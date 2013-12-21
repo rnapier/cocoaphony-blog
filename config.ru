@@ -51,11 +51,12 @@ use Rack::Rewrite do
   r301 %r{^/blog/updated-rncryptor-784}, '/blog/updated-rncryptor/'
   r301 %r{^/blog/rncryptor-titanium-794}, '/blog/rncryptor-titanium/'
   r301 %r{^/blog/triangle-cocoaheads-march-745}, '/blog/triangle-cocoaheads-march/'
+
+  r301 %r{^/blog/wp-content/uploads/2012/03/Building-a-Core-Foundation.pdf}, '/assets/Building-a-Core-Foundation.pdf'  
 end
 
 # To deal with:
 # /blog/wp-content/uploads/2012/03/Building-a-Core-Foundation.pdf
-# /blog/cocoaconf
 
 class SinatraStaticServer < Sinatra::Base
 
