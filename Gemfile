@@ -16,6 +16,7 @@ gem 'liquid', '~> 2.3.0'
 gem 'directory_watcher', '1.4.1'
 gem 'sinatra', '~> 1.4.2'
 gem 'thin'
+gem 'rack-rewrite'
 
 group :development do
   gem 'rb-fsevent', '~> 0.9'
