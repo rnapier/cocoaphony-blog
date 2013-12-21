@@ -21,7 +21,7 @@ tags: []
 ---
 There was an <a href="http://stackoverflow.com/questions/1019636/phone-screen-questions-for-mac-os-x-developer-positions/1019759#1019759">interesting question</a> on StackOverflow that was unfortunately closed as off topic. It was off topic, but it's still a useful question. When phone screening potential Cocoa developers, what kinds of questions should you ask? I've helped several clients screen potential candidates over the years, and so I have several questions I use to help with that.
 
-<a id="more"></a><a id="more-777"></a>
+<!-- more -->
 Now obviously some might be concerned that posting such a list invites people to "study for the test." To that, I have several comments:
 
 * I am not providing answers here, only questions. A potential interviewee who researches the answers is a benefit to everyone.

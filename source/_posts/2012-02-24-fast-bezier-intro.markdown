@@ -21,7 +21,7 @@ categories:
 [If you want the answer to last time's homework, skip to the end.]
 
 So you want to hand-calculate Bézier curves. Good for you. It comes up more often then you'd think on iOS, even though `UIBezierPath` is supposed to do it all for you. The truth is, sometimes you need the numbers yourself. For instance if you want to calculate intersections, or you want to draw text along the curve (like in <a href="https://github.com/rnapier/ios5ptl/tree/master/ch18/CurvyText">CurvyText</a> from <a href="http://iosptl.com">iOS:PTL</a> chapter 18).
-<a id="more"></a><a id="more-701"></a>
+<!-- more -->
 Just as a refresher, here's the cubic Bézier function in C, written in the simplest possible way (we're only going to discuss the cubic Bézier function here):
 
 	static CGFloat Bezier(CGFloat t, CGFloat P0, CGFloat P1, CGFloat P2, CGFloat P3) {

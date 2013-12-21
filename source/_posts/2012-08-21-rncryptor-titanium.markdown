@@ -34,7 +34,7 @@ Several months ago, I received a request to port my <a href="https://github.com/
 
 The pain of maintaining this thing has gotten to be too much, though. I'm releasing it today on <a href="https://github.com/rnapier/Cryptor-titanium">GitHub</a> in its current form, which is based on the older, synchronous form of RNCryptor. I may not have updated all the license text yet; if I miss any, it is under the MIT license. Thanks to those who purchased Cryptor-Titanium during its commercial life. Anyone who is interested in continuing development, please contact me (or submit a pull request).
 
-<a id="more"></a><a id="more-794"></a>Trying to upgrade to the new asynchronous interface is what led me to throw my hands up in disgust. The JavaScript isn't hard. Obviously JavaScript is fully capable of managing an asynchronous interface. It's all the shim nonsense and the constant impedance mismatches. And the sheer punch-me-in-the-face annoyance of debugging JavaScript on the iPhone.
+<!-- more -->
 
 Note that RNCryptor has always been an iOS-only solution, so the Titanium wrapper only works on iOS. If you want a correctly-written, cross-platform JavaScript solution, my recommendation is <a href="http://bitwiseshiftleft.github.com/sjcl">SJCL</a>.
 

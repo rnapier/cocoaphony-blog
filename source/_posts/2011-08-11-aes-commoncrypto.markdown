@@ -25,7 +25,7 @@ tags: []
 
 I see a lot of example code out there showing how to use `CCCrypt()`, and most of it is unfortunately wrong. Since I just got finished writing about 10 pages of explanation for my upcoming book, I thought I'd post a shortened form here and hopefully help clear things up a little. This is going to be a little bit of a whirlwind, focused on the simplest case. If you want the gory details including performance improvements for large amounts of data, well, <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-1119961327.html">the book</a> will be out later this year. :D
 
-<a id="more"></a><a id="more-564"></a>
+<!-- more -->
 
 First and foremost: the key. This is almost always done wrong in the examples you see floating around the Internet. A human-typed password is not an AES key. It has far too little entropy. Using it directly as an AES key opens you up to all kinds of attacks. In particular, lines like this are wrong:
 

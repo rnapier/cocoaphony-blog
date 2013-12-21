@@ -41,7 +41,7 @@ That works really well as long as your superclass doesn't implement `NSCopying`,
         return copy;
     }
 
-But that may or may not work. If `super` implements `-copyWithZone:` as described above, then all is fine. But what if your superclass uses `NSCopyObject()`? Things go badly, and in ways very difficult to understand and debug. <a id="more"></a><a id="more-439"></a>`NSCopyObject()`, in my opinion, is evil. Yes it's quick and easy to use, but it's incredibly dangerous and there are better ways (I'll discuss one approach later). Never use this function in your own code. But Apple used it in `NSCell`, and so we have to deal with it. `NSCopyObject()` breaks object orientation (it forces subclasses to know implementation details of their superclass) and memory management (it breaks retain counts).
+But that may or may not work. If `super` implements `-copyWithZone:` as described above, then all is fine. But what if your superclass uses `NSCopyObject()`? Things go badly, and in ways very difficult to understand and debug. <!-- more -->`NSCopyObject()`, in my opinion, is evil. Yes it's quick and easy to use, but it's incredibly dangerous and there are better ways (I'll discuss one approach later). Never use this function in your own code. But Apple used it in `NSCell`, and so we have to deal with it. `NSCopyObject()` breaks object orientation (it forces subclasses to know implementation details of their superclass) and memory management (it breaks retain counts).
 
 `NSCopyObject()` makes a perfect copy of an object's ivars, optionally expanding the size of the resulting copy. By "perfect copy" I mean "copies the pointers in the ivars to the new object." So this is what happens in our example above:
 

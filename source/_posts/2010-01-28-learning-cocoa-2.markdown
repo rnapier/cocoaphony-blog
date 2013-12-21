@@ -21,7 +21,7 @@ tags: []
 ---
 <em><a href="http://stackoverflow.com/questions/1043820/what-programming-skills-i-need-to-become-an-iphone-developer/1044525#1044525">From a StackOverflow posting</a>.</em>
 
-When I teach Cocoa, I always ask the class what their background is in. This generally tells me what they need to unlearn before they're ready for Cocoa. Here are some of the things I've found that different groups need to unlearn.<a id="more"></a><a id="more-467"></a>
+When I teach Cocoa, I always ask the class what their background is in. This generally tells me what they need to unlearn before they're ready for Cocoa. Here are some of the things I've found that different groups need to unlearn.<!-- more -->
 
 For C++ developers:
 

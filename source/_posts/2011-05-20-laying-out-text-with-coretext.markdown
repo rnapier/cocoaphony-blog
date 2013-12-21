@@ -24,7 +24,7 @@ Today's question is about <a href="http://stackoverflow.com/questions/6062420/co
 The goal of this project was to make "pinch" view. It lays out text in a view, and where ever you touch, the text is pinched towards that point. It's not meant to be really useful. Everything is done in `drawRect:`, which is ok in this case, since we only draw when we're dirty, and when we're dirty we have to redraw everything anyway. But in many cases, you'd want to do these calculations elsewhere, and only do final drawing in `drawRect:`.
 
 We start with some basic view layout, and loop until we run out of text or run out of vertical space in the view.
-<a id="more"></a><a id="more-547"></a>
+<!-- more -->
 
     - (void)drawRect:(CGRect)rect {      
       [... Basic view setup and drawing the border ...]

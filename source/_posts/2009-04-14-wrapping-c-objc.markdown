@@ -33,7 +33,7 @@ tags:
 
 When faced with mixing C++ and ObjC code, there are two main approaches. One is to just work in Objective-C++ through the entire project. I don't like this approach. I find the mixing of ObjC and C++ classes very confusing, since they cannot be used interchangeably and require completely different memory management. The mix of class hierarchies and naming conventions lead to a lot of confusion when we introduce people to code that does this kind of mixing.
 
-My opinion is that ObjC and C++ have very different patterns, so it is important to pick one to be in charge and wrap the other. So if you basically have an C++ program than needs a little ObjC to talk to the UI, then wrap the ObjC in C++ objects. If you basically have an ObjC program that needs a C++ middleware, then wrap the C++ objects.<a id="more"></a><a id="more-20"></a>
+My opinion is that ObjC and C++ have very different patterns, so it is important to pick one to be in charge and wrap the other. So if you basically have an C++ program than needs a little ObjC to talk to the UI, then wrap the ObjC in C++ objects. If you basically have an ObjC program that needs a C++ middleware, then wrap the C++ objects.<!-- more -->
 
 Here's how I usually wrap a C++ object (CFoo) into a ObjC object (Foo):
 <h4>Foo.h</h4>

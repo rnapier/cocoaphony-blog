@@ -29,7 +29,7 @@ I work on a lot of projects that share significant code between iPhone and Mac v
 This is almost never correct, and almost always means that someone imported Cocoa.h into a model class. Model classes should never rely on UIKit or Cocoa. They should just import Foundation.h.
 
 There is one interesting exception that we've run into: NSImage versus UIImage. These are really model classes, but they're part of AppKit and UIKit. They have very similar interfaces, so in most code you should be able to interchange them and keep everything portable. What to do?
-<a id="more"></a><a id="more-436"></a>**XXImage.h**
+<!-- more -->
 
     #ifdef TARGET_OS_IPHONE
     #import <UIKit/UIImage.h>

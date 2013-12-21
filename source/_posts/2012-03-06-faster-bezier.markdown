@@ -23,7 +23,7 @@ tags: []
 ---
 When <a href="http://robnapier.net/blog/fast-bezier-intro-701">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That's 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original `-Os` optimized function. But we're just getting warmed up. We haven't yet gotten half of the performance available.
 
-<a id="more"></a><a id="more-722"></a>
+<!-- more -->
 In this installment, we'll look at improving our algorithm. The code is available on <a href="https://github.com/rnapier/cocoaphony/tree/master/BezierPerf">github</a>.
 
 We tried the Accelerate framework, but it didn't help us. The cost of the function calls obliterated our gains. What can we do? First, let's look at the code again, and see if we're doing anything foolish.

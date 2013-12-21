@@ -38,7 +38,7 @@ tags:
 
 I haven't been thrilled with the first crop of iPhone development books that hit the market. This shouldn't be surprising. It's a new platform and, as with the first AppStore apps, the pressure to be first to market fights the authors' desire to provide the best possible product.
 
-I was specifically asked about <a href="http://www.amazon.com/gp/product/0321555457?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0321555457" rel="nofollow">iPhone Developer's Cookbook: Building Applications with the iPhone SDK</a> by Erica Sadun. My biggest concern is that it's a cookbook based on "recipes" to do this or that. This is often exactly the problem with how people learn Mac and iPhone development. They think that it's just Java or C++ with a different syntax and if they learn where the brackets go, then they'll be a Cocoa developer. <a id="more"></a><a id="more-260"></a>
+I was specifically asked about <a href="http://www.amazon.com/gp/product/0321555457?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0321555457" rel="nofollow">iPhone Developer's Cookbook: Building Applications with the iPhone SDK</a> by Erica Sadun. My biggest concern is that it's a cookbook based on "recipes" to do this or that. This is often exactly the problem with how people learn Mac and iPhone development. They think that it's just Java or C++ with a different syntax and if they learn where the brackets go, then they'll be a Cocoa developer. <!-- more -->
 
 As <em>Cookbook</em> describes itself:
 

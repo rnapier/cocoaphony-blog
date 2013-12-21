@@ -29,7 +29,7 @@ Two posts in a day... but this was a completely different topic.
 
 I'm beginning work on my first Leopard-only application, and so I'm trying out garbage collection. Sure, I'm excited about garbage collection. Sure, I have no great love of keeping track of my retain counts and autorelease pools. But....
 
-It feels really, really weird to not release my variables. I tend to rely on autorelease a lot. I know there are some disadvantages, but I like the fact that it notes your intention when you allocate the memory. <a id="more"></a><a id="more-100"></a> Consider this:
+It feels really, really weird to not release my variables. I tend to rely on autorelease a lot. I know there are some disadvantages, but I like the fact that it notes your intention when you allocate the memory. <!-- more --> Consider this:
 <pre lang="objc">NSMenuItem *mi = [[[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""] autorelease];
 [menu addItem:mi];</pre>
 versus

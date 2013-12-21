@@ -25,7 +25,7 @@ tags:
 ---
 In <a href="http://robnapier.net/blog/build-system-1-build-panel-360">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn't it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it's easier than ever. Let's make one.
 
-<a id="more"></a><a id="more-364"></a>The easiest way to create a new template is to base it off of an existing template. First, let's get a sense of what a project template is, and how Xcode finds and uses them. Open the following directories to see the default templates:
+<!-- more -->
 
 <code>/Developer/Library/Xcode</code> - Mac
 <code>/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode</code> - iPhone

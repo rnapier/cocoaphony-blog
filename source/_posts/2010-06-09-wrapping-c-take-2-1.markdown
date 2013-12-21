@@ -28,7 +28,7 @@ Last year, I presented <a href="http://robnapier.net/blog/wrapping-c-objc-20">an
 
 First, to remind everyone of the problem: you have a C++ object that you want to consume in Objective-C. That's easy in ObjC++, but if you make an ivar that references a C++ class, then the header file can only be included by ObjC++ classes. This quickly spreads .mm files throughout your project, creating all kinds of headaches. ObjC is a beautiful thing, and C++ is fine, but ObjC++ is a crazy land that should be carefully segregated from civilized code. So how do we do it?
 
-<a id="more"></a><a id="more-486"></a>
+<!-- more -->
 We create a thin wrapper object to provide an ObjC face on a C++ object. The challenge is how to hide C++ classes from the header file. The answer is to put them in a struct that you forward declare so you don't have to expose its contents. Structs are almost identical with C++ classes, but their forward declaration syntax is C-compatible (unlike class). Let's look at how this is done.
 
 For this example, we will consider a C++ class called `RN::Wrap`. It holds a simple string with set and get accessors.

@@ -20,7 +20,7 @@ tags: []
 <i>Based on a <a href="http://stackoverflow.com/questions/874690/is-objective-c-only-used-for-development-on-mac-os-iphone/874837">post</a> at StackOverflow. The question was whether Objective-C is only used for development on Mac OS/iPhone and why.</i>
 
 I think ObjC has been isolated to the Apple world through a quirk of history and the nature of proprietary systems.
-<a id="more"></a><a id="more-371"></a>
+<!-- more -->
 First, you need to separate ObjC from Cocoa. ObjC is a very primitive language. I think it is a very elegant language, but it is extremely basic. You can implement ObjCv1 in a C pre-processor. C++ and ObjC were developed about the same time. C++ put a huge amount of infrastructure in place to bring a C-like syntax to what is basically a completely different language. ObjC brought a Smalltalk-like syntax to C, with almost nothing else. Even things like +alloc and -release aren't language elements of ObjC. They're fairly simple wrappers around malloc() and free().<sup><a href="#footnote-1">[*]</a></sup> Standing on its own, ObjC isn't really that interesting (elegant as I think it is). This is very similar to the nature of Smalltalk. Without its object libraries, there isn't much you can do with it. With its object libraries, it's incredibly powerful.
 
 NeXT provided this entire framework on top of ObjC called NeXTSTEP. Since the NeXT computer was not a widespread commercial success, and NeXTSTEP was proprietary, not many people learned the framework or the underlying language. When Apple bought it and morphed it into Cocoa, it continued to be a proprietary system.

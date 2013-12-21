@@ -38,7 +38,7 @@ Now and then I teach Mac and iPhone courses, and several people have asked me to
 
 I tend to teach Mac and iPhone together, though I been focusing on iPhone because that's what we've needed most. I still favor Aaron Hillegass's <a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&amp;tag=cocoaphony-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img style="border:none !important; margin:0px !important;" src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&amp;l=as2&amp;o=1&amp;a=0321503619" border="0" alt="" width="1" height="1" /> as a textbook. I'm open to suggestions for excellent iPhone-specific books for beginners, but when I was developing this course last August, I didn't find a lot on the market I was impressed with. Even the Big Nerd Ranch iPhone class I found disappointing, which is one of the reasons I had to write my own class for our new developers. The Big Nerd Ranch's Cocoa Bootcamp still cannot be beat if you're looking to learn Mac development and have several grand handy.
 
-So without further ado, the syllabus and resources. I can't promise that reading through this will be as effective as watching me pace around for a week telling you about it, but it perhaps it will give a nice kick-start.<a id="more"></a><a id="more-158"></a>
+So without further ado, the syllabus and resources. I can't promise that reading through this will be as effective as watching me pace around for a week telling you about it, but it perhaps it will give a nice kick-start.<!-- more -->
 
 "CP#-#" are page references in <em>Cocoa Programming</em>. Generally speaking, students should work all Challenges.
 <h3>Mac Section</h3>

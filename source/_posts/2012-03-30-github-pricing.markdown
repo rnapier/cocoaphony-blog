@@ -21,7 +21,7 @@ tags:
 ---
 I've been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It's a good interface. It works. I could use a few more features in the Issues module, but it's nice that they keep it simple. I've tried BitBucket and Assembla, and looked at several others. I've managed my own servers. In every test, github wins.
 
-Except for price. github is often the most expensive. Especially if you need what I need, which is several small repositories, each with a small number of collaborators (often just one or two). But just a few of those can push you into the Medium plan, or even into the Bronze plan.<a id="more"></a><a id="more-754"></a>So I was complaining about this to my wife. I say "Wife, github is just too expensive. Why do they have to be like that? I really like using them."
+Except for price. github is often the most expensive. Especially if you need what I need, which is several small repositories, each with a small number of collaborators (often just one or two). But just a few of those can push you into the Medium plan, or even into the Bronze plan.<!-- more -->So I was complaining about this to my wife. I say "Wife, github is just too expensive. Why do they have to be like that? I really like using them."
 
 "Oh," says Wife. "What are we talking about?"
 

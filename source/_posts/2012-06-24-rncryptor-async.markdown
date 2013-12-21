@@ -19,7 +19,7 @@ categories:
 tags: []
 ---
 I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I'll be documenting this more formally within a few weeks, but here are the high points:
-<a id="more"></a><a id="more-772"></a>
+<!-- more -->
 
 There are now separate RNCryptor and RNDecryptor objects (as well as RNOpenSSLEncryptor and RNOpenSSLDecryptor).
 

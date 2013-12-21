@@ -23,7 +23,7 @@ Thanks to @codinghorror, I recently read a blog post from Steve McConnell called
 <blockquote>"One point in his article that McConnell did not address--<strong>programmer compensation does not vary accordingly.</strong> This is a telling point--if the difference is productivity can be 10X, why is it that salaries rarely fall outside the 2X range for experienced developers?" [emphasis in original]</blockquote>
 
 He then provides some fairly satisfying answers. "The other guy is actually overpaid." "You're confusing coding with actual business value." "Companies pay the least they can get away with." etc. All his answers make good, intuitive sense. Unfortunately, despite being a longtime fan of Steve McConnell's work, I believe most are irrelevant or incorrect.
-<a id="more"></a><a id="more-748"></a>
+<!-- more -->
 
 Let me state this a little more concretely. If a company pays Alice $X, but Alice generates $10X in marginal value, then there is a very strong incentive for another company to offer Alice $2X and receive $9X in marginal value. Alice would almost certainly accept $2X, and a competitor would be idiotic not to pay it. As long as Alice were free to change employers at will, and as long as employers were capable of determining Alice's value in even a vague way, this would naturally continue until there were little marginal value left (less than the friction of recruiting and moving and within the precision of determining Alice's productivity). That is to say, there should not be much money left on the table. In the normal version of this story, there is a massive amount of money on the table. It's hard to believe this continues indefinitely in a highly competitive, unregulated, and mobile industry like ours.
 

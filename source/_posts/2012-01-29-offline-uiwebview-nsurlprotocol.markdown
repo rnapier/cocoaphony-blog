@@ -34,7 +34,7 @@ What I wanted was a simple mechanism for the following case:
 
 My test case was simple: a webview that loads cnn.com (a nice complicated webpage with lots of images). Run it once. Quit. Turn off the network. Run it again. CNN should display.
 
-<a id="more"></a><a id="more-588"></a>
+<!-- more -->
 ### Exisiting solutions
 
 The ever-brilliant Matt Gallagher has <a href="http://cocoawithlove.com/2010/09/substituting-local-data-for-remote.html">some interesting thoughts</a> on how to subclass `NSURLCache` to handle this, but I find his solution fragile and unreliable, especially on iOS 5. The HTTP caching rules are complicated, and in many cases you need to connect to the server to re-validate your cache before you're allowed to use your local copy. Unless everything works out perfectly, his solution may not work when you're offline, or may force you to turn off cache validation (which could make your pages go stale).

@@ -22,7 +22,7 @@ categories:
 tags: []
 ---
 For those of you having trouble with Flash 10.1, I've fixed PB to handle it. This moves from the hackish "dig around in the NetscapePlugin objects and call undocumented methods" approach to a standard CGEvent based keyboard injection. You can't use NSApp's sendEvent: to talk to Flash (probably because Flash is not in Cocoa). But the following code is a good general purpose "send me a virtual keystroke."
-<a id="more"></a><a id="more-523"></a>
+<!-- more -->
 
     - (void)sendKeyPress:(int)keycode withModifier:(int)modifier
     {

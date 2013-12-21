@@ -28,7 +28,7 @@ categories:
 tags: []
 ---
 It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is "what does system_profiler actually do?"  But it's a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It's a whirlwind tour of how you begin to attack programs using pretty standard tools. I'm not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you're going to hide how your program works, make sure you research those first. You'll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.
-<a id="more"></a><a id="more-393"></a>
+<!-- more -->
 Of course you start with the obvious, "man system_profiler". But that doesn't give as much information as we want. So let's tear apart the binary and see what's going on, shall we?
 
 <pre lang="bash">

@@ -17,7 +17,7 @@ categories:
 tags: []
 ---
 CoreText is a very powerful system for laying out text in arbitrary ways. This is going to be a bit of a whirlwind tour of it to help out [nonamelive on StackOverflow](http://stackoverflow.com/questions/5284516/how-can-i-draw-image-with-text-wrapping-on-ios).</a> I'm working on an advanced iOS book right now, and I'll have a longer writeup there.
-<a id="more"></a><a id="more-540"></a>The primary tool for this project is the `CTFramesetter`. Its job is to layout runs of text into rectangles. So to use it, you need to break up your text areas into rectangles. I hinted at some of the tools to do that in [Clipping a CGRect to a CGPath](http://robnapier.net/blog/clipping-cgrect-cgpath-531). Your first job is to create an array of CGPaths that describe the area you want to fill with text. For nonamelive's case, that's pretty easy using `CGPathAddLineToPoint`. The only tricky part for my example code is that you need to draw in Mac coordinates (with the origin in the lower left). CoreText works in Mac coordinates, and so it's generally easier to do everything that way for the view.
+<!-- more -->
 
 Once you have your arbitrary paths, you want to break them down into rectangles. I've written some code to do this that assumes a known hight for the text lines. Things get more complicated if you have text that includes different font sizes (you need to do some guessing, then try to layout, and go back and correct things if you were wrong).
 

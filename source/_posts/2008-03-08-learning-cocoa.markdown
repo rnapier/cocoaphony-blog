@@ -34,7 +34,7 @@ This is <strong>the</strong> book on learning Cocoa:
 
 <a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&l=as2&o=1&a=0321503619" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> by Aaron Hillegass
 
-Third edition is supposed to come out this summer. I've read the proofs of the 3rd edition, and it does add some good stuff, but if you're anxious to get started, I'd get 2nd edition and get started.<a id="more"></a><a id="more-95"></a>
+Third edition is supposed to come out this summer. I've read the proofs of the 3rd edition, and it does add some good stuff, but if you're anxious to get started, I'd get 2nd edition and get started.<!-- more -->
 
 I may sound like a terrible shill for Aaron, who also happens to be a very nice guy and an excellent instructor, but this really is <strong>the</strong> book on the subject. Poll any group of Cocoa developers and it'll come up over and over again either as the book they used or the book they would have used if it had existed when they started.
 

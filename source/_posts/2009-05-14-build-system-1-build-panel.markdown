@@ -31,7 +31,7 @@ The first thing we want to do is get rid of one of the great obfuscations of Xco
 The build panel seems convenient at first, but in practice it makes it hard to see what's going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you've done this so someone doesn't come along later switch the setting. The Build Panel doesn't give you an easy way to include comments right along with the setting (the "Comments" panel is pretty useless in my experience), and it's easy to lose settings or accidentally apply them to only to one configuration.
 
 XCode provides a better solution called xcconfig files. Everything you can do in the build panel can be done in xcconfig files, and you can actually read them and make comments. So let's make some.
-<a id="more"></a><a id="more-360"></a><ol>
+<!-- more -->
 	<li>Create a new Window-Based iPhone Application. (Everything we do here works exactly the same for Mac.)</li>
 	<li>Add a new group to your Groups & Files called "Build Configuration".</li>
 	<li>Add a new file to the group. Under "Other" select "Configuration Settings File." Call it "Shared.xcconfig".</li>

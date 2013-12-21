@@ -36,7 +36,7 @@ And most importantly (and most hidden):
 <a href="https://developer.apple.com/library/mac/#samplecode/SBSystemPrefs/Listings/ReadMe_txt.html">SBSystemPref's Magical README</a>
 
 And now for a step-by-step example. We're going to send some mail with an attachment through Mail.app.
-<a id="more"></a><a id="more-265"></a>
+<!-- more -->
 I'm going to assume you know enough Applescript to have written this:
 
 <pre lang="applescript">

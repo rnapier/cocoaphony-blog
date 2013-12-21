@@ -28,7 +28,7 @@ tags: []
 Sometimes you want to inject some logic into a method you don't control. The most common sane reason to do this is for debugging or profiling. For instance, you might want to log every time the various `NSNotificationCenter` methods are called so you can determine if that's a performance bottleneck. (As I discovered myself, if you have thousands of notification observations in your system, it can be a serious performance problem.)
 
 In most OOP languages your only option would be to subclass the object you want to instrument and then arrange for every instance of that object to be your subclass. In many cases that's either very difficult or outright impossible, particularly if the object is used internally by a system framework. But Objective-C is highly dynamic, and message dispatching is resolved at runtime. You can modify how it works.
-<a id="more"></a><a id="more-502"></a>
+<!-- more -->
 
 On Mac, there is an `NSObject` method called `poseAsClass:` that can achieve this easily. Unfortunately, it's deprecated in 10.5 and isn't available at all for Mac 64-bit and iPhone. I want a technique that I can use reliably for all my platforms, and luckily there is a fully supported alternative: `method_exchangeImplemenations()`.
 

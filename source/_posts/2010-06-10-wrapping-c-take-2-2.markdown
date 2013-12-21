@@ -18,7 +18,7 @@ categories:
 - iphone
 tags: []
 ---
-In the <a href="http://robnapier.net/blog/wrapping-c-take-2-1-486">last post</a>, we discussed how to wrap simple C++ objects in Objective-C. But how about more complex objects, particularly with `shared_ptr`?<a id="more"></a><a id="more-493"></a> 
+In the <a href="http://robnapier.net/blog/wrapping-c-take-2-1-486">last post</a>, we discussed how to wrap simple C++ objects in Objective-C. But how about more complex objects, particularly with `shared_ptr`?<!-- more --> 
 
 Many of the objects I deal with include these, and there are a few special concerns:
 

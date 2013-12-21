@@ -21,7 +21,7 @@ tags: []
 I've been playing with Core Text recently, and one of the things I wanted to do was layout text in an arbitrary CGPath. On Mac, you'd do this with NSLayoutManager, but iOS doesn't have that so we have to build our own. I'll discuss Core Text more later, but one of the steps along this problem is how to clip a CGRect to a CGPath. I found several discussions of finding CGPath intersections, all explaining the basic technique. Draw the things you care about into a bitmap context and then inspect the pixels to see where they overlap. Clear enough, but it was hard to find a small code sample that demonstrated this with Core Graphics.
 
 For my purposes, I want the first full-height rectangle within the intersection of the line rectangle and the CGPath. Later I will expand this code to find all full-height rectangles within the intersection (there can be more than one), but this is enough to demonstrate the point.
-<a id="more"></a><a id="more-531"></a>
+<!-- more -->
 First, we quickly clip the rectangle to the bounding box of the CGPath using `CGPathGetBoundingBox()`. In iOS 4, they've added `CGPathGetPathBoundingBox()`, which can create a tighter box if you have control points outside your path, but I don't know yet if there's a performance trade-off for using it.
 
     CGRect rect = someRect();

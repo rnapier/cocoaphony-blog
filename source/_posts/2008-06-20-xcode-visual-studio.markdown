@@ -29,7 +29,7 @@ tags:
 ---
 I move between VS and XCode a bit without shuddering or fussing, which seems to make me a strange creature. In general, shocking as it is to say on a Cocoa list, VS is actually a much more powerful environment. Most who love XCode have little used VS (at least VS2005 or later, <a href="http://vs.net/" target="_blank">VS.NET</a> is clunky IMO). But learning what actually is better about VS requires using XCode for quite some time. Most of the initial complaints are simply small differences between the two; many of which I prefer the XCode way. But then, XCode is a Mac app, and I generally prefer Mac UI.
 
-<a id="more"></a><a id="more-114"></a>As a regular user of both, here are some advantages of VS that do not wear off when you get used to XCode:
+<!-- more -->
 <ul>
 	<li>Much deeper integration with its debugger. XCode and gdb play together, but they're not integrated the way VS is with its debugger. There are many important gdb features that can't easily be reached from XCode, and some (debugging with a core file) that you pretty much can't run XCode at all if you want to accomplish.</li>
 	<li>The multi-tab interface makes it much easier to manage moving between many files, and the debugger is better integrated with the editor. XCode encourages you to have an explosion of windows, and the debugger is inconsistently integrated with the editor. The AllInOne interface for XCode goes too far the other way and makes moving between files a real pain.</li>

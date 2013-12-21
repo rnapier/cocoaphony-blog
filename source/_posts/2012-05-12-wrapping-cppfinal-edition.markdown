@@ -23,7 +23,7 @@ I have always strong recommended segregating Objective-C and C++ code with a thi
 That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple's frameworks are implemented in C++.
 
 So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your "middleware" in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).
-
+<!-- more -->
 (As a side note, I also recommend that OS-related things like file management, network management, and threading all be handled natively. GCD is much better than pthreads. NSURLConnection is much better than writing your own C++ networking layer in BSD sockets. But this is tangental to the main point.)
 
 Saying all that, how do you wrap a C++ object so that Objective-C can read it? This used to be a question that required some significant thought. See <a href="http://robnapier.net/blog/wrapping-c-take-2-1-486">Wrapping C++, Take 2 Part 1</a> and <a href="http://robnapier.net/blog/wrapping-c-take-2-2-493">Part 2</a> for my previous thinking on the subject.

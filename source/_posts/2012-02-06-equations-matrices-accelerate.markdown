@@ -21,7 +21,7 @@ tags: []
 <p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I'll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
 
 <p>In this post, I'm targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it's hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you're like me, and once upon a time you actually took linear algebra, but today you wouldn't know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn't been released…) My goal isn't to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
-<a id="more"></a><a id="more-607"></a>
+<!-- more -->
 
 <p>So by way of example, we will consider the cubic Bézier curve (as expressed by <a href="http://en.wikipedia.org/wiki/Bézier_curve#Cubic_B.C3.A9zier_curves">Wikipedia</a>):</p>
 

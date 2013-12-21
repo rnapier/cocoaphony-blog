@@ -42,7 +42,7 @@ This removes you from all notifications. If you fail to do this, and you are dea
 
 If you are not observing anything, then -removeObserver: does nothing, so it is not dangerous to call. There is a slight performance cost, especially for objects that are alloc'ed and dealloc'ed a lot, so there's no reason to add it to objects that do nothing with notifications, but I recommend better safe than sorry in most cases.
 
-This advice does not apply to KVO observations, which are a completely different animal. <a id="more"></a><a id="more-42"></a>
+This advice does not apply to KVO observations, which are a completely different animal. <!-- more -->
 
 <h3>Naming</h3>
 While here, it's worth noting some other significant notification advice. Never pass a hard-coded string as the name; you're begging for hard-to-track-down bugs when you mistype the string elsewhere. Create a name in the form PREFIXSomethingDidHappenNotification, for example: RNFooDidChangeNotification.

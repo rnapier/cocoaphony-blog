@@ -28,7 +28,7 @@ I keep coming across [code](http://dotnetaddict.dotnetdevelopersjournal.com/leop
 
 It's time to say stop it already with the extra `+stringWithString:`. I haven't worked out yet where this anti-pattern comes from. Maybe it's a misunderstanding of some sample code in [Kochan](http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861)? Maybe it's a Java/.NET thing? I'm not sure. But I see it so often from so many places that it's clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)
 
-<a id="more"></a><a id="more-415"></a>
+<!-- more -->
 The correct form of the above code is:
 
     newMonster.trueName = @"New Monster";

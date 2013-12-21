@@ -23,7 +23,7 @@ During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</
 But here's the thing: what do you animate? While you do want to animate the glyph positions, you're not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer's list of animatable properties confirmed that there's nothing like that. But no problem, I added a custom property called `touchPointScale` and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)
 
 OK, so great. But one comment I got at CocoaConf was that it should handle multitouch. So I started playing with that, but now I had a problem. I could have lots of touches, so my single `touchPointScale` doesn't...er...scale. What I want to do is take a collection of `TouchPoint` objects that the layer owns, animate each of their scales independently, and have the layer do its animation thing. But how do we animate based on changes in properties of things in a layer's collection?
-<a id="more"></a><a id="more-812"></a>
+<!-- more -->
 
 *The sample code is available on <a href="https://github.com/rnapier/richtext-coretext/tree/master/PinchText">github</a>.*
 
