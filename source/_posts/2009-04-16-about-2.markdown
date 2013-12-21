@@ -1,0 +1,19 @@
+---
+layout: page
+status: publish
+published: true
+title: About
+author: Rob Napier
+author_login: rnapier
+author_email: robnapier@gmail.com
+author_url: http://robnapier.net
+wordpress_id: 21
+wordpress_url: http://robnapier.net/blog/?page_id=21
+date: 2009-04-16 04:40:10.000000000 -04:00
+categories:
+- Uncategorized
+tags: []
+---
+Rob is a builder of treehouses, hiker, proud father, and in his spare 50-60 hours a week, a Mac and iPhone developer. When he's bored and wants good music, he hacks on <a href="http://pandoraboy.googlecode.com">PandoraBoy</a>. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.
+
+You can find more information about him on <a href="http://www.linkedin.com/in/rnapier" target="_blank">LinkedIn</a>. Or mail him at robnapier on gmail.

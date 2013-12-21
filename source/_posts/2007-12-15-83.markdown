@@ -1,0 +1,21 @@
+---
+layout: post
+status: publish
+published: true
+author: Rob Napier
+author_login: rnapier
+author_email: robnapier@gmail.com
+author_url: http://robnapier.net
+wordpress_id: 83
+wordpress_url: http://robnapier.net/blog/?p=83
+date: 2007-12-15 17:53:09.000000000 -05:00
+categories:
+- PandoraBoy
+tags:
+- PandoraBoy
+---
+Why is it when I want to test PandoraBoy with an album that has no artwork available, suddenly Pandora becomes so good at having every piece of artwork on every track for 7 different stations until I run out of hourly skips?
+
+Well, at least I finally fixed that stupid "thumbs-up in the lower left of the Pandora window" bug that's been driving me crazy for so long. Check for nil returns people!
+
+I'm still trying to understand how Pandora manages skip tracking. I'm not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don't seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they're storing it in Flash local storage. I swear they didn't used to keep track of skips if you switched stations and then switched back, but then they also didn't used to keep track of your place in the song when you switched stations. Curiouser and curiouser.
