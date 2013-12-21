@@ -29,75 +29,93 @@ OK, so great. But one comment I got at CocoaConf was that it should handle multi
 
 First, we have `TouchPoint` objects. These are just trivial data objects. The `identifier` here happens to be the address of the object, but it could be any unique string.
 
-    @interface TouchPoint : NSObject
-    @property (nonatomic, readwrite, strong) UITouch *touch;
-    @property (nonatomic, readwrite, assign) CGPoint point;
-    @property (nonatomic, readwrite, assign) CGFloat scale;
+``` objc
+@interface TouchPoint : NSObject
+@property (nonatomic, readwrite, strong) UITouch *touch;
+@property (nonatomic, readwrite, assign) CGPoint point;
+@property (nonatomic, readwrite, assign) CGFloat scale;
 
-    + (TouchPoint *)touchPointForTouch:(UITouch *)touch inView:(UIView *)view scale:(CGFloat)scale;
-    - (NSString *)identifier;
-    @end
++ (TouchPoint *)touchPointForTouch:(UITouch *)touch inView:(UIView *)view scale:(CGFloat)scale;
+- (NSString *)identifier;
+@end
+```
 
 Then we have `PinchTextLayer`, which has a collection of `TouchPoint` objects:
 
-    @property (nonatomic, readwrite, strong) NSMutableDictionary *touchPointsForIdentifier;
+``` objc
+@property (nonatomic, readwrite, strong) NSMutableDictionary *touchPointsForIdentifier;
+```
 
 The thing we want to animate is "the `scale` of the touch point with a given identifier." In order to animate something, it needs to be something you can call `setValue:forKeyPath:` on. And that brings us to the power of KVC and dictionaries.
 
 Say you have this code:
 
-    self.dict[@"somekey"] = @"somevalue";
+``` objc
+self.dict[@"somekey"] = @"somevalue";
+```
 
 You can also write that this way:
 
-    [self setValue:@"somevalue" forKeyPath:@"dict.somekey"];
+``` objc
+[self setValue:@"somevalue" forKeyPath:@"dict.somekey"];
+```
 
 And if you have this code:
 
-    self.dict[@"somekey"].prop = @"someValue";
+``` objc
+self.dict[@"somekey"].prop = @"someValue";
+```
 
 You can write that this way:
 
-    [self setValue:@"somevalue" forKeyPath:@"dict.somekey.prop"];
+``` objc
+[self setValue:@"somevalue" forKeyPath:@"dict.somekey.prop"];
+```
 
 And that means that things held in dictionaries can be animated pretty easily because they can be accessed via `setValue:forKeyPath:`. First, you need to tell the layer that changes on your dictionary impact drawing:
 
-    + (BOOL)needsDisplayForKey:(NSString *)key {
-      if ([key isEqualToString:@"touchPointForIdentifier"]) {
-        return YES;
-      }
-      else {
-        return [super needsDisplayForKey:key];
-      }
-    }
+``` objc
++ (BOOL)needsDisplayForKey:(NSString *)key {
+  if ([key isEqualToString:@"touchPointForIdentifier"]) {
+    return YES;
+  }
+  else {
+    return [super needsDisplayForKey:key];
+  }
+}
+```
 
 This applies to all key paths that start with `touchPointForIdentifier`. And because we're not animating `touchPointForIdentifier` itself, we don't have to make it `@dynamic`. We do need to copy it in `initWithLayer:` of course:
 
-    - (id)initWithLayer:(id)layer {
-      self = [super initWithLayer:layer];
-      ...
-      [self setTouchPointForIdentifier:[[layer touchPointForIdentifier] copy]];
-      return self;
-    }
+``` objc
+- (id)initWithLayer:(id)layer {
+  self = [super initWithLayer:layer];
+  ...
+  [self setTouchPointForIdentifier:[[layer touchPointForIdentifier] copy]];
+  return self;
+}
+```
 
 And that's just about it. We can now treat the key path "touchPointForIdentifier.&lt;identifier&gt;.scale" as an animatable property just like `position` or `opacity`.
 
-    - (void)addTouches:(NSSet *)touches inView:(UIView *)view scale:(CGFloat)scale {
-      for (UITouch *touch in touches) {
-        TouchPoint *touchPoint = [TouchPoint touchPointForTouch:touch inView:view scale:scale];
-        NSString *keyPath = [self touchPointScaleKeyPathForTouchPoint:touchPoint];
+``` objc
+- (void)addTouches:(NSSet *)touches inView:(UIView *)view scale:(CGFloat)scale {
+  for (UITouch *touch in touches) {
+    TouchPoint *touchPoint = [TouchPoint touchPointForTouch:touch inView:view scale:scale];
+    NSString *keyPath = [self touchPointScaleKeyPathForTouchPoint:touchPoint];
 
-        CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:keyPath];
-        anim.fromValue = @0;
-        anim.toValue = @(touchPoint.scale);
-        [self addAnimation:anim forKey:keyPath];
+    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:keyPath];
+    anim.fromValue = @0;
+    anim.toValue = @(touchPoint.scale);
+    [self addAnimation:anim forKey:keyPath];
 
-        [self.touchPointForIdentifier setObject:touchPoint forKey:touchPoint.identifier];
-      }
-    }
+    [self.touchPointForIdentifier setObject:touchPoint forKey:touchPoint.identifier];
+  }
+}
 
-    - (NSString *)touchPointScaleKeyPathForTouchPoint:(TouchPoint *)touchPoint {
-      return [NSString stringWithFormat:@"touchPointForIdentifier.%@.scale", touchPoint.identifier];
-    }
+- (NSString *)touchPointScaleKeyPathForTouchPoint:(TouchPoint *)touchPoint {
+  return [NSString stringWithFormat:@"touchPointForIdentifier.%@.scale", touchPoint.identifier];
+}
+```
 
 Side note: Along the way, I also developed a technique for animating custom properties (without any storage behind them, implemented by custom methods) by overriding `setValue:forKeyPath:`. If you think that might be useful, you can see it in <a href="https://github.com/rnapier/richtext-coretext/tree/4eb482dcfe2340f09d553c707a5b3b2a4116ff63">github</a>, but so far I haven't thought of any cases where it's better than using the dictionary.
