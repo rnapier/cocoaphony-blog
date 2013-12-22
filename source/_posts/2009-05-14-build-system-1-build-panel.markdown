@@ -26,7 +26,7 @@ XCode has a decent build system, but it doesn't work as well as it could out of 
 
 The first thing we want to do is get rid of one of the great obfuscations of Xcode: The Build panel.
 
-{% img center /images/build-system-1-build-panel/buildpanel-300x274.png %}
+{% img center /images/build-system-1-build-panel/buildpanel.png %}
 
 The build panel seems convenient at first, but in practice it makes it hard to see what's going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you've done this so someone doesn't come along later switch the setting. The Build Panel doesn't give you an easy way to include comments right along with the setting (the "Comments" panel is pretty useless in my experience), and it's easy to lose settings or accidentally apply them to only to one configuration.
 
