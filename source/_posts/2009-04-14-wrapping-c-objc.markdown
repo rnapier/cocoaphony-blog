@@ -7,7 +7,7 @@ author: Rob Napier
 author_login: rnapier
 author_email: robnapier@gmail.com
 author_url: http://robnapier.net
-excerpt: "<em>See <a href=\"http://robnapier.net/blog/wrapping-c-take-2-1-486\">Take
+excerpt: "<em>See <a href=\"http://robnapier.net/blog/wrapping-c-take-2-1\">Take
   2</a> for an updated approach to this problem.</em>\r\n\r\nWhen faced with mixing
   C++ and ObjC code, there are two main approaches. One is to just work in Objective-C++
   through the entire project. I don't like this approach. I find the mixing of ObjC
@@ -29,7 +29,7 @@ tags:
 - c++
 - objective-c
 ---
-<em>See <a href="http://robnapier.net/blog/wrapping-c-take-2-1-486">Take 2</a> for an updated approach to this problem.</em>
+<em>See [Take 2](/blog/wrapping-c-take-2-1) for an updated approach to this problem.</em>
 
 When faced with mixing C++ and ObjC code, there are two main approaches. One is to just work in Objective-C++ through the entire project. I don't like this approach. I find the mixing of ObjC and C++ classes very confusing, since they cannot be used interchangeably and require completely different memory management. The mix of class hierarchies and naming conventions lead to a lot of confusion when we introduce people to code that does this kind of mixing.
 
