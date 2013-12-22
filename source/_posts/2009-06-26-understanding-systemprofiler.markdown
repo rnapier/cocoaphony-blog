@@ -31,7 +31,7 @@ It thought I was going to be quiet for two weeks, now three posts in a day. Ther
 <!-- more -->
 Of course you start with the obvious, "man system_profiler". But that doesn't give as much information as we want. So let's tear apart the binary and see what's going on, shall we?
 
-<pre lang="bash">
+``` bash
 $ otool -L /usr/sbin/system_profiler
 system_profiler:
 	/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport (compatibility version 1.0.0, current version 1.0.0)
@@ -40,11 +40,11 @@ system_profiler:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 111.1.4)
 	/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 227.0.0)
 	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 476.17.0)
-</pre>
+```
 
 So we see it's using CoreFoundation and a private framework. Let's see what we can learn from that private framework.
 
-<pre lang="bash">
+``` bash
 $ otool -L /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport
 /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport:
 	/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport (compatibility version 1.0.0, current version 1.0.0)
@@ -60,11 +60,11 @@ $ otool -L /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSu
 	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 476.17.0)
 	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 949.45.0)
 	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 677.22.0)
-</pre>
+```
 
 We see it's in Cocoa. Nice, we can use <a href="http://www.codethecode.com/projects/class-dump/">class-dump</a> on it. And we see a bunch of public and private frameworks in there. We won't go into all of those here. But you can tear them apart using the same techniques we're going to use on DiskManagement:
 
-<pre lang="objc">
+``` objc
 $ class-dump /System/Library/PrivateFrameworks/DiskManagement.framework/Versions/A/DiskManagement
 ...
 @interface DMManager : NSObject
@@ -93,13 +93,13 @@ $ class-dump /System/Library/PrivateFrameworks/DiskManagement.framework/Versions
 - (id)diskWithDisk:(id)fp8;
 - (id)rootDisk;
 ...
-</pre>
+```
 
 Hey, that might be handy in trying to understand unique things about our system (the thing we happen to be interested in). You can continue this approach through any of the pieces that look interesting. Of course you're going to have to guess a bit about types, but you can call these methods in your code and then ask the resulting object for its -class.
 
 We could do this all day (and you probably will, chasing down various libraries that look interesting and writing small projects to explore them), but let's take a completely different track. Let's go from static to dynamic and see what system_profiler actually <b>does</b> when it runs.
 
-<pre lang="c">
+``` c
 $ sudo dtruss /usr/sbin/system_profiler
 ...
 stat("/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport\0", 0xBFFFD3E8, 0xFFFFFFFFBFFFBCA4)		 = 0 0
@@ -110,11 +110,11 @@ mmap(0x3F000000, 0xD000, 0x5, 0x12, 0x3, 0x100000000)		 = 0x3F000000 0
 ...
 open_nocancel("/System/Library/SystemProfiler/SPBluetoothReporter.spreporter/Contents\0", 0x100004, 0x316310)		 = 3 0
 ...
-</pre>
+```
 
 So we see all the frameworks it uses, and hey, /System/Library/SystemProfiler sure looks interesting. I wonder what we might do with that? 
 
-<pre lang="objc">
+``` objc
 $ class-dump /System/Library/SystemProfiler/SPNetworkReporter.spreporter/Contents/MacOS/SPNetworkReporter
 struct __SCDynamicStore;
 ...
@@ -137,39 +137,39 @@ struct __SCDynamicStore;
 - (void)dealloc;
 
 @end
-</pre>
+```
 
 OK, but what does this one really do? Maybe if if we had a nice way to disassemble it.... Like maybe <a href="http://otx.osxninja.com/">otx</a>.
 
-<pre lang="asm">
+``` c-objdump
 $ otx /System/Library/SystemProfiler/SPNetworkReporter.spreporter/Contents/MacOS/SPNetworkReporter
 ...
 -(id)[SPNetworkReporter _hardwareDictionaryForInterface:]
-        +0      00000f0e  55                                      pushl           %ebp
-        +1      00000f0f  89e5                                    movl            %esp,%ebp
-        +3      00000f11  57                                      pushl           %edi
-        +4      00000f12  56                                      pushl           %esi
-        +5      00000f13  53                                      pushl           %ebx
-        +6      00000f14  e800000000                      calll           0x00000f19
-   +11  00000f19  5b                                      popl            %ebx
-   +12  00000f1a  83ec5c                                  subl            $0x5c,%esp
-   +15  00000f1d  8b83e7300000                    movl            0x000030e7(%ebx),%eax
-   +21  00000f23  89442404                                movl            %eax,0x04(%esp)
-   +25  00000f27  8b8377310000                    movl            0x00003177(%ebx),%eax
-   +31  00000f2d  890424                                  movl            %eax,(%esp)
-   +34  00000f30  e8c3410000                      calll           0x000050f8                                +[NSMutableDictionary dictionary]
-   +39  00000f35  89c7                                    movl            %eax,%edi
-   +41  00000f37  8b4510                                  movl            0x10(%ebp),%eax
-   +44  00000f3a  85c0                                    testl           %eax,%eax
-   +46  00000f3c  0f8486020000                    jel             0x000011c8
-   +52  00000f42  8d45e4                                  leal            0xe4(%ebp),%eax
-   +55  00000f45  89442404                                movl            %eax,0x04(%esp)
-   +59  00000f49  8b8313410000                    movl            0x00004113(%ebx),%eax
-   +65  00000f4f  8b00                                    movl            (%eax),%eax
-   +67  00000f51  890424                                  movl            %eax,(%esp)
-   +70  00000f54  e84a410000                      calll           0x000050a3                                _IOMasterPort
+    +0  00000f0e  55             pushl    %ebp
+    +1  00000f0f  89e5           movl     %esp,%ebp
+    +3  00000f11  57             pushl    %edi
+    +4  00000f12  56             pushl    %esi
+    +5  00000f13  53             pushl    %ebx
+    +6  00000f14  e800000000     calll    0x00000f19
+   +11  00000f19  5b             popl     %ebx
+   +12  00000f1a  83ec5c         subl     $0x5c,%esp
+   +15  00000f1d  8b83e7300000   movl     0x000030e7(%ebx),%eax
+   +21  00000f23  89442404       movl     %eax,0x04(%esp)
+   +25  00000f27  8b8377310000   movl     0x00003177(%ebx),%eax
+   +31  00000f2d  890424         movl     %eax,(%esp)
+   +34  00000f30  e8c3410000     calll    0x000050f8               +[NSMutableDictionary dictionary]
+   +39  00000f35  89c7           movl     %eax,%edi
+   +41  00000f37  8b4510         movl     0x10(%ebp),%eax
+   +44  00000f3a  85c0           testl    %eax,%eax
+   +46  00000f3c  0f8486020000   jel      0x000011c8
+   +52  00000f42  8d45e4         leal     0xe4(%ebp),%eax
+   +55  00000f45  89442404       movl     %eax,0x04(%esp)
+   +59  00000f49  8b8313410000   movl     0x00004113(%ebx),%eax
+   +65  00000f4f  8b00           movl     (%eax),%eax
+   +67  00000f51  890424         movl     %eax,(%esp)
+   +70  00000f54  e84a410000     calll    0x000050a3               _IOMasterPort
 ...
-</pre>
+```
 
 Digging through we'll see a lot of stuff starting "IO." Just a little googling will teach us that means IOKit. So maybe that's going to be a good place to study in understanding this better.
 
