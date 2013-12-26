@@ -5,8 +5,10 @@ require 'rack/rewrite'
 # The project root directory
 $root = ::File.dirname(__FILE__)
 
-# Rewrite known incoming Wordpress links
 use Rack::Rewrite do
+  r301 %r{/blog/feed}, '/atom.xml'
+
+# Rewrite known incoming Wordpress links
   r301 %r{^/blog/aes-commoncrypto-564}, '/blog/aes-commoncrypto/'
   r301 %r{^/blog/offline-uiwebview-nsurlprotocol-588}, '/blog/offline-uiwebview-nsurlprotocol/'
   r301 %r{^/blog/build-system-1-build-panel-360}, '/blog/build-system-1-build-panel/'
@@ -54,9 +56,6 @@ use Rack::Rewrite do
 
   r301 %r{^/blog/wp-content/uploads/2012/03/Building-a-Core-Foundation.pdf}, '/assets/Building-a-Core-Foundation.pdf'  
 end
-
-# To deal with:
-# /blog/wp-content/uploads/2012/03/Building-a-Core-Foundation.pdf
 
 class SinatraStaticServer < Sinatra::Base
 

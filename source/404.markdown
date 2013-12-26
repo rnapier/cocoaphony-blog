@@ -1,0 +1,8 @@
+---
+layout: page
+title: "404 error"
+comments: false
+sharing: false
+footer: false
+---
+I've hunted far and wide. Maybe it was here at some point, and in that case I'm really sorry. Maybe it was on the old WordPress site, and it didn't get a redirect. Maybe the search box up at the top will help you out. Or maybe you're just typing random URLs into your browser bar. If so, then you should knock it off.
