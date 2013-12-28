@@ -19,8 +19,10 @@ given a few assumptions.
 To work this out, we really just need to know three things:
 
 * How many passwords exist for a given length?
-* How many passwords can we guess per time unit?
-* How long a time unit do we consider "infeasible?"
+* How much effort (resources x time) does it take to guess a password?
+* How much attacker effort do we consider "feasible?"
+
+### How many passwords exist for a given lenth?
 
 The number of passwords for a given length depends on the number of different
 characters we allow in a password. On common English keyboards, you can easily
@@ -29,6 +31,16 @@ type 26 lowercase, 26 uppercase, 10 numbers, about 32 symbols, and space. That's
 
 [^tab]: I'm not including the tab key because it is very often not allowed in
 passwords, especially on the web.
+
+The number of passwords for a given set size (_S_) and a specific password
+length (_n_) is _S^n_.
+
+What's interesting about this function is how it reacts to changes in _S_ and
+_n_. For example, let's consider a fixed password size (_n = 8_), with a
+variable set size from _S = 26_ to _S = 3000_ (roughly the number of everyday
+Chinese characters).
+
+
 
 Then we can use some very fancy math[^not-fancy-math], where \\(\bf{S}\\) is the
 number of characters we choose from (95 in this case).

@@ -1,0 +1,19 @@
+#!/usr/local/bin/gnuplot
+
+reset
+set term svg enhanced dynamic fname "PT Serif" lw 2
+set output "plot.svg"
+
+set yrange [1:1e50]
+set logscale y
+set logscale x
+set xrange [26:10000]
+set x2range [6:20]
+set x2tics
+set xtics nomirror
+set x2label "Password length (linear)"
+set xlabel "Set size (log)"
+set ylabel "Number of passwords (log)"
+plot  \
+      26**x axes x2y1 title "Small set (26), varrying length", \
+      x**6 axes x1y1 title "Short password (6), varrying set size"
