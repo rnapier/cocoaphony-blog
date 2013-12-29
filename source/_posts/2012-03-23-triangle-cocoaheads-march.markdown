@@ -21,4 +21,4 @@ Last night's <a href="http://meetup.trianglecocoa.com/events/49569052/">CocoaHea
 
 For those who didn't scribble notes fast enough, my Core Foundation presentation is attached (including the fix for my memory leak; was it Jay who found that?) I'll make sure to fix the code in the book for the next edition.
 
-<a href="http://robnapier.net/blog/wp-content/uploads/2012/03/Building-a-Core-Foundation.pdf" title="Building a Core Foundation.pdf" alt="Building a Core Foundation">Building a Core Foundation.pdf</a>
+[Building a Core Foundation Presentation](/assets/Building-a-Core-Foundation.pdf)

@@ -180,4 +180,5 @@ Finally, finally, we draw the glyphs and move down a line. We move down by addin
 
 So there you have it. It's a whirlwind tour showing how to lay glyphs out one-by-one. Attached is an example project showing it in real life.
 
-<a href='http://robnapier.net/blog/wp-content/uploads/2011/05/TextDemo.zip'>TextDemo</a>
+[PinchText](https://github.com/rnapier/richtext-coretext/tree/master/PinchText)
+

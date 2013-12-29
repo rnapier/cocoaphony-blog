@@ -88,4 +88,4 @@ There are some inefficiencies here. More efficient approaches would calculate th
 
 An example Xcode project is attached.
 
-<a href='http://robnapier.net/blog/wp-content/uploads/2011/03/Columns.zip'>Columns.zip</a>
+[Columns](https://github.com/rnapier/richtext-coretext/tree/master/Columns)

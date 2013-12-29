@@ -22,7 +22,7 @@ tags: []
 ---
 *The most up-to-date source for this is now available at <a href="https://github.com/rnapier/RNCachingURLProtocol">github</a>.*
 
-Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://robnapier.net/book">our book</a> is devoted to the ins-and-outs of this subject.
+Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://iosptl.com">our book</a> is devoted to the ins-and-outs of this subject.
 
 But sometimes you just have a simple `UIWebView`, and you want to cache the last version of the page. You'd think that `NSURLCache` would handle this for you, but it's much more complicated than that. `NSURLCache` doesn't cache everything you'd think it would. Sometimes this is because of Apple's decisions in order to save space. Just as often, however, it's because the HTTP caching rules explicitly prevent caching a particular resource.
 
@@ -79,5 +79,3 @@ The code is in the attached project. Look in `RNCachingURLProtocol.m`.
 <strong>EDIT: Be sure to see Nick Dowell's modification in the comments to handle HTTP redirect.</strong>
 
 <strong>EDIT2: In `cachePathForRequest:`, I use `hash` to uniquely identify the URLs. For long, similar URLs, this collides a lot (See <a href="http://opensource.apple.com/source/CF/CF-476.17/CFString.c">CFString.c</a> for comments on how the hash function is implemented.) The better thing to use is MD5 or SHA1 or something, but those aren't built-in on iOS prior to iOS5, so you'd have to implement your own (and I don't need it that badly for my current projects). This is something you'd want to fix before using this seriously.</strong>
-
-<a href='http://robnapier.net/blog/wp-content/uploads/2012/01/CachedWebView.zip'>CachedWebView Example Project</a>

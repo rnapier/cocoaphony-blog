@@ -24,7 +24,7 @@ tags:
 - c++
 - objective-c
 ---
-Last year, I presented <a href="http://robnapier.net/blog/wrapping-c-objc-20">an approach to wrapping C++</a>. Since then, I've been introduced to other approaches, particularly from gf who helped me better understand opaque objects. Since I do a lot of cross-language work, I've had some opportunity to play with and expand this, and so I'd like to update my C++ wrapping approach.
+Last year, I presented <a href="/wrapping-c-objc">an approach to wrapping C++</a>. Since then, I've been introduced to other approaches, particularly from gf who helped me better understand opaque objects. Since I do a lot of cross-language work, I've had some opportunity to play with and expand this, and so I'd like to update my C++ wrapping approach.
 
 First, to remind everyone of the problem: you have a C++ object that you want to consume in Objective-C. That's easy in ObjC++, but if you make an ivar that references a C++ class, then the header file can only be included by ObjC++ classes. This quickly spreads .mm files throughout your project, creating all kinds of headaches. ObjC is a beautiful thing, and C++ is fine, but ObjC++ is a crazy land that should be carefully segregated from civilized code. So how do we do it?
 
@@ -91,6 +91,4 @@ Using the class requires no special work. It's pure ObjC:
 	RNWrap *wrap = [[[RNWrap alloc] initWithString:@"my string"] autorelease];
 	NSLog(@"wrap = %@", [wrap string]);
 
-In <a href="http://robnapier.net/blog/wrapping-c-take-2-2-493">part two</a>, we'll discuss how to extend this approach to more complex problems such as smart pointers, listeners/delegates, and bindings.
-
-<a href='http://robnapier.net/blog/wp-content/uploads/2010/06/SimpleCppWrap.zip'>SimpleCppWrap.zip</a>
+In <a href="/wrapping-c-take-2-2">part two</a>, we'll discuss how to extend this approach to more complex problems such as smart pointers, listeners/delegates, and bindings.
