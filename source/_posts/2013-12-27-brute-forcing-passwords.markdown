@@ -13,7 +13,7 @@ recently:
 >Assuming a password is not in a dictionary, what length is required to make a
 >brute force attack infeasible?
 
-That's a pretty good question, and we should be able to answer it fairly easily,
+That's a pretty good question, and we should be able to answer it fairly easily
 given a few assumptions.
 
 The short answer is, using [RNCryptor](https://github.com/rnapier/RNCryptor) and
