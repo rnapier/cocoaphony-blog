@@ -6,6 +6,7 @@ require 'rack/rewrite'
 $root = ::File.dirname(__FILE__)
 
 use Rack::Rewrite do
+  r301 '/blog', '/'
   r301 '/blog/', '/'
   r301 '/blog/feed', '/atom.xml'
 
