@@ -16,11 +16,11 @@ recently:
 That's a pretty good question, and we should be able to answer it fairly easily,
 given a few assumptions.
 
-The short answer is, using RNCryptor and some reasonable security assumptions,
-it would be very difficult to brute-force an 8 character password randomly taken
-from all the easily typable characters on an English keyboard. The rest of this
-article will discuss my assumptions, and how you would calculate good lengths
-for other assumptions.
+The short answer is, using [RNCryptor](https://github.com/rnapier/RNCryptor) and
+some reasonable security assumptions, it would be very difficult to brute-force
+an 8 character password randomly taken from all the easily typable characters on
+an English keyboard. The rest of this article will discuss my assumptions, and
+how you would calculate good lengths for other assumptions.
 
 <!-- more -->
 
@@ -58,7 +58,7 @@ size by orders of magnitude (exponetially). Increasing the length of the
 password by two or three characters is better than increasing the number of
 available characters 10-fold. So, given a choice, you'd rather have a long,
 random password than anything else. This is the principle of AES key sizes. Each
-bit is chosen from a set of just 2 "letters, but 256 bits still provides a huge
+bit is chosen from a set of just 2 "letters," but 256 bits still provides a huge
 keyspace.
 
 ### How much effort (resources x time) does it take to test a password?
@@ -66,25 +66,25 @@ keyspace.
 By design, most of the time required to test a password in RNCryptor is spent
 converting the password into a key using
 [PBKDF2](http://en.wikipedia.org/wiki/PBKDF2). PBKDF2 is is designed to be slow
-specifically to make brute forcing difficult. RNCryptor is uses 10,000
-iterations to convert the password into a key. How long that takes to calculate
-depends on your machine, so we need to define some unit that we will measure
-our attack in. Since I happen to have one in front of me, we're going to use
-"one core of an Early 2011 MacBook Pro" as the unit.
+specifically to make brute forcing difficult. RNCryptor uses 10,000 iterations
+to convert the password into a key. How long that takes to calculate depends on
+your machine, so we need to define some unit that we will measure our attack in.
+Since I happen to have one in front of me, we're going to use "one core of an
+Early 2011 MacBook Pro" as the unit.
 
 There are a couple of things to keep in mind when choosing this unit. First, you
 need to think in terms of what hardware your attacker is going to use against
-you, not the hardware you used in encrypt in the first place. So think at least
-in terms of desktops and servers, not iPhones. Second, remember that the proper
-unit is a "core," not a system. PBKDF2 can't be computed in parallel, but the
-attacker can easily spread many different PKBDF2 computations over as many cores
-as available. That said, it doesn't really matter what the unit is; we just need
-a way to describe attacker resources.
+you, not the hardware you used to encrypt. So think at least in terms of
+desktops and servers, not iPhones. Second, remember that the proper unit is a
+"core," not a system. PBKDF2 can't be computed in parallel, but the attacker can
+easily spread many different PKBDF2 computations over as many cores as
+available. That said, it doesn't really matter what the unit is; we just need a
+way to describe attacker resources.
 
 How long does it take one unit to test one password? With the current version of
-the RNCryptor data format, this is dependent on the length of the ciphertext.
-But the v4 data format will remove this dependency, so the majority of the time
-is in the PBKDF2 iterations. 
+the RNCryptor data format, it's dependent on the length of the ciphertext. But
+the v4 data format will remove this overhead, so we'll assume almost all the
+time is in the PBKDF2 iterations.
 
 We could write a function to time this by hand, but Common Crypto provides 
 [`CCCalibratePBKDF()`](http://www.opensource.apple.com/source/CommonCrypto/CommonCrypto-60049/include/CommonKeyDerivation.h)
@@ -102,9 +102,10 @@ uint rounds = CCCalibratePBKDF(kCCPBKDF2,
 
 [^calibrate]: While `CCCalibratePBKDF` accepts a password length, the results are not very sensitive (if at all) to its value. The most important parameter is the delay.
 
-This returns between 9,000-10,000. To keep things simple, we'll say that one
-"unit" can calculate 10,000 PBKDF2 rounds (one RNCryptor password) in 10ms. Or
-alternatively, one unit can test approximately 100 passwords per second.
+This returns between 9,000-10,000 on my machine. To keep things simple, we'll
+say that one "unit" can calculate 10,000 PBKDF2 rounds (one RNCryptor password)
+in 10ms. Or alternatively, one unit can test approximately 100 passwords per
+second.
 
 ### How much attacker effort is "feasible?"
 
@@ -121,14 +122,14 @@ Eventually you have to decide on some number. For general purposes, I like to
 use 100,000 core-years (with my "Early 2011 MacBook Pro" being the equivalent of
 8 "cores"). If your secret has a fairly short shelf-life, you may be wiling to
 go as low as 1,000 core-years, or for very sensitive information that needs
-protection for decades, you may need to scale for 10 million core-years.
+protection for decades, you may want to scale to 10 million core-years.
 
 ### Putting it all together
 
 To recap our assumptions:
 
 * 95 character set for passwords (_S_)
-* 100 password tests per core-second, due to 10,000 PBKDF2 iterations (_rate_)
+* 100 password tests per core-second, based on 10,000 PBKDF2 iterations (_rate_)
 * 100,000 core-years of effort = 100,000 x (3 x 10^7) core-seconds (_effort_)
 
 Now it's just some fancy math[^fancy-math] to solve for _length_ (which must be
@@ -154,11 +155,11 @@ password in half this time?" You're completely correct. Since the correct
 password is as likely to be in the first half searched as the last half, the
 expected time is technically half as long. But it doesn't matter. Because
 password length grows logithmically, halving or doubling the effort has little
-impact. You'll still get about 8 characters.
+impact. You'll still get 8 characters.
 
 To get up to 10 million core-years (two more orders of magnitude), just pushes
 us up to 9 characters. That shouldn't be surprising, since there are almost 100
-characters in our set, every time we add another character to the password, we
+characters in our set, every time we add another character to the password we
 should expect to add two orders of magnitude to the difficulty.
 
 What if the password were still random, but only selected from lowercase letters
@@ -174,3 +175,11 @@ smaller character spaces increase the password length needs, but not by a lot.
 * This analysis only applies when the attacker is brute-forcing the password 
   space. Most attackers do not do it this way. They more often attack poorly
   chosen or reused passwords.
+
+* PBKDF2 is critical for slowing down brute-force attacks. PBKDF2 adds several
+  orders of magntiude to the attacker's effort.
+
+* When thinking about spaces, orders of magnitude are more important than actual
+  values. If you're not adding an extra zero, you're not making much impact. Try
+  to have at least a couple of orders of magnitude safety margin against the
+  resources you think the attacker will ever have over your time horizon.
