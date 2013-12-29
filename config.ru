@@ -58,6 +58,7 @@ use Rack::Rewrite do
   r301 '/blog/updated-rncryptor-784', '/updated-rncryptor/'
   r301 '/blog/rncryptor-titanium-794', '/rncryptor-titanium/'
   r301 '/blog/triangle-cocoaheads-march-745', '/triangle-cocoaheads-march/'
+  r301 '/blog/cocoaconf2012', '/cocoaconf'
 
   r301 '/blog/wp-content/uploads/2012/03/Building-a-Core-Foundation.pdf', '/assets/Building-a-Core-Foundation.pdf'  
 end
