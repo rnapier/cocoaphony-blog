@@ -2,7 +2,7 @@
 
 reset
 set term svg enhanced dynamic fname "PT Serif" lw 2
-set output "plot.svg"
+set output "length-vs-size.svg"
 
 set yrange [1:1e50]
 set logscale y
@@ -15,5 +15,5 @@ set x2label "Password length (linear)"
 set xlabel "Set size (log)"
 set ylabel "Number of passwords (log)"
 plot  \
-      26**x axes x2y1 title "Small set (26), varrying length", \
-      x**6 axes x1y1 title "Short password (6), varrying set size"
+      26**x axes x2y1 title "Small set (26), varying length", \
+      x**6 axes x1y1 title "Short password (6), varying set size"
