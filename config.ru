@@ -10,6 +10,9 @@ use Rack::Rewrite do
   r301 '/blog', '/'
   r301 '/blog/', '/'
 
+  r301 '/blog/brute-forcing-passwords/', '/brute-forcing-passwords/'
+
+
 # Rewrite known incoming Wordpress links
   r301 '/blog/about-2', '/'
   r301 '/blog/aes-commoncrypto-564', '/aes-commoncrypto/'
