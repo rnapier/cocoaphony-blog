@@ -8,6 +8,7 @@ $root = ::File.dirname(__FILE__)
 use Rack::Rewrite do
   r301 '/blog/feed', '/atom.xml'
   r301 '/blog', '/'
+  r301 '/blog/', '/'
 
 # Rewrite known incoming Wordpress links
   r301 '/blog/about-2', '/'
