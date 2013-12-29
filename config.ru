@@ -10,7 +10,7 @@ use Rack::Rewrite do
   r301 '/blog', '/'
 
 # Rewrite known incoming Wordpress links
-  r301 '/blog/brute-forcing-passwords/', '/brute-forcing-passwords'
+  r301 '/blog/about-2', '/'
   r301 '/blog/aes-commoncrypto-564', '/aes-commoncrypto/'
   r301 '/blog/offline-uiwebview-nsurlprotocol-588', '/offline-uiwebview-nsurlprotocol/'
   r301 '/blog/build-system-1-build-panel-360', '/build-system-1-build-panel/'
@@ -47,7 +47,6 @@ use Rack::Rewrite do
   r301 '/blog/rncryptor-async-772', '/rncryptor-async/'
   r301 '/blog/ios5-ptl-kindle-585', '/ios5-ptl-kindle/'
   r301 '/blog/pbkdf2-sha1-799', '/pbkdf2-sha1/'
-  r301 '/blog/about-2', '/about/'
   r301 '/blog/memory-managing-iboutlets-17', '/memory-managing-iboutlets/'
   r301 '/blog/rncryptor-vulnerability-fix-832', '/rncryptor-vulnerability-fix/'
   r301 '/blog/github-pricing-754', '/github-pricing/'
