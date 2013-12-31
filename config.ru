@@ -60,6 +60,7 @@ use Rack::Rewrite do
   r301 %r{/blog/triangle-cocoaheads-march-745/?}, '/triangle-cocoaheads-march/'
   r301 %r{/blog/cocoaconf2012/?}, '/cocoaconf/'
   r301 %r{/blog/forum-rncryptor-840/?}, '/forum-rncryptor'
+  r301 %r{/blog/app-delegate-343}, '/app-delegate'
 
   r301 %r{/blog/wp-content/uploads/2012/03/Building-a-Core-Foundation.pdf/?}, '/assets/Building-a-Core-Foundation.pdf'  
 end
