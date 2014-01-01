@@ -3,8 +3,10 @@ layout: post
 title: "Pinning your SSL Certs"
 date: 2014-01-01 15:10:08 -0500
 comments: true
-categories: 
+categories: security
 ---
+*Short version: If you want to pin your SSL certs easily, go get [RNPinnedCertValidator](https://github.com/rnapier/RNPinnedCertValidator).*
+
 If your app uses SSL to communicate with your server (and it should), you generally don't need to trust [every certificate that Apple trusts](http://support.apple.com/kb/HT5012). You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there's certainly no reason to trust the over 200 certificates in iOS 7's root store.
 
 The practice of trusting only your own certificate is called "pinning," and I've discussed it several times at conferences. I then say something like, "It's easy. [You just do this](https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m):"
