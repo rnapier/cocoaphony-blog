@@ -6,15 +6,16 @@ require 'rack/rewrite'
 $root = ::File.dirname(__FILE__)
 
 use Rack::Rewrite do
+  r302 '/feed', '/atom.xml'
+  r302 '/feed/', '/atom.xml'
+
   r301 '/blog', '/'
   r301 '/blog/', '/'
-  r301 '/blog/feed', 'http://feeds.feedburner.com/Cocoaphony'
-  r301 '/blog/?feed=rss2', 'http://feeds.feedburner.com/Cocoaphony'
 
   r301 '/blog/brute-forcing-passwords/', '/brute-forcing-passwords/'
 
-
 # Rewrite known incoming Wordpress links
+  r301 '/blog/feed', '/feed'
   r301 %r{/blog/about-2/?}, '/'
   r301 %r{/blog/aes-commoncrypto-564/?}, '/aes-commoncrypto/'
   r301 %r{/blog/offline-uiwebview-nsurlprotocol-588/?}, '/offline-uiwebview-nsurlprotocol/'
