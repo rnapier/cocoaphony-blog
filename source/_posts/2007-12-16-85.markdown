@@ -1,0 +1,19 @@
+---
+layout: post
+status: publish
+published: true
+author: Rob Napier
+author_login: rnapier
+author_email: robnapier@gmail.com
+author_url: http://robnapier.net
+wordpress_id: 85
+wordpress_url: http://robnapier.net/blog/?p=85
+date: 2007-12-16 10:56:31.000000000 -05:00
+categories:
+- PandoraBoy
+tags:
+- PandoraBoy
+---
+PB 0.5 is in my final testing. Just going to let it run a few hours before I post it on Monday. Adds station changing (finally) from menu, applescript or hotkeys. It's actually a much larger change than it looks. There was a lot of under-the-covers restructuring while I got that working.
+
+Next plans: either investigate how to masquerade as iTunes (so that stuff that works with iTunes will transparently work with PandoraBoy), or work on some eye-candy features (full-screen mode, floating semi-transparent windows, etc.)

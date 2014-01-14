@@ -1,0 +1,251 @@
+---
+layout: post
+status: publish
+published: true
+title: iPhone Course Syllabus
+author: Rob Napier
+author_login: rnapier
+author_email: robnapier@gmail.com
+author_url: http://robnapier.net
+excerpt: "Now and then I teach Mac and iPhone courses, and several people have asked
+  me to detail my syllabus, and provide some other pointers on how to get started.
+  I've taught this course in various forms, running from 3 to 10 days long. A week
+  and a half is good; it gives you a weekend to absorb a little bit.\r\n\r\nI tend
+  to teach Mac and iPhone together, though I been focusing on iPhone because that's
+  what we've needed most. I still favor Aaron Hillegass's <a href=\"http://www.amazon.com/gp/product/0321503619?ie=UTF8&amp;tag=cocoaphony-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321503619\">Cocoa
+  Programming for Mac OS X</a><img style=\"border:none !important; margin:0px !important;\"
+  src=\"http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&amp;l=as2&amp;o=1&amp;a=0321503619\"
+  border=\"0\" alt=\"\" width=\"1\" height=\"1\" /> as a textbook. I'm open to suggestions
+  for excellent iPhone-specific books for beginners, but when I was developing this
+  course last August, I didn't find a lot on the market I was impressed with. Even
+  the Big Nerd Ranch iPhone class I found disappointing, which is one of the reasons
+  I had to write my own class for our new developers. The Big Nerd Ranch's Cocoa Bootcamp
+  still cannot be beat if you're looking to learn Mac development and have several
+  grand handy.\r\n\r\nSo without further ado, the syllabus and resources. I can't
+  promise that reading through this will be as effective as watching me pace around
+  for a week telling you about it, but it perhaps it will give a nice kick-start."
+wordpress_id: 158
+wordpress_url: http://robnapier.net/blog/?p=158
+date: 2009-04-23 22:20:14.000000000 -04:00
+categories:
+- iphone
+tags:
+- cocoa
+- Learning Cocoa
+- cocoa touch
+---
+Now and then I teach Mac and iPhone courses, and several people have asked me to detail my syllabus, and provide some other pointers on how to get started. I've taught this course in various forms, running from 3 to 10 days long. A week and a half is good; it gives you a weekend to absorb a little bit.
+
+I tend to teach Mac and iPhone together, though I been focusing on iPhone because that's what we've needed most. I still favor Aaron Hillegass's <a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&amp;tag=cocoaphony-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img style="border:none !important; margin:0px !important;" src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&amp;l=as2&amp;o=1&amp;a=0321503619" border="0" alt="" width="1" height="1" /> as a textbook. I'm open to suggestions for excellent iPhone-specific books for beginners, but when I was developing this course last August, I didn't find a lot on the market I was impressed with. Even the Big Nerd Ranch iPhone class I found disappointing, which is one of the reasons I had to write my own class for our new developers. The Big Nerd Ranch's Cocoa Bootcamp still cannot be beat if you're looking to learn Mac development and have several grand handy.
+
+So without further ado, the syllabus and resources. I can't promise that reading through this will be as effective as watching me pace around for a week telling you about it, but it perhaps it will give a nice kick-start.<!-- more -->
+
+"CP#-#" are page references in <em>Cocoa Programming</em>. Generally speaking, students should work all Challenges.
+<h3>Mac Section</h3>
+<ul>
+	<li>Cocoa: What is it (CP1-8<em>)</em></li>
+	<li>Let's get started (CP9-32)</li>
+	<li>Objective-C (CP33-63)</li>
+	<li>Memory Management (CP68-77)
+<ul>
+	<li>Skip garbage collection. It doesn't exist on iPhone.</li>
+	<li>Sit and stare at the center of Page 73: "Rules Concerning Release." This should have been in a big bold black box.</li>
+	<li>Read these two pages from Apple:
+<ul>
+	<li><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmPractical.html" target="_blank">Practical Memory Management</a></li>
+	<li><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html" target="_blank">Memory Management Rules</a></li>
+</ul>
+</li>
+	<li>Write the three magic words (alloc, copy, new) on a piece of paper, frame it, and hang over your computer monitor.</li>
+	<li>For accessors, I recommend the first idiom, listed on page 75. The differences between them are subtle and deserve their own article. But I teach retain, then release.</li>
+	<li>Always use accessors.
+<ul>
+	<li>No, really. Always.</li>
+	<li>All ivars should begin with underscore, or some other prefix (I actually use "my" but I teach underscore because it's more common).</li>
+	<li>ivars may only be accessed through accessors or in <code>-dealloc</code>. Underscores found outside accessors will be treated harshly. Do not use accessors in <code>-dealloc.</code></li>
+	<li>"Sometimes it might seem tedious or pedantic, but if you use accessor methods consistently the chances of having problems with memory management decrease considerably. If you are using <code>retain</code> and <code>release</code> on instance variables throughout your code, you are almost certainly doing the wrong thing."</li>
+</ul>
+</li>
+</ul>
+</li>
+	<li>Collections (not in CP)
+<ul>
+	<li>NSArray - Most people understand this one pretty quickly. I go ahead and explain Collection memory management here.</li>
+	<li>NSDictionary - You need this one all the time</li>
+	<li>Mutable subclasses of these - Explain the "mutable" pattern to objects, and caution against getting over-eager to make mutable subclasses of your own. Generally you don't need them.</li>
+	<li>NSSet/NSCountedSet - Wax poetic about proper use of NSSet because it's terribly underused.</li>
+	<li>NSEnumerator and Fast Enumeration</li>
+</ul>
+</li>
+	<li>Target/Action (CP79-93)
+<ul>
+	<li>Read the Debugging Hints (CP92).</li>
+	<li>I take this opportunity to stress the first bullet in Debugging Hints
+<ul>
+	<li>When "nothing happens" and there's a NIB involved, it almost always means you forgot to wire something in IB. The #1 reason for "nothing happens" is that some object is nil. And the #1 reason during initial development for an object to be nil when you don't expect it is that you forgot to wire it in in IB.</li>
+</ul>
+</li>
+</ul>
+</li>
+	<li>Key Value Coding (CP111-113)
+<ul>
+	<li>KVC is a core piece of Cocoa. Students need to understand it deeply.</li>
+	<li>Bindings are handy in certain situations, but they're not available on iPhone, so I don't get into them unless it's a long class.</li>
+	<li>Key Value Observing tends to be very confusing to students. I don't recommend KVO except in some very specific cases, none of which are applicable to iPhone.</li>
+</ul>
+</li>
+	<li>Properties (Not in CP)
+<ul>
+	<li>Now that the students understand KVC, we discuss how to properly create properties. I used to teach dot notation, but I've stopped because I find it confuses the students too much. I just show them that it exists so they can read Apple's code.</li>
+</ul>
+</li>
+	<li>User Defaults (CP200-208)
+<ul>
+	<li>I cover NSDictionary in my section on Collections rather than here.</li>
+	<li>This is when I discuss global string constant naming conventions.</li>
+	<li>This is when I discuss the correct way to use "const". (CP202 does it correctly)</li>
+</ul>
+</li>
+	<li>Using Notifications (CP209-215)
+<ul>
+	<li>Notifications are a key concept, and I spend a lot of time here.</li>
+	<li>We've now seen the three major ways that objects alert other objects of changes: Delegation, KVO and Notification. When do you use each?
+<ul>
+	<li>Delegation: One object (the delegate) is the clear controller of the other one. It tells the target object what to do. At least some of the delegate methods should have return values. If all of the delegate methods are of the "will" or "did" variety, then...</li>
+	<li>Notification: In my experience this is the most common and most useful way to loosely couple objects. Unless it's clearly a delegate situation, use Notifications.</li>
+	<li>KVO: Very rarely is this a good idea, especially for beginning programmers. It's ok as part of simple bindings for the UI, and it's a key part of Core Data. But it's difficult to do it correctly, and it's hard to debug. And when thing go wrong, you crash.</li>
+</ul>
+</li>
+	<li>If you ever observe a notification in your object, anywhere, you should call <code>-removeObserver:</code> in <code>-dealloc</code>. There is very little penalty to calling this when it isn't needed, and large penalties for failing to call it (you can crash).</li>
+	<li>Good naming: PREFIXObjectDidVerbNotification. Apple often uses  PREFIXObjectVerbedNotification, but I find DidVerb to be more parallel with WillVerb, ShouldVerb, and DidFailVerb so I avoid the past participle. The Object in the name should generally be the same as the object: parameter.</li>
+	<li>The value of a notification string constant should be the same as the name of the string constant.</li>
+</ul>
+</li>
+	<li>Localization (CP223-231)
+<ul>
+	<li>CP is very light on this topic. Apple's docs are pretty light on this topic. I continue the tradition, and am pretty light on this topic. But I admit it.</li>
+	<li>This is really just a bare scratching at the surface of Localization. My main hope is that the students know that (a) Localization is a problem that needs to be considered early, and (b) using NSLocalizedString() is necessary but not sufficient.</li>
+	<li>This is also my time to give horror stories about over-complicated NIBs and strongly encourage the students to keep their NIBs simple.</li>
+</ul>
+</li>
+	<li>Categories (CP295-498)
+<ul>
+	<li>CP names the category header FirstLetter.h. I teach NSString+FirstLetter.h.</li>
+	<li>I acknowlege that you really should use a prefix with underscore. I also note that I never do this. I discuss the tradeoffs and in what code you must versus what code you can get away without.</li>
+	<li>I try to make it really clear that Categories are not some obscure feature of ObjC. This is a core feature that well-written Cocoa programs will use often.</li>
+	<li>CP297 glosses over the difference between a <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/ObjectiveC/Articles/ocCategories.html#//apple_ref/doc/uid/TP30001163-CH20-SW2" target="_blank">Category and an Extension</a>. I make this clearer.</li>
+</ul>
+</li>
+	<li>Protocols (Not in CP)
+<ul>
+	<li>I use CP297-298 to bridge into @protocol, which isn't sufficiently covered in CP (one brief mention at CP167). Since ObjC2 made protocols useful, they have become very important to iPhone, and are a good addition to many Cocoa programs.</li>
+</ul>
+</li>
+	<li>NSTimer/NSRunLoop (CP309-316)
+<ul>
+	<li>Timers are useful, but I focus on NSRunLoop in this chapter, using NSTimer as an example, and then discussing performSelector:.</li>
+</ul>
+</li>
+</ul>
+Deep breath. Get a coffee. At this point in the class I feel like Mr. Miyagi. "We came here to learn iPhone, and all you had us do was paint the fence all day."
+<h3>iPhone Section</h3>
+Pull out your iPhones students. Since I haven't found a really great text book for iPhone, I teach this section in a very hands-on demonstration style. We all pull up XCode, and I project my screen on the wall, and we all program together. Now that the class has the basics of ObjC under their belts, they get to see how real Cocoa developers work.
+<ul>
+	<li>Porting Code
+<ul>
+	<li>My first demonstration is to go back to RandomApp, that first program you wrote in Chapter 2 of CP. I port the app over to iPhone, showing how similar it is, and where the differences are.</li>
+	<li>So now we have an awesome app. It picks random numbers for us right there on our iPhone. Finally we can pick our lottery numbers while we're standing in line rather than having to do it at home on the Mac.</li>
+</ul>
+</li>
+	<li>View Controllers
+<ul>
+	<li>We refactor Random from a simple Window-based app to a View Controller. This gives a good chance to talk about refactoring, which is an important topic for any developer.</li>
+</ul>
+</li>
+	<li><a href="http://developer.apple.com/iphone/library/featuredarticles/ViewControllerPGforiPhoneOS/UsingToolbarControllers/UsingToolbarControllers.html#//apple_ref/doc/uid/TP40007457-CH6-SW1" target="_blank">Tab Bar Controllers</a> and <a href="http://developer.apple.com/iphone/library/documentation/UserExperience/Conceptual/TableView_iPhone/Introduction/Introduction.html" target="_blank">Table Views</a>
+<ul>
+	<li>We should keep track of old picks. So we make a new TabView app. Through all of this process, I strongly encourage the students to follow my lead, but make the UI their own.</li>
+	<li>I have students start with a Window-based app and build up from there. They learn more, and when I've tried to use the pre-loaded templates, I always find that it's harder to tear them apart than just start over.</li>
+	<li>Tab 1 now holds the old Random. Tab 2 is a list of numbers that have been picked before.</li>
+	<li>In the process we create an Entry object and an EntryManager to keep track of all of them. Through this we learn the MVC pattern. Entry keeps track of the pick and what time it was picked.</li>
+	<li>Once we have our Entries, we build a HistoryTableView to show them on Tab 2. HistoryTableView just shows the numbers in a list. Most TableView code is modeled on <a href="http://developer.apple.com/iphone/library/samplecode/TableViewSuite/index.html#//apple_ref/doc/uid/DTS40007318" target="_blank">TableViewSuite</a>. This is SimpleTableView.</li>
+</ul>
+</li>
+	<li><a href="http://developer.apple.com/iphone/library/featuredarticles/ViewControllerPGforiPhoneOS/UsingNavigationControllers/UsingNavigationControllers.html#//apple_ref/doc/uid/TP40007457-CH7-SW1" target="_blank">Navigation Controllers</a>
+<ul>
+	<li>We're tracking when we picked these numbers, so we'd like to see that. So we expand Tab 2 into a drill down with a NavigationController, modeled on <a href="http://developer.apple.com/iphone/library/samplecode/SimpleDrillDown/index.html#//apple_ref/doc/uid/DTS40007416" target="_blank">SimpleDrillDown</a>. We show the number and the date it was picked.</li>
+	<li>We want to keep track of whether this was a winner. So we add a UISwitch to the bottom of the detail screen to mark it as a winner (adding the necessary property to Entry).</li>
+</ul>
+</li>
+	<li>Custom Table Cells
+<ul>
+	<li>Now we can drill into each entry and see if it's a winner, but that's pretty clunky. We want to show a green ball for the winners and a red ball for the losers. We implement this using TableViewSuite's TableViewCellSubviews.</li>
+	<li>Then we add several more cell elements, and show how TableViewCellSubviews gets a bit jittery. We reimplement it using TVS CustomTableViewCell.</li>
+	<li>We take this opportunity to learn about fonts and some simple programatic text layout.</li>
+</ul>
+</li>
+	<li>Simple View Animations
+<ul>
+	<li>We want a view that shows that last entry and whether it was a winner, so we add a third tab and RecentViewController that shows it in large text in the middle of the screen. It fetches the most recent entry by calling <code>[[EntryManager sharedManager] mostRecentEntry]</code>.</li>
+	<li>Then we animate the text from off-screen to the center using <a href="http://developer.apple.com/iphone/library/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/WindowsandViews/WindowsandViews.html#//apple_ref/doc/uid/TP40007072-CH8-SW11" target="_blank">view animations</a> when the view appears.</li>
+	<li>We add a second view that shows the last winning number, and use <code>+setAnimationTransition:forView:cache:</code> to "flip" between the views when you press an on-screen button.</li>
+</ul>
+</li>
+	<li>Location Manager
+<ul>
+	<li>We need to know where we were when we picked that lucky number. First we create a new project that just dumps the output from Location Manager into a UITextView, which is a good lesson in this very useful debugging technique.</li>
+	<li>We then add Location Manager into Random.</li>
+</ul>
+</li>
+	<li>Accelerometer
+<ul>
+	<li>We'd like to be able to shake the iPhone to generate a new random entry. First we create a new project with three UILabels that get updated with the current state of the accelerometer. We discuss the difference between {0,0,-1} and {0,0,0}, and which of them might require them to buy a new iPhone.</li>
+	<li>We expand the test app to print "Shake" when it thinks its being shaken. Then we're ready to go back to Random.</li>
+	<li>In Random, we have the AppDelegate create a new Entry whenever the iPhone is shaken.</li>
+</ul>
+</li>
+	<li>Notifications
+<ul>
+	<li>When a new Entry is created, we have EntryManager post a notification. RecentViewController observes this notification and updates the view with the new entry when one is picked. Shaking lets us do this while RecentViewController is onscreen.</li>
+</ul>
+</li>
+	<li>didReceiveMemoryWarning
+<ul>
+	<li>Implement didReceiveMemoryWarning for all our view controllers. I try to cover the subtleties of UIViewController's behavior of dropping its view. Some of this requires a little experience to understand fully, so I mostly demonstrate Apple's <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmNibObjects.html#//apple_ref/doc/uid/TP40004998-SW4" target="_blank">new pattern</a>.</li>
+</ul>
+</li>
+	<li>Custom Views
+<ul>
+	<li>Finally it's time to let go of Random. We make a simple app that draws a simple image on the screen at a given location using <code>-drawRect:</code>. Boring, yes, but it gets better.</li>
+</ul>
+</li>
+	<li>Touch and MultiTouch (and some CoreAnimation)
+<ul>
+	<li>Now we use UITouch to discover where the person has tapped. The first app just re-draws the image at that point.</li>
+	<li>We move the image onto a CALayer, and use Core Animation to slide to where we're touching.</li>
+	<li>Now we make it follow our finger as our finger moves.</li>
+	<li>We look into more complex touches such as double-tap to create a second object on the screen.</li>
+	<li>We add swipe, causing all the objects to fly off the screen in the direction of the swipe.</li>
+	<li>And finally we add multi-touch. When there are two touches, we draw a circle through them, and when we let go, all the images "explode" off the screen.</li>
+	<li>As we go through this, I encourage the students to implement their own features. Use the accelerometer to provide "gravity" for instance. Or make more interesting objects that can be rotated with multi-touch.</li>
+</ul>
+</li>
+	<li>WebKit
+<ul>
+	<li>We start a new project and implement a full web browser in 5 minutes. One UITextField, one UIWebView. A little wiring. Done.</li>
+</ul>
+</li>
+	<li>REST services and XML (CP345-346 sort of)
+<ul>
+	<li>Well that was fun, but what about a networked app that's a little more useful?</li>
+	<li>I don't really like CP's AmaZone example. It does a synchronous request on the UI thread. You should never do that. It also uses NSXMLDocument, which is fine, but not available on iPhone. So I've rewritten it to use <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/URLLoadingSystem/Tasks/UsingNSURLConnection.html" target="_blank">NSURLConnection</a> and <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/XMLParsing/XMLParsing.html" target="_blank">NSXMLParser</a>.</li>
+</ul>
+</li>
+	<li>Foundation and Core Foundation
+<ul>
+	<li>If we still have time at this point, I rewrite Random as a Foundation (command-line) tool that just calculates ten random numbers and outputs them.</li>
+	<li>I then rewrite it in Core Foundation to demonstrate toll-free bridging and the general patterns for CF. In particular, we learn CF's <a href="http://developer.apple.com/documentation/CoreFOundation/Conceptual/CFMemoryMgmt/Concepts/Ownership.html#//apple_ref/doc/uid/20001148-103029" target="_blank">two magic words</a>: Create and Copy.</li>
+</ul>
+</li>
+</ul>
+At the end, if there's any time at all, we look at things like view rotation, CALayer, Core Animation, Instruments, or whatever the students are interested in. But at this point, they generally have the tools in hand to know how to ask more questions, find their way around the documentation, and really get themselves into trouble. The real fun can now begin.

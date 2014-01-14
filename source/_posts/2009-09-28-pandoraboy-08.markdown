@@ -1,0 +1,26 @@
+---
+layout: post
+status: publish
+published: true
+title: PandoraBoy 0.8
+author: Rob Napier
+author_login: rnapier
+author_email: robnapier@gmail.com
+author_url: http://robnapier.net
+excerpt: I've put out <a href="http://code.google.com/p/pandoraboy/">PB 0.8</a>. It
+  has a small number of preference and hotkey fixes, upgrades to the latest ShortcutRecorder
+  (which took a lot more work than I hoped, and I still think may be a little flakey),
+  dropped 10.4 support (because of the latest ShortcutRecorder), and adds experimental
+  <a href="http://rowmote.com/Rowmote/Rowmote.html">Rowmote</a> suppor
+wordpress_id: 448
+wordpress_url: http://robnapier.net/blog/?p=448
+date: 2009-09-28 22:26:34.000000000 -04:00
+categories:
+- PandoraBoy
+tags: []
+---
+I've put out <a href="http://code.google.com/p/pandoraboy/">PB 0.8</a>. It has a small number of preference and hotkey fixes, upgrades to the latest ShortcutRecorder (which took a lot more work than I hoped, and I still think may be a little flakey), dropped 10.4 support (because of the latest ShortcutRecorder), and adds experimental <a href="http://rowmote.com/Rowmote/Rowmote.html">Rowmote</a> support. (I may accidentally list "rowmote" as "rowmate" in the changelog; sorry about that.) I say "experimental" because I haven't gotten around to testing it myself. The author of Rowmote kindly provided me a patch, and I've applied it and nothing seems to have blown up.
+
+I'm planning at least another day of PB work this week, so vote on the Issues list for things you most care about and I'll hit those first. Testing 10.6 support is obviously top of the charts. My main production box is still 10.5, and that's where I run PB, so I haven't actually run into the problem yet. But I have 10.6 boxes around to test with.
+
+I know there are a lot of significant bumps with PB these days. I focus almost all of my development time on my full time Mac and iPhone projects, and only look at PB now and then (since it does everything I really want it to). But later this week I'll make some more time to take care of the bigger issues that impact folks the most. Pandora is still my favorite music service, and I spend a lot of time listening to it. I like to help others enjoy it as much as I do.
