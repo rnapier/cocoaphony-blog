@@ -1,0 +1,550 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="In the last post, we discussed how to wrap simple C++ objects in Objective-C. But how about more complex objects, particularly with shared_ptr?">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/page/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/wrapping-c-take-2-2/">Wrapping C++ - Take 2, Part 2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-10T01:48:41-04:00" pubdate data-updated="true">Jun 10<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the <a href="/wrapping-c-take-2-1">last post</a>, we discussed how to wrap simple C++ objects in Objective-C. But how about more complex objects, particularly with <code>shared_ptr</code>?</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/wrapping-c-take-2-2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/wrapping-c-take-2-1/">Wrapping C++ - Take 2, Part 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-09T02:39:04-04:00" pubdate data-updated="true">Jun 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Last year, I presented <a href="/wrapping-c-objc">an approach to wrapping C++</a>. Since then, I&rsquo;ve been introduced to other approaches, particularly from gf who helped me better understand opaque objects. Since I do a lot of cross-language work, I&rsquo;ve had some opportunity to play with and expand this, and so I&rsquo;d like to update my C++ wrapping approach.</p>
+
+<p>First, to remind everyone of the problem: you have a C++ object that you want to consume in Objective-C. That&rsquo;s easy in ObjC++, but if you make an ivar that references a C++ class, then the header file can only be included by ObjC++ classes. This quickly spreads .mm files throughout your project, creating all kinds of headaches. ObjC is a beautiful thing, and C++ is fine, but ObjC++ is a crazy land that should be carefully segregated from civilized code. So how do we do it?</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/wrapping-c-take-2-1/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/chinese-study/">Chinese Study</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-28T11:00:57-04:00" pubdate data-updated="true">Apr 28<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the years I&rsquo;ve travelled to China several times, and now I&rsquo;m working with large group of developers in Suzhou, Hangzhou and Hefei. A few weeks ago I was able to visit again, and that&rsquo;s gotten me back in the mood to study Chinese. It often helps me to write down things as I learn them, and some of my Chinese coworkers read this blog and might help set me straight as I wander through their language like a bull in a China shop (as it were&hellip;.) It&rsquo;s a bit off the trail for Cocoa development, so feel free to use the Subscribe2 link on the right to take this category off of your email subscription.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/chinese-study/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/nslog-aint-printf-wformat/">NSLog Ain&#8217;t Printf in -Wformat</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-13T11:45:15-04:00" pubdate data-updated="true">Apr 13<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So say you had this code:</p>
+
+<pre><code>printf("%s", 1);
+NSLog(@"%s", 1);
+</code></pre>
+
+<p>And you compiled with <code>-Wformat</code>. You might expect both of these lines to kick out a warning:</p>
+
+<pre><code>Format '%s' expects type 'char *', but argument 2 has type 'int'
+</code></pre>
+
+<p>You&rsquo;d be particularly misled when you went and looked at the definition of <code>NSLog()</code>:</p>
+
+<pre><code>FOUNDATION_EXPORT void NSLog(NSString *format, ...) __attribute__((format(__NSString__, 1, 2)));
+</code></pre>
+
+<p>Why look there, doesn&rsquo;t that look like it should provide format type checking? Oh how foolish. Neither gcc nor clang can actually handle that <code>__NSString__</code> specifier in a robust way. So the first line above will give a useful warning, but the second one will silently compile and later crash. Exciting, I know. You have been warned.</p>
+
+<p> <code>-Wformat-nonliteral</code> and <code>-Wformat-security</code> do catch dangerous calls like <code>NSLog(foo)</code>, so <code>__NSString__</code> isn&rsquo;t a complete loss, but it&rsquo;s a shame we can&rsquo;t get type checking here.</p>
+
+<p>There&rsquo;s a good discussion of this at <a href="http://stackoverflow.com/questions/1229212/nslog-improper-format-specifier-affects-other-variables]">NSLog(…) improper format specifier affects other variables?</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/iphone-career/">iPhone as a Career</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-11T17:22:52-04:00" pubdate data-updated="true">Apr 11<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Prashant P. wrote me recently asking some questions that I thought I&rsquo;d answer here. First, can iPhone development be full time job, and second, will it help him get into a &ldquo;mainstream job&rdquo; in Java, .NET, etc. As he notes, most of the iPhone development he&rsquo;s seen has been a part-time rather than full-time job; a side-line rather than a career.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/iphone-career/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/learning-cocoa-2/">Learning Cocoa With Other Backgrounds</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-28T14:05:18-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em><a href="http://stackoverflow.com/questions/1043820/what-programming-skills-i-need-to-become-an-iphone-developer/1044525#1044525">From a StackOverflow posting</a>.</em></p>
+
+<p>When I teach Cocoa, I always ask the class what their background is in. This generally tells me what they need to unlearn before they&rsquo;re ready for Cocoa. Here are some of the things I&rsquo;ve found that different groups need to unlearn.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/learning-cocoa-2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/how-become-security-domain-expert/">How to Become a Security Domain Expert?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-08T14:38:45-05:00" pubdate data-updated="true">Jan 8<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>From a posting on <a href="http://stackoverflow.com/questions/1514102/how-to-become-a-security-domain-expert/1514199#1514199">StackOverflow</a>.</em></p>
+
+<p>There are many areas of security expertise, so it highly depends on what your want your career path to look like. At the bits-and-bytes end there is penetration testing and &ldquo;security research&rdquo; (which is often as much &ldquo;cataloging of programming bugs&rdquo; as actual research). At the more strategic end there is &ldquo;risk management&rdquo; which often spends much of its time in non-technical considerations like appropriate budgets, education and response.</p>
+
+<p>Blah, blah, blah, but how do you get started, right?</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/how-become-security-domain-expert/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/gotoandplay/">gotoAndPlay</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-08T10:45:43-05:00" pubdate data-updated="true">Jan 8<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Now that we&rsquo;re past the New Year, and I have a chance to reorganize my schedule, I&rsquo;m working up my next series of postings. While you&rsquo;re all patiently waiting, go read <a href="http://gotoandplay.freeblog.hu">gotoAndPlay</a>. I started out helping Geri on some <a href="http://stackoverflow.com/questions/2016394/set-opacity-of-a-cglayer-before-draw">layer</a> drawing <a href="http://stackoverflow.com/questions/2024376/drawing-a-cglayer-outside-the-method-drawrect-faster/2024421">questions</a> on StackOverflow, and have really gotten interested in his efforts to make his apps really beautiful.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/recent-pandora-update/">The Recent Pandora Update</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-12-25T17:24:06-05:00" pubdate data-updated="true">Dec 25<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>PandoraBoy&rsquo;s user interface is pretty screwed up since the recent Pandora update. I&rsquo;ve talked with Pandora and it&rsquo;s a known problem with WebKit. You&rsquo;ll see the same issues if you run Safari. Pandora is working on a fix, and when they deploy it, PandoraBoy should automatically work again.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-08/">PandoraBoy 0.8</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-28T22:26:34-04:00" pubdate data-updated="true">Sep 28<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve put out <a href="http://code.google.com/p/pandoraboy/">PB 0.8</a>. It has a small number of preference and hotkey fixes, upgrades to the latest ShortcutRecorder (which took a lot more work than I hoped, and I still think may be a little flakey), dropped 10.4 support (because of the latest ShortcutRecorder), and adds experimental <a href="http://rowmote.com/Rowmote/Rowmote.html">Rowmote</a> support. (I may accidentally list &ldquo;rowmote&rdquo; as &ldquo;rowmate&rdquo; in the changelog; sorry about that.) I say &ldquo;experimental&rdquo; because I haven&rsquo;t gotten around to testing it myself. The author of Rowmote kindly provided me a patch, and I&rsquo;ve applied it and nothing seems to have blown up.</p>
+
+<p>I&rsquo;m planning at least another day of PB work this week, so vote on the Issues list for things you most care about and I&rsquo;ll hit those first. Testing 10.6 support is obviously top of the charts. My main production box is still 10.5, and that&rsquo;s where I run PB, so I haven&rsquo;t actually run into the problem yet. But I have 10.6 boxes around to test with.</p>
+
+<p>I know there are a lot of significant bumps with PB these days. I focus almost all of my development time on my full time Mac and iPhone projects, and only look at PB now and then (since it does everything I really want it to). But later this week I&rsquo;ll make some more time to take care of the bigger issues that impact folks the most. Pandora is still my favorite music service, and I spend a lot of time listening to it. I like to help others enjoy it as much as I do.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/6/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/4/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I&#8217;ll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

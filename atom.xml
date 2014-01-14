@@ -1,0 +1,1013 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Cocoaphony]]></title>
+  <link href="http://robnapier.net/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Pinning Your SSL Certs]]></title>
+    <link href="http://robnapier.net/pinning-your-ssl-certs/"/>
+    <updated>2014-01-01T15:10:08-05:00</updated>
+    <id>http://robnapier.net/pinning-your-ssl-certs</id>
+    <content type="html"><![CDATA[<p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
+
+<p>If your app uses SSL to communicate with your server (and it should), you generally don&rsquo;t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there&rsquo;s certainly no reason to trust the over 200 certificates in iOS 7&rsquo;s root store.</p>
+
+<p>The practice of trusting only your own certificate is called &ldquo;pinning,&rdquo; and I&rsquo;ve discussed it several times at conferences. I then say something like, &ldquo;It&rsquo;s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:&rdquo;</p>
+
+<!-- more -->
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">...</span>
+</span><span class='line'>    <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">pathForResource:</span><span class="s">@&quot;www.google.com&quot;</span>
+</span><span class='line'>                                                     <span class="nl">ofType:</span><span class="s">@&quot;cer&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSData</span> <span class="o">*</span><span class="n">certData</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nl">dataWithContentsOfFile:</span><span class="n">path</span>
+</span><span class='line'>                                              <span class="nl">options:</span><span class="mi">0</span>
+</span><span class='line'>                                                <span class="nl">error:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">certData</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// Handle error reading</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">SecCertificateRef</span>
+</span><span class='line'>    <span class="n">certificate</span> <span class="o">=</span> <span class="n">SecCertificateCreateWithData</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="n">__bridge</span> <span class="n">CFDataRef</span><span class="p">)</span><span class="n">certData</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">certificate</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// Handle error parsing</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">anchors</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSArray</span> <span class="nl">arrayWithObject:</span><span class="n">CFBridgingRelease</span><span class="p">(</span><span class="n">certificate</span><span class="p">)];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">connection:</span><span class="p">(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="n">connection</span>
+</span><span class='line'><span class="nl">willSendRequestForAuthenticationChallenge:</span><span class="p">(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="n">challenge</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">SecTrustRef</span> <span class="n">trust</span> <span class="o">=</span> <span class="n">challenge</span><span class="p">.</span><span class="n">protectionSpace</span><span class="p">.</span><span class="n">serverTrust</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">SecTrustSetAnchorCertificates</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="p">(</span><span class="n">__bridge</span> <span class="n">CFArrayRef</span><span class="p">)</span><span class="n">self</span><span class="p">.</span><span class="n">anchors</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">SecTrustSetAnchorCertificatesOnly</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="n">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">SecTrustResultType</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">OSStatus</span> <span class="n">status</span> <span class="o">=</span> <span class="n">SecTrustEvaluate</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">errSecSuccess</span> <span class="o">&amp;&amp;</span>
+</span><span class='line'>      <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="n">kSecTrustResultProceed</span> <span class="o">||</span>
+</span><span class='line'>       <span class="n">result</span> <span class="o">==</span> <span class="n">kSecTrustResultUnspecified</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSURLCredential</span> <span class="o">*</span><span class="n">cred</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLCredential</span> <span class="nl">credentialForTrust:</span><span class="n">trust</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">challenge</span><span class="p">.</span><span class="n">sender</span> <span class="nl">useCredential:</span><span class="n">cred</span> <span class="nl">forAuthenticationChallenge:</span><span class="n">challenge</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">challenge</span><span class="p">.</span><span class="n">sender</span> <span class="nl">cancelAuthenticationChallenge:</span><span class="n">challenge</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I mean, really, what could be simpler. OK, maybe it could be simpler. Maybe if it were a little simpler, everyone would do it. So how about this?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">connection:</span><span class="p">(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="nv">connection</span>
+</span><span class='line'><span class="nf">willSendRequestForAuthenticationChallenge:</span><span class="p">(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="nv">challenge</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">pathForResource:</span><span class="s">@&quot;mycert&quot;</span>
+</span><span class='line'>                                                   <span class="nl">ofType:</span><span class="s">@&quot;cer&quot;</span><span class="p">];</span>
+</span><span class='line'>  <span class="n">RNPinnedCertValidator</span> <span class="o">*</span><span class="n">validator</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RNPinnedCertValidator</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithCertificatePath:</span><span class="n">path</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">validator</span> <span class="nl">validateChallenge:</span><span class="n">challenge</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Is that simple enough? Then go grab <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RNCryptor: Truncating Passwords]]></title>
+    <link href="http://robnapier.net/rncryptor-truncating-passwords/"/>
+    <updated>2013-12-30T21:30:11-05:00</updated>
+    <id>http://robnapier.net/rncryptor-truncating-passwords</id>
+    <content type="html"><![CDATA[<p><strong>Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to RNCryptor 2.2 when it comes out this week.</strong></p>
+
+<p>I hate it when I do stupid things. But then you all get to learn something, so luckily some good can come of my shame. Please learn something so this isn&rsquo;t all for naught.</p>
+
+<p><a href="https://github.com/rnapier/RNCryptor/issues/77">Issue #77</a> in RNCryptor is one of those classic bugs. Here it is, as gently pointed out to me by <a href="https://github.com/arthurwalasek">Arthur Walasek</a>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CCKeyDerivationPBKDF</span><span class="p">(</span><span class="n">keySettings</span><span class="p">.</span><span class="n">PBKDFAlgorithm</span><span class="p">,</span>      <span class="c1">// algorithm</span>
+</span><span class='line'>                   <span class="n">password</span><span class="p">.</span><span class="n">UTF8String</span><span class="p">,</span> <span class="c1">// password</span>
+</span><span class='line'>                   <span class="n">password</span><span class="p">.</span><span class="n">length</span><span class="p">,</span> <span class="c1">// passwordLength</span>
+</span><span class='line'>                   <span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I have had this bug since I first wrote this code for iOS 5 PTL, and it&rsquo;s horrible. The problem, if you haven&rsquo;t seen it yet, is that <code>-length</code> returns the number of characters in <code>password</code>, not the number of bytes. In many languages you can get away with that, but not in multi-byte languages like Chinese.</p>
+
+<!-- more -->
+
+
+<p>So what happens when someone uses the password &ldquo;中文密码&rdquo;? <code>password.UTF8String</code> returns 8 bytes, but <code>password.length</code> returns 4. So we truncate this password down to &ldquo;中文&rdquo; (2 characters, 4 bytes) and that&rsquo;s what we use. That means later, you can decrypt this with anything that&rsquo;s half-right. &ldquo;中文xx&rdquo; is good enough.</p>
+
+<p>The fix is simple. You can either use <code>-lengthOfBytesUsingEncoding:</code>, or you can create an <code>NSData</code> with <code>-dataUsingEncoding:</code>. I prefer the latter, and <a href="https://github.com/rnapier/RNCryptor/commit/2c3cae0e677c1aa4d841b655c82bcb0d4086bd60">that&rsquo;s how I&rsquo;ve fixed it</a>.</p>
+
+<p>The tricky bit is maintaining backward compatibility. It requires bumping the file version so we can tell which approach we used. But all of that is done and checked in.</p>
+
+<p>Right now, I&rsquo;m working with <a href="https://github.com/curtisdf">Curtis Farnham</a> to make sure that the PHP version is compatible with the latest changes. This bug convinced me to finally write some test vectors so we can keep all the language implementations consistent. Once I get that straightened out, I&rsquo;ll post a new version of RNCryptor (or by the end of the week either way).</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Brute Forcing Passwords]]></title>
+    <link href="http://robnapier.net/brute-forcing-passwords/"/>
+    <updated>2013-12-27T15:15:30-05:00</updated>
+    <id>http://robnapier.net/brute-forcing-passwords</id>
+    <content type="html"><![CDATA[<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+<p>I got an <a href="https://github.com/rnapier/RNCryptor/issues/92">interesting question</a>
+recently:</p>
+
+<blockquote><p>Assuming a password is not in a dictionary, what length is required to make a
+brute force attack infeasible?</p></blockquote>
+
+<p>That&rsquo;s a pretty good question, and we should be able to answer it fairly easily
+given a few assumptions.</p>
+
+<p>The short answer is, using <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> and
+some reasonable security assumptions, it would be very difficult to brute-force
+an 8 character password randomly taken from all the easily typable characters on
+an English keyboard. The rest of this article will discuss my assumptions, and
+how you would calculate good lengths for other assumptions.</p>
+
+<!-- more -->
+
+
+<p>To work this out, we really just need to know three things:</p>
+
+<ul>
+<li>How many passwords exist for a given length?</li>
+<li>How much effort (resources x time) does it take to test a password?</li>
+<li>How much attacker effort is &ldquo;feasible?&rdquo;</li>
+</ul>
+
+
+<h3>How many passwords exist for a given length?</h3>
+
+<p>The number of passwords for a given length depends on the number of different
+characters we allow in a password. On common English keyboards, you can easily
+type 26 lowercase, 26 uppercase, 10 numbers, about 32 symbols, and space. That&rsquo;s
+95 different characters.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<p>The number of passwords for a given set size (<em>S</em>) and a specific password
+length (<em>n</em>) is <em>S<sup>n</sup></em>.</p>
+
+<p>What&rsquo;s interesting about this function is how it reacts to changes in <em>S</em> and
+<em>n</em>. For example, let&rsquo;s consider a fixed password size (<em>n = 8</em>), with a
+variable set size from <em>S = 26</em> (lowercase English letters) to <em>S = 3000</em>
+(roughly the number of everyday Chinese characters). Would we rather a long
+lowercase English password or a short Chinese password?<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p><img src="http://robnapier.net/images/brute-forcing-passwords/length-vs-size.svg" alt="Length vs. Set Size" /></p>
+
+<p>In this graph, we start at the same point (6 characters chosen from a set of
+26). We then vary the length one character at a time (linearly) versus the set
+size by orders of magnitude (exponetially). Increasing the length of the
+password by two or three characters is better than increasing the number of
+available characters 10-fold. So, given a choice, you&rsquo;d rather have a long,
+random password than anything else. This is the principle of AES key sizes. Each
+bit is chosen from a set of just 2 &ldquo;letters,&rdquo; but 256 bits still provides a huge
+keyspace.</p>
+
+<h3>How much effort (resources x time) does it take to test a password?</h3>
+
+<p>By design, most of the time required to test a password in RNCryptor is spent
+converting the password into a key using
+<a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a>. PBKDF2 is is designed to be slow
+specifically to make brute forcing difficult. RNCryptor uses 10,000 iterations
+to convert the password into a key. How long that takes to calculate depends on
+your machine, so we need to define some unit that we will measure our attack in.
+Since I happen to have one in front of me, we&rsquo;re going to use &ldquo;one core of an
+Early 2011 MacBook Pro&rdquo; as the unit.</p>
+
+<p>There are a couple of things to keep in mind when choosing this unit. First, you
+need to think in terms of what hardware your attacker is going to use against
+you, not the hardware you used to encrypt. So think at least in terms of
+desktops and servers, not iPhones. Second, remember that the proper unit is a
+&ldquo;core,&rdquo; not a system. PBKDF2 can&rsquo;t be computed in parallel, but the attacker can
+easily spread many different PKBDF2 computations over as many cores as
+available. That said, it doesn&rsquo;t really matter what the unit is; we just need a
+way to describe attacker resources.</p>
+
+<p>How long does it take one unit to test one password? With the current version of
+the RNCryptor data format, it&rsquo;s dependent on the length of the ciphertext. But
+the v4 data format will remove this overhead, so we&rsquo;ll assume almost all the
+time is in the PBKDF2 iterations.</p>
+
+<p>We could write a function to time this by hand, but Common Crypto provides
+<a href="http://www.opensource.apple.com/source/CommonCrypto/CommonCrypto-60049/include/CommonKeyDerivation.h"><code>CCCalibratePBKDF()</code></a>
+to help us out. It will tell us how many rounds we need to achieve a certain
+delay.<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">uint</span> <span class="n">rounds</span> <span class="o">=</span> <span class="n">CCCalibratePBKDF</span><span class="p">(</span><span class="n">kCCPBKDF2</span><span class="p">,</span>
+</span><span class='line'>                               <span class="mi">8</span><span class="p">,</span>   <span class="c1">// Password length</span>
+</span><span class='line'>                               <span class="mi">8</span><span class="p">,</span>   <span class="c1">// Salt length</span>
+</span><span class='line'>                               <span class="n">kCCPRFHmacAlgSHA1</span><span class="p">,</span>
+</span><span class='line'>                               <span class="mi">32</span><span class="p">,</span>  <span class="c1">// Key length</span>
+</span><span class='line'>                               <span class="mi">10</span><span class="p">);</span> <span class="c1">// Miliseconds</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This returns between 9,000-10,000 on my machine. To keep things simple, we&rsquo;ll
+say that one &ldquo;unit&rdquo; can calculate 10,000 PBKDF2 rounds (one RNCryptor password)
+in 10ms. Or alternatively, one unit can test approximately 100 passwords per
+second.</p>
+
+<h3>How much attacker effort is &ldquo;feasible?&rdquo;</h3>
+
+<p>Maybe by &ldquo;feasible&rdquo; we mean &ldquo;in a few days on a laptop.&rdquo; Or maybe by &ldquo;feasible&rdquo;
+we mean &ldquo;within 100,000 core-years (10 years on 10,000 cores, or a month on one
+million cores).&rdquo; That isn&rsquo;t as shocking a scale as you might think. Some secrets
+really do need to stay secret for decades, and 10,000 cores is small for a
+botnet, several of which have several million active hosts with multiple cores
+at any give time. You also have to consider technological advances. If the
+secret you encrypt today is being attacked ten years from now, you have to scale
+against those machines, not today&rsquo;s machines.</p>
+
+<p>Eventually you have to decide on some number. For general purposes, I like to
+use 100,000 core-years (with my &ldquo;Early 2011 MacBook Pro&rdquo; being the equivalent of
+8 &ldquo;cores&rdquo;). If your secret has a fairly short shelf-life, you may be wiling to
+go as low as 1,000 core-years, or for very sensitive information that needs
+protection for decades, you may want to scale to 10 million core-years.</p>
+
+<h3>Putting it all together</h3>
+
+<p>To recap our assumptions:</p>
+
+<ul>
+<li>95 character set for passwords (<em>S</em>)</li>
+<li>100 password tests per core-second, based on 10,000 PBKDF2 iterations (<em>rate</em>)</li>
+<li>100,000 core-years of effort = 100,000 x (3 x 10<sup>7</sup>) core-seconds (<em>effort</em>)</li>
+</ul>
+
+
+<p>Now it&rsquo;s just some fancy math<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup> to solve for <em>length</em> (which must be
+integral):</p>
+
+<p>$$\newcommand{\unit}[1]{\mathrm{#1}}$$
+$$rate = \frac{S^{length}}{effort}$$</p>
+
+<p>$$S^{length} = rate \times effort$$</p>
+
+<p>$$length = \left\lceil\log _S (rate \times effort)\right\rceil$$</p>
+
+<p>$$length = \left\lceil\frac{\log(rate \times effort)}{\log(S)}\right\rceil$$</p>
+
+<p>$$length = \left\lceil\frac{\log(100 \times (100,000 \times 3 \times 10^{7}))}{\log(95)}\right\rceil$$</p>
+
+<p>$$length = 8$$</p>
+
+<p>The careful reader may be asking &ldquo;shouldn&rsquo;t the attacker expect to find the
+password in half this time?&rdquo; You&rsquo;re completely correct. Since the correct
+password is as likely to be in the first half searched as the last half, the
+expected time is technically half as long. But it doesn&rsquo;t matter. Because
+password length grows logithmically, halving or doubling the effort has little
+impact. You&rsquo;ll still get 8 characters.</p>
+
+<p>To get up to 10 million core-years (two more orders of magnitude), just pushes
+us up to 9 characters. That shouldn&rsquo;t be surprising, since there are almost 100
+characters in our set, every time we add another character to the password we
+should expect to add two orders of magnitude to the difficulty.</p>
+
+<p>What if the password were still random, but only selected from lowercase letters
+and numbers? Then we need 10 characters to get 100,000 core-years of effort. So
+smaller character spaces increase the password length needs, but not by a lot.</p>
+
+<h3>What are the take-aways?</h3>
+
+<ul>
+<li><p>Between 8 and 10 random characters is a quite good password. Even with a much
+smaller number of iterations of PBKDF2, 10 character random passwords hold up
+well.</p></li>
+<li><p>This analysis only applies when the attacker is brute-forcing the password
+space. Most attackers do not do it this way. They more often attack poorly
+chosen or reused passwords.</p></li>
+<li><p>PBKDF2 is critical for slowing down brute-force attacks. PBKDF2 adds several
+orders of magntiude to the attacker&rsquo;s effort.</p></li>
+<li><p>When thinking about spaces, orders of magnitude are more important than actual
+values. If you&rsquo;re not adding an extra zero, you&rsquo;re not making much impact. Try
+to have at least a couple of orders of magnitude safety margin against the
+resources you think the attacker will ever have over your time horizon.</p></li>
+</ul>
+
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>I&rsquo;m not including the tab key because it is very often not allowed in passwords, especially on the web.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>When discussing &ldquo;characters&rdquo; here, I mean actual characters. It doesn&rsquo;t matter how many bytes are used to represent them. So <em>XX</em> and <em>谢谢</em> are the same length for these purposes, no matter how they&rsquo;re encoded.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p>While <code>CCCalibratePBKDF</code> accepts a password length, the results are not very sensitive (if at all) to its value. The most important parameter is the delay.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+<li id="fn:4">
+<p>Not actually fancy math.<a href="#fnref:4" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[New Blog Site]]></title>
+    <link href="http://robnapier.net/new-blog-site/"/>
+    <updated>2013-12-24T14:56:29-05:00</updated>
+    <id>http://robnapier.net/new-blog-site</id>
+    <content type="html"><![CDATA[<p>After several years of WordPress, I finally decided to make a change. The main change was getting rid of comments. There were several useful comments over the years, but the vast majority of the comments that came in were spam. The spam filters got most of them, but over the last year, more and more have been getting through. They’ve become more subtle over the years, and so more of a headache to deal with on my side. The handful of useful comments weren’t worth it. Most of the time, people comment in order to ask me a question. They can still easily do that through email, and I can post any interesting threads as another blog post.</p>
+
+<!-- more -->
+
+
+<p>I also had grown dissatisfied with the readability of the blog. It was a bit busy, and code formatting wasn’t great. So now, like the cool kids, I’m trying out Octopress. I’ve always managed my blog in markdown, and WordPress fights that a little bit. Octopress is definitely a hacker’s blogging platform, which is nice for the hacker in me. I admit, it also is a bit awkward at times, and often feels more complicated than WordPress. And I absolutely worry that messing with my tools will get in the way of actually writing useful stuff. And so I need to be careful about that.</p>
+
+<p>Now that I’ve gotten some other projects out of the way, I’m hoping to get back to blogging a bit in 2014. Plus there are several updates in the works for <a href="http://github.com/rnapier/RNCryptor">RNCryptor</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[New Forum for RNCryptor]]></title>
+    <link href="http://robnapier.net/forum-rncryptor/"/>
+    <updated>2013-12-20T09:39:33-05:00</updated>
+    <id>http://robnapier.net/forum-rncryptor</id>
+    <content type="html"><![CDATA[<p>If you&rsquo;re using RNCryptor, you may want to join the forum I&rsquo;ve finally setup: <a href="https://groups.google.com/forum/#!forum/rncryptor.">https://groups.google.com/forum/#!forum/rncryptor.</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Update on RNCryptor Vulnerability Fix]]></title>
+    <link href="http://robnapier.net/rncryptor-vulnerability-fix/"/>
+    <updated>2013-01-17T17:12:12-05:00</updated>
+    <id>http://robnapier.net/rncryptor-vulnerability-fix</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve built a candidate fix for the RNCryptor <a href="http://robnapier.net/blog/rncryptor-hmac-vulnerability-827">HMAC vulnerability</a>. It&rsquo;s on a branch (<a href="https://github.com/rnapier/RNCryptor/tree/issue44">issue44</a>) currently, but I&rsquo;ll merge it to master next week if no one sees problems, and update the docs. By default it is incompatible with v1 files. If you need to be able to decrypt v1 files, you can define RNCRYPTOR_ALLOW_V1_BAD_HMAC when building.</p>
+
+<p>Please let me know if anyone encounters issues.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RNCryptor HMAC Vulnerability (My Security Blunder)]]></title>
+    <link href="http://robnapier.net/rncryptor-hmac-vulnerability/"/>
+    <updated>2013-01-14T13:52:38-05:00</updated>
+    <id>http://robnapier.net/rncryptor-hmac-vulnerability</id>
+    <content type="html"><![CDATA[<p>Thank you to Allen Mann for discovering the following significant security vulnerability in RNCryptor.</p>
+
+<h3>The Vulnerability</h3>
+
+
+<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> computes the HMAC over the ciphertext only. It does not compute an HMAC over the header, particularly the IV. This allows an attacker to modify the IV and thus manipulate the first block (16-bytes) of decrypted plaintext. This is a major issue, and is exactly the kind of problem that RNCryptor is designed to avoid.</p>
+
+<p>I will be modifying RNCryptor shortly to fix this. This will rev the file version to 2. I will provide a backward-compatibly option to read v1 files (default off). I strongly recommend that developers move to the v2 format.</p>
+
+<p>I will try to get this out as quickly as I can, hopefully this week.</p>
+
+<!-- more -->
+
+
+
+
+<h3>The Lesson</h3>
+
+
+<p>There is a valuable lesson here. I know this vulnerability in AES. I have <a href="http://cocoaconf.com/conference/sessionDetails/218?confId=7">given talks</a> about it. I&rsquo;ve demonstrated it with <a href="https://github.com/rnapier/security-blunders/blob/master/modaes.py">exploit code</a>. I wrote RNCryptor <em>explicitly</em> to avoid this vulnerability. Yet I screwed up the implementation and so RNCryptor is currently vulnerable to it.</p>
+
+<p>I didn&rsquo;t find this problem myself. I&rsquo;m in the process of designing a different encrypted data format for a client, and I correctly compute the HMAC in that format, and I <em>still</em> didn&rsquo;t clue-in that I&rsquo;d done it wrong in RNCryptor.</p>
+
+<p>How was it found? By someone who didn&rsquo;t just take my word for it. He looked at the implementation, saw the error, wrote his own exploit to prove it to himself, and informed me.</p>
+
+<p>OpenSSL has been written by people very concerned with security. It&rsquo;s been <a href="http://www.kb.cert.org/vuls/byid?searchview&query=openssl">riddled with security bugs</a> over the years. (I wrote RNCryptor directly in response to the serious problems in its AES format.) <a href="http://www.kb.cert.org/vuls/byid?searchview&query=pgp">PGP</a>, <a href="http://www.kb.cert.org/vuls/byid?searchview&query=openssh">SSH</a>, <a href="http://www.kb.cert.org/vuls/byid?searchview&query=kerberos">Kerberos</a>, security protocols, formats, and implementations, even if built by smart people who are aware of the issues, they often have vulnerabilities. Some subtle, some bone-headed (like this one).</p>
+
+<p>So what should you take away from this?</p>
+
+<ol>
+<li><p>Trust security systems in proportion to how much public scrutiny they receive. The more closed a system, the more it relies on proprietary and secret techniques, the less you should trust it. Open source systems have many errors. Don&rsquo;t imagine that proprietary systems have fewer; they just aren&rsquo;t found and fixed.</p></li>
+<li><p>A security system is only as good as its implementation. The RNCryptor v1 format uses HMAC, which is good, but the implementation is slightly wrong and that creates a vulnerability. Just because your system uses AES and AES is strong doesn&rsquo;t mean that your system is secure.</p></li>
+<li><p>You need to educate yourself on the basics of how cryptographic systems work. As a developer you need to be able to evaluate whether the cryptography framework you&rsquo;re using is secure, and even more critically you need to be able to evaluate whether you&rsquo;re using it securely. Common Cryptor&rsquo;s HMAC functions are fine, but if I pass the wrong data, the system is still insecure.</p></li>
+<li><p>Assume that any security framework you have will need to be upgraded in the future, possibly in incompatible ways, to address vulnerabilities. Design your project to make upgrading as simple as possible.</p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Animating Arbitrary KeyPaths]]></title>
+    <link href="http://robnapier.net/animating-arbitrary-keypaths/"/>
+    <updated>2012-12-17T21:44:41-05:00</updated>
+    <id>http://robnapier.net/animating-arbitrary-keypaths</id>
+    <content type="html"><![CDATA[<p>During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</a>, I discussed my PinchView from <a href="http://robnapier.net/blog/laying-out-text-with-coretext-547">Laying out text with Core Text</a>. It&rsquo;s a text view that squeezes the glyphs towards your finger when you touch it. I built it to demonstrate per-glyph layout in Core Text. While demonstrating it, I was pretty unsatisfied with how it looked when you touched it or let go. When you drag your finger on the view, the glyphs move around like water. It&rsquo;s quite pretty. But when you initially touch the screen, the glyphs suddenly jump to their new locations, and then they jump back when you release the screen. Well, that&rsquo;s no good. So I wanted to add animations.</p>
+
+<p>But here&rsquo;s the thing: what do you animate? While you do want to animate the glyph positions, you&rsquo;re not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer&rsquo;s list of animatable properties confirmed that there&rsquo;s nothing like that. But no problem, I added a custom property called <code>touchPointScale</code> and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)</p>
+
+<!-- more -->
+
+
+<p>OK, so great. But one comment I got at CocoaConf was that it should handle multitouch. So I started playing with that, but now I had a problem. I could have lots of touches, so my single <code>touchPointScale</code> doesn&rsquo;t&hellip;er&hellip;scale. What I want to do is take a collection of <code>TouchPoint</code> objects that the layer owns, animate each of their scales independently, and have the layer do its animation thing. But how do we animate based on changes in properties of things in a layer&rsquo;s collection?</p>
+
+<p><em>The sample code is available on <a href="https://github.com/rnapier/richtext-coretext/tree/master/PinchText">github</a>.</em></p>
+
+<p>First, we have <code>TouchPoint</code> objects. These are just trivial data objects. The <code>identifier</code> here happens to be the address of the object, but it could be any unique string.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">TouchPoint</span> : <span class="nc">NSObject</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UITouch</span> <span class="o">*</span><span class="n">touch</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGPoint</span> <span class="n">point</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">scale</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">TouchPoint</span> <span class="o">*</span><span class="p">)</span><span class="nf">touchPointForTouch:</span><span class="p">(</span><span class="n">UITouch</span> <span class="o">*</span><span class="p">)</span><span class="nv">touch</span> <span class="nf">inView:</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span> <span class="nf">scale:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">scale</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">identifier</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then we have <code>PinchTextLayer</code>, which has a collection of <code>TouchPoint</code> objects:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">touchPointsForIdentifier</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The thing we want to animate is &ldquo;the <code>scale</code> of the touch point with a given identifier.&rdquo; In order to animate something, it needs to be something you can call <code>setValue:forKeyPath:</code> on. And that brings us to the power of KVC and dictionaries.</p>
+
+<p>Say you have this code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">dict</span><span class="p">[</span><span class="s">@&quot;somekey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">@&quot;somevalue&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can also write that this way:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">self</span> <span class="nl">setValue:</span><span class="s">@&quot;somevalue&quot;</span> <span class="nl">forKeyPath:</span><span class="s">@&quot;dict.somekey&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And if you have this code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">dict</span><span class="p">[</span><span class="s">@&quot;somekey&quot;</span><span class="p">].</span><span class="n">prop</span> <span class="o">=</span> <span class="s">@&quot;someValue&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can write that this way:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">self</span> <span class="nl">setValue:</span><span class="s">@&quot;somevalue&quot;</span> <span class="nl">forKeyPath:</span><span class="s">@&quot;dict.somekey.prop&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that means that things held in dictionaries can be animated pretty easily because they can be accessed via <code>setValue:forKeyPath:</code>. First, you need to tell the layer that changes on your dictionary impact drawing:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">needsDisplayForKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">([</span><span class="n">key</span> <span class="nl">isEqualToString:</span><span class="s">@&quot;touchPointForIdentifier&quot;</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">super</span> <span class="nl">needsDisplayForKey:</span><span class="n">key</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This applies to all key paths that start with <code>touchPointForIdentifier</code>. And because we&rsquo;re not animating <code>touchPointForIdentifier</code> itself, we don&rsquo;t have to make it <code>@dynamic</code>. We do need to copy it in <code>initWithLayer:</code> of course:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithLayer:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">layer</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithLayer:</span><span class="n">layer</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">self</span> <span class="nl">setTouchPointForIdentifier:</span><span class="p">[[</span><span class="n">layer</span> <span class="n">touchPointForIdentifier</span><span class="p">]</span> <span class="n">copy</span><span class="p">]];</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that&rsquo;s just about it. We can now treat the key path &ldquo;touchPointForIdentifier.&lt;identifier&gt;.scale&rdquo; as an animatable property just like <code>position</code> or <code>opacity</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addTouches:</span><span class="p">(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">inView:</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span> <span class="nf">scale:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">scale</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">UITouch</span> <span class="o">*</span><span class="n">touch</span> <span class="k">in</span> <span class="n">touches</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">TouchPoint</span> <span class="o">*</span><span class="n">touchPoint</span> <span class="o">=</span> <span class="p">[</span><span class="n">TouchPoint</span> <span class="nl">touchPointForTouch:</span><span class="n">touch</span> <span class="nl">inView:</span><span class="n">view</span> <span class="nl">scale:</span><span class="n">scale</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">keyPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nl">touchPointScaleKeyPathForTouchPoint:</span><span class="n">touchPoint</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">CABasicAnimation</span> <span class="o">*</span><span class="n">anim</span> <span class="o">=</span> <span class="p">[</span><span class="n">CABasicAnimation</span> <span class="nl">animationWithKeyPath:</span><span class="n">keyPath</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">anim</span><span class="p">.</span><span class="n">fromValue</span> <span class="o">=</span> <span class="err">@</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">anim</span><span class="p">.</span><span class="n">toValue</span> <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="n">touchPoint</span><span class="p">.</span><span class="n">scale</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="nl">addAnimation:</span><span class="n">anim</span> <span class="nl">forKey:</span><span class="n">keyPath</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">touchPointForIdentifier</span> <span class="nl">setObject:</span><span class="n">touchPoint</span> <span class="nl">forKey:</span><span class="n">touchPoint</span><span class="p">.</span><span class="n">identifier</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">touchPointScaleKeyPathForTouchPoint:</span><span class="p">(</span><span class="n">TouchPoint</span> <span class="o">*</span><span class="p">)</span><span class="nv">touchPoint</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;touchPointForIdentifier.%@.scale&quot;</span><span class="p">,</span> <span class="n">touchPoint</span><span class="p">.</span><span class="n">identifier</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Side note: Along the way, I also developed a technique for animating custom properties (without any storage behind them, implemented by custom methods) by overriding <code>setValue:forKeyPath:</code>. If you think that might be useful, you can see it in <a href="https://github.com/rnapier/richtext-coretext/tree/4eb482dcfe2340f09d553c707a5b3b2a4116ff63">github</a>, but so far I haven&rsquo;t thought of any cases where it&rsquo;s better than using the dictionary.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CocoaConf]]></title>
+    <link href="http://robnapier.net/cocoaconf/"/>
+    <updated>2012-11-29T22:50:04-05:00</updated>
+    <id>http://robnapier.net/cocoaconf</id>
+    <content type="html"><![CDATA[<p>Here are some useful links you&rsquo;re probably looking for.</p>
+
+<p><a href="https://github.com/rnapier/richtext-coretext/blob/master/Rich%20Text%2C%20Core%20Text.pdf">Rich Text, Core Text</a> Presentation</p>
+
+<p><a href="http://www.linotype.com/2762/zapfinoextra.html">Zapfino Extra Pro</a></p>
+
+<p><a href="http://www.iamcal.com/understanding-bidirectional-text/">Understanding Bidirectional (BIDI) Text in Unicode</a> by Cal Henderson</p>
+
+<p><a href="http://www.unicode.org/reports/tr9">Unicode Standard Annex #9</a> Unicode Bidirectional Algorithm</p>
+
+<p><a href="https://github.com/rnapier/richtext-coretext">GitHub for Rich Text, Core Text</a></p>
+
+<p><a href="https://github.com/rnapier/practical-security/blob/master/Practical%20Security.pdf">Practical Security</a> Presentation</p>
+
+<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor GitHub</a></p>
+
+<p><a href="https://github.com/rnapier/security-blunders">GitHub for Security Blunders</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PBKDF2 and SHA-1]]></title>
+    <link href="http://robnapier.net/pbkdf2-sha1/"/>
+    <updated>2012-09-18T11:01:11-04:00</updated>
+    <id>http://robnapier.net/pbkdf2-sha1</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve posted a new errata on the iosptl site about <a href="http://iosptl.com/posts/new-prf-functions-for-pbkdf2/">PBKDF2 and SHA-1 versus SHA-2</a>. If you&rsquo;re using CommonCryptor (and particularly CommonKeyDerivation), you may be interested.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RNCryptor and My Titanium Experiment]]></title>
+    <link href="http://robnapier.net/rncryptor-titanium/"/>
+    <updated>2012-08-21T10:13:18-04:00</updated>
+    <id>http://robnapier.net/rncryptor-titanium</id>
+    <content type="html"><![CDATA[<p>Several months ago, I received a request to port my <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> module to <a href="http://www.appcelerator.com">Titanium</a>. I&rsquo;ve never been a fan of the JavaScript wrappers for iOS and Android. My belief and experience is that they&rsquo;re far more trouble than their worth. But the goal of RNCryptor was always to help people use AES correctly, and that&rsquo;s as important in JavaScript as it is in Objective-C. So I wrapped up RNCyptor into a Titanium module and stuck it on the <a href="https://marketplace.appcelerator.com">Appcelerator Marketplace</a>. Though RNCryptor is free, the pain of wrapping it into JavaScript led me to charge $10 for the Titanium version.</p>
+
+<p>The pain of maintaining this thing has gotten to be too much, though. I&rsquo;m releasing it today on <a href="https://github.com/rnapier/Cryptor-titanium">GitHub</a> in its current form, which is based on the older, synchronous form of RNCryptor. I may not have updated all the license text yet; if I miss any, it is under the MIT license. Thanks to those who purchased Cryptor-Titanium during its commercial life. Anyone who is interested in continuing development, please contact me (or submit a pull request).</p>
+
+<!-- more -->
+
+
+<p>Note that RNCryptor has always been an iOS-only solution, so the Titanium wrapper only works on iOS. If you want a correctly-written, cross-platform JavaScript solution, my recommendation is <a href="http://bitwiseshiftleft.github.com/sjcl">SJCL</a>.</p>
+
+<p>My experience here has strengthened my belief that the JavaScript shims for mobile development are bad in theory and horrible in practice. It is much easier to write a full iOS app and a full Android app than to try to write one app that runs well on both. JavaScript only makes it harder.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Updated RNCryptor]]></title>
+    <link href="http://robnapier.net/updated-rncryptor/"/>
+    <updated>2012-07-13T16:06:30-04:00</updated>
+    <id>http://robnapier.net/updated-rncryptor</id>
+    <content type="html"><![CDATA[<p>I have brought the <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> async branch to master. This is a major change in API, but I believe much more flexible. I&rsquo;ve stripped the API down quite a lot, so please let me know if there are missing features. I&rsquo;m particularly interested in anyone who needs better support for reading and writing files. I haven&rsquo;t added any methods for that until I see how people are really using it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Phone-screening Cocoa Developers]]></title>
+    <link href="http://robnapier.net/phone-screen/"/>
+    <updated>2012-06-26T11:15:12-04:00</updated>
+    <id>http://robnapier.net/phone-screen</id>
+    <content type="html"><![CDATA[<p>There was an <a href="http://stackoverflow.com/questions/1019636/phone-screen-questions-for-mac-os-x-developer-positions/1019759#1019759">interesting question</a> on StackOverflow that was unfortunately closed as off topic. It was off topic, but it&rsquo;s still a useful question. When phone screening potential Cocoa developers, what kinds of questions should you ask? I&rsquo;ve helped several clients screen potential candidates over the years, and so I have several questions I use to help with that.</p>
+
+<!-- more -->
+
+
+<p>Now obviously some might be concerned that posting such a list invites people to &ldquo;study for the test.&rdquo; To that, I have several comments:</p>
+
+<ul>
+<li>I am not providing answers here, only questions. A potential interviewee who researches the answers is a benefit to everyone.</li>
+<li>This are the minimum basics. They&rsquo;re intended to figure out if someone is even worth talking to. Failure to know these things are a pretty good indication that you <em>aren&rsquo;t</em> interested in this candidate. They&rsquo;re not a demonstration of significant skill.</li>
+<li>There&rsquo;s almost always a big difference in the answers between someone who has actually encountered these issues in the real world, and someone who has just recently searched google to crib the answers. It&rsquo;s not usually difficult to tell them apart.</li>
+<li>Anyone who found this list by reading my blog is obviously a developer of exceptional taste and intelligence and should be invited to an in-person interview on the spot.</li>
+</ul>
+
+
+<p>The first list of questions is for &ldquo;any&rdquo; developer, by which I mean any professional, experienced developer. The second list refers to &ldquo;senior&rdquo; developers. Most of the questions on that list would be more properly categorized as &ldquo;intermediate,&rdquo; but senior developers often specialize. One might be an incredible UI programmer who knows little about ObjC internals. Another might be brilliant at developing high-performance data processing with Dispatch I/O, but have trouble managing view rotations. My questions tend to skew a little towards the latter type of developer since that&rsquo;s my speciality. But I try to cover the UI side as well.</p>
+
+<p>Note that several of my questions involve opinions or ask the candidate to &ldquo;describe generally.&rdquo; None of my questions expect exact, runnable code to be generated on the spot, nor do I expect a candidate to be a walking encyclopedia of Cocoa implementation details. My goal is to explore what the candidate knows intuitively and would know where to look quickly if needed. My goal is not to give a Cocoa pop-quiz. Particularly in a phone screen, most of these questions should be fairly easy to answer for an interesting candidate.</p>
+
+<p>Input welcome as I evolve this list. In particular, I&rsquo;m looking for senior developers who might feel my questions are too skewed to my skill set. I&rsquo;d like to keep them as broadly applicable as possible.</p>
+
+<p>So without further ado, some questions.<!--more--><h3>Any Cocoa Developer</h3></p>
+
+<ul>
+<li><p>Should be able to explain the difference between <code>foo = bar</code> and <code>self.foo = bar</code> when <code>foo</code> is an ivar.</p></li>
+<li><p>Should be able to easily explain what would cause <code>EXC_BAD_ACCESS</code>.</p></li>
+<li><p>Should know what happens if you send a message to <code>nil</code>.</p></li>
+<li><p>Should be able to explain the MVC paradigm, and describe how to break down a simple problem into Models, Views and Controllers. Pay special attention to how they develop Model classes.</p></li>
+<li><p>(iOS) Should be able to explain the use of <code>UITableView</code>.</p></li>
+<li><p>(iOS) Should be able to explain at least one way to fade-out a view that does not involve an <code>NSTimer</code>.</p></li>
+<li><p>Should know the difference between a view and a layer, and how the two relate to each other.</p></li>
+<li><p>Should be able to explain a retain loop and how to prevent them.</p></li>
+<li><p>Should be able to explain a retain loop caused by a block capturing <code>self</code>. They should be able to describe at least one way to address this problem.</p></li>
+<li><p>Should be able to explain what a nib file is, how it is loaded, and (iOS) the order of <code>UIViewController</code> methods during creating, loading, displaying, and unloading the main view with and without a nib file (minor mistakes here are ok; but they should be familiar with the overall flow).</p></li>
+<li><p>Should be able to describe the debugging steps for the following scenario: &ldquo;You have a button, an <code>IBAction</code>, a text field, and an <code>IBOutlet</code>. When you press the button, it should increment the value in the text field. However, when you press the button, the button highlights and unhighlights, but nothing else happens.&rdquo;</p></li>
+<li><p>(iOS) Should know how to show and dismiss the keyboard.</p></li>
+<li><p><em>(May become an intermediate/senior topic in the future.)</em> Should know the rules of memory management cold, including the <a href="http://robnapier.net/blog/three-magic-words-6">three magic words</a>. With the rise of ARC, this may eventually become a senior question, but in 2012 every serious Cocoa developer should still be familiar with manual memory management.</p></li>
+<li><p>(OSX) Should be able to describe the responder-chain, what it is for, and generally how it works.</p></li>
+<li><p>Should be able to describe the difference between the Delegate pattern and the Target-Action pattern and where you would best apply each.</p></li>
+</ul>
+
+
+<h3>Anyone Claiming to be a &#8220;Senior&#8221; Cocoa Developer</h3>
+
+
+<ul>
+<li><p>Should have several defensible opinions on what constitutes Cocoa &ldquo;best practice.&rdquo;</p></li>
+<li><p>Should be able to provide information about a radar they&rsquo;ve filed. Any senior developer should eventually have encountered a Cocoa bug, and a good one will have filed a radar. Extra credit for radars cross-posted to openradar.</p></li>
+<li><p>Should have specific opinions and complaints about Xcode. Anyone without specific complaints about Xcode hasn&rsquo;t used it very much. Extra credit for radars opened against Xcode.</p></li>
+<li><p>Should know the Core Foundation memory management rules and should be able to explain what &ldquo;toll-free bridging&rdquo; is.</p></li>
+<li><p>Should know how to correctly use <code>__bridge</code>, <code>CFBridgingRetain()</code>, and <code>CFBridgingRelease()</code>.</p></li>
+<li><p>(iOS) Should be able to explain several circumstances in which an application may run in the background. In particular, they should be able to explain how to manage long-running operations and when this should be used.</p></li>
+<li><p>(iOS) Should be able to explain the use of <code>UIGestureRecognizer</code> and give several reasons that a recognizer might not fire when expected.</p></li>
+<li><p>Should be able to name several Frameworks outside of Cocoa. Specifically, they should be familiar with at least one Framework that does not link by default and they need to add to their project (any serious developer will have encountered this problem).</p></li>
+<li><p>Should know how to apply perspective to <code>CALayer</code>. Extra credit if they can explain the difference between a normal layer and a transform layer.</p></li>
+<li><p>Should be able to explain an <code>NSInvocation</code>, at least to the level of how you would use one.</p></li>
+<li><p>Should be able to explain generally KVO&rsquo;s implementation. In particular, &ldquo;when you call a setter on a KVO observed object, <code>willChangeValueForKey:</code> is called automatically, even though it&rsquo;s not in the setter code. How is this achieved?&rdquo;</p></li>
+<li><p>Should be able to design a thread-safe accessor using GCD. Extra credit if it allows simultaneous readers and does not block writers. (Explanation of the basic approach is fine. I dislike on-the-spot coding, even when the developer is onsite.)</p></li>
+<li><p>Should be able to explain run loops, why you might manually process one (i.e. <code>runMode:beforeDate:</code>), reasons you might manually process the <em>main</em> run loop and what dangers that might create.</p></li>
+<li><p>Should be familiar with several approaches to debugging memory crashes and leaks, including <code>NSZombiesEnabled</code> and malloc debugging. Should be able to describe generally how each of these works.</p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RNCryptor Async]]></title>
+    <link href="http://robnapier.net/rncryptor-async/"/>
+    <updated>2012-06-24T19:39:43-04:00</updated>
+    <id>http://robnapier.net/rncryptor-async</id>
+    <content type="html"><![CDATA[<p>I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I&rsquo;ll be documenting this more formally within a few weeks, but here are the high points:</p>
+
+<!-- more -->
+
+
+<p>There are now separate RNCryptor and RNDecryptor objects (as well as RNOpenSSLEncryptor and RNOpenSSLDecryptor).</p>
+
+<p>Aync usage looks like this:</p>
+
+<pre><code>RNEncryptor *encryptor = [[RNEncryptor alloc] initWithSettings:kRNCryptorAES256Settings
+                                                      password:password
+                                                       handler:^(RNCryptor *cryptor, NSData *data) {
+                                                          ...
+                                                       }];
+</code></pre>
+
+<p>You add data using <code>addData:</code>. <code>handler</code> may or may not be called once for every call to <code>addData:</code>. When you are done, you must call <code>finish</code>, at which point, <code>handler</code> will be called one last time. You can check this condition using <code>cryptor.isFinished</code>.</p>
+
+<p>There is still synchronous access such as:</p>
+
+<pre><code>NSData *encryptedData = [RNEncryptor encryptData:data
+                                    withSettings:kRNCryptorAES256Settings
+                                        password:password
+                                           error:&amp;error];
+</code></pre>
+
+<p>I have dropped all the URL, file and stream APIs. Please let me know if you have a general use case where you would like them. I don&rsquo;t mind creating some convenience methods, but the convenience methods in the original interface were becoming too numerous and that complicates testing. Input on this is welcome. I found that many people were either doing very small things where synchronous NSData is good, or they were using <code>NSURLConnection</code>, where you need all the callbacks (to handle redirects, authentication, etc.), so I&rsquo;ve supported those two cases the most.</p>
+
+<p>By default, <code>handler</code> is called on the GCD queue that the cryptor was created on. You can modify this by setting <code>responseQueue</code>.</p>
+
+<p>Input on the API is welcome. I&rsquo;m leaving it on the async branch until people have time to play with a little bit and I have time to document it fully.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mode Changes for RNCryptor]]></title>
+    <link href="http://robnapier.net/mode-rncryptor/"/>
+    <updated>2012-06-18T19:37:41-04:00</updated>
+    <id>http://robnapier.net/mode-rncryptor</id>
+    <content type="html"><![CDATA[<p>After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I&rsquo;ve decided to make a change to the default AES mode used by RNCryptor from its current CTR to the much more ubiquitous CBC.</p>
+
+<p>CTR mode has several advantages that I was hoping to exploit. First, it does not require padding, so it is not subject to padding oracle attacks (the cipher text is also generally a few bytes shorter than the equivalent CBC). That said, if the same nonce+counter+key combination is ever reused, an attacker can easily compute the key. This is pretty unlikely given how RNCryptor generates its nonce, but it&rsquo;s not impossible. If the same IV+key is used for CBC mode, then some information is leaked to an attacker, but its not nearly as catastrophic as reusing a nonce. The point is that CTR is not a home run here. It&rsquo;s different, exchanging one possible vulnerability for a different one (since RNCryptor does not store previous nonces to prevent reuse).</p>
+
+<p>It is also possible to compute CTR in parallel on multiple cores. Apple doesn&rsquo;t currently do this, and is not highly likely to do so in the future. They might, but it&rsquo;s not something to adapt the design to.</p>
+
+<p>Almost every AES system out there implements CBC, so using any other mode introduces a significant interoperability problem. A mode would need to be dramatically better to be worth that. CTR has not lived up to that requirement, and so I&rsquo;m switching to CBC.</p>
+
+<p>This will make it much easier to write RNCryptor-compatible modules in Java, JavaScript, etc., as have been requested.</p>
+
+<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code>CCKeyDerivationPBKDF</code>.</p>
+
+<p>If you update, note that this is incompatible with your existing encrypted files. I doubt there is enough field usage out there that this is an issue, but if it is, let me know and I can discuss with you how to convert.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Simple GCD Timer (RNTimer)]]></title>
+    <link href="http://robnapier.net/simple-gcd-timer-rntimer/"/>
+    <updated>2012-05-29T21:37:25-04:00</updated>
+    <id>http://robnapier.net/simple-gcd-timer-rntimer</id>
+    <content type="html"><![CDATA[<p><i>I know this exists out there somewhere already, but I couldn&rsquo;t find it anywhere and I was sick of writing it over and over again&hellip;. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot&rsquo;s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash&rsquo;s</a>, but they solve different problems.</i></p>
+
+<p>Have you ever noticed how hard it is to write a repeating <code>NSTimer</code> that doesn&rsquo;t create a retain loop? Almost always you wind up with something like this:</p>
+
+<pre><code>[NSTimer scheduledTimerWithTimeInterval:1
+                                 target:self
+                               selector:@selector(something)
+                               userInfo:nil 
+                                repeats:YES];
+</code></pre>
+
+<p>Seems easy enough, except it&rsquo;s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you&rsquo;d think this would be easy. And it should be, so I fixed it. I just still can&rsquo;t quite believe I&rsquo;m the first to do so.</p>
+
+<p>Anyway, for your consideration I present a very simple class called <code>RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn&rsquo;t address.</p>
+
+<p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Wrapping C++ Final Edition]]></title>
+    <link href="http://robnapier.net/wrapping-cppfinal-edition/"/>
+    <updated>2012-05-12T20:11:45-04:00</updated>
+    <id>http://robnapier.net/wrapping-cppfinal-edition</id>
+    <content type="html"><![CDATA[<p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a &ldquo;language.&rdquo; It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code>.mm</code> is a blight on your code. Never let it spread.</p>
+
+<p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple&rsquo;s frameworks are implemented in C++.</p>
+
+<p>So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your &ldquo;middleware&rdquo; in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).</p>
+
+<!-- more -->
+
+
+<p>(As a side note, I also recommend that OS-related things like file management, network management, and threading all be handled natively. GCD is much better than pthreads. NSURLConnection is much better than writing your own C++ networking layer in BSD sockets. But this is tangental to the main point.)</p>
+
+<p>Saying all that, how do you wrap a C++ object so that Objective-C can read it? This used to be a question that required some significant thought. See <a href="http://robnapier.net/blog/wrapping-c-take-2-1-486">Wrapping C++, Take 2 Part 1</a> and <a href="http://robnapier.net/blog/wrapping-c-take-2-2-493">Part 2</a> for my previous thinking on the subject.</p>
+
+<p>Improvements in Objective-C have made all of the previous hoop-jumping irrelevant. The problem all my previous solutions was trying to solve was that you had to declare ivars in the header. Your ivar was a C++ class (which might be in a namespace or might be a template), and that made it difficult to declare in the header without forcing all the importers to be ObjC++. So to solve this generally you needed opaque types, or at the very least forward declared structs, etc. And it was all a big pain.</p>
+
+<p>But that&rsquo;s over. You can now declare all your ivars in the implementation file. So everything&rsquo;s easy. Your wrapper class can have C++ ivars without having any impact on users of the wrapper class.</p>
+
+<p>Consider a simple C++ class (but throwing in the headache of a namespace):</p>
+
+<pre><code>namespace MY {
+class Cpp {
+  public:
+    std::string getName() { return _name; };
+    void setName(std::string aName) { _name = aName; };
+  private:
+    std::string _name;
+};
+}
+</code></pre>
+
+<p>The wrapper for this is trivial:</p>
+
+<pre><code>@interface CPPWrapper : NSObject
+@property (nonatomic, readwrite, copy) NSString *name;
+@end
+
+@interface CPPWrapper ()
+@property (nonatomic, readwrite, assign) MY::Cpp *cpp;
+@end
+
+@implementation CPPWrapper
+@synthesize cpp = _cpp;
+
+- (id)init {
+  self = [super init];
+  if (self) {
+    _cpp = new MY::Cpp();
+  }
+  return self;
+}
+
+- (void)dealloc {
+  delete _cpp;
+}
+
+- (NSString *)name {
+  return [NSString stringWithUTF8String:self.cpp-&gt;getName().c_str()];
+}
+
+- (void)setName:(NSString *)aName {
+  self.cpp-&gt;setName([aName UTF8String]);
+}
+@end
+</code></pre>
+
+<p>Couldn&rsquo;t be easier really. The one headache that really remains in my experience is enums inside of a namespace (or more generally enums declared in a C++ header). The best solution is to use <code>#if __cplusplus</code> blocks to strip away the namespace and still declare the enum in pure C. Do this if at all possible. Otherwise you&rsquo;ll wind up with an C enum that mirrors the C++ enum. This is a maintenance nightmare, since changes to the C++ enum will often be missed in the ObjC enum, and you&rsquo;ll get very difficult-to-debug errors with enum mismatches.</p>
+
+<p>Just to ask and answer a possible question: why <code>*Cpp</code> and not just <code>Cpp</code>? The reason is that in almost all cases the C++ object will be created outside of your wrappers. So in almost all cases, there&rsquo;s going to be a method like <code>initWithCpp:(Cpp *)cpp</code>. How does that work? Easy, wrap it in <code>#if __cplusplus</code>:</p>
+
+<pre><code>#if __cplusplus
+#include "Cpp.h"
+...
+- (CppWrapper *)initWithCpp:(Cpp *)cpp;
+#endif
+</code></pre>
+
+<p>Anyway, most of my research into opaque types and generally how to manage C++ wrappers has now become trivial. I&rsquo;m just giving one more post to let you all know that. (And because <a href="http://robnapier.net/blog/wrapping-c-take-2-1-486#comment-15967">Orpheus</a> asked.) Post comments if there are more questions.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Github and Its Pricing]]></title>
+    <link href="http://robnapier.net/github-pricing/"/>
+    <updated>2012-03-30T22:48:49-04:00</updated>
+    <id>http://robnapier.net/github-pricing</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It&rsquo;s a good interface. It works. I could use a few more features in the Issues module, but it&rsquo;s nice that they keep it simple. I&rsquo;ve tried BitBucket and Assembla, and looked at several others. I&rsquo;ve managed my own servers. In every test, github wins.</p>
+
+<p>Except for price. github is often the most expensive. Especially if you need what I need, which is several small repositories, each with a small number of collaborators (often just one or two). But just a few of those can push you into the Medium plan, or even into the Bronze plan.<!-- more -->So I was complaining about this to my wife. I say &ldquo;Wife, github is just too expensive. Why do they have to be like that? I really like using them.&rdquo;</p>
+
+<p>&ldquo;Oh,&rdquo; says Wife. &ldquo;What are we talking about?&rdquo;</p>
+
+<p>&ldquo;Well,&rdquo; I say, &ldquo;it could easily be $25/month.&rdquo;</p>
+
+<p>&ldquo;$300/year?&rdquo;</p>
+
+<p>&ldquo;Yeah.&rdquo;</p>
+
+<p>&ldquo;And it works really well? And makes business go more smoothly?&rdquo;</p>
+
+<p>&ldquo;Yeah&hellip;?&rdquo;</p>
+
+<p>&ldquo;And you need some service for this, right?&rdquo;</p>
+
+<p>&ldquo;One way or another.&rdquo;</p>
+
+<p>&ldquo;Get over yourself. Pay them.&rdquo;</p>
+
+<p>And I started to think about it. If I&rsquo;d billed the time I&rsquo;d already spent researching and designing scripts to work around issues, I&rsquo;d probably have covered a year or two of service.</p>
+
+<p>Some services have gotten so cheap, you get used to what you think they &ldquo;should&rdquo; cost. I remember haggling in markets in Shanghai and friends saying &ldquo;Rob, you&rsquo;re buying a scarf for $2 and you&rsquo;re haggling over the last 50 cents.&rdquo; My attitude was, yeah, but in Shanghai that scarf should be 8 RMB and she&rsquo;s asking 14. At home I&rsquo;d think nothing of paying $10, but in Shanghai I feel ripped off paying more than a buck. The whole Internet is a Shanghai market sometimes.</p>
+
+<p>Quality is worth paying for. As a developer, I expect to be paid for the quality code I write. Time to pay others for theirs.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Some Math Behind "Contribution != Compensation"]]></title>
+    <link href="http://robnapier.net/contribution-vs-compensation/"/>
+    <updated>2012-03-24T18:16:32-04:00</updated>
+    <id>http://robnapier.net/contribution-vs-compensation</id>
+    <content type="html"><![CDATA[<p>Thanks to @codinghorror, I recently read a blog post from Steve McConnell called <a href="http://blogs.construx.com/blogs/stevemcc/archive/2011/01/22/10x-productivity-myths-where-s-the-10x-difference-in-compensation.aspx">10x Productivity Myths: Where’s the 10x Difference in Compensation?</a> Steve quotes a question from Pete McBreen:</p>
+
+<blockquote>&#8220;One point in his article that McConnell did not address&#8211;<strong>programmer compensation does not vary accordingly.</strong> This is a telling point&#8211;if the difference is productivity can be 10X, why is it that salaries rarely fall outside the 2X range for experienced developers?&#8221; [emphasis in original]</blockquote>
+
+
+<p>He then provides some fairly satisfying answers. &ldquo;The other guy is actually overpaid.&rdquo; &ldquo;You&rsquo;re confusing coding with actual business value.&rdquo; &ldquo;Companies pay the least they can get away with.&rdquo; etc. All his answers make good, intuitive sense. Unfortunately, despite being a longtime fan of Steve McConnell&rsquo;s work, I believe most are irrelevant or incorrect.</p>
+
+<!-- more -->
+
+
+<p>Let me state this a little more concretely. If a company pays Alice $X, but Alice generates $10X in marginal value, then there is a very strong incentive for another company to offer Alice $2X and receive $9X in marginal value. Alice would almost certainly accept $2X, and a competitor would be idiotic not to pay it. As long as Alice were free to change employers at will, and as long as employers were capable of determining Alice&rsquo;s value in even a vague way, this would naturally continue until there were little marginal value left (less than the friction of recruiting and moving and within the precision of determining Alice&rsquo;s productivity). That is to say, there should not be much money left on the table. In the normal version of this story, there is a massive amount of money on the table. It&rsquo;s hard to believe this continues indefinitely in a highly competitive, unregulated, and mobile industry like ours.</p>
+
+<p>Arguing that it&rsquo;s impossible to measure Alice&rsquo;s productivity to any precision makes the entire discussion moot, since it eliminates the ability to say that Alice is 10x more productive. How did you decide that if productivity is unmeasurable? Even intuitive measurements would be sufficient to create a bidding war if there were really 10x value on the table.</p>
+
+<p>It also seems unworkable that a company would continue to pay large numbers of people dramatically above their total contribution. Sure, here and there; large companies are quite inefficient in my experience. And at the executive level, I believe there is enough collusion between compensation committees and CEOs to make the system significantly inefficient. But almost any argument for this being systemic suggests that companies are highly altruistic. It&rsquo;s hard to believe that a greedy company would hold onto a significant number of low-level employees that would be cheaper to fire and replace with no one.</p>
+
+<p>I suggest that there&rsquo;s another answer that doesn&rsquo;t require long-lived massive inefficiencies in the market. I suggest that Alice is being paid in another way and that our &ldquo;loser&rdquo; employee provides some other value. I&rsquo;m further claiming that the value Loser provides is reasonably close to the money that Alice foregoes. In other words, Alice is paying Loser for his service, and thus a reasonably efficient economic system in equilibrium is restored. I&rsquo;m not claiming to have created this idea. It&rsquo;s directly from R. H. Frank&rsquo;s <a href="http://www.jstor.org/stable/1805123">&ldquo;Are Workers Paid their Marginal Products?&rdquo;</a> where it is examined in detail in several industries, including ones where it is much easier to determine precise productivity than ours.</p>
+
+<p>To see how this works, let&rsquo;s play it out in a system where productivity==pay. You have the option of two jobs, one with Company A and another with Company B. At Company A, you would be one of the most productive people there. In fact, you&rsquo;d be twice as productive as the average employee. The average employee at A makes $50k (all numbers are total compensation).</p>
+
+<p>Company B, on the other hand, has some of the most brilliant people in the industry. You&rsquo;d be half as productive there as the average employee. Since the average employee at Company B is 4x as productive as the average employee at Company A, they also make 4x as much: $200k. So in either case, your &ldquo;fair&rdquo; compensation would be $100k. Which job do you choose?</p>
+
+<p>Well, let&rsquo;s think about it some more. At Company A, you&rsquo;re going to be at the top of the pile. You&rsquo;re going to get the best assignments, designing the most cutting edge stuff that Company A does. That&rsquo;s going to be less cutting edge than Company B&rsquo;s most advanced stuff, but at Company B you&rsquo;re not going to work on the most advanced stuff. You&rsquo;re going to be at the bottom of the pile there, one of the most junior people. You&rsquo;re going to do maintenance on their legacy products. You&rsquo;re going to do the bug fixes that the senior guys don&rsquo;t want to do.</p>
+
+<p>So you&rsquo;re faced with a very productive company where you&rsquo;re Loser or a less productive company where you&rsquo;re Alice. The question is, what kind of compensation would you require from each company in order to be willing to work there? Different people weigh these things differently. Some people would take a huge pay cut to do grunt work for a brilliant company (I know a guy who did this). But I&rsquo;m guessing for most people Company B would have to pay them more to be at the bottom of the pile than Company A would to be at the top.</p>
+
+<p>Now the math behind the pay compression should come into focus. If you demand $110k to work at Company B, you&rsquo;d still be one of the lowest paid people there. But the average employee would only be paid 1.8x as much for 2x as much productivity. You just created the &ldquo;unfair&rdquo; situation we&rsquo;re talking about. On the other hand, if you choose to work on more exciting projects at Company A and are willing to do it for $90k, then you&rsquo;re on exactly the other side of the coin.</p>
+
+<p>What this boils down to is that without Loser, Alice can&rsquo;t be at the top. Without someone to do the boring maintenance work, Alice would have to do it herself. So she willingly, if unconsciously, pays Loser a premium so she can work on cooler projects. Company B needs someone to do $100k junior work. You demand $110k to be junior there rather than $90k to be senior at Company A. So they pay Alice $10k less than her job is worth, you $10k more, and the system is back in balance. Except now you&rsquo;re Loser and Alice keeps asking why she doesn&rsquo;t make as much as her performance predicts.</p>
+
+<p>This is not the only cause of what seem like unfair pay practices. There is absolutely a lot of inefficiencies in big companies that allow deadwood to coast. There are definitely politics that let do-nothings get to work on cool projects. In some cases Loser can make <em>more</em> than Alice for absurd reasons. But I&rsquo;m arguing that these are the margins. If they were the primary cause, more efficient companies would destroy these idiotic firms by taking all their Alices. I&rsquo;m saying that the core of the compression, the reason that 3x productivity can become 1.3x pay, is that it is the natural economic result of a free market working efficiently, and that Alice is paying Loser for her rank.</p>
+
+<p>It may not be as satisfying an answer as &ldquo;companies are messed up,&rdquo; but I think it actually explains the situation most accurately.</p>
+
+<p>Footnote: Frank has recently put out a new, related book called <em>The Darwin Economy</em>. I&rsquo;m not a fan of the book, even when I agree with it, because it glosses over some important points too easily. But for $10 you can read the <a href="http://www.jstor.org/stable/1805123"><em>American Economic Association</em></a> paper and see some of the real-world studies that back up this particular economic theory.</p>
+
+<p>I&rsquo;ll get back to writing about NEON assembly on the iPad in the next week or so.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Triangle CocoaHeads (and Building a (Core) Foundation)]]></title>
+    <link href="http://robnapier.net/triangle-cocoaheads-march/"/>
+    <updated>2012-03-23T21:48:30-04:00</updated>
+    <id>http://robnapier.net/triangle-cocoaheads-march</id>
+    <content type="html"><![CDATA[<p>Last night&rsquo;s <a href="http://meetup.trianglecocoa.com/events/49569052/">CocoaHeads</a> was a blast. <a href="http://www.dtsquaredsoftware.com/">Alondo</a>, you have to come give an intermediate/advanced talk on Storyboards. Thanks a lot to @scottpenrose for his lightning and thunder, and @flightblog for his inspiration (METAR gave me a lot of headaches, too). And of course, thanks especially to <a href="http://log.jsh.in/">Josh</a> for organizing everything. And a new place for NSCoder? You rock.</p>
+
+<p>For those who didn&rsquo;t scribble notes fast enough, my Core Foundation presentation is attached (including the fix for my memory leak; was it Jay who found that?) I&rsquo;ll make sure to fix the code in the book for the next edition.</p>
+
+<p><a href="http://robnapier.net/assets/Building-a-Core-Foundation.pdf">Building a Core Foundation Presentation</a></p>
+]]></content>
+  </entry>
+  
+</feed>

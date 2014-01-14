@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Software Development | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/software-development/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Phone-screening Cocoa Developers]]></title>
+    <link href="http://robnapier.net/phone-screen/"/>
+    <updated>2012-06-26T11:15:12-04:00</updated>
+    <id>http://robnapier.net/phone-screen</id>
+    <content type="html"><![CDATA[<p>There was an <a href="http://stackoverflow.com/questions/1019636/phone-screen-questions-for-mac-os-x-developer-positions/1019759#1019759">interesting question</a> on StackOverflow that was unfortunately closed as off topic. It was off topic, but it&rsquo;s still a useful question. When phone screening potential Cocoa developers, what kinds of questions should you ask? I&rsquo;ve helped several clients screen potential candidates over the years, and so I have several questions I use to help with that.</p>
+
+<!-- more -->
+
+
+<p>Now obviously some might be concerned that posting such a list invites people to &ldquo;study for the test.&rdquo; To that, I have several comments:</p>
+
+<ul>
+<li>I am not providing answers here, only questions. A potential interviewee who researches the answers is a benefit to everyone.</li>
+<li>This are the minimum basics. They&rsquo;re intended to figure out if someone is even worth talking to. Failure to know these things are a pretty good indication that you <em>aren&rsquo;t</em> interested in this candidate. They&rsquo;re not a demonstration of significant skill.</li>
+<li>There&rsquo;s almost always a big difference in the answers between someone who has actually encountered these issues in the real world, and someone who has just recently searched google to crib the answers. It&rsquo;s not usually difficult to tell them apart.</li>
+<li>Anyone who found this list by reading my blog is obviously a developer of exceptional taste and intelligence and should be invited to an in-person interview on the spot.</li>
+</ul>
+
+
+<p>The first list of questions is for &ldquo;any&rdquo; developer, by which I mean any professional, experienced developer. The second list refers to &ldquo;senior&rdquo; developers. Most of the questions on that list would be more properly categorized as &ldquo;intermediate,&rdquo; but senior developers often specialize. One might be an incredible UI programmer who knows little about ObjC internals. Another might be brilliant at developing high-performance data processing with Dispatch I/O, but have trouble managing view rotations. My questions tend to skew a little towards the latter type of developer since that&rsquo;s my speciality. But I try to cover the UI side as well.</p>
+
+<p>Note that several of my questions involve opinions or ask the candidate to &ldquo;describe generally.&rdquo; None of my questions expect exact, runnable code to be generated on the spot, nor do I expect a candidate to be a walking encyclopedia of Cocoa implementation details. My goal is to explore what the candidate knows intuitively and would know where to look quickly if needed. My goal is not to give a Cocoa pop-quiz. Particularly in a phone screen, most of these questions should be fairly easy to answer for an interesting candidate.</p>
+
+<p>Input welcome as I evolve this list. In particular, I&rsquo;m looking for senior developers who might feel my questions are too skewed to my skill set. I&rsquo;d like to keep them as broadly applicable as possible.</p>
+
+<p>So without further ado, some questions.<!--more--><h3>Any Cocoa Developer</h3></p>
+
+<ul>
+<li><p>Should be able to explain the difference between <code>foo = bar</code> and <code>self.foo = bar</code> when <code>foo</code> is an ivar.</p></li>
+<li><p>Should be able to easily explain what would cause <code>EXC_BAD_ACCESS</code>.</p></li>
+<li><p>Should know what happens if you send a message to <code>nil</code>.</p></li>
+<li><p>Should be able to explain the MVC paradigm, and describe how to break down a simple problem into Models, Views and Controllers. Pay special attention to how they develop Model classes.</p></li>
+<li><p>(iOS) Should be able to explain the use of <code>UITableView</code>.</p></li>
+<li><p>(iOS) Should be able to explain at least one way to fade-out a view that does not involve an <code>NSTimer</code>.</p></li>
+<li><p>Should know the difference between a view and a layer, and how the two relate to each other.</p></li>
+<li><p>Should be able to explain a retain loop and how to prevent them.</p></li>
+<li><p>Should be able to explain a retain loop caused by a block capturing <code>self</code>. They should be able to describe at least one way to address this problem.</p></li>
+<li><p>Should be able to explain what a nib file is, how it is loaded, and (iOS) the order of <code>UIViewController</code> methods during creating, loading, displaying, and unloading the main view with and without a nib file (minor mistakes here are ok; but they should be familiar with the overall flow).</p></li>
+<li><p>Should be able to describe the debugging steps for the following scenario: &ldquo;You have a button, an <code>IBAction</code>, a text field, and an <code>IBOutlet</code>. When you press the button, it should increment the value in the text field. However, when you press the button, the button highlights and unhighlights, but nothing else happens.&rdquo;</p></li>
+<li><p>(iOS) Should know how to show and dismiss the keyboard.</p></li>
+<li><p><em>(May become an intermediate/senior topic in the future.)</em> Should know the rules of memory management cold, including the <a href="http://robnapier.net/blog/three-magic-words-6">three magic words</a>. With the rise of ARC, this may eventually become a senior question, but in 2012 every serious Cocoa developer should still be familiar with manual memory management.</p></li>
+<li><p>(OSX) Should be able to describe the responder-chain, what it is for, and generally how it works.</p></li>
+<li><p>Should be able to describe the difference between the Delegate pattern and the Target-Action pattern and where you would best apply each.</p></li>
+</ul>
+
+
+<h3>Anyone Claiming to be a "Senior" Cocoa Developer</h3>
+
+
+<ul>
+<li><p>Should have several defensible opinions on what constitutes Cocoa &ldquo;best practice.&rdquo;</p></li>
+<li><p>Should be able to provide information about a radar they&rsquo;ve filed. Any senior developer should eventually have encountered a Cocoa bug, and a good one will have filed a radar. Extra credit for radars cross-posted to openradar.</p></li>
+<li><p>Should have specific opinions and complaints about Xcode. Anyone without specific complaints about Xcode hasn&rsquo;t used it very much. Extra credit for radars opened against Xcode.</p></li>
+<li><p>Should know the Core Foundation memory management rules and should be able to explain what &ldquo;toll-free bridging&rdquo; is.</p></li>
+<li><p>Should know how to correctly use <code>__bridge</code>, <code>CFBridgingRetain()</code>, and <code>CFBridgingRelease()</code>.</p></li>
+<li><p>(iOS) Should be able to explain several circumstances in which an application may run in the background. In particular, they should be able to explain how to manage long-running operations and when this should be used.</p></li>
+<li><p>(iOS) Should be able to explain the use of <code>UIGestureRecognizer</code> and give several reasons that a recognizer might not fire when expected.</p></li>
+<li><p>Should be able to name several Frameworks outside of Cocoa. Specifically, they should be familiar with at least one Framework that does not link by default and they need to add to their project (any serious developer will have encountered this problem).</p></li>
+<li><p>Should know how to apply perspective to <code>CALayer</code>. Extra credit if they can explain the difference between a normal layer and a transform layer.</p></li>
+<li><p>Should be able to explain an <code>NSInvocation</code>, at least to the level of how you would use one.</p></li>
+<li><p>Should be able to explain generally KVO&rsquo;s implementation. In particular, &ldquo;when you call a setter on a KVO observed object, <code>willChangeValueForKey:</code> is called automatically, even though it&rsquo;s not in the setter code. How is this achieved?&rdquo;</p></li>
+<li><p>Should be able to design a thread-safe accessor using GCD. Extra credit if it allows simultaneous readers and does not block writers. (Explanation of the basic approach is fine. I dislike on-the-spot coding, even when the developer is onsite.)</p></li>
+<li><p>Should be able to explain run loops, why you might manually process one (i.e. <code>runMode:beforeDate:</code>), reasons you might manually process the <em>main</em> run loop and what dangers that might create.</p></li>
+<li><p>Should be familiar with several approaches to debugging memory crashes and leaks, including <code>NSZombiesEnabled</code> and malloc debugging. Should be able to describe generally how each of these works.</p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Github and Its Pricing]]></title>
+    <link href="http://robnapier.net/github-pricing/"/>
+    <updated>2012-03-30T22:48:49-04:00</updated>
+    <id>http://robnapier.net/github-pricing</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It&rsquo;s a good interface. It works. I could use a few more features in the Issues module, but it&rsquo;s nice that they keep it simple. I&rsquo;ve tried BitBucket and Assembla, and looked at several others. I&rsquo;ve managed my own servers. In every test, github wins.</p>
+
+<p>Except for price. github is often the most expensive. Especially if you need what I need, which is several small repositories, each with a small number of collaborators (often just one or two). But just a few of those can push you into the Medium plan, or even into the Bronze plan.<!-- more -->So I was complaining about this to my wife. I say &ldquo;Wife, github is just too expensive. Why do they have to be like that? I really like using them.&rdquo;</p>
+
+<p>&ldquo;Oh,&rdquo; says Wife. &ldquo;What are we talking about?&rdquo;</p>
+
+<p>&ldquo;Well,&rdquo; I say, &ldquo;it could easily be $25/month.&rdquo;</p>
+
+<p>&ldquo;$300/year?&rdquo;</p>
+
+<p>&ldquo;Yeah.&rdquo;</p>
+
+<p>&ldquo;And it works really well? And makes business go more smoothly?&rdquo;</p>
+
+<p>&ldquo;Yeah&hellip;?&rdquo;</p>
+
+<p>&ldquo;And you need some service for this, right?&rdquo;</p>
+
+<p>&ldquo;One way or another.&rdquo;</p>
+
+<p>&ldquo;Get over yourself. Pay them.&rdquo;</p>
+
+<p>And I started to think about it. If I&rsquo;d billed the time I&rsquo;d already spent researching and designing scripts to work around issues, I&rsquo;d probably have covered a year or two of service.</p>
+
+<p>Some services have gotten so cheap, you get used to what you think they &ldquo;should&rdquo; cost. I remember haggling in markets in Shanghai and friends saying &ldquo;Rob, you&rsquo;re buying a scarf for $2 and you&rsquo;re haggling over the last 50 cents.&rdquo; My attitude was, yeah, but in Shanghai that scarf should be 8 RMB and she&rsquo;s asking 14. At home I&rsquo;d think nothing of paying $10, but in Shanghai I feel ripped off paying more than a buck. The whole Internet is a Shanghai market sometimes.</p>
+
+<p>Quality is worth paying for. As a developer, I expect to be paid for the quality code I write. Time to pay others for theirs.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Some Math Behind "Contribution != Compensation"]]></title>
+    <link href="http://robnapier.net/contribution-vs-compensation/"/>
+    <updated>2012-03-24T18:16:32-04:00</updated>
+    <id>http://robnapier.net/contribution-vs-compensation</id>
+    <content type="html"><![CDATA[<p>Thanks to @codinghorror, I recently read a blog post from Steve McConnell called <a href="http://blogs.construx.com/blogs/stevemcc/archive/2011/01/22/10x-productivity-myths-where-s-the-10x-difference-in-compensation.aspx">10x Productivity Myths: Where’s the 10x Difference in Compensation?</a> Steve quotes a question from Pete McBreen:</p>
+
+<blockquote>"One point in his article that McConnell did not address--<strong>programmer compensation does not vary accordingly.</strong> This is a telling point--if the difference is productivity can be 10X, why is it that salaries rarely fall outside the 2X range for experienced developers?" [emphasis in original]</blockquote>
+
+
+<p>He then provides some fairly satisfying answers. &ldquo;The other guy is actually overpaid.&rdquo; &ldquo;You&rsquo;re confusing coding with actual business value.&rdquo; &ldquo;Companies pay the least they can get away with.&rdquo; etc. All his answers make good, intuitive sense. Unfortunately, despite being a longtime fan of Steve McConnell&rsquo;s work, I believe most are irrelevant or incorrect.</p>
+
+<!-- more -->
+
+
+<p>Let me state this a little more concretely. If a company pays Alice $X, but Alice generates $10X in marginal value, then there is a very strong incentive for another company to offer Alice $2X and receive $9X in marginal value. Alice would almost certainly accept $2X, and a competitor would be idiotic not to pay it. As long as Alice were free to change employers at will, and as long as employers were capable of determining Alice&rsquo;s value in even a vague way, this would naturally continue until there were little marginal value left (less than the friction of recruiting and moving and within the precision of determining Alice&rsquo;s productivity). That is to say, there should not be much money left on the table. In the normal version of this story, there is a massive amount of money on the table. It&rsquo;s hard to believe this continues indefinitely in a highly competitive, unregulated, and mobile industry like ours.</p>
+
+<p>Arguing that it&rsquo;s impossible to measure Alice&rsquo;s productivity to any precision makes the entire discussion moot, since it eliminates the ability to say that Alice is 10x more productive. How did you decide that if productivity is unmeasurable? Even intuitive measurements would be sufficient to create a bidding war if there were really 10x value on the table.</p>
+
+<p>It also seems unworkable that a company would continue to pay large numbers of people dramatically above their total contribution. Sure, here and there; large companies are quite inefficient in my experience. And at the executive level, I believe there is enough collusion between compensation committees and CEOs to make the system significantly inefficient. But almost any argument for this being systemic suggests that companies are highly altruistic. It&rsquo;s hard to believe that a greedy company would hold onto a significant number of low-level employees that would be cheaper to fire and replace with no one.</p>
+
+<p>I suggest that there&rsquo;s another answer that doesn&rsquo;t require long-lived massive inefficiencies in the market. I suggest that Alice is being paid in another way and that our &ldquo;loser&rdquo; employee provides some other value. I&rsquo;m further claiming that the value Loser provides is reasonably close to the money that Alice foregoes. In other words, Alice is paying Loser for his service, and thus a reasonably efficient economic system in equilibrium is restored. I&rsquo;m not claiming to have created this idea. It&rsquo;s directly from R. H. Frank&rsquo;s <a href="http://www.jstor.org/stable/1805123">&ldquo;Are Workers Paid their Marginal Products?&rdquo;</a> where it is examined in detail in several industries, including ones where it is much easier to determine precise productivity than ours.</p>
+
+<p>To see how this works, let&rsquo;s play it out in a system where productivity==pay. You have the option of two jobs, one with Company A and another with Company B. At Company A, you would be one of the most productive people there. In fact, you&rsquo;d be twice as productive as the average employee. The average employee at A makes $50k (all numbers are total compensation).</p>
+
+<p>Company B, on the other hand, has some of the most brilliant people in the industry. You&rsquo;d be half as productive there as the average employee. Since the average employee at Company B is 4x as productive as the average employee at Company A, they also make 4x as much: $200k. So in either case, your &ldquo;fair&rdquo; compensation would be $100k. Which job do you choose?</p>
+
+<p>Well, let&rsquo;s think about it some more. At Company A, you&rsquo;re going to be at the top of the pile. You&rsquo;re going to get the best assignments, designing the most cutting edge stuff that Company A does. That&rsquo;s going to be less cutting edge than Company B&rsquo;s most advanced stuff, but at Company B you&rsquo;re not going to work on the most advanced stuff. You&rsquo;re going to be at the bottom of the pile there, one of the most junior people. You&rsquo;re going to do maintenance on their legacy products. You&rsquo;re going to do the bug fixes that the senior guys don&rsquo;t want to do.</p>
+
+<p>So you&rsquo;re faced with a very productive company where you&rsquo;re Loser or a less productive company where you&rsquo;re Alice. The question is, what kind of compensation would you require from each company in order to be willing to work there? Different people weigh these things differently. Some people would take a huge pay cut to do grunt work for a brilliant company (I know a guy who did this). But I&rsquo;m guessing for most people Company B would have to pay them more to be at the bottom of the pile than Company A would to be at the top.</p>
+
+<p>Now the math behind the pay compression should come into focus. If you demand $110k to work at Company B, you&rsquo;d still be one of the lowest paid people there. But the average employee would only be paid 1.8x as much for 2x as much productivity. You just created the &ldquo;unfair&rdquo; situation we&rsquo;re talking about. On the other hand, if you choose to work on more exciting projects at Company A and are willing to do it for $90k, then you&rsquo;re on exactly the other side of the coin.</p>
+
+<p>What this boils down to is that without Loser, Alice can&rsquo;t be at the top. Without someone to do the boring maintenance work, Alice would have to do it herself. So she willingly, if unconsciously, pays Loser a premium so she can work on cooler projects. Company B needs someone to do $100k junior work. You demand $110k to be junior there rather than $90k to be senior at Company A. So they pay Alice $10k less than her job is worth, you $10k more, and the system is back in balance. Except now you&rsquo;re Loser and Alice keeps asking why she doesn&rsquo;t make as much as her performance predicts.</p>
+
+<p>This is not the only cause of what seem like unfair pay practices. There is absolutely a lot of inefficiencies in big companies that allow deadwood to coast. There are definitely politics that let do-nothings get to work on cool projects. In some cases Loser can make <em>more</em> than Alice for absurd reasons. But I&rsquo;m arguing that these are the margins. If they were the primary cause, more efficient companies would destroy these idiotic firms by taking all their Alices. I&rsquo;m saying that the core of the compression, the reason that 3x productivity can become 1.3x pay, is that it is the natural economic result of a free market working efficiently, and that Alice is paying Loser for her rank.</p>
+
+<p>It may not be as satisfying an answer as &ldquo;companies are messed up,&rdquo; but I think it actually explains the situation most accurately.</p>
+
+<p>Footnote: Frank has recently put out a new, related book called <em>The Darwin Economy</em>. I&rsquo;m not a fan of the book, even when I agree with it, because it glosses over some important points too easily. But for $10 you can read the <a href="http://www.jstor.org/stable/1805123"><em>American Economic Association</em></a> paper and see some of the real-world studies that back up this particular economic theory.</p>
+
+<p>I&rsquo;ll get back to writing about NEON assembly on the iPad in the next week or so.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[On "Evidence Based Scheduling"]]></title>
+    <link href="http://robnapier.net/evidence-based-scheduling/"/>
+    <updated>2009-02-19T15:28:28-05:00</updated>
+    <id>http://robnapier.net/evidence-based-scheduling</id>
+    <content type="html"><![CDATA[<p>Joel Spolsky, of <a><em>Joel on Software</em></a> is one of my favorite writers in the software industry. He&rsquo;s insightful, pithy, and practical. But sometimes he and I part ways, at least in practice, and <a href="http://www.joelonsoftware.com/items/2007/10/26.html">&ldquo;Evidence Based Scheduling&rdquo;</a> is one of those times.</p>
+
+<p>The trouble with the &ldquo;break it into tiny pieces&rdquo; approach is that the number of pieces quickly explodes so large that the act of tracking them swamps the project. And now, rather than getting wildly behind schedule because you underestimated how long a particular piece will take, you&rsquo;re behind schedule because you underestimated how many pieces there were. And now you have more project management overhead&hellip;. <!-- more --></p>
+
+<p>Many of Joel&rsquo;s points are good, but the basic truism is that our industry has no idea how to schedule anything non-trivial. This has led me to advocate very rapid iterations, which basically breaks everything down into things trivial enough that we can schedule them (similar to what Joel is saying), but this doesn&rsquo;t help when the goal is to answer &ldquo;when can we <strong>ship</strong> a product that we can <strong>sell</strong>?&rdquo; We can tell you when the first feature-incomplete iteration will be ready, but not when something actually customer-ready will be.</p>
+
+<p>I agree with Joel about &ldquo;evidence based&rdquo; scheduling at the macro-level (rather than the individual task level). That&rsquo;s how I do all my most accurate scheduling. &ldquo;Project Hellfire is about as big as Project Snowstorm, and Snowstorm took about 6 months to complete, so Hellfire should be able the same.&rdquo; But generally we don&rsquo;t institutionalize that <span class="il">memory</span>, and we ignore those who remember project Hellfire. We assume we won&rsquo;t make those mistakes again, so of course it&rsquo;ll be faster. It won&rsquo;t be. We&rsquo;ll make different mistakes. And in the end, it&rsquo;ll probably take about the same amount of time.</p>
+
+<p>But then again, if our employers actually knew and believed how long it would take to really deliver the product, they would never approve the project&hellip;. A bizarre fact. If a project is really going to take 2 years to complete, and you say it&rsquo;s going to take 18 months, you will be accused of sandbagging and run out of the room. If you say it will take 6 months, they will fund you, and be frustrated when it takes 3 years (because it always takes longer when you try to go too fast), but they&rsquo;ll fund you all the same, and keep funding you for the three years. We tend to accuse engineers of overestimating the schedule, but the truth is we almost always overestimate our skills.</p>
+]]></content>
+  </entry>
+  
+</feed>

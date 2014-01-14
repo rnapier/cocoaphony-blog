@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Pushing the Limits | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/pushing-the-limits/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Kindle!]]></title>
+    <link href="http://robnapier.net/ios5-ptl-kindle/"/>
+    <updated>2011-12-22T10:47:36-05:00</updated>
+    <id>http://robnapier.net/ios5-ptl-kindle</id>
+    <content type="html"><![CDATA[<p>For those who have asked (and it&rsquo;s the #1 question I&rsquo;m asked about the book), <em>iOS 5 Programming Pushing the Limits</em> is now available in <a href="http://www.amazon.com/Programming-Pushing-Limits-Extraordinary-ebook/dp/B006OP97QI/ref=sr_1_11?s=digital-text&ie=UTF8&qid=1324561899&sr=1-11">Kindle format</a>, along with iBook and Adobe eBook. Enjoy</p>
+]]></content>
+  </entry>
+  
+</feed>

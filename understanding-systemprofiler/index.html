@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Understanding System_profiler - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="It thought I was going to be quiet for two weeks, now three posts in a day. There was a good question on Stack Overflow about getting system &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/understanding-systemprofiler">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Understanding System_profiler</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-26T17:25:53-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is &ldquo;what does system_profiler actually do?&rdquo;  But it&rsquo;s a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It&rsquo;s a whirlwind tour of how you begin to attack programs using pretty standard tools. I&rsquo;m not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you&rsquo;re going to hide how your program works, make sure you research those first. You&rsquo;ll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.</p>
+
+<!-- more -->
+
+
+<p>Of course you start with the obvious, &ldquo;man system_profiler&rdquo;. But that doesn&rsquo;t give as much information as we want. So let&rsquo;s tear apart the binary and see what&rsquo;s going on, shall we?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>otool -L /usr/sbin/system_profiler
+</span><span class='line'>system_profiler:
+</span><span class='line'>  /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation <span class="o">(</span>compatibility version 300.0.0, current version 677.22.0<span class="o">)</span>
+</span><span class='line'>  /usr/lib/libgcc_s.1.dylib <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+</span><span class='line'>  /usr/lib/libSystem.B.dylib <span class="o">(</span>compatibility version 1.0.0, current version 111.1.4<span class="o">)</span>
+</span><span class='line'>  /usr/lib/libobjc.A.dylib <span class="o">(</span>compatibility version 1.0.0, current version 227.0.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation <span class="o">(</span>compatibility version 150.0.0, current version 476.17.0<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So we see it&rsquo;s using CoreFoundation and a private framework. Let&rsquo;s see what we can learn from that private framework.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>otool -L /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport
+</span><span class='line'>/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport:
+</span><span class='line'>  /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/Frameworks/IOKit.framework/Versions/A/IOKit <span class="o">(</span>compatibility version 1.0.0, current version 275.0.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/PrivateFrameworks/DiskManagement.framework/Versions/A/DiskManagement <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa <span class="o">(</span>compatibility version 1.0.0, current version 12.0.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration <span class="o">(</span>compatibility version 1.0.0, current version 212.2.0<span class="o">)</span>
+</span><span class='line'>  /usr/lib/libcurl.4.dylib <span class="o">(</span>compatibility version 5.0.0, current version 5.0.0<span class="o">)</span>
+</span><span class='line'>  /usr/lib/libz.1.dylib <span class="o">(</span>compatibility version 1.0.0, current version 1.2.3<span class="o">)</span>
+</span><span class='line'>  /usr/lib/libgcc_s.1.dylib <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+</span><span class='line'>  /usr/lib/libSystem.B.dylib <span class="o">(</span>compatibility version 1.0.0, current version 111.1.4<span class="o">)</span>
+</span><span class='line'>  /usr/lib/libobjc.A.dylib <span class="o">(</span>compatibility version 1.0.0, current version 227.0.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation <span class="o">(</span>compatibility version 150.0.0, current version 476.17.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit <span class="o">(</span>compatibility version 45.0.0, current version 949.45.0<span class="o">)</span>
+</span><span class='line'>  /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation <span class="o">(</span>compatibility version 300.0.0, current version 677.22.0<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We see it&rsquo;s in Cocoa. Nice, we can use <a href="http://www.codethecode.com/projects/class-dump/">class-dump</a> on it. And we see a bunch of public and private frameworks in there. We won&rsquo;t go into all of those here. But you can tear them apart using the same techniques we&rsquo;re going to use on DiskManagement:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">$</span> <span class="n">class</span><span class="o">-</span><span class="n">dump</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">PrivateFrameworks</span><span class="o">/</span><span class="n">DiskManagement</span><span class="p">.</span><span class="n">framework</span><span class="o">/</span><span class="n">Versions</span><span class="o">/</span><span class="n">A</span><span class="o">/</span><span class="n">DiskManagement</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">DMManager</span> : <span class="nc">NSObject</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">id</span> <span class="n">_instPriv</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">+</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="n">systemResourcesSufficient</span><span class="p">;</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">systemAtMountPoint:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span> <span class="nf">lowVersion:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">fp12</span> <span class="nf">lowInclusive:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">fp16</span> <span class="nf">highVersion:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">fp20</span> <span class="nf">highInclusive:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">fp24</span><span class="p">;</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">sharedManager</span><span class="p">;</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">sharedManagerWithoutAuthentication</span><span class="p">;</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">initialize</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithAuthentication:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dealloc</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">agent</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">updateGID:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">getPartitionStartLocationForDisk:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">getInfoForChildrenOfDisk:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span> <span class="nf">sortedBy:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp12</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">enableVirtualDisks</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">disableVirtualDisks</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">diskWithIdentifier:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">diskWithDiskIdentifier:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">diskWithDeviceTreePath:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">diskWithUUID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">diskWithUUIDInDisk:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">diskWithDisk:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">rootDisk</span><span class="p">;</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hey, that might be handy in trying to understand unique things about our system (the thing we happen to be interested in). You can continue this approach through any of the pieces that look interesting. Of course you&rsquo;re going to have to guess a bit about types, but you can call these methods in your code and then ask the resulting object for its -class.</p>
+
+<p>We could do this all day (and you probably will, chasing down various libraries that look interesting and writing small projects to explore them), but let&rsquo;s take a completely different track. Let&rsquo;s go from static to dynamic and see what system_profiler actually <b>does</b> when it runs.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">$</span> <span class="n">sudo</span> <span class="n">dtruss</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">system_profiler</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">stat</span><span class="p">(</span><span class="s">&quot;/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport</span><span class="se">\0</span><span class="s">&quot;</span><span class="p">,</span> <span class="mh">0xBFFFD3E8</span><span class="p">,</span> <span class="mh">0xFFFFFFFFBFFFBCA4</span><span class="p">)</span>        <span class="o">=</span> <span class="mi">0</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">open</span><span class="p">(</span><span class="s">&quot;/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport</span><span class="se">\0</span><span class="s">&quot;</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">)</span>      <span class="o">=</span> <span class="mi">3</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">pread</span><span class="p">(</span><span class="mh">0x3</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\312\376\272\276\0</span><span class="s">&quot;</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">)</span>        <span class="o">=</span> <span class="mi">4096</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">pread</span><span class="p">(</span><span class="mh">0x3</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\316\372\355\376\a\0</span><span class="s">&quot;</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">)</span>       <span class="o">=</span> <span class="mi">4096</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">mmap</span><span class="p">(</span><span class="mh">0x3F000000</span><span class="p">,</span> <span class="mh">0xD000</span><span class="p">,</span> <span class="mh">0x5</span><span class="p">,</span> <span class="mh">0x12</span><span class="p">,</span> <span class="mh">0x3</span><span class="p">,</span> <span class="mh">0x100000000</span><span class="p">)</span>      <span class="o">=</span> <span class="mh">0x3F000000</span> <span class="mi">0</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">open_nocancel</span><span class="p">(</span><span class="s">&quot;/System/Library/SystemProfiler/SPBluetoothReporter.spreporter/Contents</span><span class="se">\0</span><span class="s">&quot;</span><span class="p">,</span> <span class="mh">0x100004</span><span class="p">,</span> <span class="mh">0x316310</span><span class="p">)</span>       <span class="o">=</span> <span class="mi">3</span> <span class="mi">0</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So we see all the frameworks it uses, and hey, /System/Library/SystemProfiler sure looks interesting. I wonder what we might do with that?</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">$</span> <span class="n">class</span><span class="o">-</span><span class="n">dump</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">SystemProfiler</span><span class="o">/</span><span class="n">SPNetworkReporter</span><span class="p">.</span><span class="n">spreporter</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">MacOS</span><span class="o">/</span><span class="n">SPNetworkReporter</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">__SCDynamicStore</span><span class="p">;</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">SPNetworkReporter</span> : <span class="nc">SPReporter</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">__SCDynamicStore</span> <span class="o">*</span><span class="n">_scStore</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">_localizedServiceNames</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nl">_hardwareDictionaryForInterface:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">_proxyDictionaryForServiceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">_ipv4DictionaryForServiceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">_ipv6DictionaryForServiceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">_dnsDictionaryForServiceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">_appleTalkDictionaryForServiceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">_ethernetDictionaryForServiceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span> <span class="nf">interfaceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp12</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">_dhcpDictionaryForServiceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">_dictionaryForServiceID:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">updateDictionary:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dealloc</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>OK, but what does this one really do? Maybe if if we had a nice way to disassemble it&hellip;. Like maybe <a href="http://otx.osxninja.com/">otx</a>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='c-objdump'><span class='line'><span class="err">$</span> <span class="n">otx</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">SystemProfiler</span><span class="o">/</span><span class="n">SPNetworkReporter</span><span class="p">.</span><span class="n">spreporter</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">MacOS</span><span class="o">/</span><span class="n">SPNetworkReporter</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="o">-</span><span class="p">(</span><span class="n">id</span><span class="p">)[</span><span class="n">SPNetworkReporter</span> <span class="n">_hardwareDictionaryForInterface</span><span class="o">:</span><span class="p">]</span>
+</span><span class='line'>    <span class="o">+</span><span class="mi">0</span>  <span class="mf">00000f</span><span class="mi">0</span><span class="n">e</span>  <span class="mi">55</span>             <span class="n">pushl</span>    <span class="o">%</span><span class="n">ebp</span>
+</span><span class='line'>    <span class="o">+</span><span class="mi">1</span>  <span class="mf">00000f0f</span>  <span class="mf">89e5</span>           <span class="n">movl</span>     <span class="o">%</span><span class="n">esp</span><span class="p">,</span><span class="o">%</span><span class="n">ebp</span>
+</span><span class='line'>    <span class="o">+</span><span class="mi">3</span>  <span class="mf">00000f</span><span class="mi">11</span>  <span class="mi">57</span>             <span class="n">pushl</span>    <span class="o">%</span><span class="n">edi</span>
+</span><span class='line'>    <span class="o">+</span><span class="mi">4</span>  <span class="mf">00000f</span><span class="mi">12</span>  <span class="mi">56</span>             <span class="n">pushl</span>    <span class="o">%</span><span class="n">esi</span>
+</span><span class='line'>    <span class="o">+</span><span class="mi">5</span>  <span class="mf">00000f</span><span class="mi">13</span>  <span class="mi">53</span>             <span class="n">pushl</span>    <span class="o">%</span><span class="n">ebx</span>
+</span><span class='line'>    <span class="o">+</span><span class="mi">6</span>  <span class="mf">00000f</span><span class="mi">14</span>  <span class="n">e800000000</span>     <span class="n">calll</span>    <span class="mh">0x00000f19</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">11</span>  <span class="mf">00000f</span><span class="mi">19</span>  <span class="mi">5</span><span class="n">b</span>             <span class="n">popl</span>     <span class="o">%</span><span class="n">ebx</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">12</span>  <span class="mf">00000f</span><span class="mi">1</span><span class="n">a</span>  <span class="mi">83</span><span class="n">ec5c</span>         <span class="n">subl</span>     <span class="err">$</span><span class="mh">0x5c</span><span class="p">,</span><span class="o">%</span><span class="n">esp</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">15</span>  <span class="mf">00000f</span><span class="mi">1</span><span class="n">d</span>  <span class="mi">8</span><span class="n">b83e7300000</span>   <span class="n">movl</span>     <span class="mh">0x000030e7</span><span class="p">(</span><span class="o">%</span><span class="n">ebx</span><span class="p">),</span><span class="o">%</span><span class="n">eax</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">21</span>  <span class="mf">00000f</span><span class="mi">23</span>  <span class="mi">89442404</span>       <span class="n">movl</span>     <span class="o">%</span><span class="n">eax</span><span class="p">,</span><span class="mh">0x04</span><span class="p">(</span><span class="o">%</span><span class="n">esp</span><span class="p">)</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">25</span>  <span class="mf">00000f</span><span class="mi">27</span>  <span class="mi">8</span><span class="n">b8377310000</span>   <span class="n">movl</span>     <span class="mh">0x00003177</span><span class="p">(</span><span class="o">%</span><span class="n">ebx</span><span class="p">),</span><span class="o">%</span><span class="n">eax</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">31</span>  <span class="mf">00000f</span><span class="mi">2</span><span class="n">d</span>  <span class="mi">890424</span>         <span class="n">movl</span>     <span class="o">%</span><span class="n">eax</span><span class="p">,(</span><span class="o">%</span><span class="n">esp</span><span class="p">)</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">34</span>  <span class="mf">00000f</span><span class="mi">30</span>  <span class="n">e8c3410000</span>     <span class="n">calll</span>    <span class="mh">0x000050f8</span>               <span class="o">+</span><span class="p">[</span><span class="n">NSMutableDictionary</span> <span class="n">dictionary</span><span class="p">]</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">39</span>  <span class="mf">00000f</span><span class="mi">35</span>  <span class="mi">89</span><span class="n">c7</span>           <span class="n">movl</span>     <span class="o">%</span><span class="n">eax</span><span class="p">,</span><span class="o">%</span><span class="n">edi</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">41</span>  <span class="mf">00000f</span><span class="mi">37</span>  <span class="mi">8</span><span class="n">b4510</span>         <span class="n">movl</span>     <span class="mh">0x10</span><span class="p">(</span><span class="o">%</span><span class="n">ebp</span><span class="p">),</span><span class="o">%</span><span class="n">eax</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">44</span>  <span class="mf">00000f</span><span class="mi">3</span><span class="n">a</span>  <span class="mi">85</span><span class="n">c0</span>           <span class="n">testl</span>    <span class="o">%</span><span class="n">eax</span><span class="p">,</span><span class="o">%</span><span class="n">eax</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">46</span>  <span class="mf">00000f</span><span class="mi">3</span><span class="n">c</span>  <span class="mf">0f</span><span class="mi">8486020000</span>   <span class="n">jel</span>      <span class="mh">0x000011c8</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">52</span>  <span class="mf">00000f</span><span class="mi">42</span>  <span class="mi">8</span><span class="n">d45e4</span>         <span class="n">leal</span>     <span class="mh">0xe4</span><span class="p">(</span><span class="o">%</span><span class="n">ebp</span><span class="p">),</span><span class="o">%</span><span class="n">eax</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">55</span>  <span class="mf">00000f</span><span class="mi">45</span>  <span class="mi">89442404</span>       <span class="n">movl</span>     <span class="o">%</span><span class="n">eax</span><span class="p">,</span><span class="mh">0x04</span><span class="p">(</span><span class="o">%</span><span class="n">esp</span><span class="p">)</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">59</span>  <span class="mf">00000f</span><span class="mi">49</span>  <span class="mi">8</span><span class="n">b8313410000</span>   <span class="n">movl</span>     <span class="mh">0x00004113</span><span class="p">(</span><span class="o">%</span><span class="n">ebx</span><span class="p">),</span><span class="o">%</span><span class="n">eax</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">65</span>  <span class="mf">00000f4f</span>  <span class="mi">8</span><span class="n">b00</span>           <span class="n">movl</span>     <span class="p">(</span><span class="o">%</span><span class="n">eax</span><span class="p">),</span><span class="o">%</span><span class="n">eax</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">67</span>  <span class="mf">00000f</span><span class="mi">51</span>  <span class="mi">890424</span>         <span class="n">movl</span>     <span class="o">%</span><span class="n">eax</span><span class="p">,(</span><span class="o">%</span><span class="n">esp</span><span class="p">)</span>
+</span><span class='line'>   <span class="o">+</span><span class="mi">70</span>  <span class="mf">00000f</span><span class="mi">54</span>  <span class="n">e84a410000</span>     <span class="n">calll</span>    <span class="mh">0x000050a3</span>               <span class="n">_IOMasterPort</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Digging through we&rsquo;ll see a lot of stuff starting &ldquo;IO.&rdquo; Just a little googling will teach us that means IOKit. So maybe that&rsquo;s going to be a good place to study in understanding this better.</p>
+
+<p>This is just the start, and the goal is to get people thinking in the right way and get some basic tools in their hands. These aren&rsquo;t black-hat tools. These are the basic tools of the trade. Any experienced Mac developer should know enough to tear apart Apple&rsquo;s code to figure out how they&rsquo;re doing what they do. That let&rsquo;s us write better Mac apps, even if we avoid using the private interfaces.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-26T17:25:53-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>cocoa</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://robnapier.net/understanding-systemprofiler/" data-via="cocoaphony" data-counturl="http://robnapier.net/understanding-systemprofiler/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/obfuscating-cocoa/" title="Previous Post: Obfuscating Cocoa">&laquo; Obfuscating Cocoa</a>
+      
+      
+        <a class="basic-alignment right" href="/broader-use-of-objc/" title="Next Post: Broader use of ObjC">Broader use of ObjC &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I'll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

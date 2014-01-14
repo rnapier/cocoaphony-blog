@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Learning Cocoa With Other Backgrounds - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="From a StackOverflow posting. When I teach Cocoa, I always ask the class what their background is in. This generally tells me what they need to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/learning-cocoa-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Learning Cocoa With Other Backgrounds</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-28T14:05:18-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em><a href="http://stackoverflow.com/questions/1043820/what-programming-skills-i-need-to-become-an-iphone-developer/1044525#1044525">From a StackOverflow posting</a>.</em></p>
+
+<p>When I teach Cocoa, I always ask the class what their background is in. This generally tells me what they need to unlearn before they&rsquo;re ready for Cocoa. Here are some of the things I&rsquo;ve found that different groups need to unlearn.<!-- more --></p>
+
+<p>For C++ developers:</p>
+
+<ul>
+<li><p>Naming. Correct naming is critical in Objective-C. The compiler will not save you. Learn the naming conventions and follow them.</p></li>
+<li><p>Dot notation. Dot notation is pleasant to type for experienced Cocoa developers, but extremely confusing to new developers. Dot notation does not mean &ldquo;get or set the ivar of the object.&rdquo; Dot notation means &ldquo;pass the message <code>-foo</code> or <code>-setFoo:</code> to the object.&rdquo; These two statements seem very similar, but are in fact radically different. Most importantly, <code>foo</code> and <code>self.foo</code> are not the same thing, though often they may appear to be the same thing. Assigning to the latter will generally retain the object, while the former will not.</p></li>
+<li><p>Following up on dot notation, accessors are not mandatory in ObjC, but should be. Always, always use them (except in the accessors themselves of course, and in <code>-dealloc</code>). Do not access your ivars directly. Not even if you see sample code doing it.</p></li>
+<li><p>The reason for all of the last three issues is memory management. If you will follow these last three rules, then your memory management will be easy and you will have very few problems. If you do not, and C++ folks often are very bad about this because C++ has such sloppy naming conventions, then you will have terrible memory management problems. <em>2012 Update: Note that with ARC, memory management has become much simpler, but my recommendations haven&rsquo;t changed.</em></p></li>
+<li><p>Objective-C can use C++. I recommend strongly, however, that you keep your C++ and Objective-C separate, and have only a <a href="http://robnapier.net/blog/wrapping-c-objc-20">thin translation layer</a> in Objective-C++. Learn to use NSArray rather than vector, etc.</p></li>
+<li><p>C++ developers often get confused about how Singletons are used in ObjC. If you understand the full, correct Singleton pattern, then you need to understand that ObjC generally doesn&rsquo;t use it. It&rsquo;s ok to have a static in ObjC that holds the &ldquo;shared instance&rdquo; and that you never free. OS X (phone and Mac) will recover the memory for you at program termination. It&rsquo;s ok to have a &ldquo;singleton&rdquo; that can actually have multiple instances (NSNotificationCenter and many other objects allow this). There is seldom reason to really ensure that you are the one and only instance of the object (if you&rsquo;re overriding <code>-release</code>, stop, even if you found the code to do it on Apple&rsquo;s site). &ldquo;Singletons&rdquo; are generally just an instance that happens to be stored in a static and is returned when you asked for the &ldquo;sharedController&rdquo; or &ldquo;sharedFoo&rdquo; or whatever.</p></li>
+<li><p>Threading is somewhat rare in Cocoa. Most things are done on the Run Loop, which is cooperative multi-tasking. You get asked something, you respond as quick as you can, all on one thread. <em>2012 Update: Cocoa programs are becoming more multi-threaded, but you should still very seldom create your own threads. You should use dispatch or operation queues and let the OS handle threads for you. Creating an operation block is a different pattern than creating a worker thread. You should very seldom create worker threads. Operations are much more scalable, generally faster, easier to code, and have fewer inter-thread interactions if written correctly.</em></p></li>
+</ul>
+
+
+<p>For C developers:</p>
+
+<ul>
+<li><p>I push C developers to stay away from Core Foundation (things that start <code>CF</code>). Core Foundation is very useful, but it&rsquo;s too easy to let it become a crutch to avoid actually learning Cocoa. It&rsquo;s better to first learn Cocoa in ObjC, and then come back and use Core Foundation when you need to.</p></li>
+<li><p>Do not be afraid of long descriptive names. Get used to them. Love them.</p></li>
+<li><p>Embrace objects. Even the C-based Core Foundation is basically object oriented in C syntax.</p></li>
+<li><p>Don&rsquo;t forget your C. A lot of Objective-C is done in straight-up C. It&rsquo;s just C, really. C++ isn&rsquo;t, but Objective-C really, really is just C.</p></li>
+<li><p>Objective-C is really C, but Cocoa isn&rsquo;t. Cocoa is Smalltalk. And so you really need to study the Model-View-Controller paradigm and live it every day.</p></li>
+</ul>
+
+
+<p>Java/C#:</p>
+
+<ul>
+<li><p>Java developers seem to have the hardest time with dot notation. I often just flat-out ban dot notation for former Java developers. Don&rsquo;t use <code>foo.bar</code>, just use <code>[foo bar]</code> and <code>[foo setBar:baz]</code>. You will save yourself a lot of headaches. A Java background just seems to make it much harder to break the idea that dot notation is <em>really</em> a method call and nothing else.</p></li>
+<li><p>Even more than C++ developers, I have to teach Java developers that they aren&rsquo;t going to spawn threads for things. Use the run loop, and do thing asynchronously with callbacks. As a beginner, you may never need to spawn a thread. I write a lot of complex code, and still only spawn maybe a couple of ObjC threads in a major program. <em>2012 Update: See comments in C++ section about threads. Dispatch and operation queues are much more powerful than manual threading.</em></p></li>
+<li><p>C# developers (and Windows developers in general) have trouble with Interface Builder. When you create a button in Visual Studio, it writes a bunch of code for you. IB does not write code. IB serializes an object. A NIB is just an object archive. At run time, the NIB is read, and the objects are deserialized.</p></li>
+<li><p>Objective-C does not subclass a lot. It uses helper objects (delegation, datasources). If you have a special window that can&rsquo;t be closed except in certain circumstances, you don&rsquo;t subclass <code>NSWindow</code> (you almost <em>never</em> subclass <code>NSWindow</code> for anything). You assign a delegate to the <code>NSWindow</code> instance, and when it wants to close, it asks its delegate <code>-windowShouldClose:</code>.</p></li>
+<li><p>.NET has lots of objects that do similar things in different ways, and each time a new rev comes along, they give you a new set of objects that do those same things in new ways. .NET objects tend to be really smart with lots of little fiddle knobs to configure them. Cocoa objects are dumb, and that&rsquo;s why I love them so much. A table view in Cocoa doesn&rsquo;t know anything about querying SQL servers. A table view knows how to draw a table. It asks its datasource for what that data should be, and it asks every time it gets ready to draw a cell. It asks its delegate how tall each rows should be and whether a given row may be selected, just at the moment it needs the information. This is backwards of how .NET generally does things.</p></li>
+</ul>
+
+
+<p>And that leads to my biggest point for developers coming from anywhere that isn&rsquo;t Smalltalk:</p>
+
+<ul>
+<li>It isn&rsquo;t about you. It isn&rsquo;t about your code. And it isn&rsquo;t about your code doing this or that. It&rsquo;s first about the user and responding to the user. It&rsquo;s second about your code responding to the framework. You don&rsquo;t usually tell the framework what to do. It asks you for things when it needs something. You sit and wait for it to talk to you. You&rsquo;re not in charge. You don&rsquo;t control the runloop; it controls you. You register to be told when things happen, and you indicate that you&rsquo;re the object who knows something about something (data for a table for instance). And then you let go, and let Cocoa do the rest. It&rsquo;s a very different world. I like it very much.</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-28T14:05:18-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>cocoa</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://robnapier.net/learning-cocoa-2/" data-via="cocoaphony" data-counturl="http://robnapier.net/learning-cocoa-2/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/how-become-security-domain-expert/" title="Previous Post: How to become a security domain expert?">&laquo; How to become a security domain expert?</a>
+      
+      
+        <a class="basic-alignment right" href="/iphone-career/" title="Next Post: iPhone as a career">iPhone as a career &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I'll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

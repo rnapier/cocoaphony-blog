@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: .NET | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/dot-net/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[XCode vs. Visual Studio]]></title>
+    <link href="http://robnapier.net/xcode-visual-studio/"/>
+    <updated>2008-06-20T10:50:24-04:00</updated>
+    <id>http://robnapier.net/xcode-visual-studio</id>
+    <content type="html"><![CDATA[<p>I move between VS and XCode a bit without shuddering or fussing, which seems to make me a strange creature. In general, shocking as it is to say on a Cocoa list, VS is actually a much more powerful environment. Most who love XCode have little used VS (at least VS2005 or later, <a href="http://vs.net/" target="_blank">VS.NET</a> is clunky IMO). But learning what actually is better about VS requires using XCode for quite some time. Most of the initial complaints are simply small differences between the two; many of which I prefer the XCode way. But then, XCode is a Mac app, and I generally prefer Mac UI.</p>
+
+<!-- more -->
+
+
+<ul>
+    <li>Much deeper integration with its debugger. XCode and gdb play together, but they're not integrated the way VS is with its debugger. There are many important gdb features that can't easily be reached from XCode, and some (debugging with a core file) that you pretty much can't run XCode at all if you want to accomplish.</li>
+    <li>The multi-tab interface makes it much easier to manage moving between many files, and the debugger is better integrated with the editor. XCode encourages you to have an explosion of windows, and the debugger is inconsistently integrated with the editor. The AllInOne interface for XCode goes too far the other way and makes moving between files a real pain.</li>
+    <li>Mouse-over gives much better information in VS when editing. VS is always compiling your code, and so can give you access to information in the editor that is only available in the debugger for XCode. XCode technically also is always compiling your code (or it claims to), but it doesn't really make use of this fact.</li>
+    <li>VS is better in nearly every conceivable way if you're programming in C++. XCode hates C++. If you use wstrings in C++, XCode will actually come out of the computer and slap you around (who knows, maybe it should). I dream of being able to easily display wstrings in the debugger. Yes, I've built the formatting plugins and from time to time they even work. Probably the biggest missing feature in XCode is good code completion for C++, especially with overloads, which VS does very well.</li>
+</ul>
+
+
+<p>All that said, I still much prefer to work in XCode, but mostly because I prefer coding in Cocoa to .NET (.NET is actually pretty nice, but Cocoa is nicer). Apple&rsquo;s help documentation for Cocoa is far superior to Microsoft&rsquo;s documentation for .NET (which is infuriating to work with), and getting to the help in XCode is much more effective than in VS.</p>
+
+<p>So to VS guys I say: Give XCode a chance. It&rsquo;s better than you think once you are used to Mac interfaces and if you&rsquo;re working on Cocoa apps (which XCode is highly optimized for). To XCode guys I say: until you&rsquo;ve used VS for a while, don&rsquo;t assume that XCode has all the features it should. In the programming editor world, XCode is still kind of primitive.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Searching for HttpWebRequest.Date]]></title>
+    <link href="http://robnapier.net/searching-httpwebrequestdate/"/>
+    <updated>2008-05-30T09:39:41-04:00</updated>
+    <id>http://robnapier.net/searching-httpwebrequestdate</id>
+    <content type="html"><![CDATA[<p>A fie on useless attempts to stop hacking&hellip; At least that&rsquo;s my current assumption on why Microsoft did this. I&rsquo;m a Cocoa guy, but I actually like .NET and hack a bit of it now and then. It&rsquo;s a pretty good framework, though you can see some of the seams where Microsoft didn&rsquo;t quite think it through when they were designing it and had to tack on later (the whole System.Text.Encoding namespace that&rsquo;s made up of methods that should exist on String; but then C# doesn&rsquo;t have ObjC-style categories so they probably also being more careful about throwing 10k methods on a single class the way Cocoa does, but I&rsquo;m running off on a tangent here).</p>
+
+<p>The point today is the headache that is the HttpWebRequest.Date property. What HttpWebRequest.Date property you might ask? That&rsquo;s right; there isn&rsquo;t one. <!-- more -->It&rsquo;s a magical protected property that you can neither set nor meaningfully read. The system sets it for you when you make the connection and you can&rsquo;t do anything about it. Why? Most likely because messing with your date is a part of many kinds of attacks on web servers. But maybe they were just too lazy to implement it such that it would be automatically set only if you hadn&rsquo;t automatically set it. I&rsquo;ll assume for now that some misguided hope of improving security guided them on this. But it&rsquo;s a stupid approach.</p>
+
+<p>The work around is to build a raw TcpClient that talks HTTP, which is a pain for legitimate developers, but not so much of a pain that it would barely slow down attackers. It&rsquo;s a pain if you want to talk HTTP correctly, because especially HTTP 1.1 is actually a bit tricky. But if you just want to replay a forged session, then it&rsquo;s not so bad.</p>
+
+<p>But why would you want to screw with your date? For security reasons&hellip;. authentication in particular. I don&rsquo;t actually need to change my date; I just need to know what it is <em>before</em> I send the POST. When talking to Cerberus Web-API, the HTTP date header is one of the things they hash in their authentication token. That&rsquo;s a pretty good model; provides a decent defense against certain kinds of replay attacks. But it requires that you know exactly what time will be listed in your Date: header. If you guess using Datetime.Now, you can probably build a system that works most of the time. But if the second ticks over between the time you grab it and the time .NET assigns the Date header, you miss and don&rsquo;t authenticate. Classic race condition.</p>
+
+<p>So I&rsquo;m back to writing a full TcpClient so I can write all my headers, which isn&rsquo;t the end of the world, but is much more fragile and complicated than an HttpWebRequest. I&rsquo;m going to have to dig into whether HTTP 1.0 will allow a Date header when talking to IIS. If it does (and it probably does because headers outside the standard are generally legal), then at least that will simplify things and I don&rsquo;t have to worry about GetChunked or any of the other little things you need to do to be a proper 1.1 client. As long as 1.0 will also work with virtual hosts and the Host header&hellip;. It&rsquo;s always something.</p>
+]]></content>
+  </entry>
+  
+</feed>

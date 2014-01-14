@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Introduction to Fast Bezier (and Trying the Accelerate.framework) - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="[If you want the answer to last time&rsquo;s homework, skip to the end.] So you want to hand-calculate Bézier curves. Good for you. It comes up more &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/fast-bezier-intro">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Introduction to Fast Bezier (and Trying the Accelerate.framework)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-24T14:22:46-05:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>[If you want the answer to last time&rsquo;s homework, skip to the end.]</p>
+
+<p>So you want to hand-calculate Bézier curves. Good for you. It comes up more often then you&rsquo;d think on iOS, even though <code>UIBezierPath</code> is supposed to do it all for you. The truth is, sometimes you need the numbers yourself. For instance if you want to calculate intersections, or you want to draw text along the curve (like in <a href="https://github.com/rnapier/ios5ptl/tree/master/ch18/CurvyText">CurvyText</a> from <a href="http://iosptl.com">iOS:PTL</a> chapter 18).</p>
+
+<!-- more -->
+
+
+<p>Just as a refresher, here&rsquo;s the cubic Bézier function in C, written in the simplest possible way (we&rsquo;re only going to discuss the cubic Bézier function here):</p>
+
+<pre><code>static CGFloat Bezier(CGFloat t, CGFloat P0, CGFloat P1, CGFloat P2, CGFloat P3) {
+  return 
+    powf(1-t, 3) * P0
+    + 3 * powf(1-t, 2) * t * P1
+    + 3 * (1-t) * powf(t, 2) * P2
+    + powf(t, 3) * P3;
+}
+</code></pre>
+
+<p>If you want to see this function in use, pull down CurvyText and look in <a href="https://github.com/rnapier/ios5ptl/blob/master/ch18/CurvyText/CurvyText/CurvyTextView.m">CurvyTextView.m</a>.</p>
+
+<p><code>P0</code> through <code>P3</code> are the control points. If you called <code>addCurveToPoint:controlPoint1:controlPoint2:</code>, then the starting point (wherever you &ldquo;were&rdquo;) would be <code>P0</code>. The end point would be <code>P3</code> and the control points would be <code>P1</code> and <code>P2</code>. <code>t</code> is a value that runs from 0 to 1; we&rsquo;ll talk about it more in a moment. If you&rsquo;re still really lost, you should take time out and read the <a href="http://en.wikipedia.org/wiki/Bézier_curve">Wikipedia article on Bézier curves</a>.</p>
+
+<p>The first thing to understand is that this is exactly the same function that <code>UIBezierPath</code> uses. (Well, exactly equivalent to the function they use. I&rsquo;m certain they don&rsquo;t use this one because it&rsquo;s pretty inefficient as we&rsquo;ll see.) So when we start calculating, we&rsquo;re going to match <code>UIBezierPath</code> exactly. That&rsquo;s great because it means you can mix-and-match your code and Core Graphics and everything will match-up.</p>
+
+<p>The next thing to understand is that in this form, the Bézier curve function is effectively one-dimensional. We hand it an &ldquo;x&rdquo; value and we get back an &ldquo;x&rdquo; value. We hand it a &ldquo;y&rdquo; value and we get back a &ldquo;y&rdquo; value. So we have to call it twice per point. That&rsquo;ll be important later for optimization purposes.</p>
+
+<p>Finally, the strangest thing you need to understand is that this function is not linear for <code>t</code>. At <code>t=0</code>, the equation evaluates to <code>P0</code>. At <code>t=1</code>, the equation evaluates to <code>P3</code>. (The equation never evaluates to <code>P1</code> or <code>P2</code> since Bézier curves do not pass through these control points.) But between 0 and 1, things get much more complicated. <code>t=0.5</code> does not represent &ldquo;half-way along the curve.&rdquo; Small changes in <code>t</code> can represent very small movement or very large movement along the curve depending on where you are on it. This fact is one of the headaches of Bézier curves.</p>
+
+<p>Our goal is to figure out how to calculate Bézier very fast. So we&rsquo;re not going to worry much about drawing. We&rsquo;re just going to investigate ways to calculate this function quickly. Hopefully the process will help you when you&rsquo;re investigating other functions.</p>
+
+<p>First, let&rsquo;s build a test project. You can get the full test code in <a href="https://github.com/rnapier/cocoaphony/BezierPerf">BezierPerf</a>. Starting with a basic project, you want this in <code>didFinishLaunchingWithOptions:</code> to simulate 100 curves drawn at 50 frames per second:</p>
+
+<pre><code>#define BEZIER_FUNC copyBezierSimple
+
+const unsigned kFPS = 50;
+const unsigned kNumCurves = 100;
+
+CGPoint P0 = {50, 500};
+CGPoint P1 = {300, 300};
+CGPoint P2 = {400, 700};
+CGPoint P3 = {650, 500};
+
+CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+CGPoint lastPoint = {0};
+for (unsigned i = 0; i &lt; kFPS * kNumCurves; ++i) {
+  CGPoint *points;
+  unsigned count = BEZIER_FUNC(P0, P1, P2, P3, &amp;points);
+  lastPoint = points[count-1];
+  free(points);
+}
+printf("Time: %f\n", CFAbsoluteTimeGetCurrent() - start);
+printf("(%f, %f)\n", lastPoint.x, lastPoint.y );
+exit(0);
+</code></pre>
+
+<p>Now we&rsquo;ll start with the simplest approach (<a href="https://github.com/rnapier/cocoaphony/blob/master/BezierPerf/BezierPerf/Bezier.c" target="_blank">Bezier.c</a>):</p>
+
+<pre><code>unsigned int copyBezierSimple(CGPoint P0, CGPoint P1, CGPoint P2, CGPoint P3, CGPoint **results) {
+  *results = calloc(kSteps + 1, sizeof(struct CGPoint));
+
+  for (unsigned step = 0; step &lt;= kSteps; ++step) {
+    CGFloat x = Bezier((CGFloat)step/(CGFloat)kSteps, P0.x, P1.x, P2.x, P3.x);
+    CGFloat y = Bezier((CGFloat)step/(CGFloat)kSteps, P0.y, P1.y, P2.y, P3.y);
+    (*results)[step] = CGPointMake(x, y);
+  }
+  return kSteps + 1;
+}
+</code></pre>
+
+<p>This just calls <code>Bezier()</code> twice. On my iPhone 4, in Debug mode, with 1000 points, this takes over 20 seconds to run. In Release mode (with optimizations) it takes just over 3 seconds. Wow. 6x improvement. We&rsquo;ll look into what it&rsquo;s doing later, but 3s is still no good. We need these calculations every second, and we haven&rsquo;t even drawn anything yet. Time to start optimizing.</p>
+
+<p>It&rsquo;s math, so Accelerate.framework is going to make it magically fast, right? I mean, everyone knows that Accelerate uses the fancy vector hardware and that means super-duper fast. So let&rsquo;s do that. We&rsquo;ll rewrite <code>Bezier()</code> to use Accelerate. This calculates <code>P*B*T</code> as we discussed in <a href="http://robnapier.net/blog/equations-matrices-accelerate-607">the last post</a>.</p>
+
+<pre><code>static CGFloat BezierAccelerate(CGFloat t, CGFloat P0, CGFloat P1, CGFloat P2, CGFloat P3) {
+  const CGFloat P[1][4] = {P0, P1, P2, P3};
+
+  static const CGFloat B[4][4] = 
+  { {-1,  3, -3, 1},
+    { 3, -6,  3, 0},
+    {-3,  3,  0, 0},
+    { 1,  0,  0, 0}};
+
+  const CGFloat T[4][1] = { powf(t, 3), powf(t, 2), t, 1 };
+
+  CGFloat PB[1][4];
+  vDSP_mmul((CGFloat*)P, 1, (CGFloat*)B, 1, (CGFloat*)PB, 1, 1, 4, 4);
+
+  CGFloat result[1][1];
+  vDSP_mmul((CGFloat*)PB, 1, (CGFloat *)T, 1, (CGFloat*)result, 1, 1, 1, 4);
+
+  return result[0][0];
+}
+</code></pre>
+
+<p>This is going to be great. We got rid of that long crazy function and replaced it with a couple of elegant matrix multiples running on the NEON vector processor. I can feel the speed already.</p>
+
+<p>11s. In Release mode, with optimizations.</p>
+
+<p>OK, so it&rsquo;s twice as fast as the original Debug code. But it&rsquo;s almost 4 times slower than just turning on <code>-Os</code> with the original function. What? Isn&rsquo;t Accelerate supposed to make all things faster? We haven&rsquo;t even tried to optimize the original <code>Bezier()</code> function, and still Accelerate is slower.</p>
+
+<p><strong>Lesson 1: Accelerate is not magic &ldquo;go fast&rdquo; fairy dust. It may even be slower than the simplest possible non-Accelerate implementation.</strong></p>
+
+<p>This is not to say that Accelerate isn&rsquo;t awesome. It can be for certain problems. But day-to-day multiplication is often not one of them.</p>
+
+<p>I promised we&rsquo;d talk about what <code>-Os</code> is doing and why it&rsquo;s giving us a 6x speedup. First, you can take a look at the code by editing the Scheme and setting the Build Configuration to Debug. Then use Product, Generate Output, Assembly File to see what happens. At the bottom of the assembler output window, you will see &ldquo;Show Assembly Output For.&rdquo; Switching between &ldquo;Running&rdquo; and &ldquo;Archiving&rdquo; will let you compare the debug and release output.</p>
+
+<p>The easiest way to navigate this output is by searching for <code>.thumb_func</code> which will help you find your functions. You can then look for <code>blx</code> to find the places you make function calls. The <code>.loc</code> entries tell you where you are in the source file (filenumber, line, column). Handy, right? In debug mode, you can see the Bezier function and the four calls to <code>powf()</code>. But in release mode, the <code>Bezier</code> function is gone entirely. It&rsquo;s been inlined. This is a big deal. Function calls can be expensive. This is one of the big reasons that hand-calculation can be so much faster than Accelerate. Accelerate is optimized for big matrices. For little tiny things, the cost of the function call dwarfs what you might save otherwise. Also, most Accelerate functions include fancy features like adjustable stride and parameter error checking. &ldquo;Fancy features&rdquo; translates into &ldquo;probably slower.&rdquo;</p>
+
+<p>Back to the assembler, note that there are only two calls to <code>powf()</code>. Where did the other calls go? Well, if you dig a little, you&rsquo;ll notice these lines:</p>
+
+<pre><code>vmul.f32    d16, d0, d0
+...
+vmul.f32    d17, d1, d1
+</code></pre>
+
+<p>These are squaring functions (<code>d0*d0 -&gt; d16</code>). That is incredibly, insanely faster than <code>pow(x,2)</code>. We got rid of a lot of function calls (both calls to <code>Bezier</code> and calls to <code>powf</code>), and we replaced a very expensive squaring function with a very cheap one using <code>vmul</code>.</p>
+
+<p>Which brings us to the next point. <code>vmul</code> is a NEON instruction. You don&rsquo;t have to use Accelerate to get NEON benefits. The compiler uses the NEON processor for all kinds of things.</p>
+
+<p>So now that we know that the compiler will replace <code>pow(x,2)</code> with <code>x*x</code>, I wonder if cubing by hand is faster, too. Let&rsquo;s try <code>BezierNoPow()</code>:</p>
+
+<pre><code>static CGFloat BezierNoPow(CGFloat t, CGFloat P0, CGFloat P1, CGFloat P2, CGFloat P3) {
+  return
+    (1-t)*(1-t)*(1-t) * P0
+    + 3 * (1-t)*(1-t) * t * P1
+    + 3 * (1-t) * t*t * P2
+    + t*t*t * P3;
+}
+</code></pre>
+
+<p>Debug: 9.7s. Nice. 50% improvement over unoptimized <code>powf()</code>.</p>
+
+<p>Release: <strong>0.6s.</strong> 5x speedup over optimized <code>powf()</code>. <strong>30x speedup over the original function.</strong></p>
+
+<p>In fairness, we should try removing the <code>powf()</code> calls in the Accelerate function. That gets us to 6.5s. Still 10x slower then hand-coded.</p>
+
+<p>Now 0.6s is still 60% of our available time, so it&rsquo;s worth digging deeper to see what else we can do to speed things up. We&rsquo;ll talk more about that later. We haven&rsquo;t really gotten warmed up yet. We haven&rsquo;t even launched Instruments. There is still plenty of speed we can pick up here. Read more at <a href="http://robnapier.net/blog/faster-bezier-722">Even Faster Bezier</a>.</p>
+
+<hr />
+
+<p>For those of you who did your homework from <a href="http://robnapier.net/blog/equations-matrices-accelerate-607">last time</a>, here&rsquo;s the answer, this time in C, for the matrix you need to calculate the derivative (slope) of the Bézier function:</p>
+
+<pre><code>const float Bp[4][3] = {
+  {-3, 6, -3},
+  {9, -12, 3},
+  {-9, 6, 0},
+  {3, 0, 0}
+};
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-24T14:22:46-05:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>cocoa</a>, <a class='category' href='/blog/categories/iphone/'>iphone</a>, <a class='category' href='/blog/categories/performance/'>performance</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://robnapier.net/fast-bezier-intro/" data-via="cocoaphony" data-counturl="http://robnapier.net/fast-bezier-intro/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/equations-matrices-accelerate/" title="Previous Post: Converting algebra to matrices for Accelerate framework">&laquo; Converting algebra to matrices for Accelerate framework</a>
+      
+      
+        <a class="basic-alignment right" href="/faster-bezier/" title="Next Post: Even Faster Bezier">Even Faster Bezier &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I'll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

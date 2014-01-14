@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Some Math Behind "Contribution != Compensation" - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="Thanks to @codinghorror, I recently read a blog post from Steve McConnell called 10x Productivity Myths: Where’s the 10x Difference in Compensation? &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/contribution-vs-compensation">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Some Math Behind "Contribution != Compensation"</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-24T18:16:32-04:00" pubdate data-updated="true">Mar 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Thanks to @codinghorror, I recently read a blog post from Steve McConnell called <a href="http://blogs.construx.com/blogs/stevemcc/archive/2011/01/22/10x-productivity-myths-where-s-the-10x-difference-in-compensation.aspx">10x Productivity Myths: Where’s the 10x Difference in Compensation?</a> Steve quotes a question from Pete McBreen:</p>
+
+<blockquote>&#8220;One point in his article that McConnell did not address&#8211;<strong>programmer compensation does not vary accordingly.</strong> This is a telling point&#8211;if the difference is productivity can be 10X, why is it that salaries rarely fall outside the 2X range for experienced developers?&#8221; [emphasis in original]</blockquote>
+
+
+<p>He then provides some fairly satisfying answers. &ldquo;The other guy is actually overpaid.&rdquo; &ldquo;You&rsquo;re confusing coding with actual business value.&rdquo; &ldquo;Companies pay the least they can get away with.&rdquo; etc. All his answers make good, intuitive sense. Unfortunately, despite being a longtime fan of Steve McConnell&rsquo;s work, I believe most are irrelevant or incorrect.</p>
+
+<!-- more -->
+
+
+<p>Let me state this a little more concretely. If a company pays Alice $X, but Alice generates $10X in marginal value, then there is a very strong incentive for another company to offer Alice $2X and receive $9X in marginal value. Alice would almost certainly accept $2X, and a competitor would be idiotic not to pay it. As long as Alice were free to change employers at will, and as long as employers were capable of determining Alice&rsquo;s value in even a vague way, this would naturally continue until there were little marginal value left (less than the friction of recruiting and moving and within the precision of determining Alice&rsquo;s productivity). That is to say, there should not be much money left on the table. In the normal version of this story, there is a massive amount of money on the table. It&rsquo;s hard to believe this continues indefinitely in a highly competitive, unregulated, and mobile industry like ours.</p>
+
+<p>Arguing that it&rsquo;s impossible to measure Alice&rsquo;s productivity to any precision makes the entire discussion moot, since it eliminates the ability to say that Alice is 10x more productive. How did you decide that if productivity is unmeasurable? Even intuitive measurements would be sufficient to create a bidding war if there were really 10x value on the table.</p>
+
+<p>It also seems unworkable that a company would continue to pay large numbers of people dramatically above their total contribution. Sure, here and there; large companies are quite inefficient in my experience. And at the executive level, I believe there is enough collusion between compensation committees and CEOs to make the system significantly inefficient. But almost any argument for this being systemic suggests that companies are highly altruistic. It&rsquo;s hard to believe that a greedy company would hold onto a significant number of low-level employees that would be cheaper to fire and replace with no one.</p>
+
+<p>I suggest that there&rsquo;s another answer that doesn&rsquo;t require long-lived massive inefficiencies in the market. I suggest that Alice is being paid in another way and that our &ldquo;loser&rdquo; employee provides some other value. I&rsquo;m further claiming that the value Loser provides is reasonably close to the money that Alice foregoes. In other words, Alice is paying Loser for his service, and thus a reasonably efficient economic system in equilibrium is restored. I&rsquo;m not claiming to have created this idea. It&rsquo;s directly from R. H. Frank&rsquo;s <a href="http://www.jstor.org/stable/1805123">&ldquo;Are Workers Paid their Marginal Products?&rdquo;</a> where it is examined in detail in several industries, including ones where it is much easier to determine precise productivity than ours.</p>
+
+<p>To see how this works, let&rsquo;s play it out in a system where productivity==pay. You have the option of two jobs, one with Company A and another with Company B. At Company A, you would be one of the most productive people there. In fact, you&rsquo;d be twice as productive as the average employee. The average employee at A makes $50k (all numbers are total compensation).</p>
+
+<p>Company B, on the other hand, has some of the most brilliant people in the industry. You&rsquo;d be half as productive there as the average employee. Since the average employee at Company B is 4x as productive as the average employee at Company A, they also make 4x as much: $200k. So in either case, your &ldquo;fair&rdquo; compensation would be $100k. Which job do you choose?</p>
+
+<p>Well, let&rsquo;s think about it some more. At Company A, you&rsquo;re going to be at the top of the pile. You&rsquo;re going to get the best assignments, designing the most cutting edge stuff that Company A does. That&rsquo;s going to be less cutting edge than Company B&rsquo;s most advanced stuff, but at Company B you&rsquo;re not going to work on the most advanced stuff. You&rsquo;re going to be at the bottom of the pile there, one of the most junior people. You&rsquo;re going to do maintenance on their legacy products. You&rsquo;re going to do the bug fixes that the senior guys don&rsquo;t want to do.</p>
+
+<p>So you&rsquo;re faced with a very productive company where you&rsquo;re Loser or a less productive company where you&rsquo;re Alice. The question is, what kind of compensation would you require from each company in order to be willing to work there? Different people weigh these things differently. Some people would take a huge pay cut to do grunt work for a brilliant company (I know a guy who did this). But I&rsquo;m guessing for most people Company B would have to pay them more to be at the bottom of the pile than Company A would to be at the top.</p>
+
+<p>Now the math behind the pay compression should come into focus. If you demand $110k to work at Company B, you&rsquo;d still be one of the lowest paid people there. But the average employee would only be paid 1.8x as much for 2x as much productivity. You just created the &ldquo;unfair&rdquo; situation we&rsquo;re talking about. On the other hand, if you choose to work on more exciting projects at Company A and are willing to do it for $90k, then you&rsquo;re on exactly the other side of the coin.</p>
+
+<p>What this boils down to is that without Loser, Alice can&rsquo;t be at the top. Without someone to do the boring maintenance work, Alice would have to do it herself. So she willingly, if unconsciously, pays Loser a premium so she can work on cooler projects. Company B needs someone to do $100k junior work. You demand $110k to be junior there rather than $90k to be senior at Company A. So they pay Alice $10k less than her job is worth, you $10k more, and the system is back in balance. Except now you&rsquo;re Loser and Alice keeps asking why she doesn&rsquo;t make as much as her performance predicts.</p>
+
+<p>This is not the only cause of what seem like unfair pay practices. There is absolutely a lot of inefficiencies in big companies that allow deadwood to coast. There are definitely politics that let do-nothings get to work on cool projects. In some cases Loser can make <em>more</em> than Alice for absurd reasons. But I&rsquo;m arguing that these are the margins. If they were the primary cause, more efficient companies would destroy these idiotic firms by taking all their Alices. I&rsquo;m saying that the core of the compression, the reason that 3x productivity can become 1.3x pay, is that it is the natural economic result of a free market working efficiently, and that Alice is paying Loser for her rank.</p>
+
+<p>It may not be as satisfying an answer as &ldquo;companies are messed up,&rdquo; but I think it actually explains the situation most accurately.</p>
+
+<p>Footnote: Frank has recently put out a new, related book called <em>The Darwin Economy</em>. I&rsquo;m not a fan of the book, even when I agree with it, because it glosses over some important points too easily. But for $10 you can read the <a href="http://www.jstor.org/stable/1805123"><em>American Economic Association</em></a> paper and see some of the real-world studies that back up this particular economic theory.</p>
+
+<p>I&rsquo;ll get back to writing about NEON assembly on the iPad in the next week or so.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-24T18:16:32-04:00" pubdate data-updated="true">Mar 24<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/software-development/'>Software Development</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://robnapier.net/contribution-vs-compensation/" data-via="cocoaphony" data-counturl="http://robnapier.net/contribution-vs-compensation/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/triangle-cocoaheads-march/" title="Previous Post: Triangle CocoaHeads (and Building a (Core) Foundation)">&laquo; Triangle CocoaHeads (and Building a (Core) Foundation)</a>
+      
+      
+        <a class="basic-alignment right" href="/github-pricing/" title="Next Post: Github and its pricing">Github and its pricing &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I'll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Security | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/security/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Pinning Your SSL Certs]]></title>
+    <link href="http://robnapier.net/pinning-your-ssl-certs/"/>
+    <updated>2014-01-01T15:10:08-05:00</updated>
+    <id>http://robnapier.net/pinning-your-ssl-certs</id>
+    <content type="html"><![CDATA[<p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
+
+<p>If your app uses SSL to communicate with your server (and it should), you generally don&rsquo;t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there&rsquo;s certainly no reason to trust the over 200 certificates in iOS 7&rsquo;s root store.</p>
+
+<p>The practice of trusting only your own certificate is called &ldquo;pinning,&rdquo; and I&rsquo;ve discussed it several times at conferences. I then say something like, &ldquo;It&rsquo;s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:&rdquo;</p>
+
+<!-- more -->
+
+
+<p>``` objc
+&hellip;</p>
+
+<pre><code>NSError *error = NULL;
+NSString *path = [[NSBundle mainBundle] pathForResource:@"www.google.com"
+                                                 ofType:@"cer"];
+NSData *certData = [NSData dataWithContentsOfFile:path
+                                          options:0
+                                            error:&amp;error];
+
+if (! certData) {
+  // Handle error reading
+}
+
+SecCertificateRef
+certificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)certData);
+
+if (!certificate) {
+  // Handle error parsing
+}
+
+self.anchors = [NSArray arrayWithObject:CFBridgingRelease(certificate)];
+</code></pre>
+
+<p>&hellip;</p>
+
+<ul>
+<li><p>(void)connection:(NSURLConnection <em>)connection
+willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge </em>)challenge {</p>
+
+<p>SecTrustRef trust = challenge.protectionSpace.serverTrust;</p>
+
+<p>SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef)self.anchors);
+SecTrustSetAnchorCertificatesOnly(trust, true);</p>
+
+<p>SecTrustResultType result;
+OSStatus status = SecTrustEvaluate(trust, &amp;result);
+if (status == errSecSuccess &amp;&amp;
+    (result == kSecTrustResultProceed ||
+     result == kSecTrustResultUnspecified)) {</p>
+
+<p>  NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
+  [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+}
+else {
+  [challenge.sender cancelAuthenticationChallenge:challenge];
+}
+}
+```</p></li>
+</ul>
+
+
+<p>I mean, really, what could be simpler. OK, maybe it could be simpler. Maybe if it were a little simpler, everyone would do it. So how about this?</p>
+
+<p>```objc
+&ndash; (void)connection:(NSURLConnection <em>)connection
+willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge </em>)challenge {
+  NSString *path = [[NSBundle mainBundle] pathForResource:@&ldquo;mycert&rdquo;</p>
+
+<pre><code>                                               ofType:@"cer"];
+</code></pre>
+
+<p>  RNPinnedCertValidator *validator = [[RNPinnedCertValidator alloc] initWithCertificatePath:path];
+  [validator validateChallenge:challenge];
+}
+```</p>
+
+<p>Is that simple enough? Then go grab <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RNCryptor: Truncating Passwords]]></title>
+    <link href="http://robnapier.net/rncryptor-truncating-passwords/"/>
+    <updated>2013-12-30T21:30:11-05:00</updated>
+    <id>http://robnapier.net/rncryptor-truncating-passwords</id>
+    <content type="html"><![CDATA[<p><strong>Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to RNCryptor 2.2 when it comes out this week.</strong></p>
+
+<p>I hate it when I do stupid things. But then you all get to learn something, so luckily some good can come of my shame. Please learn something so this isn&rsquo;t all for naught.</p>
+
+<p><a href="https://github.com/rnapier/RNCryptor/issues/77">Issue #77</a> in RNCryptor is one of those classic bugs. Here it is, as gently pointed out to me by <a href="https://github.com/arthurwalasek">Arthur Walasek</a>:</p>
+
+<p>``` objc
+int result = CCKeyDerivationPBKDF(keySettings.PBKDFAlgorithm,      // algorithm</p>
+
+<pre><code>               password.UTF8String, // password
+               password.length, // passwordLength
+               ...
+</code></pre>
+
+<p>```</p>
+
+<p>I have had this bug since I first wrote this code for iOS 5 PTL, and it&rsquo;s horrible. The problem, if you haven&rsquo;t seen it yet, is that <code>-length</code> returns the number of characters in <code>password</code>, not the number of bytes. In many languages you can get away with that, but not in multi-byte languages like Chinese.</p>
+
+<!-- more -->
+
+
+<p>So what happens when someone uses the password &ldquo;中文密码&rdquo;? <code>password.UTF8String</code> returns 8 bytes, but <code>password.length</code> returns 4. So we truncate this password down to &ldquo;中文&rdquo; (2 characters, 4 bytes) and that&rsquo;s what we use. That means later, you can decrypt this with anything that&rsquo;s half-right. &ldquo;中文xx&rdquo; is good enough.</p>
+
+<p>The fix is simple. You can either use <code>-lengthOfBytesUsingEncoding:</code>, or you can create an <code>NSData</code> with <code>-dataUsingEncoding:</code>. I prefer the latter, and <a href="https://github.com/rnapier/RNCryptor/commit/2c3cae0e677c1aa4d841b655c82bcb0d4086bd60">that&rsquo;s how I&rsquo;ve fixed it</a>.</p>
+
+<p>The tricky bit is maintaining backward compatibility. It requires bumping the file version so we can tell which approach we used. But all of that is done and checked in.</p>
+
+<p>Right now, I&rsquo;m working with <a href="https://github.com/curtisdf">Curtis Farnham</a> to make sure that the PHP version is compatible with the latest changes. This bug convinced me to finally write some test vectors so we can keep all the language implementations consistent. Once I get that straightened out, I&rsquo;ll post a new version of RNCryptor (or by the end of the week either way).</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Brute Forcing Passwords]]></title>
+    <link href="http://robnapier.net/brute-forcing-passwords/"/>
+    <updated>2013-12-27T15:15:30-05:00</updated>
+    <id>http://robnapier.net/brute-forcing-passwords</id>
+    <content type="html"><![CDATA[<p><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></p>
+
+<p>I got an <a href="https://github.com/rnapier/RNCryptor/issues/92">interesting question</a>
+recently:</p>
+
+<blockquote><p>Assuming a password is not in a dictionary, what length is required to make a
+brute force attack infeasible?</p></blockquote>
+
+<p>That&rsquo;s a pretty good question, and we should be able to answer it fairly easily
+given a few assumptions.</p>
+
+<p>The short answer is, using <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> and
+some reasonable security assumptions, it would be very difficult to brute-force
+an 8 character password randomly taken from all the easily typable characters on
+an English keyboard. The rest of this article will discuss my assumptions, and
+how you would calculate good lengths for other assumptions.</p>
+
+<!-- more -->
+
+
+<p>To work this out, we really just need to know three things:</p>
+
+<ul>
+<li>How many passwords exist for a given length?</li>
+<li>How much effort (resources x time) does it take to test a password?</li>
+<li>How much attacker effort is &ldquo;feasible?&rdquo;</li>
+</ul>
+
+
+<h3>How many passwords exist for a given length?</h3>
+
+<p>The number of passwords for a given length depends on the number of different
+characters we allow in a password. On common English keyboards, you can easily
+type 26 lowercase, 26 uppercase, 10 numbers, about 32 symbols, and space. That&rsquo;s
+95 different characters.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<p>The number of passwords for a given set size (<em>S</em>) and a specific password
+length (<em>n</em>) is <em>S<sup>n</sup></em>.</p>
+
+<p>What&rsquo;s interesting about this function is how it reacts to changes in <em>S</em> and
+<em>n</em>. For example, let&rsquo;s consider a fixed password size (<em>n = 8</em>), with a
+variable set size from <em>S = 26</em> (lowercase English letters) to <em>S = 3000</em>
+(roughly the number of everyday Chinese characters). Would we rather a long
+lowercase English password or a short Chinese password?<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p><img src="/images/brute-forcing-passwords/length-vs-size.svg" alt="Length vs. Set Size" /></p>
+
+<p>In this graph, we start at the same point (6 characters chosen from a set of
+26). We then vary the length one character at a time (linearly) versus the set
+size by orders of magnitude (exponetially). Increasing the length of the
+password by two or three characters is better than increasing the number of
+available characters 10-fold. So, given a choice, you&rsquo;d rather have a long,
+random password than anything else. This is the principle of AES key sizes. Each
+bit is chosen from a set of just 2 &ldquo;letters,&rdquo; but 256 bits still provides a huge
+keyspace.</p>
+
+<h3>How much effort (resources x time) does it take to test a password?</h3>
+
+<p>By design, most of the time required to test a password in RNCryptor is spent
+converting the password into a key using
+<a href="http://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a>. PBKDF2 is is designed to be slow
+specifically to make brute forcing difficult. RNCryptor uses 10,000 iterations
+to convert the password into a key. How long that takes to calculate depends on
+your machine, so we need to define some unit that we will measure our attack in.
+Since I happen to have one in front of me, we&rsquo;re going to use &ldquo;one core of an
+Early 2011 MacBook Pro&rdquo; as the unit.</p>
+
+<p>There are a couple of things to keep in mind when choosing this unit. First, you
+need to think in terms of what hardware your attacker is going to use against
+you, not the hardware you used to encrypt. So think at least in terms of
+desktops and servers, not iPhones. Second, remember that the proper unit is a
+&ldquo;core,&rdquo; not a system. PBKDF2 can&rsquo;t be computed in parallel, but the attacker can
+easily spread many different PKBDF2 computations over as many cores as
+available. That said, it doesn&rsquo;t really matter what the unit is; we just need a
+way to describe attacker resources.</p>
+
+<p>How long does it take one unit to test one password? With the current version of
+the RNCryptor data format, it&rsquo;s dependent on the length of the ciphertext. But
+the v4 data format will remove this overhead, so we&rsquo;ll assume almost all the
+time is in the PBKDF2 iterations.</p>
+
+<p>We could write a function to time this by hand, but Common Crypto provides
+<a href="http://www.opensource.apple.com/source/CommonCrypto/CommonCrypto-60049/include/CommonKeyDerivation.h"><code>CCCalibratePBKDF()</code></a>
+to help us out. It will tell us how many rounds we need to achieve a certain
+delay.<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+
+<p>``` objc
+uint rounds = CCCalibratePBKDF(kCCPBKDF2,</p>
+
+<pre><code>                           8,   // Password length
+                           8,   // Salt length
+                           kCCPRFHmacAlgSHA1,
+                           32,  // Key length
+                           10); // Miliseconds
+</code></pre>
+
+<p>```</p>
+
+<p>This returns between 9,000-10,000 on my machine. To keep things simple, we&rsquo;ll
+say that one &ldquo;unit&rdquo; can calculate 10,000 PBKDF2 rounds (one RNCryptor password)
+in 10ms. Or alternatively, one unit can test approximately 100 passwords per
+second.</p>
+
+<h3>How much attacker effort is &ldquo;feasible?&rdquo;</h3>
+
+<p>Maybe by &ldquo;feasible&rdquo; we mean &ldquo;in a few days on a laptop.&rdquo; Or maybe by &ldquo;feasible&rdquo;
+we mean &ldquo;within 100,000 core-years (10 years on 10,000 cores, or a month on one
+million cores).&rdquo; That isn&rsquo;t as shocking a scale as you might think. Some secrets
+really do need to stay secret for decades, and 10,000 cores is small for a
+botnet, several of which have several million active hosts with multiple cores
+at any give time. You also have to consider technological advances. If the
+secret you encrypt today is being attacked ten years from now, you have to scale
+against those machines, not today&rsquo;s machines.</p>
+
+<p>Eventually you have to decide on some number. For general purposes, I like to
+use 100,000 core-years (with my &ldquo;Early 2011 MacBook Pro&rdquo; being the equivalent of
+8 &ldquo;cores&rdquo;). If your secret has a fairly short shelf-life, you may be wiling to
+go as low as 1,000 core-years, or for very sensitive information that needs
+protection for decades, you may want to scale to 10 million core-years.</p>
+
+<h3>Putting it all together</h3>
+
+<p>To recap our assumptions:</p>
+
+<ul>
+<li>95 character set for passwords (<em>S</em>)</li>
+<li>100 password tests per core-second, based on 10,000 PBKDF2 iterations (<em>rate</em>)</li>
+<li>100,000 core-years of effort = 100,000 x (3 x 10<sup>7</sup>) core-seconds (<em>effort</em>)</li>
+</ul>
+
+
+<p>Now it&rsquo;s just some fancy math<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup> to solve for <em>length</em> (which must be
+integral):</p>
+
+<p>$$\newcommand{\unit}[1]{\mathrm{#1}}$$
+$$rate = \frac{S^{length}}{effort}$$</p>
+
+<p>$$S^{length} = rate \times effort$$</p>
+
+<p>$$length = \left\lceil\log _S (rate \times effort)\right\rceil$$</p>
+
+<p>$$length = \left\lceil\frac{\log(rate \times effort)}{\log(S)}\right\rceil$$</p>
+
+<p>$$length = \left\lceil\frac{\log(100 \times (100,000 \times 3 \times 10^{7}))}{\log(95)}\right\rceil$$</p>
+
+<p>$$length = 8$$</p>
+
+<p>The careful reader may be asking &ldquo;shouldn&rsquo;t the attacker expect to find the
+password in half this time?&rdquo; You&rsquo;re completely correct. Since the correct
+password is as likely to be in the first half searched as the last half, the
+expected time is technically half as long. But it doesn&rsquo;t matter. Because
+password length grows logithmically, halving or doubling the effort has little
+impact. You&rsquo;ll still get 8 characters.</p>
+
+<p>To get up to 10 million core-years (two more orders of magnitude), just pushes
+us up to 9 characters. That shouldn&rsquo;t be surprising, since there are almost 100
+characters in our set, every time we add another character to the password we
+should expect to add two orders of magnitude to the difficulty.</p>
+
+<p>What if the password were still random, but only selected from lowercase letters
+and numbers? Then we need 10 characters to get 100,000 core-years of effort. So
+smaller character spaces increase the password length needs, but not by a lot.</p>
+
+<h3>What are the take-aways?</h3>
+
+<ul>
+<li><p>Between 8 and 10 random characters is a quite good password. Even with a much
+smaller number of iterations of PBKDF2, 10 character random passwords hold up
+well.</p></li>
+<li><p>This analysis only applies when the attacker is brute-forcing the password
+space. Most attackers do not do it this way. They more often attack poorly
+chosen or reused passwords.</p></li>
+<li><p>PBKDF2 is critical for slowing down brute-force attacks. PBKDF2 adds several
+orders of magntiude to the attacker&rsquo;s effort.</p></li>
+<li><p>When thinking about spaces, orders of magnitude are more important than actual
+values. If you&rsquo;re not adding an extra zero, you&rsquo;re not making much impact. Try
+to have at least a couple of orders of magnitude safety margin against the
+resources you think the attacker will ever have over your time horizon.</p></li>
+</ul>
+
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>I&rsquo;m not including the tab key because it is very often not allowed in passwords, especially on the web.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>When discussing &ldquo;characters&rdquo; here, I mean actual characters. It doesn&rsquo;t matter how many bytes are used to represent them. So <em>XX</em> and <em>谢谢</em> are the same length for these purposes, no matter how they&rsquo;re encoded.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p>While <code>CCCalibratePBKDF</code> accepts a password length, the results are not very sensitive (if at all) to its value. The most important parameter is the delay.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+<li id="fn:4">
+<p>Not actually fancy math.<a href="#fnref:4" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

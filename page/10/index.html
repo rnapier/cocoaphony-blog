@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="To all you aspiring Cocoa developers&hellip;. If you want to make a private framework, you need to remember to set the install path for it to @ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/page/10">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/private-frameworks-install-path/">Private Frameworks&#8217; Install Path</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-05T10:03:30-05:00" pubdate data-updated="true">Mar 5<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To all you aspiring Cocoa developers&hellip;.</p>
+
+<p>If you want to make a private framework, you need to remember to set the install path for it to <span>@executable_path/../Frameworks</span>. Just copying it into your bundle isn&rsquo;t good enough. Otherwise your app is going to think it&rsquo;s in (~)/Library/Frameworks once you package it up and give it to other people.</p>
+
+<p>In related news, PandoraBoy 0.5.1<span>a</span> is now released.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-051-released/">PandoraBoy 0.5.1 Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-04T22:39:34-05:00" pubdate data-updated="true">Mar 4<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Yes it is true, a new version of PandoraBoy is up, 0.5.1. I haven&rsquo;t put it into Sparkle yet, and probably will skip it because it only fixes a couple of things (most notably, paid accounts now work correctly). Technically there&rsquo;s an entire full-screen mode in there now with a plug-in architecture and public framework, but I&rsquo;ve disabled it because it&rsquo;s still kind of flakey and doesn&rsquo;t work very well. I&rsquo;m going to focus for a while instead on some of the bugs that have been reported and get those cleaned up.</p>
+
+<p>Maybe I&rsquo;ll play with the new version of ShortcutRecorder that just came out thanks to OmniGroup&rsquo;s contributions (great company, great products). Hopefully I can get rid of my IB2 dependencies and finally move 100% into XCode3.</p>
+
+<p>And of course I&rsquo;ve been promising improvements in Sparkle that will help PandoraBoy a little bit, and I more deeply need for my day job. I&rsquo;ve been mostly working on those during what I consider &ldquo;day job&rdquo; hours, but right now core product features are far more pressing than automatic updates. And #1 on my list: collapse the current branch back down to trunk! Ah, subversion, thou viper. Linus was right. There&rsquo;s no such thing as &ldquo;CVS done right.&rdquo; But in truth, it isn&rsquo;t so terrible, it just isn&rsquo;t so good either&hellip;.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/upcoming-pandoraboy-release/">Upcoming PandoraBoy Release</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-12T16:08:56-05:00" pubdate data-updated="true">Feb 12<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="post-body entry-content">No, I haven&#8217;t forgotten about PandoraBoy, but I have been exceedingly busy of late. Of course it comes in the middle of my work on a large feature (Full Screen plugins), so I&#8217;ve done a lot of PB work, but haven&#8217;t made a new release. I&#8217;m about to the point of releasing what I have (which works but isn&#8217;t pretty) and rolling some critical bug fixes out in the not too distant future.</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-xcode3/">PandoraBoy and XCode3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-13T17:38:47-05:00" pubdate data-updated="true">Jan 13<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Well, I&rsquo;m spending a little more time hacking PandoraBoy today. It now will compile under XCode3 for anyone playing along at home. I&rsquo;m hoping to learn a lot this week to move things forward even more. Right now I&#8217;m <a href="http://www.serenbeinn.com/">here</a>, getting ready for <a href="http://bignerdranch.com/classes/cocoa.shtml">this</a>. Sometimes I think I picked a good life this time.</p>
+
+<p>Now if I can just get back into my home computer to get my PB todo list&hellip;. Back into full-screen mode stuff.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/89/">89</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-08T16:49:00-05:00" pubdate data-updated="true">Jan 8<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I haven&rsquo;t forgotten about PandoraBoy, but I&rsquo;ve been very busy these last couple of weeks. I&rsquo;m now a full-time Mac programmer, and so I&rsquo;ve been spending most of my time doing &ldquo;real&rdquo; hacking. Next week I go to Big Nerd Ranch for training, so I&rsquo;ll take PB with me to hack on.</p>
+
+<p>I just built my first kernel extension and begun trying it out. Kernel programming is a whole different world&hellip; When it doesn&rsquo;t work, Gray Screen/Reboot. I&rsquo;m glad that (a) OSX boots quick, and (b) I have a lot of computers&hellip;</p>
+
+<p>I&rsquo;m trying to waste system resources in a guaranteed way. I have these boxes with 2G of memory, and need to test problems that show up on 512MB machines and I don&rsquo;t have any 512MB sticks&hellip;.</p>
+
+<p>As I study Mac OS X Advanced Programming, I think I may be able to do this with mlock() and not have to use a kext. I&rsquo;ve read other things that suggest that mlock() won&rsquo;t work the way I want in a user app. So testing is in my future.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/88/">88</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-30T22:19:59-05:00" pubdate data-updated="true">Dec 30<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the random noise in the picture. First secret: spend some time and read through every patch available, particularly the ones in Tools. It&rsquo;s important to know what&rsquo;s available so you don&rsquo;t spend hours trying to reinvent the basics. And don&rsquo;t forget that &ldquo;transparent&rdquo; defaults to meaning &ldquo;whatever random memory happens to be on the video card.&rdquo;</p>
+
+<p>I&rsquo;ll be spend quite a bit of time trying to improve the interface for the full-screen plugins. I&rsquo;m trying to make it as easy to write new full-screen modes as to write new screen savers. Once I&rsquo;ve gotten a second full-screen plugin written, I think I&rsquo;ll better know how to structure the interface.</p>
+
+<p>I&rsquo;ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you&rsquo;d get a stray &ldquo;ERROR: Could not find webNetscapePluggin&rdquo; error in your logs. Hopefully that&rsquo;s now fixed.</p>
+
+<div class="post-body entry-content">Should post a 0.6 (or at least 0.6 beta) sometime after the New Year.</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/87/">87</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-24T23:18:04-05:00" pubdate data-updated="true">Dec 24<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Huge changes in PandoraBoy on the way. I&rsquo;m working on full-screen mode, so you can run PandoraBoy from across the room and still see what&rsquo;s currently playing. Building a smooth transition from window to full-screen without interrupting playback has taken my a couple of days, but I think it&rsquo;s a pleasing effect. Right now it doesn&rsquo;t do a lot more than be a full-screen Pandora window (which isn&rsquo;t very exciting in itself, though much harder than it sounds), but next I&rsquo;ll work on a plug-in architecture to let you put various information on the bottom portion of the screen. Then it&rsquo;ll actually be useful.</p>
+
+<p>Why is it so hard to go full-screen you may ask? Afterall, it&rsquo;s just a webpage. But the mini-player is a web page that assumes the window is a specific size. Getting the background gradient to look right at any size is the main problem, since there is no direct way to scale a background in CSS2. repeat-x handles left-to-right scaling, but the pandora background isn&rsquo;t tileable vertically. My final solution was to build an NSImageView which holds a flipped version of the Pandora background, and then placed it immediately underneath the pandora webview. It handles all vertical stretching and gives a nice darker area at the bottom rather than just fading to white.</p>
+
+<p>I&rsquo;ll also investigate a black-screen mode with the pandora player standing with no background. I had that working at one point, but it&rsquo;s been hard to recreate it in a way to zooms cleanly. CSS2 and Javascript just aren&rsquo;t nearly as powerful as Cocoa&hellip;.</p>
+
+<p>If you&rsquo;re feeling insanely adventurous, it&rsquo;s all checked in on truck in subversion&hellip;.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/86/">86</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-17T22:40:24-05:00" pubdate data-updated="true">Dec 17<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>PandoraBoy 0.5 is live. Go forth.</p>
+
+<p>I may not get to work on PB for a few days at least. One-way call paths will be my life for a little while I suspect. Or maybe it&rsquo;s just USB audio input failing in some strange way&hellip; ah telephony.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/85/">85</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-16T10:56:31-05:00" pubdate data-updated="true">Dec 16<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>PB 0.5 is in my final testing. Just going to let it run a few hours before I post it on Monday. Adds station changing (finally) from menu, applescript or hotkeys. It&rsquo;s actually a much larger change than it looks. There was a lot of under-the-covers restructuring while I got that working.</p>
+
+<p>Next plans: either investigate how to masquerade as iTunes (so that stuff that works with iTunes will transparently work with PandoraBoy), or work on some eye-candy features (full-screen mode, floating semi-transparent windows, etc.)</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/83/">83</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-15T17:53:09-05:00" pubdate data-updated="true">Dec 15<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Why is it when I want to test PandoraBoy with an album that has no artwork available, suddenly Pandora becomes so good at having every piece of artwork on every track for 7 different stations until I run out of hourly skips?</p>
+
+<p>Well, at least I finally fixed that stupid &ldquo;thumbs-up in the lower left of the Pandora window&rdquo; bug that&rsquo;s been driving me crazy for so long. Check for nil returns people!</p>
+
+<p>I&rsquo;m still trying to understand how Pandora manages skip tracking. I&rsquo;m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don&rsquo;t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they&rsquo;re storing it in Flash local storage. I swear they didn&rsquo;t used to keep track of skips if you switched stations and then switched back, but then they also didn&rsquo;t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/11/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/9/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I&#8217;ll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

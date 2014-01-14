@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="When last we looked at Bézier curve calculations, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/page/3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/faster-bezier/">Even Faster Bezier</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T12:53:40-05:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When <a href="/fast-bezier-intro-701">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That&rsquo;s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code>-Os</code> optimized function. But we&rsquo;re just getting warmed up. We haven&rsquo;t yet gotten half of the performance available.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/faster-bezier/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/fast-bezier-intro/">Introduction to Fast Bezier (and Trying the Accelerate.framework)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-24T14:22:46-05:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[If you want the answer to last time&rsquo;s homework, skip to the end.]</p>
+
+<p>So you want to hand-calculate Bézier curves. Good for you. It comes up more often then you&rsquo;d think on iOS, even though <code>UIBezierPath</code> is supposed to do it all for you. The truth is, sometimes you need the numbers yourself. For instance if you want to calculate intersections, or you want to draw text along the curve (like in <a href="https://github.com/rnapier/ios5ptl/tree/master/ch18/CurvyText">CurvyText</a> from <a href="http://iosptl.com">iOS:PTL</a> chapter 18).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/fast-bezier-intro/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/equations-matrices-accelerate/">Converting Algebra to Matrices for Accelerate Framework</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-06T11:19:28-05:00" pubdate data-updated="true">Feb 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+<p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I&rsquo;ll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
+
+<p>In this post, I&rsquo;m targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it&rsquo;s hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you&rsquo;re like me, and once upon a time you actually took linear algebra, but today you wouldn&rsquo;t know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn&rsquo;t been released…) My goal isn&rsquo;t to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/equations-matrices-accelerate/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/offline-uiwebview-nsurlprotocol/">Drop-in Offline Caching for UIWebView (and NSURLProtocol)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-29T14:56:11-05:00" pubdate data-updated="true">Jan 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>The most up-to-date source for this is now available at <a href="https://github.com/rnapier/RNCachingURLProtocol">github</a>.</em></p>
+
+<p>Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://iosptl.com">our book</a> is devoted to the ins-and-outs of this subject.</p>
+
+<p>But sometimes you just have a simple <code>UIWebView</code>, and you want to cache the last version of the page. You&rsquo;d think that <code>NSURLCache</code> would handle this for you, but it&rsquo;s much more complicated than that. <code>NSURLCache</code> doesn&rsquo;t cache everything you&rsquo;d think it would. Sometimes this is because of Apple&rsquo;s decisions in order to save space. Just as often, however, it&rsquo;s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
+
+<p>What I wanted was a simple mechanism for the following case:</p>
+
+<ul>
+<li>You have a UIWebView that points to a website with embedded images</li>
+<li>When you&rsquo;re online, you want the normal caching algorithms (nothing fancy)</li>
+<li>When you&rsquo;re offline, you want to show the last version of the page</li>
+</ul>
+
+
+<p>My test case was simple: a webview that loads cnn.com (a nice complicated webpage with lots of images). Run it once. Quit. Turn off the network. Run it again. CNN should display.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/offline-uiwebview-nsurlprotocol/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ios5-ptl-kindle/">Kindle!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-22T10:47:36-05:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those who have asked (and it&rsquo;s the #1 question I&rsquo;m asked about the book), <em>iOS 5 Programming Pushing the Limits</em> is now available in <a href="http://www.amazon.com/Programming-Pushing-Limits-Extraordinary-ebook/dp/B006OP97QI/ref=sr_1_11?s=digital-text&ie=UTF8&qid=1324561899&sr=1-11">Kindle format</a>, along with iBook and Adobe eBook. Enjoy</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/ios-5-programming-adobe-ebook-format/">iOS 5 Programming in Adobe E-Book Format</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-16T11:38:47-05:00" pubdate data-updated="true">Dec 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those who have asked, the <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-1119961580.html">Adobe E-Book version</a> of iOS 5 Programming is available now from Wiley. I&rsquo;m not certain yet when the Kindle version will be out, but I&rsquo;m looking into it, along with getting a list of what other formats are planned.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/moment-sun/">A Moment in the Sun</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-15T00:51:54-05:00" pubdate data-updated="true">Dec 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have no idea what Amazon rankings really mean right around a book launch. Since they weight towards recent sales, I&rsquo;m sure they spike, so you have to take these things with a grain of salt. But for at least a little while, we have the <a href="http://www.amazon.com/gp/bestsellers/books/377559011">#1 book in Mobile &amp; Wireless Programming</a>. I promise I won&rsquo;t keep spamming you all with book updates, but it&rsquo;s the first time I&rsquo;ve been at the top of a &ldquo;best sellers&rdquo; list.</p>
+
+<p><img class="center" src="/images/moment-sun/Screen-Shot-2011-12-14-at-11.46.46-PM.png"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/the-book-is-almost-here/">The Book Is Almost Here</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-11T15:09:06-05:00" pubdate data-updated="true">Dec 11<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve mentioned that Mugunth Kumar and I have been working on a book, <a href="http://www.amazon.com/iOS-Programming-Pushing-Limits-Extraordinary/dp/1119961327">iOS 5 Programming Pushing the Limits</a>. It&rsquo;s available now for pre-order and should be shipping by 12/20. It will be available in several eBook formats, though I don&rsquo;t have all the details for that yet. I&rsquo;m proud of what we&rsquo;ve been able to put together here. The target audience are developers who have some iOS development under their belts, and are ready to move to the next level. Rather than just focus on the nuts and bolts of getting things done, we cover  how to do things well. In the process, we cover a lot of more advanced ground, often of frameworks with &ldquo;Core&rdquo; in their names like Core Animation, Core Text, and Core Foundation. We also address practical issues like how to optimize your application for offline work, and how to best handle REST and JSON.</p>
+
+<p>Please send any comments or corrections to me at <a href="mailto:robnapier@gmail.com"><a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#58;&#x72;&#111;&#x62;&#110;&#97;&#112;&#105;&#101;&#x72;&#x40;&#103;&#x6d;&#97;&#105;&#108;&#x2e;&#99;&#111;&#109;">&#114;&#x6f;&#98;&#x6e;&#x61;&#112;&#105;&#x65;&#114;&#x40;&#103;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;</a></a>. In the meantime, you can take a look at the <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-1119961327,descCd-DOWNLOAD.html">example code</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/aes-commoncrypto/">Properly Encrypting With AES With CommonCrypto</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-11T16:43:34-04:00" pubdate data-updated="true">Aug 11<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Update: You can now download the full example code from my book at <a href="https://github.com/rnapier/ios5ptl/tree/master/ch11/CryptPic/CryptPic">GitHub</a>. This comes from Chapter 11, &ldquo;Batten the Hatches with Security Services.&rdquo;</strong></p>
+
+<p><strong>Update2: The things described here are handled automatically by <a href="https://github.com/rnapier/RNCryptor" target="_blank">RNCryptor</a>, which is an easier approach unless you want to write your own solution.</strong></p>
+
+<p>I see a lot of example code out there showing how to use <code>CCCrypt()</code>, and most of it is unfortunately wrong. Since I just got finished writing about 10 pages of explanation for my upcoming book, I thought I&rsquo;d post a shortened form here and hopefully help clear things up a little. This is going to be a little bit of a whirlwind, focused on the simplest case. If you want the gory details including performance improvements for large amounts of data, well, <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-1119961327.html">the book</a> will be out later this year. :D</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/aes-commoncrypto/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/a-pandoraboy-maintainer-emerges/">A PandoraBoy Maintainer Emerges</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-03T08:54:19-04:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I went out to <a href="http://trianglecocoa.com/">NSCoder RTP</a> for the first time last night and met up with <a href="http://jsh.in">Josh Johnson</a>, who has been interested in taking up PandoraBoy development. So expect some changes coming up. Probably a move to github. Probably dropping 10.5 support soon. And who knows, it might even really work again.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/4/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/2/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I&#8217;ll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

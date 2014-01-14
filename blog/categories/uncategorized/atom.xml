@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Uncategorized | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/uncategorized/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Latest News]]></title>
+    <link href="http://robnapier.net/latest-news/"/>
+    <updated>2009-06-26T11:40:44-04:00</updated>
+    <id>http://robnapier.net/latest-news</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been quiet here for a while. I&rsquo;ve been spending most of my time working on <a href="http://xmppframework.googlecode.com">XMPPFramework</a>, an opensource framework that makes it easier to build XMPP clients for Mac and iPhone. I&rsquo;ve been working on this nonstop for several weeks now in preparation for a demo based on this, so there hasn&rsquo;t been a lot of time to post here. My code for that demo is done now, and I&rsquo;m headed off on vacation for two weeks. So you should see more traffic here in July. I have quite a backlog of topics I just haven&rsquo;t had time to really capture.</p>
+
+<p>If you&rsquo;re interested in a less edited form of my Cocoa musings, I still answer questions at <a href="http://stackoverflow.com">Stack Overflow</a> (<a href="feed://stackoverflow.com/feeds/user/97337">feed</a>), and I&rsquo;ve started experimenting with <a href="https://twitter.com/cocoaphony">Twitter</a>, though I&rsquo;m not sure yet how much I like tweeting.</p>
+
+<p>See you all in July!</p>
+]]></content>
+  </entry>
+  
+</feed>

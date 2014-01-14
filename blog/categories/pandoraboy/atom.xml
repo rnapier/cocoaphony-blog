@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: PandoraBoy | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/pandoraboy/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[A PandoraBoy Maintainer Emerges]]></title>
+    <link href="http://robnapier.net/a-pandoraboy-maintainer-emerges/"/>
+    <updated>2011-08-03T08:54:19-04:00</updated>
+    <id>http://robnapier.net/a-pandoraboy-maintainer-emerges</id>
+    <content type="html"><![CDATA[<p>I went out to <a href="http://trianglecocoa.com/">NSCoder RTP</a> for the first time last night and met up with <a href="http://jsh.in">Josh Johnson</a>, who has been interested in taking up PandoraBoy development. So expect some changes coming up. Probably a move to github. Probably dropping 10.5 support soon. And who knows, it might even really work again.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Looking for a PandoraBoy Maintainer]]></title>
+    <link href="http://robnapier.net/pandoraboy-maintainer/"/>
+    <updated>2011-07-26T19:35:56-04:00</updated>
+    <id>http://robnapier.net/pandoraboy-maintainer</id>
+    <content type="html"><![CDATA[<p>The whole reason I learned Cocoa in the first place was so I could work on <a href="http://code.google.com/p/pandoraboy/">PandoraBoy</a>. It&rsquo;s a great project, but I haven&rsquo;t really worked on it in quite some time. As Pandora changes, PandoraBoy becomes more and more broken. I barely have time to look at the patches that have been sent it, let alone apply them. My life has moved onto many other projects.</p>
+
+<p>I&rsquo;m actively looking for a new maintainer. It&rsquo;s a good project, and the code base is in decent repair, though I don&rsquo;t know if it builds with Xcode 4. The system basically works, but there&rsquo;s a long list of things that could be improved, and some things that are now downright broken. If you&rsquo;re interested, let me know and I&rsquo;ll help hand it off. I took it over when I knew next to nothing about Macs. It&rsquo;s a great place to learn.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Returning From the Deep Hack]]></title>
+    <link href="http://robnapier.net/returning-deep-hack/"/>
+    <updated>2011-02-02T23:33:05-05:00</updated>
+    <id>http://robnapier.net/returning-deep-hack</id>
+    <content type="html"><![CDATA[<p>For the last several months, all of my technical time not devoted to my primary employment has been absorbed in a <a href="http://itunes.apple.com/us/app/the-daily/id411516732">little iPad project</a>. Nights and weekends that I usually would spend writing blog posts, chatting on Stackoverflow, or working on PandoraBoy have instead been spent on one of the more interesting projects I&rsquo;ve worked on. But now it&rsquo;s front-page on apple.com, soaring up the charts, and I&rsquo;m rolling onto other things. Top of my list, when not working on an awesome IM/Phone app full time, is starting work on a new iOS book, but close after <em>that</em> are PandoraBoy improvements, Cocoaphony and Stackoverflow. And maybe a little skiing. And there is that go-kart the family has started building. But still, blogging is up there, and I should have a new build of PandoraBoy out in the next week that fixes up some annoying bugs.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Pandora's "Profile" Pop-up]]></title>
+    <link href="http://robnapier.net/pandoras-profile-popup/"/>
+    <updated>2010-08-06T10:14:58-04:00</updated>
+    <id>http://robnapier.net/pandoras-profile-popup</id>
+    <content type="html"><![CDATA[<p>Several people have noted that PandoraBoy is displaying a &ldquo;Profile&rdquo; window over the player that interferes with the player. This is a notification from Pandora because they&rsquo;ve changed their privacy settings (you can now make your profile private, and they want to know if you want that).</p>
+
+<p>This should be a one-time event for existing accounts. I suspect that new accounts will not see it. The solution is to open www.pandora.com in Safari, answer the question, and then re-launch PB.</p>
+
+<p>PandoraBoy goes directly to the the mini-player on launch. Pandora doesn&rsquo;t code for that since it&rsquo;s impossible from the website. So sometimes they make interfaces that are larger than the mini-player without updating the mini-player code to resize. PB doesn&rsquo;t resize the window (it doesn&rsquo;t know how large it should be). It just relies on the mini-player to do it in Javascript, but in cases like this, the mini-player also doesn&rsquo;t know how large the window should be.</p>
+
+<p>BTW, I often am asked why PB doesn&rsquo;t make the window resizable for cases like this. The answer is that it doesn&rsquo;t help. The mini-player is a flash app, and has a clipping frame independent of the window. So while you can resize the window, the content is still clipped at the border of the flash app. Ah, the wonders of Flash.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PandoraBoy 0.8.2 - Fixes Flash]]></title>
+    <link href="http://robnapier.net/pandoraboy-082-fixes-flash/"/>
+    <updated>2010-07-15T23:30:24-04:00</updated>
+    <id>http://robnapier.net/pandoraboy-082-fixes-flash</id>
+    <content type="html"><![CDATA[<p>For those of you having trouble with Flash 10.1, I&rsquo;ve fixed PB to handle it. This moves from the hackish &ldquo;dig around in the NetscapePlugin objects and call undocumented methods&rdquo; approach to a standard CGEvent based keyboard injection. You can&rsquo;t use NSApp&rsquo;s sendEvent: to talk to Flash (probably because Flash is not in Cocoa). But the following code is a good general purpose &ldquo;send me a virtual keystroke.&rdquo;</p>
+
+<!-- more -->
+
+
+<pre><code>- (void)sendKeyPress:(int)keycode withModifier:(int)modifier
+{
+    ProcessSerialNumber psn;
+    GetCurrentProcess(&amp;psn);
+    CGEventRef modifierEvent;
+    if (modifier != 0)
+    {
+        modifierEvent = CGEventCreateKeyboardEvent(NULL, modifier, YES);
+        CGEventPostToPSN(&amp;psn, modifierEvent);
+    }
+
+    CGEventRef keyEvent = CGEventCreateKeyboardEvent(NULL, keycode, YES);
+    CGEventPostToPSN(&amp;psn, keyEvent);
+    CGEventSetType(keyEvent, kCGEventKeyUp);
+    CGEventPostToPSN(&amp;psn, keyEvent);
+    CFRelease(keyEvent);
+
+    if (modifier != 0)
+    {
+        CGEventSetType(modifierEvent, kCGEventKeyUp);
+        CGEventPostToPSN(&amp;psn, modifierEvent);
+        CFRelease(modifierEvent);
+    }
+}
+</code></pre>
+
+<p>First note the use of <code>CGEventPostToPSN()</code>. I originally made the mistake of using <code>CGEventPost()</code>. The problem is that this will send the keystroke to the currently active application, not PandoraBoy. For keyboard shortcuts and applescript where PB will certainly be in the background, <code>CGEventPostToPSN()</code> is a must here.</p>
+
+<p>Note that this uses virtual keycodes. That&rsquo;s fine for PB, since (for now) we only send things that are universal (like spacebar). But it will be a problem when I implement sending &ldquo;z&rdquo; to snooze a song. The problem is that &ldquo;z&rdquo; means &ldquo;the location of &lsquo;z&rsquo; on an ANSI keyboard.&rdquo; If you have a different keyboard layout, it&rsquo;s still going to act like you pressed that lower left-hand key beside the shift, not &ldquo;z&rdquo;. If people have trouble with this, I&rsquo;ll look into UCKeyboardLayout, but it was too much for tonight, and I don&rsquo;t need it myself.</p>
+
+<p>The modifiers are tricky because if you want to send &ldquo;Z&rdquo; that really means &ldquo;shift down, z down, z up, shift up.&rdquo; This method takes care of all that for you. You would send &ldquo;Z&rdquo; like this:</p>
+
+<pre><code>[self sendKeyPress:kVK_ANSI_Z withModifier:kVK_Shift];
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

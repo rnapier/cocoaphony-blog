@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Builds | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/builds/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Building the Build System - Part 2 - Project Templates]]></title>
+    <link href="http://robnapier.net/project-templates/"/>
+    <updated>2009-05-20T18:00:42-04:00</updated>
+    <id>http://robnapier.net/project-templates</id>
+    <content type="html"><![CDATA[<p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn&rsquo;t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it&rsquo;s easier than ever. Let&rsquo;s make one.</p>
+
+<!-- more -->
+
+
+<p><code>/Developer/Library/Xcode</code> &ndash; Mac
+<code>/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode</code> &ndash; iPhone</p>
+
+<p>As with much of the move in Xcode to <code>/Developer/Platforms</code>, the existing Mac files have been inconsistently transfered, and some are still found in <code>/Developer/Library</code>. Hopefully Apple will get more consistent around this over time.</p>
+
+<p>In these directories, you&rsquo;ll see several templates that should look familiar under File Templates, Project Templates and Target Templates. Let&rsquo;s take a look at the iPhone &ndash; Application &ndash; Window-Based Application template. You should see the following structure:</p>
+
+<p>```
+<strong><em>PROJECTNAME</em></strong>.xcodeproj
+<strong>_PROJECTNAMEASIDENTIFIER</strong>__Prefix.pch
+Classes/</p>
+
+<pre><code>___PROJECTNAMEASIDENTIFIER___AppDelegate.h
+___PROJECTNAMEASIDENTIFIER___AppDelegate.m
+</code></pre>
+
+<p>Info.plist
+main.m
+MainWindow.xib
+```</p>
+
+<p>Basically, it looks very similar to an empty project called <code>___PROJECTNAME___</code> because that&rsquo;s what it is. You could open this project in Xcode, build it and run it. Be a little mindful of doing this; it will create a <code>build</code> directory that you&rsquo;ll want to delete later, but this is basically how we&rsquo;re going to modify our templates.</p>
+
+<p>The one thing special about the template is a little bit of meta-data stored inside the xcodeproj. Open this in Finder (Ctrl-Click and select Show Package Contents). You&rsquo;ll see the standard project.pbxproj, but you&rsquo;ll also see TemplateIcon.icns and TemplateInfo.plist. The first is the icon shown in Xcode, and the latter includes the description of the project (again for the Xcode template chooser screen).</p>
+
+<p>You&rsquo;ll note the use of <code>___PROJECTNAME___</code> versus <code>___PROJECTNAMEASIDENTIFIER___</code>. For the majority of projects these are the same. But if your project has characters that would be illegal in an Objective-C identifier but legal in a file name (spaces, numbers, symbols), then those will be removed in the identifier version. This is important in making class names for instance. So if your project name is &ldquo;My Application&rdquo;, the xcodeproj will be &ldquo;My Application.xcodeproj&rdquo;, but the AppDelegate class header will be &ldquo;MyApplication_AppDelegate.h&rdquo;.</p>
+
+<p>These macros (<code>___PROJECTNAME___</code> and <code>___PROJECTNAMEASIDENTIFIER___</code>) will be substituted anywhere they are found in a filename or within the files. That includes inside of XIB files. So in the MainMenu.xib for a Cocoa project, you can fix the main menu to read &ldquo;About <strong><em>PROJECTNAME</em></strong>&rdquo; and it&rsquo;ll be substituted for you. With NIBs, you couldn&rsquo;t do this, which is why &ldquo;NewApplication&rdquo; is found all over the place in the Mac MainMenu.xib. It&rsquo;s unfortunate that Apple didn&rsquo;t fix this when they converted the Cocoa templates to XIBs.</p>
+
+<p>There are several other macros available in project templates. These are not documented as far as I know. I&rsquo;ve worked them out by looking at the strings in the Xcode framework that provides them, and then testing which ones actually work in project templates (file templates and target templates have slightly different ones).</p>
+
+<p><code>
+___UUIDASIDENTIFIER___
+___UUID___
+___YEAR___
+___ORGANIZATIONNAME___
+___FULLUSERNAME___
+___USERNAME___
+___TIME___
+___DATE___
+___PROJECTNAMEASXML___
+___PROJECTNAMEASIDENTIFIER___
+___PROJECTNAME___
+</code></p>
+
+<p>Note that while there are <code>DATE</code> and <code>YEAR</code> macros, there are no <code>DAY</code> or <code>MONTH</code> macros. <code>ORGANIZATIONNAME</code> is set by default to <code>__MyCompanyName__</code>. You can fix this by setting it in defaults:</p>
+
+<p><code>bash
+defaults write com.apple.Xcode PBXCustomTemplateMacroDefinitions '{ORGANIZATIONNAME = "My Company"; }'
+</code></p>
+
+<h3>Walking through it all</h3>
+
+<p>Now that we&rsquo;ve talked it to death, let&rsquo;s walk through actually doing it based on our work <a href="/blog/build-system-1-build-panel">last time</a>.</p>
+
+<ul>
+<li>Open <code>~/Library/Application Support/Developer/Shared/Xcode</code> in Finder and make a directory called <code>Project Templates</code></li>
+<li>Under <code>Project Templates</code>, make a directory called <code>iPhone OS</code>.</li>
+<li>Open <code>/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode/Project Templates/Application</code> in Finder.</li>
+<li>Copy (don&rsquo;t move), <code>Window-Based Application</code> from the <code>/Developer</code> window to <code>~/Library</code> window.</li>
+<li>Open the <code>Window-Based Application</code> folder and open <code>___PROJECTNAME___.xcodeproj</code> in Xcode.</li>
+<li>Go back to <a href="/blog/build-system-*-build-panel">&ldquo;Abandoning the Build Panel&rdquo;</a> and apply the changes there. Or apply whatever changes you want to be in every project. In your <code>Application.xcconfig</code>, you&rsquo;ll want this:
+<code>
+PRODUCT_NAME = ___PROJECTNAME___
+GCC_PREFIX_HEADER = ___PROJECTNAMEASIDENTIFIER____Prefix.pch
+</code></li>
+<li>Quit Xcode</li>
+<li>Delete the build/ directory if one was created</li>
+<li>Right-click the xcodeproj and select &ldquo;Show Package Contents&rdquo;</li>
+<li>Delete any .mode1v3 and .pbxuser files that may have been created</li>
+<li>Open TemplateInfo.plist in Property Editor and set the description as you like</li>
+<li>If you like, replace TemplateIcon.icns with an icon file you like</li>
+<li>You can now launch XCode, select File>New Project, and you should see a &ldquo;User Templates&rdquo; section with your template.</li>
+</ul>
+
+
+<p>If you&rsquo;d like an example of the project template I use, along with all my xcconfig settings, I&rsquo;ve attached it. We&rsquo;ll be discussing some of these settings in the future.</p>
+
+<p><a href="https://github.com/rnapier/cocoaphony/tree/master/Project%20Templates">Project Templates at Github</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building the Build System - Part 1 - Abandoning the Build Panel]]></title>
+    <link href="http://robnapier.net/build-system-1-build-panel/"/>
+    <updated>2009-05-14T08:00:59-04:00</updated>
+    <id>http://robnapier.net/build-system-1-build-panel</id>
+    <content type="html"><![CDATA[<p>XCode has a decent build system, but it doesn&rsquo;t work as well as it could out of the box. With just a little work, you can make your projects easier to setup and maintain just the way you want them, improve your code, and even speed up your build times.</p>
+
+<p>The first thing we want to do is get rid of one of the great obfuscations of Xcode: The Build panel.</p>
+
+<p><img class="center" src="/images/build-system-1-build-panel/buildpanel.png"></p>
+
+<p>The build panel seems convenient at first, but in practice it makes it hard to see what&rsquo;s going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you&rsquo;ve done this so someone doesn&rsquo;t come along later switch the setting. The Build Panel doesn&rsquo;t give you an easy way to include comments right along with the setting (the &ldquo;Comments&rdquo; panel is pretty useless in my experience), and it&rsquo;s easy to lose settings or accidentally apply them to only to one configuration.</p>
+
+<p>XCode provides a better solution called xcconfig files. Everything you can do in the build panel can be done in xcconfig files, and you can actually read them and make comments. So let&rsquo;s make some.</p>
+
+<!-- more -->
+
+
+<ol>
+<li>Create a new Window-Based iPhone Application. (Everything we do here works exactly the same for Mac.)</li>
+<li>Add a new group to your Groups &amp; Files called &ldquo;Build Configuration&rdquo;.</li>
+<li>Add a new file to the group. Under &ldquo;Other&rdquo; select &ldquo;Configuration Settings File.&rdquo; Call it &ldquo;Shared.xcconfig&rdquo;.</li>
+<li>Create three more xcconfig files called Debug, Release and Application.</li>
+<li>Double-click the Project to open the Project Info panel, and select Build.</li>
+<li>Select Configuration: &ldquo;Debug&rdquo; and Show: &ldquo;Settings Defined at This Level.&rdquo;</li>
+<li>Select all the settings (you can use Cmd-A here).</li>
+<li>Copy them with Cmd-C.</li>
+<li>Go back to Debug.xcconfig and paste with Cmd-V. You now know how to find out the xcconfig syntax for any Build Panel setting you&rsquo;re uncertain of.</li>
+<li>Go back to the Build Panel and hit Delete to set all settings to default. Select &ldquo;Show: All Settings&rdquo; so you can see your settings again.</li>
+<li>In the lower-right of the panel, for &ldquo;Based On:&rdquo; select &ldquo;Debug.&rdquo; You should see your old settings show back up, but not bold this time.</li>
+<li>Repeat for Configuration: &ldquo;Release&rdquo;. Copy them to Release.xcconfig and delete them from the Build Panel.</li>
+<li>Double-click on the Target, and repeat the process, moving both its Debug and Release settings to Application. Put in a comment to indicate which are the Debug settings and which are the Release settings. We&rsquo;ll clean them up shortly. Select &ldquo;Configuration: All Configurations&rdquo; and &ldquo;Based On: Application.&rdquo;</li>
+</ol>
+
+
+<p>We&rsquo;ve now moved everything from the build panel to the xcconfig files, and the system should build. Debug and Release are slightly confused because we mixed the settings in Application, but we&rsquo;ll fix that now.</p>
+
+<p>Look in Application.xcconfig, and move anything that&rsquo;s in Debug but not in Release to Debug.xcconfig, and anything in Release but not Debug to Release.xcconfig. Anything that&rsquo;s in both, delete the second copy of.</p>
+
+<p>Anything that is in both Release and Debug, move to Shared, and put <code>#include "Shared.xcconfig"</code> at the top of the Release and Debug configs.</p>
+
+<p>If you&rsquo;ve followed all the instructions, you should have four files that look like this (assuming your product&rsquo;s name is &ldquo;Test&rdquo;):</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Shared.xcconfig </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>ARCHS = $(ARCHS_STANDARD_32_BIT)
+</span><span class='line'>SDKROOT = iphoneos2.2.1
+</span><span class='line'>CODE_SIGN_IDENTITY =
+</span><span class='line'>CODE_SIGN_IDENTITY[sdk=iphoneos#] = iPhone Developer
+</span><span class='line'>PREBINDING = NO
+</span><span class='line'>GCC_C_LANGUAGE_STANDARD = c99
+</span><span class='line'>GCC_WARN_ABOUT_RETURN_TYPE = YES
+</span><span class='line'>GCC_WARN_UNUSED_VARIABLE = YES
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Release.xcconfig </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;include &amp;ldquo;Shared.xcconfig&amp;rdquo;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;COPY_PHASE_STRIP = YES
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Debug.xcconfig </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;include &amp;ldquo;Shared.xcconfig&amp;rdquo;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;ONLY_ACTIVE_ARCH = YES
+</span><span class='line'>COPY_PHASE_STRIP = NO
+</span><span class='line'>GCC_DYNAMIC_NO_PIC = NO
+</span><span class='line'>GCC_OPTIMIZATION_LEVEL = 0
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Application.xcconfig </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>INFOPLIST_FILE = Info.plist
+</span><span class='line'>PRODUCT_NAME = Test
+</span><span class='line'>ALWAYS_SEARCH_USER_PATHS = NO
+</span><span class='line'>GCC_PRECOMPILE_PREFIX_HEADER = YES
+</span><span class='line'>GCC_PREFIX_HEADER = Test_Prefix.pch
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>If you Build&amp;Run now, everything should work. It&rsquo;s not a great build configuration, but it&rsquo;s Apple&rsquo;s default in a form that we can start understanding and improving.</p>
+
+<p>But before that, we&rsquo;re going to convert this to a Project Template, so we don&rsquo;t have to go through this process again. We&rsquo;ll do that in the <a href="http://robnapier.net/blog/project-templates-364">next part of this series</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building Autoconf Tools]]></title>
+    <link href="http://robnapier.net/building-autoconf-tools/"/>
+    <updated>2009-02-23T09:16:19-05:00</updated>
+    <id>http://robnapier.net/building-autoconf-tools</id>
+    <content type="html"><![CDATA[<p>Trying to solve this problem last night, I came across this great script to automate the process. Works great, right out of the box.</p>
+
+<p><a href="http://pseudogreen.org/blog/build_autoconfed_libs_for_iphone.html">build_for_iphoneos</a></p>
+
+<p>If you want to integrate this with an xcodebuild, you&rsquo;ll still need to build a small xcodeproj file. There&rsquo;s a template for this and instructions here:</p>
+
+<p><a href="http://developer.apple.com/DOCUMENTATION/Porting/Conceptual/PortingUnix/preparing/preparing.html#//apple_ref/doc/uid/TP40002849-BBCJABGC">Building Makefile Projects With XCode</a></p>
+]]></content>
+  </entry>
+  
+</feed>

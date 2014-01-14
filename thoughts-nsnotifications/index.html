@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Some Thoughts on NSNotifications - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="Unregistering Because these bugs are very hard to track down and very easy to avoid, I&rsquo;d like to direct everyone&rsquo;s attention to how to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/thoughts-nsnotifications">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Some Thoughts on NSNotifications</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-19T11:35:55-05:00" pubdate data-updated="true">Nov 19<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>Unregistering</h3>
+
+
+<p>Because these bugs are very hard to track down and very easy to avoid, I&rsquo;d like to direct everyone&rsquo;s attention to how to properly unregister for notifications.</p>
+
+<p>If your object uses NSNotificationCenter ever, you must add the following to -dealloc:</p>
+
+<pre lang="objc">[[NSNotificationCenter defaultCenter] removeObserver:self];</pre>
+
+
+<p>This removes you from all notifications. If you fail to do this, and you are dealloc&#8217;ed, and a notification you were observing is later posted, the application will crash with a bizarre access violation deep in NSNotificationCenter when it tries to post to an object (you) which no longer exists. It is tricky to figure out even what notification is being passed in these cases.</p>
+
+<p>If you are not observing anything, then -removeObserver: does nothing, so it is not dangerous to call. There is a slight performance cost, especially for objects that are alloc&#8217;ed and dealloc&#8217;ed a lot, so there&rsquo;s no reason to add it to objects that do nothing with notifications, but I recommend better safe than sorry in most cases.</p>
+
+<p>This advice does not apply to KVO observations, which are a completely different animal. <!-- more --></p>
+
+<h3>Naming</h3>
+
+
+<p>While here, it&rsquo;s worth noting some other significant notification advice. Never pass a hard-coded string as the name; you&rsquo;re begging for hard-to-track-down bugs when you mistype the string elsewhere. Create a name in the form PREFIXSomethingDidHappenNotification, for example: RNFooDidChangeNotification.</p>
+
+<p>Then create a constant with this name. In .h create an extern (a promise to define it elsewhere):</p>
+
+<pre lang="objc">extern NSString* RNFooDidChangeNotification;</pre>
+
+
+<p>And in .m, define it (outside of your @implementation block):</p>
+
+<pre lang="objc">NSString* RNFooDidChangeNotification = @"RNFooDidChangeNotification";</pre>
+
+
+<p>Please make the name of the notification match its value; it will make your debugging much easier. While many constants begin with a &ldquo;k&rdquo;, notifications do not, and delegate method naming conventions suggest they shouldn&rsquo;t, so please don&rsquo;t.</p>
+
+<p>The object of a notification should generally be the object that posts the notification, and in any case should whenever possible be a &ldquo;watchable&rdquo; object (i.e. an object that the observer could have a pointer to). This means that the object shouldn&rsquo;t be created dynamically when the notification is posted (an NSNumber or NSValue for instance). Other kinds of objects should be passed in the userInfo dictionary with appropriate keys (which should also be defined as variables as above). In the above example, the observer would strongly expect the object to be of class RNFoo.</p>
+
+<h3>When do notification run</h3>
+
+
+<p>For those coming from Java or C++, the actual handling of notifications often is a mystery. If you&rsquo;re used to highly threaded environments, you&rsquo;re immediately wondering about timing issues like &ldquo;what if I receive a notification in the middle of other processing?&rdquo; In Objective-C, these issues (mostly) disappear.</p>
+
+<p>-postNotification: (and the related methods) deliver notifications immediately. This is nothing like a Java JMS. -postNotification: is really just a fancy way to make a method call. As soon as you call it, the NSNotificationCenter walks through all the observers and calls all the selectors, one at a time. Only when it has finished them all does -postNotification: return. There is no extra thread. These are just method calls, and you will see them in your stack trace as though the poster called you.</p>
+
+<p>A side-effect of this is that you aren&rsquo;t going to get random notifications in the middle of your processing. As long as you keep all your notifications on the main thread (which you should do), they will always come in synchronously.</p>
+
+<p>What if you realy want to delay processing of a notification? Look at NSNotificationQueue. This will let you post notifications that get processed at the next event loop.</p>
+
+<p>(Advanced issues) NSNotificationCenter responds to notifications on the thread that the notification was posted on, not the thread the notification was observed on. In multi-threaded envrionments this can be confusing. Generally the right answer is to respond to all notifications on the main thread. To achieve this, use -performSelectorOnMainThread:withObject:waitUntilDone: to call -postNotification: if the poster is on its own thread. If the observer needs to be on its own thread, it is best to let the notification come in on the main thread, and then have the observer&rsquo;s handler perform the -performSelector:onThread:withObject:waitUntilDone: to get the processing over to the correct thread. This way, multiple observers can have their own threads, which would not work if the poster performed the -performSelector:onThread:withObject:waitUntilDone:.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-19T11:35:55-05:00" pubdate data-updated="true">Nov 19<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>cocoa</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://robnapier.net/thoughts-nsnotifications/" data-via="cocoaphony" data-counturl="http://robnapier.net/thoughts-nsnotifications/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/nsnotfound/" title="Previous Post: NSNotFound">&laquo; NSNotFound</a>
+      
+      
+        <a class="basic-alignment right" href="/three-magic-words/" title="Next Post: Three Magic Words">Three Magic Words &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I'll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Performance | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/performance/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Even Faster Bezier]]></title>
+    <link href="http://robnapier.net/faster-bezier/"/>
+    <updated>2012-03-06T12:53:40-05:00</updated>
+    <id>http://robnapier.net/faster-bezier</id>
+    <content type="html"><![CDATA[<p>When <a href="/fast-bezier-intro-701">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That&rsquo;s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code>-Os</code> optimized function. But we&rsquo;re just getting warmed up. We haven&rsquo;t yet gotten half of the performance available.</p>
+
+<!-- more -->
+
+
+<p>In this installment, we&rsquo;ll look at improving our algorithm. The code is available on <a href="https://github.com/rnapier/cocoaphony/tree/master/BezierPerf">github</a>.</p>
+
+<p>We tried the Accelerate framework, but it didn&rsquo;t help us. The cost of the function calls obliterated our gains. What can we do? First, let&rsquo;s look at the code again, and see if we&rsquo;re doing anything foolish.</p>
+
+<p>``` objc
+static inline CGFloat BezierNoPow(CGFloat t, CGFloat P0, CGFloat P1,</p>
+
+<pre><code>                              CGFloat P2, CGFloat P3) {
+</code></pre>
+
+<p>  return</p>
+
+<pre><code>(1-t)*(1-t)*(1-t) * P0
++ 3 * (1-t)*(1-t) * t * P1
++ 3 * (1-t) * t*t * P2
++ t*t*t * P3;
+</code></pre>
+
+<p>}</p>
+
+<p>unsigned int copyBezierNoPow(CGPoint P0, CGPoint P1, CGPoint P2, CGPoint P3,</p>
+
+<pre><code>                         CGPoint **results) {
+</code></pre>
+
+<p>  *results = calloc(kSteps + 1, sizeof(struct CGPoint));</p>
+
+<p>  for (unsigned step = 0; step &lt;= kSteps; ++step) {</p>
+
+<pre><code>CGFloat x = BezierNoPow((CGFloat)step/(CGFloat)kSteps,
+                        P0.x, P1.x, P2.x, P3.x);
+CGFloat y = BezierNoPow((CGFloat)step/(CGFloat)kSteps,
+                        P0.y, P1.y, P2.y, P3.y);
+(*results)[step] = CGPointMake(x, y);
+</code></pre>
+
+<p>  }
+  return kSteps + 1;
+}
+```</p>
+
+<p>Notice how we&rsquo;re recalculating a lot of things. For example, we calculate <code>(1-t)*(1-t)*(1-t)</code> twice with the same <code>t</code>. That can&rsquo;t be good. What if we factor out the part that doesn&rsquo;t change between <em>x</em> and <em>y</em>?</p>
+
+<p>``` objc
+unsigned int copyBezierXY(CGPoint P0, CGPoint P1, CGPoint P2, CGPoint P3,</p>
+
+<pre><code>                      CGPoint **results) {
+</code></pre>
+
+<p>  *results = malloc((kSteps + 1) * sizeof(struct CGPoint));</p>
+
+<p>  for (unsigned step = 0; step &lt;= kSteps; ++step) {</p>
+
+<pre><code>CGFloat t = (CGFloat)step/(CGFloat)kSteps;
+
+CGFloat C0 = (1-t)*(1-t)*(1-t); // * P0
+CGFloat C1 = 3 * (1-t)*(1-t) * t; // * P1
+CGFloat C2 = 3 * (1-t) * t*t; // * P2
+CGFloat C3 = t*t*t; // * P3;
+
+CGPoint point = {
+  C0*P0.x + C1*P1.x + C2*P2.x + C3*P3.x,
+  C0*P0.y + C1*P1.y + C2*P2.y + C3*P3.y
+};
+
+(*results)[step] = point;
+</code></pre>
+
+<p>  }
+  return kSteps + 1;
+}
+```</p>
+
+<p>Hey, that gets us from 0.6s to 0.5s (10Mp/s). A 17% improvement&rsquo;s pretty good. But let&rsquo;s think about this some more. The values <code>t</code> can take are exactly dependent on <code>kSteps</code>, which is a constant for the program. And since the <code>C</code> variables depend only on <code>t</code>, that means they&rsquo;re a fixed set as well. We should only have to calculate them once for the whole program. That seems a lot of work we don&rsquo;t need to do. Let&rsquo;s see how it turns out.</p>
+
+<p>``` objc
+unsigned int copyBezierTable(CGPoint P0, CGPoint P1, CGPoint P2, CGPoint P3,</p>
+
+<pre><code>                         CGPoint **results) {
+</code></pre>
+
+<p>  *results = malloc((kSteps + 1) * sizeof(struct CGPoint));</p>
+
+<p>  static CGFloat C0[kSteps] = {0};
+  static CGFloat C1[kSteps] = {0};
+  static CGFloat C2[kSteps] = {0};
+  static CGFloat C3[kSteps] = {0};
+  static int sInitialized = 0;
+  if (!sInitialized) {</p>
+
+<pre><code>for (unsigned step = 0; step &lt;= kSteps; ++step) {
+  CGFloat t = (CGFloat)step/(CGFloat)kSteps;
+  C0[step] = (1-t)*(1-t)*(1-t); // * P0
+  C1[step] = 3 * (1-t)*(1-t) * t; // * P1
+  C2[step] = 3 * (1-t) * t*t; // * P2
+  C3[step] = t*t*t; // * P3;
+}
+sInitialized = 1;
+</code></pre>
+
+<p>  }</p>
+
+<p>  for (unsigned step = 0; step &lt;= kSteps; ++step) {</p>
+
+<pre><code>CGPoint point = {
+  C0[step]*P0.x + C1[step]*P1.x + C2[step]*P2.x + C3[step]*P3.x,
+  C0[step]*P0.y + C1[step]*P1.y + C2[step]*P2.y + C3[step]*P3.y
+};
+(*results)[step] = point;
+</code></pre>
+
+<p>  }
+  return kSteps + 1;
+}
+```</p>
+
+<p>0.16s. 31Mp/s. That&rsquo;s over 3x faster by just calculating the piece that changes.</p>
+
+<p><strong>Lesson 2: In most cases, your biggest improvements will come from changing your algorithm. Whenever possible, get expensive things out of loops. Don&rsquo;t make a calculation fast if you can get rid of the calculation entirely. Remember that if you&rsquo;re called many times, that&rsquo;s the same as a loop.</strong></p>
+
+<p>The cost of this is 4 floats (16 bytes) per step to store the constants. So for a 1000 step curve, that&rsquo;s less than 16kB. Not a bad investment on iOS. This cost is for as many curves as you want, as long as they all use the same step size. Of course, if you want different numbers of steps, you could just pass a scale variable to calculate every other point, every fourth point, etc. But by the time we&rsquo;re done optimizing this (and there&rsquo;s still plenty of performance left to unlock), you may find that it&rsquo;s faster and easier just to calculate the same number of points for all curves.</p>
+
+<p>There is another common way to speed up Bézier calculation. Hannu Kankaanpää wrote an excellent article explaining <a href="http://www.niksula.hut.fi/~hkankaan/Homepages/bezierfast.html">forward differencing using a Taylor series</a>. His approach is fast. About 50-60% faster than <code>copyBezierXY()</code>. But <code>copyBezierTable()</code> is about twice as fast as forward differencing if you calculate a lot of curves with the same step size. Forward differencing is fast if you have one incredibly expensive curve to calculate (say a large Bézier surface). But it loses when you need to calculate a lot of curves. Factoring out everything but the points themselves into a pre-calcuated table lets you skip almost all the work. And that&rsquo;s the goal.</p>
+
+<p>We <em>still</em> haven&rsquo;t pulled out Instruments, and we&rsquo;re still writing in portable C. I wonder what we might get if we go off-road and write directly for the NEON coprocessor. Yes, that means we&rsquo;re moving onto ARM assembler in the next post. Think you can&rsquo;t beat the compiler? Think it&rsquo;s not worth it to try? Think again.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction to Fast Bezier (and Trying the Accelerate.framework)]]></title>
+    <link href="http://robnapier.net/fast-bezier-intro/"/>
+    <updated>2012-02-24T14:22:46-05:00</updated>
+    <id>http://robnapier.net/fast-bezier-intro</id>
+    <content type="html"><![CDATA[<p>[If you want the answer to last time&rsquo;s homework, skip to the end.]</p>
+
+<p>So you want to hand-calculate Bézier curves. Good for you. It comes up more often then you&rsquo;d think on iOS, even though <code>UIBezierPath</code> is supposed to do it all for you. The truth is, sometimes you need the numbers yourself. For instance if you want to calculate intersections, or you want to draw text along the curve (like in <a href="https://github.com/rnapier/ios5ptl/tree/master/ch18/CurvyText">CurvyText</a> from <a href="http://iosptl.com">iOS:PTL</a> chapter 18).</p>
+
+<!-- more -->
+
+
+<p>Just as a refresher, here&rsquo;s the cubic Bézier function in C, written in the simplest possible way (we&rsquo;re only going to discuss the cubic Bézier function here):</p>
+
+<pre><code>static CGFloat Bezier(CGFloat t, CGFloat P0, CGFloat P1, CGFloat P2, CGFloat P3) {
+  return 
+    powf(1-t, 3) * P0
+    + 3 * powf(1-t, 2) * t * P1
+    + 3 * (1-t) * powf(t, 2) * P2
+    + powf(t, 3) * P3;
+}
+</code></pre>
+
+<p>If you want to see this function in use, pull down CurvyText and look in <a href="https://github.com/rnapier/ios5ptl/blob/master/ch18/CurvyText/CurvyText/CurvyTextView.m">CurvyTextView.m</a>.</p>
+
+<p><code>P0</code> through <code>P3</code> are the control points. If you called <code>addCurveToPoint:controlPoint1:controlPoint2:</code>, then the starting point (wherever you &ldquo;were&rdquo;) would be <code>P0</code>. The end point would be <code>P3</code> and the control points would be <code>P1</code> and <code>P2</code>. <code>t</code> is a value that runs from 0 to 1; we&rsquo;ll talk about it more in a moment. If you&rsquo;re still really lost, you should take time out and read the <a href="http://en.wikipedia.org/wiki/Bézier_curve">Wikipedia article on Bézier curves</a>.</p>
+
+<p>The first thing to understand is that this is exactly the same function that <code>UIBezierPath</code> uses. (Well, exactly equivalent to the function they use. I&rsquo;m certain they don&rsquo;t use this one because it&rsquo;s pretty inefficient as we&rsquo;ll see.) So when we start calculating, we&rsquo;re going to match <code>UIBezierPath</code> exactly. That&rsquo;s great because it means you can mix-and-match your code and Core Graphics and everything will match-up.</p>
+
+<p>The next thing to understand is that in this form, the Bézier curve function is effectively one-dimensional. We hand it an &ldquo;x&rdquo; value and we get back an &ldquo;x&rdquo; value. We hand it a &ldquo;y&rdquo; value and we get back a &ldquo;y&rdquo; value. So we have to call it twice per point. That&rsquo;ll be important later for optimization purposes.</p>
+
+<p>Finally, the strangest thing you need to understand is that this function is not linear for <code>t</code>. At <code>t=0</code>, the equation evaluates to <code>P0</code>. At <code>t=1</code>, the equation evaluates to <code>P3</code>. (The equation never evaluates to <code>P1</code> or <code>P2</code> since Bézier curves do not pass through these control points.) But between 0 and 1, things get much more complicated. <code>t=0.5</code> does not represent &ldquo;half-way along the curve.&rdquo; Small changes in <code>t</code> can represent very small movement or very large movement along the curve depending on where you are on it. This fact is one of the headaches of Bézier curves.</p>
+
+<p>Our goal is to figure out how to calculate Bézier very fast. So we&rsquo;re not going to worry much about drawing. We&rsquo;re just going to investigate ways to calculate this function quickly. Hopefully the process will help you when you&rsquo;re investigating other functions.</p>
+
+<p>First, let&rsquo;s build a test project. You can get the full test code in <a href="https://github.com/rnapier/cocoaphony/BezierPerf">BezierPerf</a>. Starting with a basic project, you want this in <code>didFinishLaunchingWithOptions:</code> to simulate 100 curves drawn at 50 frames per second:</p>
+
+<pre><code>#define BEZIER_FUNC copyBezierSimple
+
+const unsigned kFPS = 50;
+const unsigned kNumCurves = 100;
+
+CGPoint P0 = {50, 500};
+CGPoint P1 = {300, 300};
+CGPoint P2 = {400, 700};
+CGPoint P3 = {650, 500};
+
+CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+CGPoint lastPoint = {0};
+for (unsigned i = 0; i &lt; kFPS * kNumCurves; ++i) {
+  CGPoint *points;
+  unsigned count = BEZIER_FUNC(P0, P1, P2, P3, &amp;points);
+  lastPoint = points[count-1];
+  free(points);
+}
+printf("Time: %f\n", CFAbsoluteTimeGetCurrent() - start);
+printf("(%f, %f)\n", lastPoint.x, lastPoint.y );
+exit(0);
+</code></pre>
+
+<p>Now we&rsquo;ll start with the simplest approach (<a href="https://github.com/rnapier/cocoaphony/blob/master/BezierPerf/BezierPerf/Bezier.c" target="_blank">Bezier.c</a>):</p>
+
+<pre><code>unsigned int copyBezierSimple(CGPoint P0, CGPoint P1, CGPoint P2, CGPoint P3, CGPoint **results) {
+  *results = calloc(kSteps + 1, sizeof(struct CGPoint));
+
+  for (unsigned step = 0; step &lt;= kSteps; ++step) {
+    CGFloat x = Bezier((CGFloat)step/(CGFloat)kSteps, P0.x, P1.x, P2.x, P3.x);
+    CGFloat y = Bezier((CGFloat)step/(CGFloat)kSteps, P0.y, P1.y, P2.y, P3.y);
+    (*results)[step] = CGPointMake(x, y);
+  }
+  return kSteps + 1;
+}
+</code></pre>
+
+<p>This just calls <code>Bezier()</code> twice. On my iPhone 4, in Debug mode, with 1000 points, this takes over 20 seconds to run. In Release mode (with optimizations) it takes just over 3 seconds. Wow. 6x improvement. We&rsquo;ll look into what it&rsquo;s doing later, but 3s is still no good. We need these calculations every second, and we haven&rsquo;t even drawn anything yet. Time to start optimizing.</p>
+
+<p>It&rsquo;s math, so Accelerate.framework is going to make it magically fast, right? I mean, everyone knows that Accelerate uses the fancy vector hardware and that means super-duper fast. So let&rsquo;s do that. We&rsquo;ll rewrite <code>Bezier()</code> to use Accelerate. This calculates <code>P*B*T</code> as we discussed in <a href="http://robnapier.net/blog/equations-matrices-accelerate-607">the last post</a>.</p>
+
+<pre><code>static CGFloat BezierAccelerate(CGFloat t, CGFloat P0, CGFloat P1, CGFloat P2, CGFloat P3) {
+  const CGFloat P[1][4] = {P0, P1, P2, P3};
+
+  static const CGFloat B[4][4] = 
+  { {-1,  3, -3, 1},
+    { 3, -6,  3, 0},
+    {-3,  3,  0, 0},
+    { 1,  0,  0, 0}};
+
+  const CGFloat T[4][1] = { powf(t, 3), powf(t, 2), t, 1 };
+
+  CGFloat PB[1][4];
+  vDSP_mmul((CGFloat*)P, 1, (CGFloat*)B, 1, (CGFloat*)PB, 1, 1, 4, 4);
+
+  CGFloat result[1][1];
+  vDSP_mmul((CGFloat*)PB, 1, (CGFloat *)T, 1, (CGFloat*)result, 1, 1, 1, 4);
+
+  return result[0][0];
+}
+</code></pre>
+
+<p>This is going to be great. We got rid of that long crazy function and replaced it with a couple of elegant matrix multiples running on the NEON vector processor. I can feel the speed already.</p>
+
+<p>11s. In Release mode, with optimizations.</p>
+
+<p>OK, so it&rsquo;s twice as fast as the original Debug code. But it&rsquo;s almost 4 times slower than just turning on <code>-Os</code> with the original function. What? Isn&rsquo;t Accelerate supposed to make all things faster? We haven&rsquo;t even tried to optimize the original <code>Bezier()</code> function, and still Accelerate is slower.</p>
+
+<p><strong>Lesson 1: Accelerate is not magic &ldquo;go fast&rdquo; fairy dust. It may even be slower than the simplest possible non-Accelerate implementation.</strong></p>
+
+<p>This is not to say that Accelerate isn&rsquo;t awesome. It can be for certain problems. But day-to-day multiplication is often not one of them.</p>
+
+<p>I promised we&rsquo;d talk about what <code>-Os</code> is doing and why it&rsquo;s giving us a 6x speedup. First, you can take a look at the code by editing the Scheme and setting the Build Configuration to Debug. Then use Product, Generate Output, Assembly File to see what happens. At the bottom of the assembler output window, you will see &ldquo;Show Assembly Output For.&rdquo; Switching between &ldquo;Running&rdquo; and &ldquo;Archiving&rdquo; will let you compare the debug and release output.</p>
+
+<p>The easiest way to navigate this output is by searching for <code>.thumb_func</code> which will help you find your functions. You can then look for <code>blx</code> to find the places you make function calls. The <code>.loc</code> entries tell you where you are in the source file (filenumber, line, column). Handy, right? In debug mode, you can see the Bezier function and the four calls to <code>powf()</code>. But in release mode, the <code>Bezier</code> function is gone entirely. It&rsquo;s been inlined. This is a big deal. Function calls can be expensive. This is one of the big reasons that hand-calculation can be so much faster than Accelerate. Accelerate is optimized for big matrices. For little tiny things, the cost of the function call dwarfs what you might save otherwise. Also, most Accelerate functions include fancy features like adjustable stride and parameter error checking. &ldquo;Fancy features&rdquo; translates into &ldquo;probably slower.&rdquo;</p>
+
+<p>Back to the assembler, note that there are only two calls to <code>powf()</code>. Where did the other calls go? Well, if you dig a little, you&rsquo;ll notice these lines:</p>
+
+<pre><code>vmul.f32    d16, d0, d0
+...
+vmul.f32    d17, d1, d1
+</code></pre>
+
+<p>These are squaring functions (<code>d0*d0 -&gt; d16</code>). That is incredibly, insanely faster than <code>pow(x,2)</code>. We got rid of a lot of function calls (both calls to <code>Bezier</code> and calls to <code>powf</code>), and we replaced a very expensive squaring function with a very cheap one using <code>vmul</code>.</p>
+
+<p>Which brings us to the next point. <code>vmul</code> is a NEON instruction. You don&rsquo;t have to use Accelerate to get NEON benefits. The compiler uses the NEON processor for all kinds of things.</p>
+
+<p>So now that we know that the compiler will replace <code>pow(x,2)</code> with <code>x*x</code>, I wonder if cubing by hand is faster, too. Let&rsquo;s try <code>BezierNoPow()</code>:</p>
+
+<pre><code>static CGFloat BezierNoPow(CGFloat t, CGFloat P0, CGFloat P1, CGFloat P2, CGFloat P3) {
+  return
+    (1-t)*(1-t)*(1-t) * P0
+    + 3 * (1-t)*(1-t) * t * P1
+    + 3 * (1-t) * t*t * P2
+    + t*t*t * P3;
+}
+</code></pre>
+
+<p>Debug: 9.7s. Nice. 50% improvement over unoptimized <code>powf()</code>.</p>
+
+<p>Release: <strong>0.6s.</strong> 5x speedup over optimized <code>powf()</code>. <strong>30x speedup over the original function.</strong></p>
+
+<p>In fairness, we should try removing the <code>powf()</code> calls in the Accelerate function. That gets us to 6.5s. Still 10x slower then hand-coded.</p>
+
+<p>Now 0.6s is still 60% of our available time, so it&rsquo;s worth digging deeper to see what else we can do to speed things up. We&rsquo;ll talk more about that later. We haven&rsquo;t really gotten warmed up yet. We haven&rsquo;t even launched Instruments. There is still plenty of speed we can pick up here. Read more at <a href="http://robnapier.net/blog/faster-bezier-722">Even Faster Bezier</a>.</p>
+
+<hr />
+
+<p>For those of you who did your homework from <a href="http://robnapier.net/blog/equations-matrices-accelerate-607">last time</a>, here&rsquo;s the answer, this time in C, for the matrix you need to calculate the derivative (slope) of the Bézier function:</p>
+
+<pre><code>const float Bp[4][3] = {
+  {-3, 6, -3},
+  {9, -12, 3},
+  {-9, 6, 0},
+  {3, 0, 0}
+};
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

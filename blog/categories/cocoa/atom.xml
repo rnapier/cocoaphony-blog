@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Cocoa | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/cocoa/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[New Forum for RNCryptor]]></title>
+    <link href="http://robnapier.net/forum-rncryptor/"/>
+    <updated>2013-12-20T09:39:33-05:00</updated>
+    <id>http://robnapier.net/forum-rncryptor</id>
+    <content type="html"><![CDATA[<p>If you&rsquo;re using RNCryptor, you may want to join the forum I&rsquo;ve finally setup: <a href="https://groups.google.com/forum/#!forum/rncryptor.">https://groups.google.com/forum/#!forum/rncryptor.</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Update on RNCryptor Vulnerability Fix]]></title>
+    <link href="http://robnapier.net/rncryptor-vulnerability-fix/"/>
+    <updated>2013-01-17T17:12:12-05:00</updated>
+    <id>http://robnapier.net/rncryptor-vulnerability-fix</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve built a candidate fix for the RNCryptor <a href="http://robnapier.net/blog/rncryptor-hmac-vulnerability-827">HMAC vulnerability</a>. It&rsquo;s on a branch (<a href="https://github.com/rnapier/RNCryptor/tree/issue44">issue44</a>) currently, but I&rsquo;ll merge it to master next week if no one sees problems, and update the docs. By default it is incompatible with v1 files. If you need to be able to decrypt v1 files, you can define RNCRYPTOR_ALLOW_V1_BAD_HMAC when building.</p>
+
+<p>Please let me know if anyone encounters issues.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RNCryptor HMAC Vulnerability (My Security Blunder)]]></title>
+    <link href="http://robnapier.net/rncryptor-hmac-vulnerability/"/>
+    <updated>2013-01-14T13:52:38-05:00</updated>
+    <id>http://robnapier.net/rncryptor-hmac-vulnerability</id>
+    <content type="html"><![CDATA[<p>Thank you to Allen Mann for discovering the following significant security vulnerability in RNCryptor.</p>
+
+<h3>The Vulnerability</h3>
+
+
+<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> computes the HMAC over the ciphertext only. It does not compute an HMAC over the header, particularly the IV. This allows an attacker to modify the IV and thus manipulate the first block (16-bytes) of decrypted plaintext. This is a major issue, and is exactly the kind of problem that RNCryptor is designed to avoid.</p>
+
+<p>I will be modifying RNCryptor shortly to fix this. This will rev the file version to 2. I will provide a backward-compatibly option to read v1 files (default off). I strongly recommend that developers move to the v2 format.</p>
+
+<p>I will try to get this out as quickly as I can, hopefully this week.</p>
+
+<!-- more -->
+
+
+
+
+<h3>The Lesson</h3>
+
+
+<p>There is a valuable lesson here. I know this vulnerability in AES. I have <a href="http://cocoaconf.com/conference/sessionDetails/218?confId=7">given talks</a> about it. I&rsquo;ve demonstrated it with <a href="https://github.com/rnapier/security-blunders/blob/master/modaes.py">exploit code</a>. I wrote RNCryptor <em>explicitly</em> to avoid this vulnerability. Yet I screwed up the implementation and so RNCryptor is currently vulnerable to it.</p>
+
+<p>I didn&rsquo;t find this problem myself. I&rsquo;m in the process of designing a different encrypted data format for a client, and I correctly compute the HMAC in that format, and I <em>still</em> didn&rsquo;t clue-in that I&rsquo;d done it wrong in RNCryptor.</p>
+
+<p>How was it found? By someone who didn&rsquo;t just take my word for it. He looked at the implementation, saw the error, wrote his own exploit to prove it to himself, and informed me.</p>
+
+<p>OpenSSL has been written by people very concerned with security. It&rsquo;s been <a href="http://www.kb.cert.org/vuls/byid?searchview&query=openssl">riddled with security bugs</a> over the years. (I wrote RNCryptor directly in response to the serious problems in its AES format.) <a href="http://www.kb.cert.org/vuls/byid?searchview&query=pgp">PGP</a>, <a href="http://www.kb.cert.org/vuls/byid?searchview&query=openssh">SSH</a>, <a href="http://www.kb.cert.org/vuls/byid?searchview&query=kerberos">Kerberos</a>, security protocols, formats, and implementations, even if built by smart people who are aware of the issues, they often have vulnerabilities. Some subtle, some bone-headed (like this one).</p>
+
+<p>So what should you take away from this?</p>
+
+<ol>
+<li><p>Trust security systems in proportion to how much public scrutiny they receive. The more closed a system, the more it relies on proprietary and secret techniques, the less you should trust it. Open source systems have many errors. Don&rsquo;t imagine that proprietary systems have fewer; they just aren&rsquo;t found and fixed.</p></li>
+<li><p>A security system is only as good as its implementation. The RNCryptor v1 format uses HMAC, which is good, but the implementation is slightly wrong and that creates a vulnerability. Just because your system uses AES and AES is strong doesn&rsquo;t mean that your system is secure.</p></li>
+<li><p>You need to educate yourself on the basics of how cryptographic systems work. As a developer you need to be able to evaluate whether the cryptography framework you&rsquo;re using is secure, and even more critically you need to be able to evaluate whether you&rsquo;re using it securely. Common Cryptor&rsquo;s HMAC functions are fine, but if I pass the wrong data, the system is still insecure.</p></li>
+<li><p>Assume that any security framework you have will need to be upgraded in the future, possibly in incompatible ways, to address vulnerabilities. Design your project to make upgrading as simple as possible.</p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PBKDF2 and SHA-1]]></title>
+    <link href="http://robnapier.net/pbkdf2-sha1/"/>
+    <updated>2012-09-18T11:01:11-04:00</updated>
+    <id>http://robnapier.net/pbkdf2-sha1</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve posted a new errata on the iosptl site about <a href="http://iosptl.com/posts/new-prf-functions-for-pbkdf2/">PBKDF2 and SHA-1 versus SHA-2</a>. If you&rsquo;re using CommonCryptor (and particularly CommonKeyDerivation), you may be interested.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Updated RNCryptor]]></title>
+    <link href="http://robnapier.net/updated-rncryptor/"/>
+    <updated>2012-07-13T16:06:30-04:00</updated>
+    <id>http://robnapier.net/updated-rncryptor</id>
+    <content type="html"><![CDATA[<p>I have brought the <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> async branch to master. This is a major change in API, but I believe much more flexible. I&rsquo;ve stripped the API down quite a lot, so please let me know if there are missing features. I&rsquo;m particularly interested in anyone who needs better support for reading and writing files. I haven&rsquo;t added any methods for that until I see how people are really using it.</p>
+]]></content>
+  </entry>
+  
+</feed>

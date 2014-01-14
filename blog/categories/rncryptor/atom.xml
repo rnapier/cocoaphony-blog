@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rncryptor, | Cocoaphony]]></title>
+  <link href="http://robnapier.net/blog/categories/rncryptor/atom.xml" rel="self"/>
+  <link href="http://robnapier.net/"/>
+  <updated>2014-01-14T09:49:29-05:00</updated>
+  <id>http://robnapier.net/</id>
+  <author>
+    <name><![CDATA[Rob Napier]]></name>
+    <email><![CDATA[robnapier@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[RNCryptor: Truncating Passwords]]></title>
+    <link href="http://robnapier.net/rncryptor-truncating-passwords/"/>
+    <updated>2013-12-30T21:30:11-05:00</updated>
+    <id>http://robnapier.net/rncryptor-truncating-passwords</id>
+    <content type="html"><![CDATA[<p><strong>Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to RNCryptor 2.2 when it comes out this week.</strong></p>
+
+<p>I hate it when I do stupid things. But then you all get to learn something, so luckily some good can come of my shame. Please learn something so this isn&rsquo;t all for naught.</p>
+
+<p><a href="https://github.com/rnapier/RNCryptor/issues/77">Issue #77</a> in RNCryptor is one of those classic bugs. Here it is, as gently pointed out to me by <a href="https://github.com/arthurwalasek">Arthur Walasek</a>:</p>
+
+<p>``` objc
+int result = CCKeyDerivationPBKDF(keySettings.PBKDFAlgorithm,      // algorithm</p>
+
+<pre><code>               password.UTF8String, // password
+               password.length, // passwordLength
+               ...
+</code></pre>
+
+<p>```</p>
+
+<p>I have had this bug since I first wrote this code for iOS 5 PTL, and it&rsquo;s horrible. The problem, if you haven&rsquo;t seen it yet, is that <code>-length</code> returns the number of characters in <code>password</code>, not the number of bytes. In many languages you can get away with that, but not in multi-byte languages like Chinese.</p>
+
+<!-- more -->
+
+
+<p>So what happens when someone uses the password &ldquo;中文密码&rdquo;? <code>password.UTF8String</code> returns 8 bytes, but <code>password.length</code> returns 4. So we truncate this password down to &ldquo;中文&rdquo; (2 characters, 4 bytes) and that&rsquo;s what we use. That means later, you can decrypt this with anything that&rsquo;s half-right. &ldquo;中文xx&rdquo; is good enough.</p>
+
+<p>The fix is simple. You can either use <code>-lengthOfBytesUsingEncoding:</code>, or you can create an <code>NSData</code> with <code>-dataUsingEncoding:</code>. I prefer the latter, and <a href="https://github.com/rnapier/RNCryptor/commit/2c3cae0e677c1aa4d841b655c82bcb0d4086bd60">that&rsquo;s how I&rsquo;ve fixed it</a>.</p>
+
+<p>The tricky bit is maintaining backward compatibility. It requires bumping the file version so we can tell which approach we used. But all of that is done and checked in.</p>
+
+<p>Right now, I&rsquo;m working with <a href="https://github.com/curtisdf">Curtis Farnham</a> to make sure that the PHP version is compatible with the latest changes. This bug convinced me to finally write some test vectors so we can keep all the language implementations consistent. Once I get that straightened out, I&rsquo;ll post a new version of RNCryptor (or by the end of the week either way).</p>
+]]></content>
+  </entry>
+  
+</feed>

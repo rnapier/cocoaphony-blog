@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>App Delegate - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="Answering a question on Stack Overflow, asking for an explanation of the Application Delegate, how it is accessed and created. In Cocoa, a delegate &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/app-delegate">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">App Delegate</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-12T08:00:16-04:00" pubdate data-updated="true">May 12<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em>Answering a <a href="http://stackoverflow.com/questions/828827/what-describes-the-application-delegate-best-how-does-it-fit-into-the-whole-conc/829591#829591">question</a> on Stack Overflow, asking for an explanation of the Application Delegate, how it is accessed and created.</em></p>
+
+<p>In Cocoa, a delegate is an object that another object defers to on questions of behavior and informs about changes in its state. For instance, a UITableViewDelegate is responsible for answering questions about how the UITableView should behave when selections are made or rows are reordered. It is the object that the UITableView asks when it wants to know how high a particular row should be. In the Model-View-Controller paradigm, delegates are Controllers, and many delegates&#8217; names end in &ldquo;Controller.&rdquo;</p>
+
+<!-- more -->
+
+
+<p>At risk of stating the obvious, the UIApplicationDelegate is the delegate for the UIApplication. The relationship is a bit more obvious in Cocoa (Mac) than in Cocoa Touch (iPhone), since the NSApplication delegate is able to control the NSApplication&rsquo;s behavior more directly (preventing the application from terminating for instance). iPhone doesn&rsquo;t permit much control over the UIApplication, so mostly the UIApplicationDelegate is informed of changes rather than having an active decision-making process.</p>
+
+<p>The UIApplicationDelegate isn&rsquo;t strictly available from everywhere in the app. The singleton UIApplication is (UIApplication -sharedApplication), and through it you can find its delegate. But this does not mean that it&rsquo;s appropriate for every object in an app to talk directly to the app delegate. In general, I discourage developers from having random objects talk to the app delegate. Most problems that are solved that way are better solved through Singletons, NSNotification, or other delegate objects.</p>
+
+<p>As to its creation, on Mac there is nothing magical about the app delegate. It&rsquo;s just an object instantiated and wired by the NIB in most cases. On iPhone, however, the app delegate can be slightly magical if instantiated by UIApplicationMain(). The fourth parameter is an NSString indicating the app delegate&rsquo;s class, and UIApplicationMain() will create one and set it as the delegate of the sharedApplication. This allows you to set the delegate without a NIB (something very difficult on Mac). If the fourth parameter to UIApplicationMain() is nil (as it is in the Apple templates), then the delegate is created and wired by the main NIB, just like the main window.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-12T08:00:16-04:00" pubdate data-updated="true">May 12<span>th</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>cocoa</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://robnapier.net/app-delegate/" data-via="cocoaphony" data-counturl="http://robnapier.net/app-delegate/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/review-beginning-iphone-development/" title="Previous Post: Review of <i>Beginning iPhone Development</i>">&laquo; Review of <i>Beginning iPhone Development</i></a>
+      
+      
+        <a class="basic-alignment right" href="/build-system-1-build-panel/" title="Next Post: Building the Build System - Part 1 - Abandoning the Build Panel">Building the Build System - Part 1 - Abandoning the Build Panel &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I'll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

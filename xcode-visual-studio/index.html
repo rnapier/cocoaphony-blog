@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>XCode vs. Visual Studio - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="I move between VS and XCode a bit without shuddering or fussing, which seems to make me a strange creature. In general, shocking as it is to say on a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/xcode-visual-studio">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">XCode vs. Visual Studio</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-06-20T10:50:24-04:00" pubdate data-updated="true">Jun 20<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I move between VS and XCode a bit without shuddering or fussing, which seems to make me a strange creature. In general, shocking as it is to say on a Cocoa list, VS is actually a much more powerful environment. Most who love XCode have little used VS (at least VS2005 or later, <a href="http://vs.net/" target="_blank">VS.NET</a> is clunky IMO). But learning what actually is better about VS requires using XCode for quite some time. Most of the initial complaints are simply small differences between the two; many of which I prefer the XCode way. But then, XCode is a Mac app, and I generally prefer Mac UI.</p>
+
+<!-- more -->
+
+
+<ul>
+    <li>Much deeper integration with its debugger. XCode and gdb play together, but they&#8217;re not integrated the way VS is with its debugger. There are many important gdb features that can&#8217;t easily be reached from XCode, and some (debugging with a core file) that you pretty much can&#8217;t run XCode at all if you want to accomplish.</li>
+    <li>The multi-tab interface makes it much easier to manage moving between many files, and the debugger is better integrated with the editor. XCode encourages you to have an explosion of windows, and the debugger is inconsistently integrated with the editor. The AllInOne interface for XCode goes too far the other way and makes moving between files a real pain.</li>
+    <li>Mouse-over gives much better information in VS when editing. VS is always compiling your code, and so can give you access to information in the editor that is only available in the debugger for XCode. XCode technically also is always compiling your code (or it claims to), but it doesn&#8217;t really make use of this fact.</li>
+    <li>VS is better in nearly every conceivable way if you&#8217;re programming in C++. XCode hates C++. If you use wstrings in C++, XCode will actually come out of the computer and slap you around (who knows, maybe it should). I dream of being able to easily display wstrings in the debugger. Yes, I&#8217;ve built the formatting plugins and from time to time they even work. Probably the biggest missing feature in XCode is good code completion for C++, especially with overloads, which VS does very well.</li>
+</ul>
+
+
+<p>All that said, I still much prefer to work in XCode, but mostly because I prefer coding in Cocoa to .NET (.NET is actually pretty nice, but Cocoa is nicer). Apple&rsquo;s help documentation for Cocoa is far superior to Microsoft&rsquo;s documentation for .NET (which is infuriating to work with), and getting to the help in XCode is much more effective than in VS.</p>
+
+<p>So to VS guys I say: Give XCode a chance. It&rsquo;s better than you think once you are used to Mac interfaces and if you&rsquo;re working on Cocoa apps (which XCode is highly optimized for). To XCode guys I say: until you&rsquo;ve used VS for a while, don&rsquo;t assume that XCode has all the features it should. In the programming editor world, XCode is still kind of primitive.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-06-20T10:50:24-04:00" pubdate data-updated="true">Jun 20<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/dot-net/'>.NET</a>, <a class='category' href='/blog/categories/cocoa/'>cocoa</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://robnapier.net/xcode-visual-studio/" data-via="cocoaphony" data-counturl="http://robnapier.net/xcode-visual-studio/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/searching-httpwebrequestdate/" title="Previous Post: Searching for HttpWebRequest.Date">&laquo; Searching for HttpWebRequest.Date</a>
+      
+      
+        <a class="basic-alignment right" href="/pandora-ui-update/" title="Next Post: Pandora UI Update">Pandora UI Update &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I'll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

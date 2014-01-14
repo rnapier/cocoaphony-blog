@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Converting Algebra to Matrices for Accelerate Framework - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="Chapter 18 of iOS:PTL includes code for calculating points on a Bézier curve (see CurvyText in the sample code). In the book, I hinted that this &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/equations-matrices-accelerate">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Converting Algebra to Matrices for Accelerate Framework</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-06T11:19:28-05:00" pubdate data-updated="true">Feb 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+<p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I&rsquo;ll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
+
+<p>In this post, I&rsquo;m targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it&rsquo;s hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you&rsquo;re like me, and once upon a time you actually took linear algebra, but today you wouldn&rsquo;t know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn&rsquo;t been released…) My goal isn&rsquo;t to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
+
+<!-- more -->
+
+
+<p>So by way of example, we will consider the cubic Bézier curve (as expressed by <a href="http://en.wikipedia.org/wiki/Bézier_curve#Cubic_B.C3.A9zier_curves">Wikipedia</a>):</p>
+
+<div>
+\begin{equation}
+\mathbf{B}(t) = (1-t)^3\mathbf{P}_0 + 3(1-t)^2\mathbf{P}_1 + 3(1-t)t^2\mathbf{P}_2 + t^3\mathbf{P}_3, t \in [0,1].
+\end{equation}
+</div>
+
+
+<p>This means that for each coordinate (x,y), you calculate the above for values running from t=0 to t=1. In C that translates into:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">static</span> <span class="n">CGFloat</span> <span class="nf">Bezier</span><span class="p">(</span><span class="n">CGFloat</span> <span class="n">t</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">P0</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">P1</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">P2</span><span class="p">,</span>
+</span><span class='line'>                    <span class="n">CGFloat</span> <span class="n">P3</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span>
+</span><span class='line'>    <span class="n">powf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">P0</span>
+</span><span class='line'>    <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">powf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">P1</span>
+</span><span class='line'>    <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">powf</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">P2</span>
+</span><span class='line'>    <span class="o">+</span> <span class="n">powf</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">P3</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For the four control points (<code>P0</code>&hellip;<code>P3</code>), you pass the <code>x</code> value to <code>Bezier()</code> and get back the <code>x</code> value of the curve. Repeat for <code>y</code>. There are many reasons that the above approach is inefficient. We&rsquo;ll discuss that more in later posts. But for this post, the goal is to figure out how to convert this into an matrix operation so we can use some of of our fancy hardware to calculate it for us.</p>
+
+<p>The first step is realizing what kind of matrix we want. Our goal is to collect all the <code>t</code> terms into one matrix, all the <code>P</code> terms into one matrix. and all the constants into a third matrix. When we&rsquo;re done, it&rsquo;ll look like this (where <code>K</code> is the constants):</p>
+
+<div>
+\begin{equation}
+\mathbf{B}(t) = \mathbf{PKT}
+\end{equation}
+</div>
+
+
+<p>Written out, that looks like:</p>
+
+<div>
+\begin{equation}
+\mathbf{B}(t) = \begin{pmatrix}
+\mathbf{P}_0 & \mathbf{P}_1 & \mathbf{P}_2 & \mathbf{P}_3 
+\end{pmatrix}
+\begin{pmatrix}
+??? &#92;&#92;
+the\ constants &#92;&#92;
+???
+\end{pmatrix}
+\begin{pmatrix}
+t^3 &#92;&#92;
+t^2 &#92;&#92;
+t &#92;&#92;
+1
+\end{pmatrix}
+\end{equation}
+</div>
+
+
+<p>The four <code>P</code> values are the control points from the Bézier equation (these are points, so they include an x and y). The four <code>t</code> terms are the powers that occur in the equation (remember: 1 = t<sup>0 </sup>).</p>
+
+<p>When you multiply matrices, the result has the number of rows in the first matrix and the number of columns in the second. So <code>P</code> is 1x4 and the constants are MxN (we&rsquo;ll figure out M and N shortly). So that result is 1xN. Times <code>T</code> (4x1) and we&rsquo;ll finish up with a 1x1 matrix. A single point value. This is why it matters that <code>P</code> is in a row and <code>T</code> is in a column.</p>
+
+<p>But a &ldquo;point&rdquo; is a vector. Let&rsquo;s make that a little clearer (I hope):</p>
+
+<div>
+\begin{equation}
+\begin{pmatrix}
+B_x(t)&#92;&#92;
+B_y(t)
+\end{pmatrix}
+ = \begin{pmatrix}
+\mathbf{P}_0 & \mathbf{P}_1 & \mathbf{P}_2 & \mathbf{P}_3 
+\end{pmatrix}
+\begin{pmatrix}
+???&#92;&#92;
+the\ constants&#92;&#92;
+???&#92;&#92;
+\end{pmatrix}
+\begin{pmatrix}
+t^3 &#92;&#92;
+t^2 &#92;&#92;
+t &#92;&#92;
+1
+\end{pmatrix}
+\end{equation}
+</div>
+
+
+<p>OK, that&rsquo;s a little closer to a <code>CGPoint</code>. One x, one y. But what about &ldquo;the constants?&rdquo; These are the multipliers for each of the terms in &ldquo;expanded form.&rdquo; What we want is our equation in a form like:</p>
+
+<div>
+\begin{equation}
+aP_0t^3 + bP_0t^2 + cP_0t + dP_0 + eP_1t^3 + fP_1t^2 + gP_1t + \cdots
+\end{equation}
+</div>
+
+
+<p>This gives us the sum of every combination of each <code>P</code> with each power of <code>t</code>. When you see &ldquo;the sum of every combination&rdquo; you should be thinking dot product and matrix multiplication. From this equation, it shouldn&rsquo;t take a lot of imagination to figure out what <code>K</code> looks like.</p>
+
+<div>
+\begin{equation}
+\begin{pmatrix}
+B_x(t)&#92;&#92;
+B_y(t)
+\end{pmatrix}
+ = \begin{pmatrix}
+\mathbf{P}_0 & \mathbf{P}_1 & \mathbf{P}_2 & \mathbf{P}_3 
+\end{pmatrix}
+\begin{pmatrix}
+a & b & c & d &#92;&#92;
+e & f & g & h &#92;&#92;
+i & j & k & l &#92;&#92;
+m & n & o & p
+\end{pmatrix}
+\begin{pmatrix}
+t^3 &#92;&#92;
+t^2 &#92;&#92;
+t &#92;&#92;
+1
+\end{pmatrix}
+\end{equation}
+</div>
+
+
+<p>Now, if only we had a way to figure out all those constants easily. We could do it with pencil and paper, but I always screw up simple algebra. If only there were some device that did mechanical operations really well. Just imagine if someone put up a <a href="http://www.wolframalpha.com/">free web service</a> that would do algebra for you.</p>
+
+<p>Bless you Wolfram. You are my hero.</p>
+
+<p>So we head over to Wolfram|Alpha and ask it to <a href="http://www.wolframalpha.com/input/?i=expand+%281-t%29%5E3+P_0+%2B+3+%281-t%29%5E2+t+P_1+%2B+3+%281-t%29+t%5E2+P_2+%2B+t%5E3+P_3">expand the Bézier equation</a> for us:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">expand</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span><span class="o">^</span><span class="mi">3</span> <span class="n">P_0</span> <span class="o">+</span> <span class="mi">3</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span> <span class="n">t</span> <span class="n">P_1</span> <span class="o">+</span> <span class="mi">3</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="n">t</span><span class="o">^</span><span class="mi">2</span> <span class="n">P_2</span> <span class="o">+</span> <span class="n">t</span><span class="o">^</span><span class="mi">3</span> <span class="n">P_3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img class="center" src="/images/equations-matrices-accelerate/wolframalpha-20120206103919629.gif"></p>
+
+<p>And from that, we can work out our matrix:</p>
+
+<div>
+\begin{equation}
+\begin{pmatrix}
+-1 & 3 & -3 & 1&#92;&#92;
+3 & -6 & 3 & 0 &#92;&#92;
+-3 & 3 & 0 & 0 &#92;&#92;
+1 & 0 & 0 & 0
+\end{pmatrix}
+\end{equation}
+</div>
+
+
+<p>Now, in fairness, I have found this matrix several <a href="http://www.google.com/search?client=safari&rls=en&q=bezier+matrix&ie=UTF-8&oe=UTF-8">places on the internet</a>. So why bother doing all this? Why not just copy the final answer? For the Bézier calculations I wanted to do, I also need the first derivative of this, and I couldn&rsquo;t find the matrix for that anywhere. So sometimes the answer isn&rsquo;t just out there for you. And from experience, let me say that trying to debug this kind of code when you don&rsquo;t actually know what the matrix means is&hellip; challenging.</p>
+
+<p>As an exercise, calculate the matrix for the Bézier derivative yourself. Wolfram|Alpha will give you the derivative of a function using the command <code>derivative</code> (instead of <code>expand</code>). I&rsquo;ll give you a hint: the matrix is not 4x4. I&rsquo;ll post the answer (and how to get it) in my next installment.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-06T11:19:28-05:00" pubdate data-updated="true">Feb 6<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>cocoa</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://robnapier.net/equations-matrices-accelerate/" data-via="cocoaphony" data-counturl="http://robnapier.net/equations-matrices-accelerate/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/offline-uiwebview-nsurlprotocol/" title="Previous Post: Drop-in offline caching for UIWebView (and NSURLProtocol)">&laquo; Drop-in offline caching for UIWebView (and NSURLProtocol)</a>
+      
+      
+        <a class="basic-alignment right" href="/fast-bezier-intro/" title="Next Post: Introduction to Fast Bezier (and trying the Accelerate.framework)">Introduction to Fast Bezier (and trying the Accelerate.framework) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I'll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

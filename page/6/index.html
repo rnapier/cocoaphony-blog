@@ -1,0 +1,584 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="The long-lasting power of Snow Leopard from The Yankee Group. Ever since I first saw GCD at WWDC, I&rsquo;ve been amazed by it and eager to give it a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://robnapier.net/page/6">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8553355-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+    <h2>Mac and iPhone, on the brain</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:robnapier.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/gcd-iphone-long-batter/">GCD + iPhone</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-14T09:14:51-04:00" pubdate data-updated="true">Sep 14<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blogs.yankeegroup.com/2009/08/26/the-long-lasting-power-of-snow-leopard/">The long-lasting power of Snow Leopard</a> from The Yankee Group.</p>
+
+<p>Ever since I first saw GCD at WWDC, I&rsquo;ve been amazed by it and eager to give it a real spin. But since the vast majority of my work is in low-level libraries that run on both Mac and iPhone, GCD is closed to me (as is garbage collection; more on that later). I&rsquo;ve said that multi-core would come to mobile devices because everything will come to mobile devices (laptops are the new desktops, and mobile is the new laptop). And for the iPhone, multi-core also makes a lot of sense by allowing Apple to dedicate a core to its own use during important functions like phone calls. But Carl Howe makes an even more compelling argument for mobile multi-core: better battery life.</p>
+
+<p>With multi-core comes another strong possibility: garbage collection. The availability of a second core makes this more likely on iPhone. Yes, memory is tighter, but ever-growing. And GC will likely do a better job of reclaiming memory faster than much of the leaky programs I see from novice programmers. But to do it well, I think a second core is a real must. I&rsquo;ve grown good at memory management over the years, and it&rsquo;s hard for me to write GC Cocoa because it &ldquo;feels wrong.&rdquo; But I think I could get used to it&hellip;. And it would help alleviate the biggest class of coding error I see in Cocoa programs.</p>
+
+<p>Of course, the clang static analyzer will probably help get rid of 90% of those errors anyway, so maybe the need for GC just went way down&hellip;. Have I mentioned recently how incredible clang really is? I desperately long for them to finish bringing it to Obj-C++ so I can use it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/implementing-nscopying/">Implementing NSCopying (or NSCopyObject() Considered Harmful)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-04T17:24:05-04:00" pubdate data-updated="true">Sep 4<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>NSCopying</code> is not always as simple to implement as you would think. Apple has a good <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmImplementCopy.html">write-up</a> discussing the complexities, but let me elaborate. Forgive some ranting digressions. It&rsquo;s important to know how to work around the problems I&rsquo;m going to discuss, but it&rsquo;s also important to understand how insane it is to have to work around this issue.</p>
+
+<p>First, there&rsquo;s the fairly obvious problem of deep versus shallow copies. If object <code>foo</code> has an instance variable <code>*bar</code>, should a copy of <code>foo</code> have a second pointer to <code>bar</code>, or should it have its own copy of whatever <code>bar</code> points to? There is no way to answer this question generally; it depends on the nature of the objects.</p>
+
+<p>Most of the time, this can be dealt with fairly easily by implementing the accessors with the correct behavior (retain versus copy), and you wind up with a <code>copyWithZone:</code> like this:</p>
+
+<pre><code>- (id)copyWithZone:(NSZone *)zone
+{
+    Product *copy = [[[self class] allocWithZone: zone] init];
+    [copy setProductName:[self productName]];
+    return copy;
+}
+</code></pre>
+
+<p>That works really well as long as your superclass doesn&rsquo;t implement <code>NSCopying</code>, but if it does, you may not have enough information or access to cleanly copy it. Now you would think this would be easy:</p>
+
+<pre><code>- (id)copyWithZone:(NSZone *)zone
+{
+    Product *copy = [super copy];
+    [copy setProductName:[self productName]];
+    return copy;
+}
+</code></pre>
+
+<p>But that may or may not work. If <code>super</code> implements <code>-copyWithZone:</code> as described above, then all is fine. But what if your superclass uses <code>NSCopyObject()</code>? Things go badly, and in ways very difficult to understand and debug. </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/implementing-nscopying/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/importing-uikit-cocoa/">Importing UIKit vs. Cocoa</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-20T11:28:40-04:00" pubdate data-updated="true">Aug 20<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I work on a lot of projects that share significant code between iPhone and Mac versions. This is the beauty of Cocoa. While working on these projects, I&rsquo;ve bumped into this idiom many times:</p>
+
+<pre><code>#ifdef TARGET_OS_IPHONE
+#import &lt;UIKit/UIKit.h&gt;
+#else
+#import &lt;Cocoa/Cocoa.h&gt;
+#endif
+</code></pre>
+
+<p>This is almost never correct, and almost always means that someone imported Cocoa.h into a model class. Model classes should never rely on UIKit or Cocoa. They should just import Foundation.h.</p>
+
+<p>There is one interesting exception that we&rsquo;ve run into: NSImage versus UIImage. These are really model classes, but they&rsquo;re part of AppKit and UIKit. They have very similar interfaces, so in most code you should be able to interchange them and keep everything portable. What to do?</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/importing-uikit-cocoa/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/regrowling-song/">Re-growling Song in PB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-19T09:01:02-04:00" pubdate data-updated="true">Aug 19<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I started implementing a hotkey to regrowl the current song. ishermandom sent me a patch months ago to do this, and I&rsquo;ve just started integrating it. It&rsquo;s very small, I just hadn&rsquo;t done it yet. Since I&rsquo;ve restructured hotkeys due to the ShortcutRecorder upgrade, I&rsquo;ve actually had to reimplement it anyway, but really, it&rsquo;s not complicated.</p>
+
+<p>I also pulled some of the NSLog() statements out, so PB will no longer fill your Console with messages about what song is playing. If you want need this functionality for something, let me know. There are better ways for me to implement it.</p>
+
+<p>Funny, Pandora seems down this morning? The silence is deafening. Even while I&rsquo;m investigating why the flash player isn&rsquo;t coming up (even in Safari), I keep hitting my &ldquo;play&rdquo; shortcut because its too quiet. I guess I pull out iTunes&hellip;.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-moving-leopard/">PandoraBoy Moving to Leopard</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-18T09:16:18-04:00" pubdate data-updated="true">Aug 18<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For the last couple of nights I&rsquo;ve finally gotten back to PandoraBoy work. The backlog of issues has gotten a bit out of hand as I&rsquo;ve focused on other projects. One thing that has hung me up for a while has been the Hotkey preferences pane, which uses ShortcutRecorder. SR had an IB Pallet that only worked with IB2.5, not IB3, which made working on that panel very difficult. I&rsquo;ve finally upgraded SR to the latest version, which required a lot of recoding since PB relied SR&rsquo;s now-deprecated autosave functionality.</p>
+
+<p>The side effect of all of that is that the latest SR requires Leopard, and so now PB requires Leopard. I had planned to wait for SnowLeopard&rsquo;s release to drop Tiger support, but this accelerates that a bit. It does make my coding a work a bit easier, since 10.5 has many nice developer features.</p>
+
+<p>Drop me a note if you&rsquo;re still running PB on Tiger. Every other major user of ShortcutRecorder had already gone Leopard-only, which is why they made the move. Tigers are getting pretty rare out there.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/flash-bug-sigint-debugger/">Flash Bug, SIGINT From Debugger()</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-16T21:17:14-04:00" pubdate data-updated="true">Aug 16<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thank you <a href="http://www.stinkbot.com/blog/archives/69">stinkblog</a>, thank you for saving me a great deal of pain debugging this. PandoraBoy work can now continue.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/quit-stringwithstring/">Quit Using +stringWithString:</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-12T10:48:10-04:00" pubdate data-updated="true">Aug 12<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I keep coming across <a href="http://dotnetaddict.dotnetdevelopersjournal.com/leopard_nscollectionview.htm">code</a> like this:</p>
+
+<pre><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
+</code></pre>
+
+<p>It&rsquo;s time to say stop it already with the extra <code>+stringWithString:</code>. I haven&rsquo;t worked out yet where this anti-pattern comes from. Maybe it&rsquo;s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it&rsquo;s a Java/.NET thing? I&rsquo;m not sure. But I see it so often from so many places that it&rsquo;s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/quit-stringwithstring/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/view-controllers-notifications/">View Controllers and Notifications</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-05T14:33:56-04:00" pubdate data-updated="true">Aug 5<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Observing NSNotifications in a view control is a good thing. But remember, just because you&rsquo;re not onscreen doesn&rsquo;t mean that you&rsquo;re not still observing. This is particularly noteworthy on iPhone, where your view can get dropped any time memory is tight and you&rsquo;re offscreen, but it can bite you anywhere.</p>
+
+<p>ViewControllers, WindowControllers and other UI controllers are often better off registering and uregistering for notifications when they are put on and off the screen rather than when they are allocated and deallocated. This often means that they will need to update their state when put on screen. For example, an icon indicating &ldquo;connected&rdquo; might be part of a StatusViewController. When StatusView comes on screen, StatusViewController should update the connected status and then begin observing changes on it. When StatusView goes off screen, StatusViewController should stop observing.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/view-controllers-notifications/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/broader-use-of-objc/">Broader Use of ObjC</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-03T21:37:56-04:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><i>Based on a <a href="http://stackoverflow.com/questions/874690/is-objective-c-only-used-for-development-on-mac-os-iphone/874837">post</a> at StackOverflow. The question was whether Objective-C is only used for development on Mac OS/iPhone and why.</i></p>
+
+<p>I think ObjC has been isolated to the Apple world through a quirk of history and the nature of proprietary systems.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/broader-use-of-objc/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/understanding-systemprofiler/">Understanding System_profiler</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-26T17:25:53-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is &ldquo;what does system_profiler actually do?&rdquo;  But it&rsquo;s a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It&rsquo;s a whirlwind tour of how you begin to attack programs using pretty standard tools. I&rsquo;m not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you&rsquo;re going to hide how your program works, make sure you research those first. You&rsquo;ll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/understanding-systemprofiler/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/7/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/5/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+	<h1>Coming Jan. 2014</h1>
+  <a href="http://www.amazon.com/dp/1118818342"><img src="/images/ios7_ptl_cover.png" alt="iOS 7 Programing Pushing the Limits" /></a>
+</section><section>
+  <h1><a href="http://renaissance.io/2014">Renaissance 2014</a></h1>
+    <p>I&#8217;ll be discussing <a href="http://renaissance.io/2014/sessions/get_security_and_privacy_right">security best practices</a> at the Renaissance conference, January 29-31, 2014 in San Francisco.</p>
+</section><section>
+  <h1>About Cocoaphony</h1>
+  <p>Rob is a builder of treehouses, hiker, proud father, and from time to time, a Mac and iPhone developer. Cocoaphony is where he pontificates on various issues fascinating to Cocoa developers, and occasionally other topics of technical interest.</p>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - <a href="mailto:robnapier@gmail.com">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
