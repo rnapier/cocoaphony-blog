@@ -10,10 +10,10 @@ use Rack::Rewrite do
   r302 '/feed/', '/atom.xml'
 
   r301 '/blog', '/'
-  r301 '/blog/', '/'
+  r301 '/ren2014', 'https://github.com/rnapier/security-right'
 
   r301 '/blog/brute-forcing-passwords/', '/brute-forcing-passwords/'
-
+  
 # Rewrite known incoming Wordpress links
   r301 '/blog/feed', '/feed'
   r301 %r{/blog/about-2/?}, '/'
