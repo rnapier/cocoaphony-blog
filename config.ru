@@ -8,6 +8,7 @@ $root = ::File.dirname(__FILE__)
 use Rack::Rewrite do
   r302 '/feed', '/atom.xml'
   r302 '/feed/', '/atom.xml'
+  r302 '/book', 'http://iosptl.com'
 
   r301 '/blog', '/'
   r301 '/ren2014', 'https://github.com/rnapier/security-right'
