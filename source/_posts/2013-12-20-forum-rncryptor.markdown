@@ -15,4 +15,4 @@ categories:
 tags:
 - rncryptor
 ---
-If you're using RNCryptor, you may want to join the forum I've finally setup: https://groups.google.com/forum/#!forum/rncryptor.
+If you're using RNCryptor, you may want to join the forum I've finally setup: https://groups.google.com/forum/#!forum/rncryptor
