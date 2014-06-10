@@ -64,7 +64,7 @@ changing. Even so, there are some things that currently concern me.
 
 #### Array mutability and copying rules
 
-If there is one thing in Swift that just seems crazy, its the rules around
+If there is one thing in Swift that just seems crazy, it's the rules around
 Array mutability and copying. Swift doesn't have an immutable array at all. It
 has a constant pointer to an array. So you can modify it all you like as long
 as you don't change its length. That is a useless kind of immutability. And
@@ -106,11 +106,14 @@ quite confident that will steadily improve.
 * The distinction between Arrays and Slices is tricky and will likely cause
 confusion, and the whole collections type hierarchy (and it's a big one) is a
 bit messy in my first estimation (but maybe I just don't get it yet, and it's
-not well documented). There's no equivalent of a Scala `Seq` that I can find.
-I'm really surprised that there doesn't seem to be a type for "thing you can
-enumerate over" or "thing you can subscript." This is one of my bigger
-concerns because it may grow harder to fix later, but I'm hoping for a lot of
-churn in this hierarchy when they fix the immutable array problem.
+not well documented). There's no equivalent of a Scala 
+[`Seq`](http://www.scala-lang.org/api/current/#scala.collection.Seq) that I can
+find. I'm really surprised that there doesn't seem to be a type for "thing you
+can subscript and has a length."[^1] This is one of my bigger concerns because
+it may grow harder to fix later, but I'm hoping for a lot of churn in this
+hierarchy when they fix the immutable array problem.
+
+[^1]: EDIT: I had said that there was no type for "thing you can enumerate over," but @bddckr made me think about this more, and Sequence does fit that bill.
 
 * `@` seems to be used randomly. It's `@lazy` but just `convenience`. Maybe I
 just haven't learned the pattern yet.
