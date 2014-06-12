@@ -29,10 +29,10 @@ quickly" and I didn't say "build cross-platform mobile apps." I said
 
 This means, among other things, no garbage collected languages need apply. As
 our Android friends have learned, when you need great performance in memory
-constrained environments, [garbage collection is your
-enemy](http://sealedabstract.com/rants/why-mobile-web-apps-are-slow/). I was a
-Mac developer when they added GC and I was at WWDC when they announced GC was
-being removed. We all applauded. GC languages were never going to be
+constrained environments, 
+[garbage collection is your enemy](http://sealedabstract.com/rants/why-mobile-web-apps-are-slow/).
+I was a Mac developer when they added GC and I was at WWDC when they announced
+GC was being removed. We all applauded. GC languages were never going to be
 considered, and I think that was a great decision. ARC is much better on
 mobile (I think it's better in most cases, but it's unquestionably better on
 mobile).
@@ -54,13 +54,13 @@ easier or harder to work with the existing Cocoa frameworks?
 
 ### What I don't like about Swift
 
- Developers often condemn a language before they understand the language.
-Everyone should think carefully about [the Blub
-Paradox](http://www.paulgraham.com/avg.html) before forming too many opinions.
-Some things that seem problematic in theory seldom show up in practice (this
-is a common situation with first impressions of Go). And Apple is notorious
-for doing everything in secret, so it's hard to know what they're already
-changing. Even so, there are some things that currently concern me.
+Developers often condemn a language before they understand the language.
+Everyone should think carefully about [the Blub Paradox](http://www.paulgraham.com/avg.html)
+before forming too many opinions. Some things that seem problematic in theory
+seldom show up in practice (this is a common situation with first impressions
+of Go). And Apple is notorious for doing everything in secret, so it's hard to
+know what they're already changing. Even so, there are some things that
+currently concern me.
 
 #### Array mutability and copying rules
 
@@ -79,9 +79,9 @@ someday. The way `NSArray` returns an `id` is arguably more dangerous than
 mutable arrays and we've dealt with it for many years. But then you get to
 array copying rules, and those are just crazy. I pass you an array. It's
 implicitly a reference to my array and if you modify it, I'll see the changes
-UNLESS you modify the length, at which point you'll make a copy and I won't
-see the changes anymore. Again, I see how the implementation leads to this,
-but it's beyond the pale that Apple would ship that without an apology and a
+UNTIL you modify the length, at which point you'll make a copy and I won't see
+the changes anymore. Again, I see how the implementation leads to this, but
+it's beyond the pale that Apple would ship that without an apology and a
 promise to fix it.
 
 #### That's it?
