@@ -136,13 +136,11 @@ You could implement that kind of structure in non-generic languages. Swift is
 generic because you find generic programming all over the core library.
 Consider functions like `advance`:
 
-~~~~
-/// Return the result of moving start by n positions.  If T models
-/// RandomAccessIndex, executes in O(1).  Otherwise, executes in
-/// O(abs(n)).  If T does not model BidirectionalIndex, requires that n
-/// is non-negative.
-func advance<T : ForwardIndex>(start: T, n: T.DistanceType) -> T
-~~~~
+    /// Return the result of moving start by n positions.  If T models
+    /// RandomAccessIndex, executes in O(1).  Otherwise, executes in
+    /// O(abs(n)).  If T does not model BidirectionalIndex, requires that n
+    /// is non-negative.
+    func advance<T : ForwardIndex>(start: T, n: T.DistanceType) -> T
 
 This is just the kind of function you'd expect in a generic language. It
 encapsulates an algorithm that will work on anything that implements
