@@ -70,10 +70,10 @@ primarily concerned with decomposing problems into functions that accept and
 return immutable values. Its usual structure is a collection of functions that
 transform values into other values, and various ways to combine functions. It
 avoids mutable state and does not require that the evaluation of functions
-occur in any particular order (or even sequentially). Functional programming
-treats a program as a math problem rather than a series of operations. When
-faced with a problem, the functional question is "what kinds of values need to
-be transformed in what ways to solve this?"
+occur in any particular order. Functional programming treats a program as a
+math problem rather than a series of operations. When faced with a problem,
+the functional question is "what kinds of values need to be transformed in
+what ways to solve this?"
 
 When you first started playing with Swift, what was the first thing you looked
 for? Maybe how it handled classes and protocols? How to call methods, declare
