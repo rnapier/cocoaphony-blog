@@ -3,7 +3,7 @@ layout: post
 title: "I don't know Swift"
 date: 2014-07-18 11:04:22 -0400
 comments: true
-categories: 
+categories: swift cocoa
 published: true
 ---
 

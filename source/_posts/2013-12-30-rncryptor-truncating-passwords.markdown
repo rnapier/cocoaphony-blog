@@ -3,7 +3,7 @@ layout: post
 title: "RNCryptor: Truncating Passwords"
 date: 2013-12-30 21:30:11 -0500
 comments: true
-categories: rncryptor, security
+categories: rncryptor security
 ---
 
 **Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to RNCryptor 2.2 when it comes out this week.**

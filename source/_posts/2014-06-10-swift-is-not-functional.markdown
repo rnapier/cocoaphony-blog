@@ -3,7 +3,7 @@ layout: post
 title: "Swift is not functional"
 date: 2014-06-10 19:57:28 -0400
 comments: true
-categories: 
+categories: swift cocoa
 ---
 
 Ever since Swift came out, I keep seeing weird comments that Swift is a

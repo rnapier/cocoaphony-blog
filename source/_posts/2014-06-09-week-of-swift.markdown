@@ -3,7 +3,7 @@ layout: post
 title: "A week of Swift"
 date: 2014-06-09 09:54:30 -0400
 comments: true
-categories: swift, cocoa
+categories: swift cocoa
 ---
 
 The first public beta of Swift has been out for a week. I've been there since
