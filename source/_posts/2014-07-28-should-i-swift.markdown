@@ -82,7 +82,7 @@ changed with Swift.[^tableview]
 
 The reason to learn Swift is because you want to develop for iOS. But today,
 the *easier* route is to come through ObjC and pick up Swift when it stabilizes.
-The reason to learn Swift is to be part of the beginning of Swift.
+The reason to learn Swift today is to be part of the beginning of Swift.
 
 ### For experienced ObjC devs
 
