@@ -97,7 +97,7 @@ Treat Swift like Autolayout.[^carbon] You don't have to jump over the first day
 it's released, but eventually you're going to need to come over or things are
 going to get harder and harder. The best approach is to experiment with it
 early, and migrate as you develop new things. There's no need to jump onto it
-day one unless that's your interest. But within 2-3 of years, you likely should
+day one unless that's your interest. But within 2-3 years, you likely should
 do new work in Swift unless there's a specific reason not to. And you should
 definitely learn Swift sometime over the next year or two. Clearly that's what
 Apple wants long term, and fighting Apple as an iOS dev is a losing game.
