@@ -40,7 +40,7 @@ common coding problems. The handful of tutorials are mostly based on a few days
 of experience. And has anyone mentioned that the compiler still crashes *all the
 time*.
 
-[^cocoa]: My assumption is that 8.X will clean up some of the Cocoa `!`s and similar tweaks, along with significant optimizer improvements. Then 9 will see some Swift-ification of Foundation (or more Foundation features in Swift stdlib). 10 will see more Swift-ification of UIKit (maybe replacing more selector-based patterns with closures). The specifics are just conjecture, but making iOS development a Swift-centric experience is clearly a multi-year, multi-release effort.
+[^cocoa]: My assumption is that 8.X will clean up some of the Cocoa `!`s and similar tweaks, along with significant optimizer improvements. Then 9 will see some Swift-ification of Foundation (or more Foundation features in Swift stdlib). 10 will see more Swift-ification of UIKit (maybe replacing more selector-based patterns with closures). The specifics are just conjecture, but making iOS development a Swift-centric experience is clearly a multi-release effort.
 
 {% pullquote %}
 
