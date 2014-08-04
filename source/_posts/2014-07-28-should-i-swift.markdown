@@ -113,7 +113,7 @@ I have a whole post planned for you. Stay tuned.
 Look, do what you want. I've made my career focusing on things that interested
 me that later turned out to be commercially valuable. I've been really lucky.
 That probably doesn't work for everyone, so who am I to give advice? But since
-you asked...[^asked]
+you asked...
 
 If you're totally excited about Swift, start today. Why are you even asking me?
 
@@ -122,7 +122,7 @@ For other Cocoa-devs, pick up Swift over the next couple of iOS releases.
 {% pullquote %} 
 For non-Cocoa devs, if you need to ask, then you probably shouldn't jump into
 Swift today. If you have the time to learn a new language,
-[learn Haskell](http://learnyouahaskell.com). I  hate to be a Haskell fanboi.[^fanboi]
+[learn Haskell](http://learnyouahaskell.com). I  hate to be a Haskell fanboi.
 I'm not even a very good a Haskell programmer.[^good] That's not the point. The
 point is that Swift wants to be functional.
 [It isn't functional](http://robnapier.net/swift-is-not-functional), but it wants to be.
@@ -133,10 +133,6 @@ why `<*>` and `>>=` were the obvious operators to use. You may agree or disagree
 with his parser, but if you can't read Haskell, you won't even understand the 
 discussion.
 {% endpullquote %}
-
-[^asked]: Well, you read down this far at least.
-
-[^fanboi]: Actually, I don't hate that at all.
 
 [^good]: The joke is: Haskell is the language the proves you're a bad programmer. I guess my next post should be titled "I don't know Haskell, either."
 
