@@ -134,7 +134,7 @@ with his parser, but if you can't read Haskell, you won't even understand the
 discussion.
 {% endpullquote %}
 
-[^good]: The joke is: Haskell is the language the proves you're a bad programmer. I guess my next post should be titled "I don't know Haskell, either."
+[^good]: The joke is: Haskell is the language that proves you're a bad programmer. I guess my next post should be titled "I don't know Haskell, either."
 
 [^haskell]: I feel like I should justify "why Haskell rather than X" here. Why not ML, OCaml, F#? But if you follow the FP discussions floating around Swift, Haskell is always front of mind. It's the [only FP language that Chris Lattner calls out](http://nondot.org/sabre/) explicitly as an influence in Swift, and it includes a lot of the concepts that are working their way into Swift. If you're going to pick one FP language to start with, it's the one I recommend.
 
