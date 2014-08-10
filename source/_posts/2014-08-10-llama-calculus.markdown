@@ -23,9 +23,9 @@ the shock?" And by "the shock," I mean "hard to find bugs."[^computed]
 
 [^computed]: Swift unfortunately overloads `var` to mean both "mutable" and "computed property" even if the computed property is immutable. I am only referring to the first use.
 
-We inherit a very unfortunate piece of syntax from the earliest days of
-FORTRAN.[^fortran] It's so common that you've probably never considered how
-insane it is. Here it is in Swift:
+We inherit a very unfortunate piece of syntax from the earliest days of FORTRAN.
+It's so common that you've probably never considered how insane it is. Here it
+is in Swift:
 
     var x: Int
     x = 5
