@@ -82,7 +82,7 @@ What is it *supposed* to do? What does it *actually* do?
 
 Perhaps the most overlooked part of that process is "what are its inputs and
 outputs?" It's really the question "what things could *possibly* be breaking
-this, and what other could this *possibly* be breaking up." And this is where
+this, and what other things could this *possibly* be breaking." And this is where
 state comes in. Consider a method:
 
     class RestaurantMeal {
