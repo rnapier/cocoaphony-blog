@@ -26,6 +26,7 @@ Our output should be a list of pages or an error. "A list of pages or an error."
 That's kind of a funny thing. What type would that be? If you're an old ObjC dev
 like me, then you'd probably think (in Swift):
 
+    struct Page { let title: String }
     func pagesFromData(data: NSData, error: NSErrorPointer) -> [Page]?
 
 But that's kind of a pain to use. We have to create an `NSError` variable and
