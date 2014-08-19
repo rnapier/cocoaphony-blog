@@ -222,6 +222,10 @@ func asJSON(data: NSData) -> Result<JSON> {
 }
 ```
 
+(If the `.Some` cases are unfamiliar to you, read 
+[Unwrapping Multiple Optionals](http://natashatherobot.com/swift-unwrap-multiple-optionals/)
+from Natasha the Robot.)
+
 Let's see what happens if we do that for all our functions (you can find all the
 helper functions in 
 [this gist](https://gist.github.com/rnapier/2c2bccc40b24fb9d54fc)):
