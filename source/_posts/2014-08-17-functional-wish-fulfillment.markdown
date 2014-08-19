@@ -346,12 +346,12 @@ write:
 
 ```
 func pagesFromData(data: NSData) -> Result<[Page]> {
-  return continueWith(asJSON(data)) {
-    continueWith(asJSONArray($0)) {
-      continueWith(secondElement($0)) {
-        continueWith(asStringList($0)) {
-          asPages($0)
-        } } } }
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result<[Page]>
 }
 ```
 
