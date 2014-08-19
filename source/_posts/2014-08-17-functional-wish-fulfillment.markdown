@@ -412,4 +412,4 @@ If Tony or Chris's posts make perfect sense to you, maybe you don't need my
 series. If you leave them a little befuddled, then this series will get to the
 same place, just a bit more gently.
 
-Until then, stop mutating. Just evolve.
+Until then, stop mutating. Evolve.
