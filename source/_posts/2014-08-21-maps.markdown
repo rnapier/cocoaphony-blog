@@ -1,0 +1,309 @@
+---
+layout: post
+title: "Maps... Wait, they don't love you like I love you"
+date: 2014-08-21 08:20:25 -0400
+comments: true
+categories: 
+---
+I had a bit of a throw-away line in
+[Functional Wish Fulfillment](http://localhost:4000/functional-wish-fulfillment):
+
+> Kind of like map, but kind of different.
+
+And I tossed a call to `map`, unexplained, in the middle of the parsing code. I
+got a little ahead of myself there. Sorry about that. Cocoa has no `map`. Maybe
+not everyone coming to Swift has a long history with this amazing little
+function. In a field where monads get all the press, it's time to step back and
+talk about the humble map.
+
+<!-- more -->
+
+After years of begging for a `map` function in Cocoa, here comes Swift with
+three different versions built-in:
+
+```
+/// Haskell's fmap for Optionals.
+func map<T, U>(x: T?, f: (T) -> U) -> U?
+
+/// Return an `Array` containing the results of mapping `transform` over `source`.
+func map<C : CollectionType, T>(source: C, transform: (C.Generator.Element) -> T) -> [T]
+
+/// Return an `Array` containing the results of mapping `transform` over `source`.
+func map<S : SequenceType, T>(source: S, transform: (S.Generator.Element) -> T) -> [T]
+```
+
+Plus it has `map` methods on `Array`, `Dictionary`, `Optional`, `Range`,
+`Slice`, and a bunch of other classes.
+
+Now I know that the very first comment in the Swift header mentions both
+"Haskell" and a non-word "fmap," but trust me, most uses of `map` aren't complex
+at all. Most of the time, it's just the world's simplest for-loop.
+
+Let's take a really common pattern you've probably written dozens of times (if
+not in Swift, than in every language you've ever worked in):
+
+```
+let domains = ["apple.com", "google.com", "robnapier.net"]
+
+var urls = [NSURL]()
+for domain in domains {
+  urls.append(NSURL(scheme: "http", host: domain, path: "/"))
+}
+// urls => [http://apple.com/, http://google.com/, http://robnapier.net/]
+```
+
+In a generic language like Swift, "pattern" means there's a probably a function
+hiding in there, so let's pull out the part that doesn't change and call it
+`map`:
+
+```
+// Let's replace String with T and NSURL with U
+// and let's pull out the NSURL(...) and call it transform()
+func map<T, U>(source: [T], transform: T -> U) -> [U] {
+  var result = [U]()
+  for element in source {
+    result.append(transform(element))
+  }
+  return result
+}
+
+// And here's our loop:
+let urls = map(domains, { NSURL(scheme: "http", host: $0, path: "/") })
+
+// Or we can use Array's method (implementation not shown)
+let urls = domains.map{ NSURL(scheme: "http", host: $0, path: "/") }
+
+// urls => [http://apple.com/, http://google.com/, http://robnapier.net/]
+
+```
+
+So `map` replaces the for-loop when you have data in one form and want it in
+some other form.
+
+## Keeping what you want
+
+Let's think about another really common for-loop. You have a bunch of items, but
+you only want some of them. For example, maybe you want to filter out
+`NSNotFound`.
+
+```
+let values = [1, 1, 2, NSNotFound, 3]
+
+var found = [Int]()
+for value in values {
+  if value != NSNotFound {
+    found.append(value)
+  }
+}
+// found => [1, 1, 2, 3]
+```
+
+Again, we wind up with this really generic for-loop. Let's factor out the common
+part.
+
+```
+// Replace Int with T, and instead of hard-coding the test, pass a function
+// that takes an element and returns whether to include it.
+func filter<T>(source: [T], includeElement: T -> Bool) -> [T] {
+  var found = [T]()
+  for value in source {
+    if includeElement(value) {
+      found.append(value)
+    }
+  }
+  return found
+}
+
+// Filter it with a function
+let found = filter(values, { $0 != NSNotFound })
+
+// or with Array's method (implementation not shown)
+let found = values.filter{ $0 != NSNotFound }
+
+// found => [1, 1, 2, 3]
+```
+
+And again we replace our cut-and-paste for-loop with a reusable function that
+captures the goal. We save some code, but it's more than that. We can compose
+filters and maps to create more interesting things in highly readable ways.
+For example, to extract simple http URLs from text:
+
+```
+func embeddedURLs(text: String) -> [NSURL] {
+  return text
+    .componentsSeparatedByString(" ")
+    .filter{ $0.hasPrefix("http://") }
+    .map{ NSURL(string: $0) }
+}
+
+embeddedURLs("This text contains a link to http://www.apple.com and other stuff.")
+// => ["http://www.apple.com"]
+```
+
+Or see this [downcasting example](http://stackoverflow.com/a/25486591/97337)
+from StackOverflow.
+
+The goal of using `map` and `filter` this way is to make your code easier to
+read, understand, and debug. It gets the boilerplate out of the way and leaves
+you with the key parts of what you're trying to do.
+
+## Map is what for does
+
+Even though I've discussed `map` in terms of `for`, they're quite different.
+`map` *is*. `for` *does*. Remember the first example:
+
+```
+var urls = [NSURL]()
+for domain in domains {
+  urls.append(NSURL(scheme: "http", host: domain, path: "/"))
+}
+```
+
+In this code, `urls` is mutated by a series of `append` calls until it contains
+the values we want. This code says how to construct `urls`. On the other hand:
+
+    let urls = domains.map{ NSURL(scheme: "http", host: $0, path: "/") }
+
+In this code, `urls` *is* the mapping of `domains` to `NSURL` constructors. This
+code doesn't require any specific implementation of `map`. In principle, `urls`
+could be constructed lazily the first time it's read, or each element could be
+lazily constructed when requested. The mapping could be performed in parallel or
+in reverse order. It could be performed once and cached, or recomputed every
+time it's accessed. In principle, we don't care. As long as the mapping only
+depends on its inputs, and as long as there are no side effects, we will always
+get the same result. This is the heart of good functional programming. We
+*define* `urls` and let the system worry about how to *compute* it.
+
+In practice, life is seldom quite that simple, and the implementation does
+matter for performance. Still, a functional approach makes it much easier to
+change our mind about the implementation. For example, in Swift today, we can
+switch from immediate mapping to lazy mapping by just adding `lazy()` like this:
+
+    let urls = lazy(domains).map{ NSURL(scheme: "http", host: $0, path: "/") })
+
+Compare that to the changes you'd have to make to your `for` code to make this a
+lazy computation. One can easily imagine the implementation of a `parallel()`
+modifier. By focusing our code on what things are, rather than how we construct
+them, swapping out one implementation for another is much simpler.
+
+## It's all about the types
+
+In Wish Driven Development, our wish generally takes the form of a function
+signature. So it's very important that you learn to read and think about
+function signatures, especially signatures that include functions as parameters.
+Let's look at `map` again:
+
+    func map<T, U>(source: [T], transform: T -> U) -> [U]
+
+Let's strip away some syntax noise to get to the heart of what's going on:
+
+    map([T], T -> U) -> [U]
+
+Or maybe you'd rather read it this way:
+
+    map([From], From -> To) -> [To]
+
+This takes an array of "something," and a function that can convert one
+"something" into a "something else," and returns an array of "something else."
+So you should use this function when you have an array of some type, and you
+want an equal-sized array of some other type, and you know how to convert a
+single element of the first type into the second type.
+
+Let's look at `filter` in the same way:
+
+    filter([T], T -> Bool) -> [T]
+
+So this takes an array of something, and a function that returns true or false
+based on one of them, and returns an array of the same kind of things.
+
+Even if I took away the names `map` and `filter`, you should have some guess
+what these functions do, just based on what they take and what they return.[^haskell]
+
+[^haskell]: In Haskell, which has a pretty consistent syntax, you can actually search the documentation for functions that transform the types you want. That turns out to be harder in Swift because of parameter names and syntactic sugar, but the idea of reading types is just as important.
+
+Let's go back to the Swift header for moment. By this time, the  `map<C:
+CollectionType, T>` function and the `map<S: SequenceType, T>` function should
+make some sense. They're just more generic versions of our array-only `map`. But
+there's one more version that seems different than the others:
+
+    func map<T, U>(x: T?, f: (T) -> U) -> U?
+
+What does that mean? It takes an optional of something, and a function that can
+convert "something" into "something else" and returns an optional of "something
+else." That sounds a lot like our array version of map, if you just replace the
+word "array" with "optional." Can we do that? Does that even make sense?
+
+Let's strip away some extra syntax and sugar so we can get a clearer view of
+these signatures:
+
+    map(Array<T>,    T -> U) -> Array<U>
+    map(Optional<T>, T -> U) -> Optional<U>
+
+That's really, really interesting (at least to me), but if we go any deeper down
+this rabbit hole, I'm going to have to start using mathy words.[^functor] You
+came here to learn practical applications. So let's crawl back up a step.
+
+[^functor]: That word is "functor" if you're curious. A [functor](https://en.wikibooks.org/wiki/Haskell/The_Functor_class) is a structure you can map over. It'd probably be clearer if we called it "mappable."
+
+So what does it mean to "map" over an optional? Well, mapping over an array
+meant generating one element for every element in the array. Why not the same
+for optionals? If there's something inside (`Some`), map it, if not, return
+`None`. Let's write that:
+
+    func map<T, U>(x: T?, f: T -> U) -> U? {
+      switch x {
+      case .Some(let value): return .Some(f(value))
+      case .None: return .None
+      }
+    }
+
+If that sounds a little like optional-chaining (`?.`), then you're getting it.
+Optional-chaining is just a more method-friendly version of `map`.
+
+So if we can map over an array, and we can map over an optional, can we map over
+anything else? How about the `Result` type we built in
+[Functional Wish Fulfillment](/functional-wish-fulfillment)?[^box]
+
+[^box]: Remember that "box" and "unbox" are just because of a compiler limitation in Beta6.
+
+```
+func map<T, U>(x: Result<T>, f: T -> U) -> Result<U> {
+  switch x {
+  case Success(let box): return .Success(Box(f(box.unbox)))
+  case Failure(let err): return .Failure(err)
+  }
+}
+```
+
+Again, focus on learning to read the types:
+
+    map(Result<T>, T -> U) -> Result<U>
+
+Given a `Result` of one type (`T`), and function that can convert that type into
+another type (`U`), I can get a `Result` of that second type.
+
+Given an `F<>` that contains `T` and a function that maps a `T` to a `U`, I can
+use `map` to convert `F<T>` into `F<U>`.
+
+That's starting to sound like math, so maybe we'll leave it there before we go
+too far.
+
+## Thoughts till next time
+
+We dug pretty deep in `map` here, breezed through `filter`, and started to think
+about the power of functions to separate intent from implementation. We touched
+on the importance of types in understanding functions. And then we stumbled
+across some interesting similarities in `Array` and `Optional` and `Result` that
+expanded our mappable world.
+
+If you're like I was the first time I walked down this road, your head is
+spinning just a little bit right now, but maybe a few things are starting to
+make sense. It's worth playing with these things in a playground. Look in your
+code for some for-loops and see if you could convert them to `map` or `filter`
+instead. Don't force it. The goal isn't to use fancy library functions, and the
+goal isn't to make your code short. The goal is to make your code clear. Play
+with formatting and see what makes your point most obvious. Try creating helper
+functions. Refactor. Try again.
+
+Soon we'll explore some more of these transforming functions and see what they
+can do for us. Until then, stop mutating. Evolve.
