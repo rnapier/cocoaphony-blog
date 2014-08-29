@@ -3,10 +3,10 @@ layout: post
 title: "Maps... Wait, they don't love you like I love you"
 date: 2014-08-21 08:20:25 -0400
 comments: true
-categories: 
+categories: swift, functional
 ---
 I had a bit of a throw-away line in
-[Functional Wish Fulfillment](http://localhost:4000/functional-wish-fulfillment):
+[Functional Wish Fulfillment](/functional-wish-fulfillment):
 
 > Kind of like map, but kind of different.
 

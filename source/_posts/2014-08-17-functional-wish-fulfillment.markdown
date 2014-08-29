@@ -3,7 +3,7 @@ layout: post
 title: "Functional Wish Fulfillment"
 date: 2014-08-18 22:00:00 -0400
 comments: true
-categories: swift
+categories: swift functional
 ---
 
 Yes, this is another of those "how to parse JSON in Swift" blog posts that seem

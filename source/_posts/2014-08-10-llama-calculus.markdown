@@ -3,7 +3,7 @@ layout: post
 title: "Your lips keep moving, but all I hear is \"applicator functive monastic llama calculus...\""
 date: 2014-08-09 16:16:19 -0400
 comments: true
-categories: 
+categories: swift functional
 ---
 \...and I hated calculus.
 
