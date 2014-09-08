@@ -44,7 +44,7 @@ We discovered that the different `map` functions all have the same "shape":
     map(Optional<T>, T -> U) -> Optional<U>
     map(Result<T>, T -> U) -> Result<U>
     // or more generally:
-    map(F<T>, T -> U) -> F<T>
+    map(F<T>, T -> U) -> F<U>
 
 Learning to see these shapes helps us find patterns we can reuse and combine.
 
