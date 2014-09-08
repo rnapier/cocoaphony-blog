@@ -1,0 +1,458 @@
+---
+layout: post
+title: "Flattenin' your mappenin'"
+date: 2014-09-01 09:13:15 -0400
+comments: true
+categories: functional swift
+---
+
+> In which our heroes create for themselves a convenience and discover a
+> surprising thing.
+
+[Last time](/maps) we looked at the incredible little `map` function, and saw
+how it could be used to simplify a lot of tedious for-loops while making our
+code more clear and less error-prone. This time, we're going to see if we can
+solve a common problem that happens with mapping, nesting.
+
+<!-- more -->
+
+## When we left our heroes
+
+First, a very quick recap on mapping. We can use `map` to transform an array of
+elements into an new array of different elements. For example, we can transform
+an array of strings into an array of string lengths in a variety of syntaxes:
+
+    let domains = ["apple.com", "google.com", "robnapier.net"]
+    let lengths = domains.map { countElements($0) }
+    let lengths = map(domains) { countElements($0) }
+    let lengths = domains.map(countElements)
+    let lengths = map(domains, countElements)
+
+Or we could transform an array of strings into an array of URLs:
+
+    let urls = domains.map { NSURL(scheme: "http", host: $0, path: "/") }
+
+We learned that we can map optionals and our custom
+[result](https://gist.github.com/rnapier/42ef28d52ac92744730f) type.
+In both cases, successful values (`Some`, `Success`) are transformed with the
+function, while failing values (`None`, `nil`, `Failure`) are simply returned.
+In this way, mapping is very similar to optional chaining (`?.`).
+
+We discovered that the different `map` functions all have the same "shape":
+
+    map(Array<T>, T -> U) -> Array<U>
+    map(Optional<T>, T -> U) -> Optional<U>
+    map(Result<T>, T -> U) -> Result<U>
+    // or more generally:
+    map(F<T>, T -> U) -> F<T>
+
+Learning to see these shapes helps us find patterns we can reuse and combine.
+
+For more introduction, see
+[Functional Wish Fulfillment](/functional-wish-fulfillment) and
+[Maps...Wait, They Don't Love You Like I Love You](/maps).
+
+## Boxes in boxes
+
+Let's take a 
+[simple example](https://gist.github.com/rnapier/e0d91580d613fb21a52b) to get
+ourselves started on a new problem. We have customers with some properties:
+
+```
+struct Customer {
+  let name: String
+  let emails: [String]
+}
+
+let customers = [
+  Customer(name: "Alice", emails: ["alice@example.com"]),
+  Customer(name: "Bob", emails: ["bob@example.org", "bobby@home.example"])
+]
+```
+
+Now we'd like a list of all our customer names for our upcoming report. Easy!
+
+    let names = customers.map { $0.name }
+    // ["Alice", "Bob"]
+
+Perfect. Just what we want. Now, we also have had a major security issue and
+need to alert all of our users at all of their email addresses. Let's grab
+those:
+
+    let emails = customers.map { $0.emails }
+    // [["alice@example.com"], ["bob@example.org", "bobby@home.example"]]
+
+Wait. That's not quite what we meant. We wanted a list of email addresses, not a
+list-of-lists of email addresses. What are we going to do now? I wouldn't be
+surprised if you've encountered this before and fixed it with some kind of
+"flatten" function that removes one layer of structure. It's slightly surprising
+that Swift doesn't have one of these built in, but it's easy enough to
+make.[^simpler]
+
+[^simpler]: In a later post we'll discuss how `flatten` is insanely simple to implement with `reduce`. The fact that its so simple is probably the reason they didn't bother to add `flatten` to stdlib. But I'm guessing.
+
+```
+func flatten<T>(array: [[T]]) -> [T] {
+  var result = [T]()
+  for subarray in array {
+    result.extend(subarray)
+  }
+  return result
+}
+```
+
+With that, let's try again:
+
+    let flatEmails = flatten(customers.map { $0.emails })
+    // ["alice@example.com", "bob@example.org", "bobby@home.example"]
+
+Great. Well, pretty great. There are a few small annoyances. Throwing
+`flatten()` on the start is kind of tedious, especially if this is part of a
+chain of maps and filters. Consider if we wanted these to be URLs. We'd want to
+do this:
+
+```
+let emails =
+  customers.map { $0.emails }
+  .flatten      // <== this isn't possible
+  .map { NSURL(string:"mailto:\($0)") }
+```
+
+But that's not really possible in Swift. You can't easily add an Array extension
+for `flatten` because it only applies to arrays of arrays. Swift can't apply
+extensions only to certain kinds of arrays. So we're forced to do this:
+
+```
+let emails =
+  flatten(customers.map { $0.emails })
+  .map { NSURL(string:"mailto:\($0)") }
+```
+
+That's kind of ugly, and gets worse if the chain is long and has multiple points
+where flattening is needed.
+
+Like I said, this "map plus flatten" is pretty common, so maybe it's worth
+making a little convenience method for it that we could stick on Array. Let's
+call it `flatMap`:
+
+```
+extension Array {
+  func flatMap<U>(transform: T -> [U]) -> [U] {
+    return flatten(self.map(transform))
+  }
+}
+```
+
+Just like it says on the tin. Apply the map. Flatten. Ta-da! And now we can
+call:
+
+    let flatMapEmails = customers.flatMap { $0.emails }
+    // ["alice@example.com", "bob@example.org", "bobby@home.example"]
+
+Just like we wanted.
+
+## Flat all the things
+
+Since we can map optionals and `Result`, can we flatten them too? Let's look at
+the shape of `flatten` and how it might apply:
+
+    flatten(Array<Array<T>>) -> Array<T>
+    flatten(Optional<Optional<T>>) -> Optional<T>
+    flatten(Result<Result<T>>) -> Result<T>
+
+So we could flatten a `T??` to `T?` or a `Result<Result<T>>` to `Result<T>`.
+That makes sense and sounds useful.
+
+```
+func flatten<T>(result: Result<Result<T>>) -> Result<T> {
+  switch result {
+  case .Success(let box):
+    switch box.unbox {
+    case .Success(let nestedBox): return .Success(nestedBox)
+    case .Failure(let err):       return .Failure(err)
+    }
+  case .Failure(let err): return .Failure(err)
+  }
+}
+```
+
+And if we can map and flatten, then of course we can write `flatMap`:
+
+```
+extension Result {
+  func flatMap<U>(transform: T -> Result<U>) -> Result<U> {
+    return flatten(self.map(transform))
+  }
+}
+```
+
+## What *is* this flatMap?
+
+That was easy enough to do, but who cares? Why would you ever want to do that?
+
+Let's go back to the shape of this function. It's a method, so we put the type
+of `self` as the first parameter to get a function form. That makes it easier
+to compare shapes:
+
+    flatMap(Result<T>, T -> Result<U>) -> Result<U>
+
+That looks very familiar. Back in
+[Functional Wish Fulfillment](/functional-wish-fulfillment) we developed a
+function called `continueWith` that let us chain together functions so that we'd
+get a success if they all succeeded, and a failure if any of them failed. Here's
+what it looked like:
+
+```
+func continueWith<T,U>(x: Result<T>, f: T -> Result<U>) -> Result<U> {
+  switch x {
+  case .Success(let box): return f(box.unbox)
+  case .Failure(let err): return .Failure(err)
+  }
+}
+```
+
+Using that, we were able to turn our big, complicated JSON parser, full of
+conditional logic, into this:
+
+```
+func pagesFromData(data: NSData) -> Result<[Page]> {
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result<[Page]>
+}
+```
+
+
+Let's compare the shapes of these functions:
+
+         flatMap(Result<T>, T -> Result<U>) -> Result<U>
+    continueWith(Result<T>, T -> Result<U>) -> Result<U>
+
+Look familiar?
+
+In functional programming, when two generic functions have the same shape, you
+should have a strong suspicion that they are at least related. There may be
+some more basic function that they both derive from, or they may turn out to be
+the same thing.
+
+I'm not going to bore you with the fairly trivial (if slightly tedious) proof
+that `continueWith` and `flatMap` are in fact the same function. You can work it
+out on your own if you're interested, or see
+[my version in this gist](https://gist.github.com/rnapier/b383d2542c9fabe913c9).
+But I will call out two facts: (1) they are the same function, and (2) it's
+possible to *prove* it.
+
+## Proving the program
+
+I am not going to wander into the "programming is math" debate. It's a silly
+argument. What is important, and should be incontrovertible, is that functional
+programming makes it easier to use well-established tools that are common among
+mathematicians. One of those tools is the proof. We use proofs all the time, we
+just don't call them that. Every correct automatic refactoring is based on a
+proof that the code before the refactor is identical to the code after the
+refactor.
+
+An optimizing compiler in a strongly typed language is essentially a giant proof
+engine. When you get errors like 
+["C is not convertible to Self,"](http://stackoverflow.com/a/25645689/97337)
+it means you asserted something that the compiler couldn't prove. It may mean
+that you asserted something that isn't true, or it may mean that the proof
+engine isn't powerful enough to prove it, or it may even mean that the language
+isn't powerful enough to express what you are trying to assert.
+
+Functional programming makes it is easier to apply proofs. In other words, it
+makes your code easier to refactor mechanically and easier to optimize
+performance. A key reason is the lack of mutable state. The more mutable state
+is tied up in something, the harder it is to prove that a dramatically different
+implementation behaves identically.
+
+Test cases are not the same thing as a proof. I can't create enough test cases
+to be certain that every number divisible by 6 is also divisible by 2 and 3.
+It'd take an infinite number of test cases. But if I prove it, I don't need any
+tests at all. The key to making that easy is ensuring that `isDivisibleBySix(n:
+Int) -> Bool` relies on nothing but `n`. If there is no mutable state, if there
+are no side effects, if it's just a function that takes a value and returns a
+value, then I can much more easily replace it with a different implementation
+and be confident it will behave the same.
+
+I don't want to wander down this road too far. I'm not arguing that we don't
+need tests, and I'm not arguing for proof-of-correctness as a general practice.
+I'm saying that if you understand the difference between test and proof, and
+write your code in a way to favors proofs, you will get better code, fewer
+tests, simpler refactoring, and safer performance optimizations. And step one
+of that is the elimination of mutable state.
+
+## A method to our functional madness
+
+OK, back to more hands-on, practical concerns. 
+
+We implemented `continueWith` as a function, but we implemented `flatMap` as an
+extension method on `Result`. Does that change anything? Here's our
+function-based syntax:
+
+```
+func pagesFromData(data: NSData) -> Result<[Page]> {
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result<[Page]>
+}
+```
+
+Using a method approach, here's what we get:
+
+```
+func pagesFromData(data: NSData) -> Result<[Page]> {
+  return asJSON(data)
+    .flatMap(asJSONArray)
+    .flatMap(secondElement)
+    .flatMap(asStringList)
+    .flatMap(asPages)
+}
+```
+
+Yeah, that's definitely easier to read, understand, and modify. Swift syntax
+tends to favor chaining methods over chaining functions. That's somewhat
+unfortunate. Functions are easier to reason about (prove) because they don't
+contain an implicit `self` that might hide state. Functions in Swift are also
+much more flexible in how they can be made generic (type-parameterized). As we
+saw before, it's not possible to write `flatten` as a method on a generic type.
+Overuse of methods can get us into really frustrating situations if we want to
+write really reusable code.
+
+But the syntax favors methods... mostly.
+
+Swift offers a very powerful way to chain together functions: operators.
+Operators are just functions that allow some syntax benefits:
+
+* They don't require parentheses
+* They can be prefix (`!x`), infix (`x + y`) or postfix (`x++`)
+
+So what if we defined an operator for `flatMap`? We'll call it `>>==` for
+reasons I'll explain later.
+
+```
+infix operator >>== {}
+func >>== <T,U>(x: T, f:T -> Result<U>) -> Result<U> {
+  return x.flatMap(f)
+}
+```
+
+With that, here's
+[our new parser](https://gist.github.com/rnapier/067156ac404cc42f17b6):
+
+```
+func pagesFromData(data: NSData) -> Result<[Page]> {
+  return asJSON(data)
+    >>== asJSONArray
+    >>== secondElement
+    >>== asStringList
+    >>== asPages
+}
+```
+
+I think this reads very nicely, even nicer than the method version (though we
+can still improve it). Each line says "as long as it hasn't failed, transform
+with...."
+
+Using operators like this can be dangerous. It's easy to wind up with obscure
+symbol soup. The key is finding a small number of highly reusable operators that
+are used consistently. There's a cost to forcing people to learn and memorize
+your operator; make sure it's going to be used often enough to be worth it.
+
+That said, we all use operators every day, and they're an important part of
+programming. There is no difference between `+` and `>>==` other than you
+learned one when you were a child. `+` is nothing more than an infix function:
+
+```
+infix operator + { associativity left precedence 140 }
+func +(lhs: Float, rhs: Float) -> Float
+func +(lhs: Int, rhs: Int) -> Int
+...
+```
+
+We could just as well use a function called `add()` to do the same thing, but
+instead everyone memorizes this arbitrary symbol because it's easier to use.
+That's important. There is nothing more *meaningful* about `+`, `-`, and `*`
+versus `>>==`. They're just symbols you've memorized. I'm suggesting you should
+memorize one more. Well, several. But you'll learn them over time just as you
+learned `√`, `∫`, `∑`, and `∞` later than you learned `+` and `-`.
+
+That doesn't mean you should go crazy with operators. In fact, I generally
+suggest you avoid creating new ones until you've thought quite a lot about it
+and looked into how other languages solve similar problems. But as we go along,
+I'm going to introduce several general-purpose operators that will make your
+code clearer and easier to write when used appropriately.
+
+## A rose by any other name would be confusing
+
+You might ask now what this function should be called. We started by calling it
+`continueWith`, but then it changed to `flatMap`, and then to `>>==`. I didn't
+mention it here, but it's also called `Bind` and `>>=`. Other Swift developers
+have called it
+[>>>](http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics)
+and [>>=-](http://nomothetis.svbtle.com/the-culmination-i). Its math name is a
+monadic bind. But what should we call it?
+
+I believe Swift programmers should call the function `flatMap` (as in Scala) and
+should use `>>==` as the operator (derived from Haskell). The operator should be
+pronounced "bind" or colloquially "and then." `bind()` and `>>=` are existing
+functions in Swift, and it's dangerous to overload things with completely
+different meanings (I'm looking at you, C++ `<<`). I think the operator should
+preserve as much of the "shape" as possible from Haskell's, and I think `>>==`
+does that best.[^type]
+
+[^type]: I also have found it easy to type. I tried `>>=-` for a while and kept getting `>>=0-` when I was typing fast.
+
+That's not really important, though. It's just my suggestion, and others might
+reasonably disagree. The point is that before foisting a new operator on the
+world (or even your team), you should spend time looking at how other languages
+and other Swift developers have approached the same problem. Otherwise you cut
+yourself off from a lot of insight and you make it hard for others coming to
+your code. Maybe they won't know Haskell or F# or Scala, but maybe they will.
+They definitely won't know the operator you made up over lunch. Make sure it's
+valuable enough to be worth teaching them.
+
+## Maps flat, maybe brains too
+
+If you've gotten this far, you've come a long way. It's a lot to take in. Let me
+sum up where we are in our parser:
+
+```
+func pagesFromData(data: NSData) -> Result<[Page]> {
+  return asJSON(data)
+    >>== asJSONArray
+    >>== secondElement
+    >>== asStringList
+    >>== asPages
+}
+```
+
+>Given some data, convert it to JSON and then to a JSON array and then take the
+second element and then convert that to a string list and then convert those to
+a list of pages and return the result.
+
+I think that captures our algorithm about as clearly as we can. Compare it to
+the [original version](https://gist.github.com/rnapier/9e8f92a1ce6be5c3d295). It
+handles errors without littering our code with error handling or requiring
+exceptions. It's compact, but not dense. It's easy to modify or extend. And
+each of the individual functions are about as simple as they could be and easy
+to unit test (or so simple that they literally can't be wrong). There's still
+more work to make it generic. Things like `secondElement` obviously don't scale,
+and we'll work on that in future posts. But the basic structure is quite nice I
+think.
+
+Until then, here are some take-aways:
+
+* Swift makes it easier to chain together methods than functions
+* ...but methods are harder to reason about because of `self`
+* Generic operators like `>>==` make it easy to chain together functions that peal away a small part of the problem while maintaining structure like error handling
+* ...but new operators should be created with caution, founded in the lessons of history
+
+That enough for this time. This was a major turning point, but there are still
+a lot of things to cover. Until then, stop mutating. Evolve.

@@ -102,7 +102,7 @@ do new work in Swift unless there's a specific reason not to. And you should
 definitely learn Swift sometime over the next year or two. Clearly that's what
 Apple wants long term, and fighting Apple as an iOS dev is a losing game.
 
-[^carbon]: For Mac devs, ObjC is the new Carbon. Take you lessons on its future from that. It'll be around and fully supported for much longer than people expect. But eventually they're going to start breaking ObjC things so that Swift can work better.
+[^carbon]: For Mac devs, ObjC is the new Carbon. Take your lessons on its future from that. It'll be around and fully supported for much longer than people expect. But eventually they're going to start breaking ObjC things so that Swift can work better.
 
 ### For the iOS newcomer from functional languages and for general language enthusiasts who don't care about Cocoa
 

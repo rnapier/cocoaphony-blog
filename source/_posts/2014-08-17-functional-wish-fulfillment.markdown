@@ -322,7 +322,7 @@ and returned a `Result`. If passed a `.Success`, then it should pass the
 contents to the next step. If passed a `.Failure`, then it should stop and
 return that. Let's call it `continueWith` for the time being.
 
-    func continueWith<A,B>(a: Result<A>, f: A -> Result<B>) -> Result<B>
+    func continueWith<T,U>(a: Result<T>, f: T -> Result<U>) -> Result<U>
 
 Stop. I know you just skimmed over that signature. Go read it again. Make sure
 you know what it says. Say it out loud. It takes a result, and a function that
@@ -364,10 +364,10 @@ calls the next function.[^unbox] If it's passed a `.Failure`, it returns a
 [^unbox]: Remember that the "unbox" step is just because of a Beta6 compiler limitation.
 
 ```
-func continueWith<A,B>(a: Result<A>, f: A -> Result<B>) -> Result<B> {
-  switch a {
-  case .Success(let boxA): return f(boxA.unbox)
-  case .Failure(let err):  return .Failure(err)
+func continueWith<T,U>(x: Result<T>, f: T -> Result<U>) -> Result<U> {
+  switch x {
+  case .Success(let box): return f(box.unbox)
+  case .Failure(let err): return .Failure(err)
   }
 }
 ```

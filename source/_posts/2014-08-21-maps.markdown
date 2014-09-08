@@ -269,8 +269,8 @@ anything else? How about the `Result` type we built in
 ```
 func map<T, U>(x: Result<T>, f: T -> U) -> Result<U> {
   switch x {
-  case Success(let box): return .Success(Box(f(box.unbox)))
-  case Failure(let err): return .Failure(err)
+  case .Success(let box): return .Success(Box(f(box.unbox)))
+  case .Failure(let err): return .Failure(err)
   }
 }
 ```
