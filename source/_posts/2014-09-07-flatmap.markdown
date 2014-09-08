@@ -255,13 +255,17 @@ just don't call them that. Every correct automatic refactoring is based on a
 proof that the code before the refactor is identical to the code after the
 refactor.
 
-An optimizing compiler in a strongly typed language is essentially a giant proof
-engine. When you get errors like 
+{% pullquote %}
+
+{" An optimizing compiler in a strongly typed language is essentially a giant
+proof engine. "} When you get errors like 
 ["C is not convertible to Self,"](http://stackoverflow.com/a/25645689/97337)
 it means you asserted something that the compiler couldn't prove. It may mean
 that you asserted something that isn't true, or it may mean that the proof
 engine isn't powerful enough to prove it, or it may even mean that the language
 isn't powerful enough to express what you are trying to assert.
+
+{% endpullquote %}
 
 Functional programming makes it is easier to apply proofs. In other words, it
 makes your code easier to refactor mechanically and easier to optimize
@@ -409,14 +413,18 @@ does that best.[^type]
 
 [^type]: I also have found it easy to type. I tried `>>=-` for a while and kept getting `>>=0-` when I was typing fast.
 
+{% pullquote %}
+
 That's not really important, though. It's just my suggestion, and others might
 reasonably disagree. The point is that before foisting a new operator on the
-world (or even your team), you should spend time looking at how other languages
-and other Swift developers have approached the same problem. Otherwise you cut
-yourself off from a lot of insight and you make it hard for others coming to
-your code. Maybe they won't know Haskell or F# or Scala, but maybe they will.
-They definitely won't know the operator you made up over lunch. Make sure it's
-valuable enough to be worth teaching them.
+world (or even your team), you should {" spend time looking at how other
+languages and other Swift developers have approached the same problem. "}
+Otherwise you cut yourself off from a lot of insight and you make it hard for
+others coming to your code. Maybe they won't know Haskell or F# or Scala, but
+maybe they will. They definitely won't know the operator you made up over lunch.
+Make sure it's valuable enough to be worth teaching them.
+
+{% endpullquote %}
 
 ## Maps flat, maybe brains too
 
