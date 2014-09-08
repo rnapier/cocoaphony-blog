@@ -448,12 +448,11 @@ a list of pages and return the result.
 I think that captures our algorithm about as clearly as we can. Compare it to
 the [original version](https://gist.github.com/rnapier/9e8f92a1ce6be5c3d295). It
 handles errors without littering our code with error handling or requiring
-exceptions. It's compact, but not dense. It's easy to modify or extend. And
-each of the individual functions are about as simple as they could be and easy
-to unit test (or so simple that they literally can't be wrong). There's still
-more work to make it generic. Things like `secondElement` obviously don't scale,
-and we'll work on that in future posts. But the basic structure is quite nice I
-think.
+exceptions. It's compact, but not dense. It's easy to modify or extend. And each
+of the individual functions is about as simple as it could be and easy to unit
+test (or so simple that it literally can't be wrong). There's still more work to
+make it generic. Things like `secondElement` obviously don't scale, and we'll
+work on that in future posts. But the basic structure is quite nice I think.
 
 Until then, here are some take-aways:
 
@@ -462,5 +461,5 @@ Until then, here are some take-aways:
 * Generic operators like `>>==` make it easy to chain together functions that peal away a small part of the problem while maintaining structure like error handling
 * ...but new operators should be created with caution, founded in the lessons of history
 
-That enough for this time. This was a major turning point, but there are still
+That's enough for this time. This was a major turning point, but there are still
 a lot of things to cover. Until then, stop mutating. Evolve.
