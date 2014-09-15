@@ -33,9 +33,9 @@ combining them. Its signature looks like this:
 
     (U, T) -> U
 
-So it doesn't have to return the same kind of thing as the list. In our example,
-since we want the sum, we just add the two values. We could just as easily
-reduce the list to its product:
+So it doesn't have to return the same kind of thing as is in the list, but it
+often does. In our example, since we want the sum, we just add the two values.
+We could just as easily reduce the list to its product:
 
     let product = reduce(xs, 1) { accumulator, value in accumulator * value }
     // ==> 120
