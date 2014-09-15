@@ -342,7 +342,7 @@ reasons I'll explain later.
 
 ```
 infix operator >>== {}
-func >>== <T,U>(x: T, f:T -> Result<U>) -> Result<U> {
+func >>== <T,U>(x: Result<T>, f:T -> Result<U>) -> Result<U> {
   return x.flatMap(f)
 }
 ```
