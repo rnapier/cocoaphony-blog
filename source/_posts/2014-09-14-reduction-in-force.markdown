@@ -68,9 +68,11 @@ zero."
 
 Another common name for this function is "fold." Sometimes, in other languages,
 you'll see "fold left" or "fold right." Swift's "reduce" is the same as "fold
-left." (A right fold starts at the end of the list and goes backwards.) You may
-also see it called "aggregate" or "accumulate." They're all pretty much the same
-function.
+left." <strike>(A right fold starts at the end of the list and goes 
+backwards.</strike>[^lazy]) You may also see it called "aggregate" or
+"accumulate" or "inject." They're all pretty much the same function.
+
+[^lazy]: UPDATE: After some [helpful discussion](https://twitter.com/cocoaphony/status/511339551915511808) with @TacticalGrace and @pyrtsa, I've decided this is description of fold right is too misleading. I usually favor simple-but-slightly-wrong explanations over more-correct-but-requires-lots-of-background-to-understand-and-is-still-slightly-wrong, but in this case, "goes backwards" really confuses how foldr is commonly used. We don't have foldr in Swift, so I'm not going to dig into it here in a footnote; I'll leave it to your [exploration](https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29).
 
 ## Finding a starting point
 
