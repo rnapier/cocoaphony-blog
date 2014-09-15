@@ -49,7 +49,7 @@ What's up with that? [I told you before](/flatmap), `+` is just a function:
     func +(lhs: Float, rhs: Float) -> Float
 
 And it's in the form `(T, T) -> T`, which is just a special case of `(U, T) ->
-T`. So that's fine, and we can pass it as the combining function.
+U`. So that's fine, and we can pass it as the combining function.
 
 There's also a method form that can be convenient:
 
