@@ -29,8 +29,13 @@ intial value, and a "combining" function like this:
 
 The most interesting part is the combining function. It is passed a "value so
 far" and a "next value from the list" and it needs to return the result of
-combining them. In our example, since we want the sum, we just add the two
-values. We could just as easily reduce the list to its product:
+combining them. Its signature looks like this:
+
+    (U, T) -> U
+
+So it doesn't have to return the same kind of thing as the list. In our example,
+since we want the sum, we just add the two values. We could just as easily
+reduce the list to its product:
 
     let product = reduce(xs, 1) { accumulator, value in accumulator * value }
     // ==> 120
