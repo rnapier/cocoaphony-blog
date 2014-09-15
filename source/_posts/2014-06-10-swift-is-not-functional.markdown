@@ -84,7 +84,7 @@ know the syntax.
 
 I'd heard people describing Swift as "functional," so when I pulled up my
 first Swift workspace, I immediately looked for what Swift used for
-`flatmap`.[^flatmap] I looked for how you split a list into head and tail. I looked
+`flatmap`. I looked for how you split a list into head and tail. I looked
 for a `foldLeft` equivalent and immutable collections. Swift didn't seem to
 have special handling for any of them. It's not that a language *has* to have
 these to be functional, any more than a language *has* to have a `for` loop to
@@ -93,8 +93,6 @@ object oriented, but you have to implement `for` using `if` and `goto` and
 there's no class inheritance, you might be...surprised at my feature choices.
 A "functional" language that can't split a list into first and "not first"
 elements trivially and in O(1) time is a very strange functional language.[^simple]
-
-[^flatmap]: There is a flatmap, but it's explicitly only for Optionals, not a ubiquitous function like it is in most functional languages (where it is the heart of for-comprehensions and monads). Search the Swift header for "Haskell's fmap for Optionals."
 
 [^simple]: I'm sure that all of these things will turn out to be fairly simple to do in Swift. But they don't jump out of the docs, and they weren't even discussed in any of the Swift videos. That's a measure of what's important versus what's possible. They tell you what paradigm you're in.
 
