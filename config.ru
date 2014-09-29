@@ -10,7 +10,7 @@ use Rack::Rewrite do
   r302 '/feed/', '/atom.xml'
   r302 '/book', 'http://iosptl.com'
 
-  r301 '/blog', ''
+  r301 '/blog', '/'
 
 # Remove trailing slashes
   r301 %r{^/(.*)/$}, '/$1'
