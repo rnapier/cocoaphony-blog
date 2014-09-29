@@ -3,7 +3,7 @@ layout: post
 title: "Go is a shop-built jig"
 comments: true
 date: 2014-09-17 15:50
-categories: go swift functional
+categories: go swift
 ---
 
 [Alex Payne](https://al3x.net/about.html) wrote an excellent essay called [Thoughts on Five Years of Emerging Languages](https://al3x.net/2014/09/16/thoughts-on-five-years-of-emerging-languages.html). It called to mind something I wrote a while ago for a limited audience that I never got around to turning into a public form. Thanks to [Manuel Chakravarty](https://twitter.com/TacticalGrace) for the link and the inspiration.
