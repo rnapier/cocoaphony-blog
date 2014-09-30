@@ -10,7 +10,7 @@ date: 2014-09-29 10:57
 
 > By not using standard FP terminology in emerging languages like Swift, we deny learners access to a lot of existing literature.
 
-I certainly agree. But there's a lot more to it, and I hope the FP community will get involved in new ways. We'll get there. First, a little history for the rest of us. FP folks, I'll get back to you in a couple of sections.
+I certainly agree. But there's a lot more to it, and I hope the functional programming community will get involved in new ways. We'll get there. First, a little history for the rest of us. FP folks, I'll get back to you in a couple of sections.
 
 <!-- more -->
 
