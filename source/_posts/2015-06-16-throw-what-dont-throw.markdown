@@ -82,7 +82,7 @@ And now we can use it:
 
 Notice the use of `try`. This is pretty different than how `try` is used in
 other langauges, and another way that Swift's error handling doesn't quite match
-"exceptions.") Swift uses `try` to remind the programmer about functions that
+"exceptions." Swift uses `try` to remind the programmer about functions that
 may throw errors. The compiler doesn't need `try`. It doesn't create scope, or
 mark control flow points, or anything like that. It's not a function or a
 constructor. It's just a keyword that Swift forces you to include so that *you*
@@ -100,7 +100,7 @@ And one more "also notice." Also notice that this is an *overload* of map. The
 closures have different types, so the compiler can pick the right one. Nice.
 
 OK, that was a lot of setup, and you could probably figure out on your own how
-to rewrite map this way. And besides, by beta 2, I'm sure threre will be a
+to rewrite map this way. And besides, by beta 2, I'm sure there will be a
 proper (re)throwing version of map. So why bother? For the next step.
 
 I know how map is implemented. It's really simple. But what if I *didn't* know
