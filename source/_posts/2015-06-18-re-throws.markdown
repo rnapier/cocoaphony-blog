@@ -148,7 +148,7 @@ closure is requested, just like a Cat can be used anywhere an Animal is
 requested. No conversions necessary. It's just types.
 
 So great, we have `mymapThrows`, and it takes either kind, so we're done, right?
-Well, we could be, but it'd be really annoying. Consider if map were marked
+Well, we could be, but it'd be really annoying. Consider if `map` were marked
 `throws`. That would mean that *every* `map` would have to include a `try`, and
 somewhere you'd have to catch the error.
 
@@ -220,6 +220,10 @@ on throwing, but in many cases we have a better tool. We can mark the method
 So what promise does `rethrows` make? It promises that the only way it will
 throw is if a closure it is passed throws. So if it's passed a closure that
 can't throw, the compiler knows that the function can't throw either.
+
+(Why isn't stdlib's `map` marked `rethrows` today? Because it's beta 1, and the
+Swift team hasn't updated all of stdlib yet. They've indicated that a lot of
+stdlib will be fixed in future betas. Have patience.)
 
 It's natural to think of `rethrows` as a subtype of `throws`, and non-throwing
 closures as a subtype of `rethrows`, but that doesn't quite seem to be true.
