@@ -58,3 +58,12 @@ sup a {
 sup {
   padding: 0;
 }
+
+p, li {
+  code {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+}
