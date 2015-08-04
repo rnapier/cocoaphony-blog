@@ -152,7 +152,7 @@ let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())]
 // error: type of expression is ambiguous without more context
 ```
 
-This kind of type eraser lets us convert a protocol with associated types into a generic type. That means we can put it properties and return values and other places that we can't use protocols directly. As you use more protocols in your Swift (and [you should be](https://developer.apple.com/videos/wwdc/2015/?id=408)), I think this will become an important tool in your toolbelt.
+This kind of type eraser lets us convert a protocol with associated types into a generic type. That means we can put it in properties and return values and other places that we can't use protocols directly. As you use more protocols in your Swift (and [you should be](https://developer.apple.com/videos/wwdc/2015/?id=408)), I think this will become an important tool in your toolbelt.
 
 So get out there and erase some over-specific types. Focus on the protocol, hide the implementation.
 
