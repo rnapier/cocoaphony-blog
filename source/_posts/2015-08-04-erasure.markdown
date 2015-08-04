@@ -5,7 +5,7 @@ comments: true
 date: 2015-08-04 15:42
 categories: 
 ---
-Once upon a time, when Swift was young, there were a couple of types called `SequenceOf` and `GeneratorOf`, and they could type erase stuff. "Type erase?" you may ask. "I thought we *loved* types." We do. Don't worry. Our types aren't going anywhere. But sometimes we want them to be just a little less...precise. Today we'll talk about the whys and hows.
+Once upon a time, when Swift was young, there were a couple of types called `SequenceOf` and `GeneratorOf`, and they could type erase stuff. "Type erase?" you may ask. "I thought we *loved* types." We do. Don't worry. Our types aren't going anywhere. But sometimes we want them to be a little less...precise.
 
 In Swift 2, our little type erasers got a rename and some friends. Now they're all named "Any"-something. So `SequenceOf` became `AnySequence` and `GeneratorOf` became `AnyGenerator` and there are a gaggle of indexes and collections from `AnyForwardIndex` to `AnyRandomAccessCollection`.
 
@@ -52,7 +52,7 @@ func reverseZip<T,U>(xs: [T], _ ys: [U]) -> AnySequence<(T,U)> {
 
 Now we can keep our implementation details private. If we have some internal sequence type, we don't have to share it with our callers. We just give them what they need and no more.
 
-Notice that `AnySequence` is not a protocol. It's a generic `struct` that wraps another sequence. You can't use an `[Int]` in a place that expects an `AnySequence<Int>`. You still want to use `SequenceType` for your parameters in most cases. `AnySequence` is usually best for return values.
+Notice that `AnySequence` is not a protocol. It's a generic `struct` that wraps another sequence. You can't use an `[Int]` in a place that expects an `AnySequence<Int>`. You still want to use `SequenceType` for parameters in most cases.
 
 These "Any" type erasers also aren't like `Any` and `AnyObject`, which are protocols that just "hide" the type. You can still `as!` them back to their underlying forms. `AnySequence` and its kin completely encapsulate the underlying data. You can't get the original back. This creates a very strong abstraction layer and strengthens type safety by making `as!` casting impossible.
 
@@ -143,6 +143,13 @@ Now we can make `grassEaters`:
 
 ```
 let grassEaters = [AnyAnimal(Cow()), AnyAnimal(Goat())] // Type is [AnyAnimal<Grass>]
+```
+
+But we still get type safety if we try to incorrectly mix our animals:
+
+```
+let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())]
+// error: type of expression is ambiguous without more context
 ```
 
 This kind of type eraser lets us convert a protocol with associated types into a generic type. That means we can put it properties and return values and other places that we can't use protocols directly. As you use more protocols in your Swift (and [you should be](https://developer.apple.com/videos/wwdc/2015/?id=408)), I think this will become an important tool in your toolbelt.
