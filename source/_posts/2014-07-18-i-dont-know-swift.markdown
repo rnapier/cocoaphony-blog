@@ -54,7 +54,7 @@ Swift has come naked into the world. Half-baked. Some parts ill-considered and
 changing dramatically before our eyes. Most of its libraries are still in ObjC,
 C, and C++. It's just the beginning and you're all here. You're those early
 adopters, usually that tiny, almost hand-picked group. But there are thousands
-of you this time, here in the priomordial era.
+of you this time, here in the primordial era.
 
 You can think this is good or bad, but it's definitely a special opportunity. I
 predict with great confidence that Swift will be
@@ -68,7 +68,7 @@ Microsoft had recommended all C# developers move to F#. Apple has made Swift the
 preferred language for one of the most popular platforms in existance. I expect
 they'll follow through with that.
 ["Any evaluation of Swift starts and ends with how well it lets developers build really fantastic iOS and Mac apps."](http://robnapier.net/week-of-swift/)
-I belive Swift meets that criteria even better than ObjC (and I love ObjC). I
+I believe Swift meets that criteria even better than ObjC (and I love ObjC). I
 don't see any reason Apple would back away from Swift now.
 
 So there you go. You're here at the beginning. There is no priesthood. There are
