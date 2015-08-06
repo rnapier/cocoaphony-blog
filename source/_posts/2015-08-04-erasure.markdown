@@ -54,7 +54,7 @@ Now we can keep our implementation details private. If we have some internal seq
 
 Notice that `AnySequence` is not a protocol. It's a generic `struct` that wraps another sequence. You can't use an `[Int]` in a place that expects an `AnySequence<Int>`. You still want to use `SequenceType` for parameters in most cases.
 
-These "Any" type erasers also aren't like `Any` and `AnyObject`, which are protocols that just "hide" the type. You can still `as!` them back to their underlying forms. `AnySequence` and its kin completely encapsulate the underlying data. You can't get the original back. This creates a very strong abstraction layer and strengthens type safety by making `as!` casting impossible.
+These "Any" type erasers also aren't like `Any` and `AnyObject`, which are protocols that just "hide" the type. You can still `as!` an `AnyObject` back to its original type. `AnySequence` and its kin completely encapsulate the underlying data. You can't get the original back. This creates a very strong abstraction layer and strengthens type safety by making `as!` casting impossible.
 
 [The new names worry me a little](http://www.openradar.me/radar?id=5528602095386624) because they make it look like `AnyObject` and `AnySequence` are the same kind of thing when they're not. But the new naming convention is definitely more flexible. You couldn't have named the `AnyIndex` types using the old `...Of` convention. So, I'm getting used to the new names.
 
