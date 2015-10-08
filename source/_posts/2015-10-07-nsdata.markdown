@@ -1,0 +1,148 @@
+---
+layout: post
+title: "NSData, My Old Friend"
+comments: true
+date: 2015-10-07 20:27
+categories:
+---
+
+## Or... "How I learned to stop worrying, and love Foundation."
+
+>Forgive me, NSData. I was running around with that flashy [UInt8], acting like you didn't have everything I need. I've learned my lesson.
+>
+> --- Rob Napier (@cocoaphony) [September 28, 2015](https://twitter.com/cocoaphony/status/648514927678910464)
+
+I did a lot of writing and rewriting of the [Swift version of RNCryptor](https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1). I struggled especially with what type to use for data. I gravitated quickly to `[UInt8]` with all its apparent Swiftiness. But in the end, after many iterations, I refactored back to `NSData`, and I'm really glad I did.
+
+This is the story of why.
+<!-- MORE -->
+
+### In fair frameworks, where we lay our scene
+
+First, I want to be clear that I don't think `[UInt8]` is bad. In some places it's better than `NSData`, but there are tradeoffs, and ultimately I found the tradeoffs favored `NSData` today. Some of those will improve in Future Swift, and I suspect something more Swifty than `NSData` will be the way of the future. But today, in the kinds of projects I work on, there's a lot going for `NSData`.
+
+"In the kinds of projects I work on" is an important caveat. I mostly build things that are used by other developers; frameworks, engines, services, even just snippets of code. I don't build a lot of full applications that an end user would see. And the systems I build typically have a very small API surface. They typically do just one thing, and they're built to be easily clicked together with things that I didn't write.
+
+To achieve that, I try to make most of my code as self-contained as possible, with minimal dependencies. I try to make it easy to plug into whatever system you prefer. That usually means sticking as much as possible to the types provided by the system. Much as I love `Result`, none of my systems use it externally (and only a few use it internally). I try to avoid exposing my caller to any cleverness. If they're familiar with the platform, I want them to find my API obvious, even boring. If they have a preferred error handling system, they probably have a way to convert `throws` to it, since that's what Cocoa generates. So I use `throws`.
+
+### The elephant in the room
+
+I see a lot of Swift devs behaving as though Cocoa has somehow disappeared. Cocoa has become the embarrassing uncle that no one wants to acknowledge, even though he's sitting right there at Thanksgiving dinner passing you the potatoes. And this is crazy. First, Cocoa is a *great* framework, filled with all kinds of tools that we use every day, implemented well and refined for years. And second, Cocoa is a *required* framework, filled with tools that we *have* to use every day if we want to write apps.
+
+Trying to cordon off Cocoa means constantly converting your types and patterns. That's horrible for programs, and it's very unswifty. Swift is all about integrating cleanly with Cocoa.
+
+If you're writing Cocoa apps you wind up with `NSData` all the time. You get it when you read or write files, when you download things from the network, when you creates PNGs, when you serialize. You can't escape `NSData`. Swift automatically bridges `NSString` and `String`, `NSArray` and `Array`, `NSError` and `ErrorType`. Some day I hope [`NSData` gets a bridge](http://www.openradar.me/23010231), but it doesn't have one today. So the question is what to do in the meantime?
+
+There are basically two options: build the bridge or use `NSData`. Building the bridge (without modifying stdlib) is tricky if you want to avoid copying. It's not hard if you're not worried about performance, but an `NSData` can easily be multiple megabytes and that's both time and memory. Even temporary copies raise your high water mark, which hurts the whole system. Yes, I know all about premature optimization, but when you're building frameworks you need to avoid patterns that are reasonably likely to cause performance problems. Even when you're building just one app, there's a difference between "build simply, then optimize" and "throw performance out the window until Apple rejects your app, then optimize." If it were just one copy, and it made everything else really simple, that might be worth discussing. But making a copy every time you move from one part of the system to another is a problem.
+
+With enough work you can solve this problem. It's not tons of code, but it is a little bit tricky to be certain you've done it exactly right and won't leak or crash (and much trickier to do from outside of stdlib). But is that work and complexity worth it? What problems were we really solving converting `NSData` to `[UInt8]`?
+
+### The magic that is `Array`
+
+Even if you don't care about `NSData` interop, using `[UInt8]` doesn't give you a magical unicorn API. `Array` has all kinds of little sharp edges that surprise and confuse if you want to very careful of making copies.
+
+Let's start with a simple function using `NSData` and see what happens with `[UInt8]`. This function takes a `CCCryptorRef` and updates it with some data, writes the resulting encrypted data to a buffer and returns the buffer.
+
+```
+func updateCryptor(cryptor: CCCryptorRef, data: NSData) -> NSData {
+    let outputLength = CCCryptorGetOutputLength(cryptor, data.length, false)
+    let buffer = NSMutableData(length: outputLength)!
+    var dataOutMoved: Int = 0
+
+    let result = CCCryptorUpdate(cryptor,
+        data.bytes, data.length,
+        buffer.mutableBytes, buffer.length,
+        &dataOutMoved)
+    guard result == 0 else { fatalError() }
+
+    buffer.length = dataOutMoved
+    return buffer
+}
+```
+
+No problems there IMO. That's a fine implementation. Easy to read and understand (if you understand `CCCryptorRef`). The `[UInt8]` implementation is about the same. I don't think you could say one is really much cleaner than the other.
+
+```
+func updateCryptor_(cryptor: CCCryptorRef, data: [UInt8]) -> [UInt8] {
+    let outputLength = CCCryptorGetOutputLength(cryptor, data.length, false)
+    var buffer = [UInt8](count: outputLength, repeatedValue: 0)
+    var dataOutMoved: Int = 0
+
+    let result = CCCryptorUpdate(cryptor,
+        data, data.count,
+        &buffer, buffer.count,
+        &dataOutMoved)
+    guard result == 0 else { fatalError() }
+
+    buffer[dataOutMoved..<buffer.endIndex] = []
+    return buffer
+}
+```
+
+But is it correct? Can we be certain that `data` is contiguous memory and isn't really an `NSArray<NSNumber>` under the covers? If it is an `NSArray`, will this work or will we get the wrong data? Should we use `.withUnsafePointer` here? I studied the docs, and talked to several devs (including Apple devs), and in the end am pretty sure that this will always work. But I'm only "pretty sure." And that's only because of kind people at Apple (especially @jckarter) taking time to walk through it with me. Not everyone has that.
+
+This "but is it correct?" came up all over the place. Would this operation cause a copy? Exactly how long is an `UnsafeBufferPointer` valid? There's a lot of bridging magic in `Array`, and it's not always clear what is *promised*. Testing only gets you so far if the current implementation just happens to work. Sometimes behaviors change just by importing Foundation.
+
+I thought I might avoid the Cocoa-bridging ambiguities of `Array` by using `ContiguousArray` instead. That way I could be very precise about my expectations. But it turns out that passing `ContiguousArray` to C behaves very differently than passing `Array`. `Array` gets turned into a pointer to the first element, but `ContiguousArray` gets turned into a pointer to the struct. So the `ContiguousArray` gets corrupted and you crash. `Array` is more magical than you think. Magic is wonderful until your program crashes and you don't know why.
+
+I struggled with copy-on-write behavior. How do I know if an array's buffer is shared so that a copy will happen on mutation? Will this code allocate 10MB or 20MB?
+
+    func makeArray() -> [UInt8] {
+        return Array(count: 10_000_000, repeatedValue: 0)
+    }
+    var array = makeArray() + [1]
+
+What tests would prove that? Is it promised or just the current implementation? Does optimization level matter? Is it the same if `makeArray()` is in another module than the caller? Would small changes in my code lead to dramatic and surprising performance changes in apps that use my framework? This was a common problem in Scala before the `@tailrec` annotation was added. Very small tweaks to a recursive function could cause your stack to explode because you quietly broke tail call optimization. All your unit tests still pass, but the program crashes.
+
+In the end, I spent hours trying to be certain of the precise behaviors of `Array` bridging and copying. And all that to replace `NSData` code that is perfectly fine.
+
+### Slice and dice
+
+When updating the cryptor, it is common that you'll only want some of the data you were passed. You might want to slice off a header, or you might want to chunk the data up to reduce your encryption buffer size. In either case, you want to pass `updateCryptor()` a slice.
+
+For an immutable `NSData` that's easy. Call `.subdataWithRange()` and you get another `NSData` back with no copying.
+
+But the `SubSequence` of `Array` is `ArraySlice`, and `updateCryptor()` doesn't accept that. Of course you can copy your slice into a new `Array`, but unnecessary copying was what we wanted to avoid.
+
+We could make all the functions take `ArraySlice` and overload all the functions with an `Array` interface that forwards to the `ArraySlice` interface. But it's a lot of duplication.
+
+So I decided to just convert everything to `UnsafeBufferPointer` and then pass that around internally. Easier semantics after a one-time conversion. No bridging worries. No unexpected copies. It seemed like a good idea at the time.
+
+The problem is that using `UnsafeBufferPointer` everywhere tends to turn your code inside out. Where you used to say:
+
+    updateCryptor(cryptor, data: data)
+
+You now have to say:
+
+    data.withUnsafeBufferPointer { updateCryptor(cryptor, data: $0) }
+
+Two solutions present themselves. First you decide that you are very clever, and use the `UnsafeBufferPointer` constructor:
+
+    // Never do this
+    updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count))
+
+Then @jckarter points out that by the time `updateCryptor` runs, there's no promise that the `UnsafeBufferPointer` is still valid. ARC could destroy `data` before the statement even completes. (If you know that `data` is life-extended, then it is possible to know this will work, but it's very unsafe, fragile, and hard to audit. Coding that way breaks everything Swift was trying to fix.)
+
+So then you start creating function overloads to accept `Array` and `ArraySlice` and convert them into `UnsafeBufferPointer`, and you have even more duplicated code. And then you realize you want to accept `NSData` here, too, so you write an extension that adds `.withUnsafeBufferPointer()` to `NSData`, and now you have four versions of every function, and you realize you really should use a protocol instead. Brilliant!
+
+```
+protocol BufferType {
+    func withUnsafeBufferPointer<R>(body: (UnsafeBufferPointer<UInt8>) throws -> R) rethrows -> R
+}
+```
+
+This really feels like it'll solve all these problems very elegantly. Except for this one problem. You want `[UInt8]` to be a `BufferType`, but you don't want `[String]` to be a `BufferType`. And then you discover that while you can write extensions that only apply to `[UInt8]`, you can't use those extensions to conform to a protocol. And that's when the screaming starts. And then the barginning, and then the drinking.
+
+When you get to the muttering, you came back and start building a `Buffer` class to wrap `Array`, `ArraySlice`, `NSData`, and even `CollectionType` to give it all a consistent interface. It's ok, but it creates another "thing" for callers to deal with. In almost all cases, they have an `NSData`. There is almost no chance they had a `[UInt8]`. This is all just an extra layer for callers to deal with and to get in the way of the optimizer.
+
+I want to remind you that all of this, all these many, many hours of struggle, were to avoid the simple `NSData` code that took two minutes to write, works great, and is pretty darn Swifty as long as you don't define "Swifty" as "does not import Foundation."
+
+## What's the matter with NSData?
+
+So why did I resist using `NSData` anyway? Well, even though I believe the Foundation is absolutely a part of Swift, some of it isn't *great* Swift. Notably `NSData` isn't a `CollectionType`. But fixing that is [pretty easy](https://gist.github.com/rnapier/da148690af63c401097d).
+
+End-to-end `NSData` also opened up some other opportunities for me, namely `dispatch_data`, which had threatened to be another can of worms with `[UInt8]`.
+
+For some, none of this will matter. The vast majority of my problems come from trying to dodge unnecessary copies. Much of this is very simple if you're willing to just copy the data all over the place. For many kinds of problems, that's fine. Use whatever you like. The copy-on-write system is actually pretty awesome and for most problems you can certainly trust it.
+
+But for those in my situation, where performance is a serious consideration in much of your code, you're looking for predictability as much as speed, and data can be huge, my hope is we get a `Buffer` type (or `Data` or whatever) that acts as a bridge to `NSData`, supports `dispatch_data`, and plays nicely with stdlib. But until that comes, I think `NSData` is just fine.
