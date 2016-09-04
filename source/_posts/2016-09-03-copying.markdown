@@ -1,0 +1,69 @@
+---
+layout: post
+title: "Copying"
+date: 2016-09-03 13:56:14 -0400
+comments: true
+categories: 
+---
+
+I'm on my way back from [try! Swift](http://tryswift.com), which was fantastic. Of course it had those obvious things I'd hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.
+
+I travel pretty well, but sometimes I make mistakes, and this was one of those times. The deodorant I thought I'd packed turned out to be body wash. Now there are a dozen reason that this shouldn't really matter, and wouldn't really matter given the A/C and the weather, etc., but I'm a product of my culture, and it was a bit stressful. I tried to find a drug store on the way to the conference, but I was afraid of being late and finally resigned myself to accepting things as they are and moving on.
+
+And then, in the conference rest room, I discovered a small cache of toiletries under a try! Swift sign saying "if you need one, please take one." I was dumbfounded. It was a very small kindness, but it mattered to me.
+<!--more-->
+I spoke to the conference organizer, [Natasha](https://twitter.com/NatashaTheRobot), to thank her. She immediately told me it wasn't her idea, she'd just copied it from [Erik Romijn](https://twitter.com/erikpub/). I went to thank Erik, and he assured me it wasn't his idea, he'd just copied it from Django conferences he'd been a part of. So I just wanted to say thanks to whomever came up with this very kind idea.
+
+---
+
+To me, the best part of try! Swift was chatting with people during the breaks and in office hours. Hopefully the videos will be up soon, since I missed a few presentations due to conversations that ran long. So if you only "attend" by watching the videos online (like I did for the first one in Tokyo), you'll unfortunately miss the best parts. I wish I could change that for you, but I can't. I'm sorry.
+
+One of the more interesting talks I had was about cut and pasting from Stack Overflow. This practice [gets a lot of shaming](https://www.gitbook.com/book/tra38/essential-copying-and-pasting-from-stack-overflow/details), and we were discussing that. I can't promise that this conversation actually took the form of a Platonic dialog, but I can't promise it didn't, either. You'll have to see me at a conference to find out.
+
+**Anubis:** I've only been programming for a little while. Swift is my first language, and I really don't know anything yet. I find myself just searching Stack Overflow and cutting and pasting code. I know that's a horrible way to program, but I don't know what else to do. Before the Internet, I guess people had to figure it out themselves, but we've all gotten so lazy.
+
+**Kakophonis:** Most of my first years programming were just copying BASIC out of [Nibble magazine](http://www.nibblemagazine.com/Nibble_Magazines.htm).
+
+**Anubis:** You mean reading articles and implementing what they taught?
+
+**Kakophonis:** Oh, no. I mean typing hundreds and hundreds of lines of code for full programs that they included.
+
+**Anubis:** So you didn't really learn much those first few years.
+
+**Kakophonis:** I learned a lot. I learned to use my tools. I learned to debug because I made a lot of typing mistakes. But most of all, I learned what good programs looked like. These were working programs written by good programmers. And I didn't just read their code, I started changing it. Not a lot. I didn't know a lot. But I learned to change the colors, or add a trivial feature, or just make random changes that made me happier with it.
+
+**Anubis:** When did you stop copying other people's code and become a real programmer?
+
+**Kakophonis:** I copy code all the time.
+
+**Anubis:** As a short-cut, right? To make a deadline?
+
+**Kakophonis:** Not at all. I use others' code whenever it's beautiful and useful and they've shared it. But you're right that I copy code a little differently than a beginner does.
+
+**Anubis:** How so?
+
+{% pullquote %}
+**Kakophonis:** I rarely cut and paste. Maybe it's a habit from my magazine days, but {" I usually retype the code by hand. "} Stack Overflow answers aren't very long, and retyping gives me a chance to really think about what the code is doing. And then, if the code works and solves my problem, I usually restyle it to match my preferences and make it a little more my own. I almost always rename things. Sometimes I rewrite it from scratch. I make sure I know what each line does and why it's there.
+{% endpullquote %}
+
+**Anubis:** Is that all?
+
+**Kakophonis:** If the code is more than a line or two, I generally add a comment crediting the source.
+
+**Anubis:** For politeness?
+
+**Kakophonis:** Yes, but more importantly, I want future maintainers, which is sometimes me, to know the context around the code, why it does things this way. That keeps them from creating regression bugs if they ever need to rewrite it further.
+
+**Anubis:** It sounds like you might learn more about programming from copying that way than from doing it yourself.
+
+{% pullquote %}
+**Kakophonis:** Exactly. But copying only improves your code and your understanding if you choose the right things to copy. Many answers on Stack Overflow are incorrect, or they're presented as magic incantations that may work, but are fragile. {" A mark of a good programmer is the ability to distinguish what they should copy from what they shouldn't. "} Stack Overflow provides beginners some clues about quality, like votes and reputation and comments, but ultimately it's experience that will help you recognize good code.
+{% endpullquote %}
+
+**Anubis:** So Stack Overflow doesn't make us weak programmers?
+
+**Kakophonis:** It's a tool. It is what you make of it. Programmers today have many more resources than they did before the Internet. It's easy to think that the previous generations had it much harder. But computers and programs were also much, much simpler. No networking. No threading. Not even a GUI. I'm amazed that anyone is able to jump straight to building an iOS app with no programming experience. I had 25 years of experience before I encountered my first multi-threaded program. No, I don't think beginning programmers today are weak.
+
+---
+
+Sometimes life is not unlikely programming. Who and what we choose to copy says a lot about us. Choosing to use someone's idea is still a choice. Give credit to your inspirations, but don't discount the wisdom in picking something beautiful to copy.
