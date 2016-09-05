@@ -6,7 +6,7 @@ comments: true
 categories: 
 ---
 
-I'm on my way back from [try! Swift](http://tryswift.com), which was fantastic. Of course it had those obvious things I'd hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.
+I'm on my way back from [try! Swift](http://tryswiftnyc.com), which was fantastic. Of course it had those obvious things I'd hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.
 
 I travel pretty well, but sometimes I make mistakes, and this was one of those times. The deodorant I thought I'd packed turned out to be body wash. Now there are a dozen reason that this shouldn't really matter, and wouldn't really matter given the A/C and the weather, etc., but I'm a product of my culture, and it was a bit stressful. I tried to find a drug store on the way to the conference, but I was afraid of being late and finally resigned myself to accepting things as they are and moving on.
 
