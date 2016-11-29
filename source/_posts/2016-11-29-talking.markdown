@@ -1,0 +1,45 @@
+---
+layout: post
+title: "Talking and Teaching"
+date: 2016-11-29 10:35:09 -0500
+comments: true
+categories:
+---
+
+[Pedro Piñera](https://twitter.com/pepibumur) makes some important points in his article [In a world...](http://ppinera.es/2016/11/16/in-a-world.html). There are a number of things in there, and you should go read it, but I want to focus on one part, which is the observation that the core "iOS speaker circle" is a fairly small group of people. Pedro notes:
+
+> There’s a huge difference when you compare a talk from someone that has been working a lot on the topic and from someone that studied the topic for giving a talk. Why do people do it then? Talks with a lot of value usually come from unknown people. From these people that from the anonymity worked on a topic and they achieved something that they were willing to share. ... People don’t care about the company that person had worked for, or the newsletter that the person had written, but instead, what that person wants to share.
+
+While I agree with Pedro's concern, I disagree that this is the proper ideal.
+
+<!--more-->
+
+I've learned more about programming from listening to [Daniel Steinberg](https://twitter.com/dimsumthinking) talk about baking cookies than I have from a dozen talks from intelligent, highly experienced people who don't have his skill for teaching. There are a number of speakers whose sessions I will attend no matter their topic because it'll always be worth the time. I get inspired every time I listen to [Jaimee Newberry](https://twitter.com/jaimeejaimee), even though almost everything about her life and style is different than mine. If I watch [Chris Eidhof](https://twitter.com/chriseidhof) live-code, I know I'm going to see some amazing idea that forces me to rethink something in my code.
+
+I absolutely care who's giving the talk. And if we're going to ask people to spend hours or days of their time and hundreds or thousands of dollars to attend conferences, I think we owe the best we can offer.
+
+But while I disagree with some of Pedro's analysis, he raises a very important point. A community with many teachers and broad sharing is better than one with few teachers and a hierarchical flow of knowledge. How do we improve?[^marginalized]
+
+[^marginalized]: I'm only talking here about whether and how to broaden the number of unique speakers, because I believe this is Pedro's point. I think there's a different, very important discussion about diversity of background and drawing from marginalized groups. What I'm going to discuss can help, but that problem requires and deserves more targeted effort than I'm discussing here.
+
+We should recognize that there's nothing wrong with having a core group of known, skilled speakers who draw a crowd. We should celebrate that. We should grow that group, and we should use them to make things even better.
+
+At dotSwift, Daniel Steinberg reached out to all the speakers and offered assistance refining their talks. Conference organizers should encourage and facilitate that kind of mentorship, and use it to reduce the risks of inexperienced speakers. I hope conference organizers speak to each other and share names of promising speakers whom they didn't have room for. CocoaHeads and other local groups should strive to video their local talks and [make them available](http://cocoaheads.tv). Conference organizers should use those to find and contact promising speakers outside the usual suspects. Local lightning talks have a very low barrier to entry and make an excellent way to get into speaking. Not everyone has a local group, but it's a start.
+
+For those without a local group to video them, I always recommend blogging. Learning to write well is a major part of learning to speak well, and the barrier to entry for blogs is lower. A blog doesn't have to be constantly updated to be helpful. A single, well-written article can be a huge value. This is another important place for conference organizers to search for new speakers, and I think those who are already well known have a duty to amplify lesser-known blogs that are well written and insightful.
+
+To those who want to speak, I'd like to offer a little advice. I'm not a top-tier speaker. I don't get invited to many different conferences (thanks to [CocoaConf](http://cocoaconf.com) for making room for me so often), and most of my CfP submissions are rejected, but I've spoken at 11 conferences over the last 4 years and some of my talks have been very well received, so take my advice for what it's worth, remembering that it comes from someone with a lot of privilege. Not all of it applies easily to marginalized groups, but hopefully it can be of some help.
+
+First, I want to quote Pedro again:
+
+>New announcements from Apple are the perfect source of topics for talks, grabbing it quickly is crucial: Protocol Oriented, Swift Open Source, Extension, Swift in the server… You can build your developer brand around the topic. After a few conferences talking about it, the community will tag you as the expert in the topic X. You might not have worked in a production environment with that new thing, you might not have faced the real use cases and issues, but documentation is perfect to prepare a talk based on it, isn’t it?
+
+Yes! I totally agree with most of this, except that this is *positive*. I take exception to a few points, though. First, "grabbing it quickly" is not crucial. Few people talk about Bluetooth or CoreMotion despite them being around for years. If those interest you, there's plenty of room for new talks. (I sure would love some more on Bluetooth!) Would you be a better speaker if you shipped many production products with them? Of course. But you can still help a lot of people understand what's possible by spending a few months going a little further than most and coming back and teaching. Don't think you have to know everything before you're allowed to say something! Just be honest and don't pretend to know more than you do. There are many topics to explore. [Natalia Berdys](https://twitter.com/batalia) gives a [brilliant talk](https://realm.io/news/tryswift-natalia-berdy-random-talk-consistent-world-noise-swift-gamekit-ios/) on random number generation. You can't get much more niche than that. You don't have to chase the "current cool thing."
+
+I don't know how it is for most speakers, but for me, preparing a talk is very difficult. It took me nearly five months to develop my [talk for try! Swift](https://realm.io/news/tryswift-rob-napier-swift-legacy-functional-programming/). I completely rewrote it four times and practiced it for weeks. I think many speakers are much faster at this than I am, so it may not be so hard for you. But if you find it challenging and find yourself throwing away draft after draft because you can't figure out what you're trying to say, just know you're not alone. If it matters to you, keep at it, and don't be afraid to throw away a draft that isn't working.[^privilege]
+
+[^privilege]: This advice assumes a lot of privilege. I know there are many people who don't have the kind of time I do and don't have the kind of family support I have. I don't know the answer for that. If I didn't have much of the privilege I have, I don't know how I would speak at conferences. Take my advice for what it's worth; it doesn't apply to everyone.
+
+If you want to give a talk, and think I can help you make it better, please reach out. I've critiqued talks before, and I'm happy to keep doing it. (I will start by asking you to evaluate the talk using [Goethe's Three Questions](http://www.slideshare.net/garrets/goethes-three-questions). You have been warned.)
+
+And if you read all this and say "hey, I don't even *want* to give a talk," that is absolutely fine. Most people don't. As anyone who's scheduled CocoaHeads talks before knows, public speaking isn't for everyone and one reason there's a small group who speaks so often is because they're the ones willing to do it. It's hard and it's scary and it's rewarding and it's valuable. And sometimes it's even fun. I hope we can include everyone who wants to be part of it. And I hope there's always a venue for those who want to listen.
