@@ -29,7 +29,7 @@ tags:
 - c++
 - objective-c
 ---
-<em>See [Take 2](/blog/wrapping-c-take-2-1) for an updated approach to this problem.</em>
+<em>See [Take 2](wrapping-c-take-2-1) for an updated approach to this problem.</em>
 
 When faced with mixing C++ and ObjC code, there are two main approaches. One is to just work in Objective-C++ through the entire project. I don't like this approach. I find the mixing of ObjC and C++ classes very confusing, since they cannot be used interchangeably and require completely different memory management. The mix of class hierarchies and naming conventions lead to a lot of confusion when we introduce people to code that does this kind of mixing.
 
