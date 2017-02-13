@@ -22,7 +22,7 @@ I’ve even refactored a C program into a Go program, by turning it into two ind
 
 (So even “we need to switch languages/platforms entirely” doesn’t stop you from evolving towards a goal.)
 
-But there's an exception that Joel doesn’t mention (but I think Martin Fowler does): if you have incredibly *buggy* code, that is, if you *don’t* have working code, then that’s the time to consider a rewrite. Not ugly code. Not badly designed or horrible to work with code. But code that doesn’t actually work, and several attempts to make it work have failed. That’s when a rewrite (at least of those potions) is likely appropriate.
+But there's an exception that Joel doesn’t mention (but I think Martin Fowler does): if you have incredibly *buggy* code, that is, if you *don’t* have working code, then that’s the time to consider a rewrite. Not ugly code. Not badly designed or horrible to work with code. But code that doesn’t actually work, and several attempts to make it work have failed. That’s when a rewrite (at least of those portions) is likely appropriate.
 
 *The discussion then turned to unit testing, and particluarly [Forgotten Refactorings](http://hamletdarcy.blogspot.com/2009/06/forgotten-refactorings.html).*
 
