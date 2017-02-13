@@ -10,7 +10,7 @@ I've been talking with folks on a Slack about refactoring today, and I thought I
 
 <!--more-->
 
-*The conversation started by referencing the class Joel piece, [Things You should Never Do, Part I](https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/). Leading to my thoughts:*
+*The conversation started by referencing the classic Joel piece, [Things You should Never Do, Part I](https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/). Leading to my thoughts:*
 
 Just finished some major refactoring work, moving ObjC to Swift and completely redesigning its state machine. I absolutely stand behind the pieces I rewrote (which were a constant source of subtle race conditions and bugs, with every fix causing two new problems). I absolutely stand behind the pieces that I have delayed rewriting (which are a spaghetti mess, and incredibly difficult to safely modify, but after some minor tweaks are stable enough to leave alone).
 
