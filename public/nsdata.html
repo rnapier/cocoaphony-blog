@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>NSData, My Old Friend - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      NSData, My Old Friend
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+Or&hellip; &ldquo;How I learned to stop worr...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/nsdata">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">NSData, My Old Friend</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2015-10-07T20:27:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Or&hellip; &ldquo;How I learned to stop worrying, and love Foundation.&rdquo;</h2>
+
+<blockquote><p>Forgive me, NSData. I was running around with that flashy [UInt8], acting like you didn&rsquo;t have everything I need. I&rsquo;ve learned my lesson.</p>
+
+<p>&mdash; Rob Napier (@cocoaphony) <a href="https://twitter.com/cocoaphony/status/648514927678910464">September 28, 2015</a></p></blockquote>
+
+<p>I did a lot of writing and rewriting of the <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">Swift version of RNCryptor</a>. I struggled especially with what type to use for data. I gravitated quickly to <code>[UInt8]</code> with all its apparent Swiftiness. But in the end, after many iterations, I refactored back to <code>NSData</code>, and I&rsquo;m really glad I did.</p>
+
+<p>This is the story of why.</p>
+
+<!-- MORE -->
+
+
+<h3>In fair frameworks, where we lay our scene</h3>
+
+<p>First, I want to be clear that I don&rsquo;t think <code>[UInt8]</code> is bad. In some places it&rsquo;s better than <code>NSData</code>, but there are tradeoffs, and ultimately I found the tradeoffs favored <code>NSData</code> today. Some of those will improve in Future Swift, and I suspect something more Swifty than <code>NSData</code> will be the way of the future. But today, in the kinds of projects I work on, there&rsquo;s a lot going for <code>NSData</code>.</p>
+
+<p>&ldquo;In the kinds of projects I work on&rdquo; is an important caveat. I mostly build things that are used by other developers; frameworks, engines, services, even just snippets of code. I don&rsquo;t build a lot of full applications that an end user would see. And the systems I build typically have a very small API surface. They typically do just one thing, and they&rsquo;re built to be easily clicked together with things that I didn&rsquo;t write.</p>
+
+<p>To achieve that, I try to make most of my code as self-contained as possible, with minimal dependencies. I try to make it easy to plug into whatever system you prefer. That usually means sticking as much as possible to the types provided by the system. Much as I love <a href="https://github.com/antitypical/Result"><code>Result</code></a>, none of my systems use it externally (and only a few use it internally). I try to avoid exposing my caller to any cleverness. If they&rsquo;re familiar with the platform, I want them to find my API obvious, even boring. If they have a preferred error handling system, they probably have a way to convert <code>throws</code> to it, since that&rsquo;s what Cocoa generates. So I use <code>throws</code>.</p>
+
+<h3>The elephant in the room</h3>
+
+<p>I see a lot of Swift devs behaving as though Cocoa has somehow disappeared. Cocoa has become the embarrassing uncle that no one wants to acknowledge, even though he&rsquo;s sitting right there at Thanksgiving dinner passing you the potatoes. And this is crazy. First, Cocoa is a <em>great</em> framework, filled with all kinds of tools that we use every day, implemented well and refined for years. And second, Cocoa is a <em>required</em> framework, filled with tools that we <em>have</em> to use every day if we want to write apps.</p>
+
+<p>Trying to cordon off Cocoa means constantly converting your types and patterns. That&rsquo;s horrible for programs, and it&rsquo;s very unswifty. Swift is all about integrating cleanly with Cocoa.</p>
+
+<p>If you&rsquo;re writing Cocoa apps you wind up with <code>NSData</code> all the time. You get it when you read or write files, when you download things from the network, when you create PNGs, when you serialize. You can&rsquo;t escape <code>NSData</code>. Swift automatically bridges <code>NSString</code> and <code>String</code>, <code>NSArray</code> and <code>Array</code>, <code>NSError</code> and <code>ErrorType</code>. Some day I hope <a href="http://www.openradar.me/23010231"><code>NSData</code> gets a bridge</a>, but it doesn&rsquo;t have one today. So the question is what to do in the meantime?</p>
+
+<p>There are basically two options: build the bridge or use <code>NSData</code>. Building the bridge (without modifying stdlib) is tricky if you want to avoid copying. It&rsquo;s not hard if you&rsquo;re not worried about performance, but an <code>NSData</code> can easily be multiple megabytes and that&rsquo;s both time and memory. Even temporary copies raise your high water mark, which hurts the whole system. Yes, I know all about premature optimization, but when you&rsquo;re building frameworks you need to avoid patterns that are reasonably likely to cause performance problems. Even when you&rsquo;re building just one app, there&rsquo;s a difference between &ldquo;build simply, then optimize&rdquo; and &ldquo;throw performance out the window until Apple rejects your app, then optimize.&rdquo; If it were just one copy, and it made everything else really simple, that might be worth discussing. But making a copy every time you move from one part of the system to another is a problem.</p>
+
+<p>With enough work you can solve this problem. It&rsquo;s not tons of code, but it is a little bit tricky to be certain you&rsquo;ve done it exactly right and won&rsquo;t leak or crash (and much trickier to do from outside of stdlib). But is that work and complexity worth it? What problems were we really solving converting <code>NSData</code> to <code>[UInt8]</code>?</p>
+
+<h3>The magic that is <code>Array</code></h3>
+
+<p>Even if you don&rsquo;t care about <code>NSData</code> interop, using <code>[UInt8]</code> doesn&rsquo;t give you a magical unicorn API. <code>Array</code> has all kinds of little sharp edges that surprise and confuse if you want to very careful of making copies.</p>
+
+<p>Let&rsquo;s start with a simple function using <code>NSData</code> and see what happens with <code>[UInt8]</code>. This function takes a <code>CCCryptorRef</code> and updates it with some data, writes the resulting encrypted data to a buffer and returns the buffer.</p>
+
+<pre><code>func updateCryptor(cryptor: CCCryptorRef, data: NSData) -&gt; NSData {
+    let outputLength = CCCryptorGetOutputLength(cryptor, data.length, false)
+    let buffer = NSMutableData(length: outputLength)!
+    var dataOutMoved: Int = 0
+
+    let result = CCCryptorUpdate(cryptor,
+        data.bytes, data.length,
+        buffer.mutableBytes, buffer.length,
+        &amp;dataOutMoved)
+    guard result == 0 else { fatalError() }
+
+    buffer.length = dataOutMoved
+    return buffer
+}
+</code></pre>
+
+<p>No problems there IMO. That&rsquo;s a fine implementation. Easy to read and understand (if you understand <code>CCCryptorRef</code>). The <code>[UInt8]</code> implementation is about the same. I don&rsquo;t think you could say one is really much cleaner than the other.</p>
+
+<pre><code>func updateCryptor_(cryptor: CCCryptorRef, data: [UInt8]) -&gt; [UInt8] {
+    let outputLength = CCCryptorGetOutputLength(cryptor, data.length, false)
+    var buffer = [UInt8](count: outputLength, repeatedValue: 0)
+    var dataOutMoved: Int = 0
+
+    let result = CCCryptorUpdate(cryptor,
+        data, data.count,
+        &amp;buffer, buffer.count,
+        &amp;dataOutMoved)
+    guard result == 0 else { fatalError() }
+
+    buffer[dataOutMoved..&lt;buffer.endIndex] = []
+    return buffer
+}
+</code></pre>
+
+<p>But is it correct? Can we be certain that <code>data</code> is contiguous memory and isn&rsquo;t really an <code>NSArray&lt;NSNumber&gt;</code> under the covers? If it is an <code>NSArray</code>, will this work or will we get the wrong data? Should we use <code>.withUnsafePointer</code> here? I studied the docs, and talked to several devs (including Apple devs), and in the end am pretty sure that this will always work. But I&rsquo;m only &ldquo;pretty sure.&rdquo; And that&rsquo;s only because of kind people at Apple (especially @jckarter) taking time to walk through it with me. Not everyone has that.</p>
+
+<p>This &ldquo;but is it correct?&rdquo; came up all over the place. Would this operation cause a copy? Exactly how long is an <code>UnsafeBufferPointer</code> valid? There&rsquo;s a lot of bridging magic in <code>Array</code>, and it&rsquo;s not always clear what is <em>promised</em>. Testing only gets you so far if the current implementation just happens to work. Sometimes behaviors change just by importing Foundation.</p>
+
+<p>I thought I might avoid the Cocoa-bridging ambiguities of <code>Array</code> by using <code>ContiguousArray</code> instead. That way I could be very precise about my expectations. But it turns out that passing <code>ContiguousArray</code> to C behaves very differently than passing <code>Array</code>. <code>Array</code> gets turned into a pointer to the first element, but <code>ContiguousArray</code> gets turned into a pointer to the struct. So the <code>ContiguousArray</code> gets corrupted and you crash. <code>Array</code> is more magical than you think. Magic is wonderful until your program crashes and you don&rsquo;t know why.</p>
+
+<p>I struggled with copy-on-write behavior. How do I know if an array&rsquo;s buffer is shared so that a copy will happen on mutation? Will this code allocate 10MB or 20MB?</p>
+
+<pre><code>func makeArray() -&gt; [UInt8] {
+    return Array(count: 10_000_000, repeatedValue: 0)
+}
+var array = makeArray() + [1]
+</code></pre>
+
+<p>What tests would prove that? Is it promised or just the current implementation? Does optimization level matter? Is it the same if <code>makeArray()</code> is in another module than the caller? Would small changes in my code lead to dramatic and surprising performance changes in apps that use my framework? This was a common problem in Scala before the <code>@tailrec</code> annotation was added. Very small tweaks to a recursive function could cause your stack to explode because you quietly broke tail call optimization. All your unit tests still pass, but the program crashes.</p>
+
+<p>In the end, I spent hours trying to be certain of the precise behaviors of <code>Array</code> bridging and copying. And all that to replace <code>NSData</code> code that is perfectly fine.</p>
+
+<h3>Slice and dice</h3>
+
+<p>When updating the cryptor, it is common that you&rsquo;ll only want some of the data you were passed. You might want to slice off a header, or you might want to chunk the data up to reduce your encryption buffer size. In either case, you want to pass <code>updateCryptor()</code> a slice.</p>
+
+<p>For an immutable <code>NSData</code> that&rsquo;s easy. Call <code>.subdataWithRange()</code> and you get another <code>NSData</code> back with no copying.</p>
+
+<p>But the <code>SubSequence</code> of <code>Array</code> is <code>ArraySlice</code>, and <code>updateCryptor()</code> doesn&rsquo;t accept that. Of course you can copy your slice into a new <code>Array</code>, but unnecessary copying was what we wanted to avoid.</p>
+
+<p>We could make all the functions take <code>ArraySlice</code> and overload all the functions with an <code>Array</code> interface that forwards to the <code>ArraySlice</code> interface. But it&rsquo;s a lot of duplication.</p>
+
+<p>So I decided to just convert everything to <code>UnsafeBufferPointer</code> and then pass that around internally. Easier semantics after a one-time conversion. No bridging worries. No unexpected copies. It seemed like a good idea at the time.</p>
+
+<p>The problem is that using <code>UnsafeBufferPointer</code> everywhere tends to turn your code inside out. Where you used to say:</p>
+
+<pre><code>updateCryptor(cryptor, data: data)
+</code></pre>
+
+<p>You now have to say:</p>
+
+<pre><code>data.withUnsafeBufferPointer { updateCryptor(cryptor, data: $0) }
+</code></pre>
+
+<p>Two solutions present themselves. First you decide that you are very clever, and use the <code>UnsafeBufferPointer</code> constructor:</p>
+
+<pre><code>// Never do this
+updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count))
+</code></pre>
+
+<p>Then @jckarter points out that by the time <code>updateCryptor</code> runs, there&rsquo;s no promise that the <code>UnsafeBufferPointer</code> is still valid. ARC could destroy <code>data</code> before the statement even completes. (If you know that <code>data</code> is life-extended, then it is possible to know this will work, but it&rsquo;s very unsafe, fragile, and hard to audit. Coding that way breaks everything Swift was trying to fix.)</p>
+
+<p>So then you start creating function overloads to accept <code>Array</code> and <code>ArraySlice</code> and convert them into <code>UnsafeBufferPointer</code>, and you have even more duplicated code. And then you realize you want to accept <code>NSData</code> here, too, so you write an extension that adds <code>.withUnsafeBufferPointer()</code> to <code>NSData</code>, and now you have four versions of every function, and you realize you really should use a protocol instead. Brilliant!</p>
+
+<pre><code>protocol BufferType {
+    func withUnsafeBufferPointer&lt;R&gt;(body: (UnsafeBufferPointer&lt;UInt8&gt;) throws -&gt; R) rethrows -&gt; R
+}
+</code></pre>
+
+<p>This really feels like it&rsquo;ll solve all these problems very elegantly. Except for this one problem. You want <code>[UInt8]</code> to be a <code>BufferType</code>, but you don&rsquo;t want <code>[String]</code> to be a <code>BufferType</code>. And then you discover that while you can write extensions that only apply to <code>[UInt8]</code>, you can&rsquo;t use those extensions to conform to a protocol. And that&rsquo;s when the screaming starts. And then the barginning, and then the drinking.</p>
+
+<p>When you get to the muttering, you came back and start building a <code>Buffer</code> class to wrap <code>Array</code>, <code>ArraySlice</code>, <code>NSData</code>, and even <code>CollectionType</code> to give it all a consistent interface. It&rsquo;s ok, but it creates another &ldquo;thing&rdquo; for callers to deal with. In almost all cases, they have an <code>NSData</code>. There is almost no chance they had a <code>[UInt8]</code>. This is all just an extra layer for callers to deal with and to get in the way of the optimizer.</p>
+
+<p>I want to remind you that all of this, all these many, many hours of struggle, were to avoid the simple <code>NSData</code> code that took two minutes to write, works great, and is pretty darn Swifty as long as you don&rsquo;t define &ldquo;Swifty&rdquo; as &ldquo;does not import Foundation.&rdquo;</p>
+
+<h2>What&rsquo;s the matter with NSData?</h2>
+
+<p>So why did I resist using <code>NSData</code> anyway? Well, even though I believe the Foundation is absolutely a part of Swift, some of it isn&rsquo;t <em>great</em> Swift. Notably <code>NSData</code> isn&rsquo;t a <code>CollectionType</code>. But fixing that is <a href="https://gist.github.com/rnapier/da148690af63c401097d">pretty easy</a>.</p>
+
+<p>End-to-end <code>NSData</code> also opened up some other opportunities for me, namely <code>dispatch_data</code>, which had threatened to be another can of worms with <code>[UInt8]</code>.</p>
+
+<p>For some, none of this will matter. The vast majority of my problems come from trying to dodge unnecessary copies. Much of this is very simple if you&rsquo;re willing to just copy the data all over the place. For many kinds of problems, that&rsquo;s fine. Use whatever you like. The copy-on-write system is actually pretty awesome and for most problems you can certainly trust it.</p>
+
+<p>But for those in my situation, where performance is a serious consideration in much of your code, you&rsquo;re looking for predictability as much as speed, and data can be huge, my hope is we get a <code>Buffer</code> type (or <code>Data</code> or whatever) that acts as a bridge to <code>NSData</code>, supports <code>dispatch_data</code>, and plays nicely with stdlib. But until that comes, I think <code>NSData</code> is just fine.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2015-10-07T20:27:00-04:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/type-erasure-in-stdlib" title="Previous Post: Type-erasure in stdlib">&laquo; Type-erasure in stdlib</a>
+      
+      
+        <a class="basic-alignment right" href="/inspiration" title="Next Post: Inspiration">Inspiration &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

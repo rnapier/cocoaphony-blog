@@ -1,0 +1,8 @@
+<div class="highlight"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">connection:</span><span class="p">(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="nv">connection</span>
+<span class="nf">willSendRequestForAuthenticationChallenge:</span><span class="p">(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="nv">challenge</span> <span class="p">{</span>
+  <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">pathForResource:</span><span class="s">@&quot;mycert&quot;</span>
+                                                   <span class="nl">ofType:</span><span class="s">@&quot;cer&quot;</span><span class="p">];</span>
+  <span class="n">RNPinnedCertValidator</span> <span class="o">*</span><span class="n">validator</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RNPinnedCertValidator</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithCertificatePath:</span><span class="n">path</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">validator</span> <span class="nl">validateChallenge:</span><span class="n">challenge</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>

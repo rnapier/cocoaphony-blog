@@ -1,0 +1,35 @@
+<div class="highlight"><pre><span class="k">@try</span>
+<span class="p">{</span>
+    <span class="n">MailApplication</span> <span class="o">*</span><span class="n">mail</span> <span class="o">=</span> 
+        <span class="p">[</span><span class="n">SBApplication</span> <span class="nl">applicationWithBundleIdentifier:</span><span class="s">@&quot;com.apple.mail&quot;</span><span class="p">];</span>
+    <span class="n">MailOutgoingMessage</span> <span class="o">*</span><span class="n">mailMessage</span> <span class="o">=</span>
+        <span class="p">[[[[</span><span class="n">mail</span> <span class="nl">classForScriptingClass:</span><span class="s">@&quot;outgoing message&quot;</span><span class="p">]</span> <span class="n">alloc</span><span class="p">]</span>
+            <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nl">dictionaryWithObjectsAndKeys:</span>
+                    <span class="s">@&quot;Test outgoing&quot;</span><span class="p">,</span> <span class="s">@&quot;subject&quot;</span><span class="p">,</span>
+                    <span class="s">@&quot;Test body</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="s">@&quot;content&quot;</span><span class="p">,</span>
+                    <span class="nb">nil</span><span class="p">]]</span> <span class="n">autorelease</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">mail</span> <span class="n">outgoingMessages</span><span class="p">]</span> <span class="nl">addObject:</span><span class="n">mailMessage</span><span class="p">];</span>
+
+    <span class="n">MailToRecipient</span> <span class="o">*</span><span class="n">recipient</span> <span class="o">=</span>
+        <span class="p">[[[[</span><span class="n">mail</span> <span class="nl">classForScriptingClass:</span><span class="s">@&quot;to recipient&quot;</span><span class="p">]</span> <span class="n">alloc</span><span class="p">]</span>
+            <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nl">dictionaryWithObjectsAndKeys:</span>
+                    <span class="s">@&quot;Rob Napier&quot;</span><span class="p">,</span> <span class="s">@&quot;name&quot;</span><span class="p">,</span>
+                    <span class="s">@&quot;sb@robnapier.net&quot;</span><span class="p">,</span> <span class="s">@&quot;address&quot;</span><span class="p">,</span>
+                    <span class="nb">nil</span><span class="p">]]</span> <span class="n">autorelease</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">mailMessage</span> <span class="n">toRecipients</span><span class="p">]</span> <span class="nl">addObject:</span><span class="n">recipient</span><span class="p">];</span>
+
+    <span class="n">MailAttachment</span> <span class="o">*</span><span class="n">attachment</span> <span class="o">=</span>
+        <span class="p">[[[[</span><span class="n">mail</span> <span class="nl">classForScriptingClass:</span><span class="s">@&quot;attachment&quot;</span><span class="p">]</span> <span class="n">alloc</span><span class="p">]</span>
+            <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nl">dictionaryWithObjectsAndKeys:</span>
+                    <span class="s">@&quot;/etc/hosts&quot;</span><span class="p">,</span> <span class="s">@&quot;filename&quot;</span><span class="p">,</span>
+                    <span class="nb">nil</span><span class="p">]]</span> <span class="n">autorelease</span><span class="p">];</span>
+    <span class="p">[[[</span><span class="n">mailMessage</span> <span class="n">content</span><span class="p">]</span> <span class="n">paragraphs</span><span class="p">]</span> <span class="nl">addObject:</span><span class="n">attachment</span><span class="p">];</span>
+        
+    <span class="p">[</span><span class="n">mailMessage</span> <span class="nl">setVisible:</span><span class="n">YES</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">mail</span> <span class="n">activate</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">@catch</span> <span class="p">(</span><span class="n">NSException</span> <span class="o">*</span><span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Exception:%@&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>

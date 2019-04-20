@@ -1,0 +1,44 @@
+<div class="highlight"><pre><span class="p">...</span>
+    <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">pathForResource:</span><span class="s">@&quot;www.google.com&quot;</span>
+                                                     <span class="nl">ofType:</span><span class="s">@&quot;cer&quot;</span><span class="p">];</span>
+    <span class="n">NSData</span> <span class="o">*</span><span class="n">certData</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nl">dataWithContentsOfFile:</span><span class="n">path</span>
+                                              <span class="nl">options:</span><span class="mi">0</span>
+                                                <span class="nl">error:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">certData</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Handle error reading</span>
+    <span class="p">}</span>
+    
+    <span class="n">SecCertificateRef</span>
+    <span class="n">certificate</span> <span class="o">=</span> <span class="n">SecCertificateCreateWithData</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="n">__bridge</span> <span class="n">CFDataRef</span><span class="p">)</span><span class="n">certData</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">certificate</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Handle error parsing</span>
+    <span class="p">}</span>
+    
+    <span class="n">self</span><span class="p">.</span><span class="n">anchors</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSArray</span> <span class="nl">arrayWithObject:</span><span class="n">CFBridgingRelease</span><span class="p">(</span><span class="n">certificate</span><span class="p">)];</span>
+<span class="p">...</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">connection:</span><span class="p">(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="n">connection</span>
+<span class="nl">willSendRequestForAuthenticationChallenge:</span><span class="p">(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="n">challenge</span> <span class="p">{</span>
+
+  <span class="n">SecTrustRef</span> <span class="n">trust</span> <span class="o">=</span> <span class="n">challenge</span><span class="p">.</span><span class="n">protectionSpace</span><span class="p">.</span><span class="n">serverTrust</span><span class="p">;</span>
+  
+  <span class="n">SecTrustSetAnchorCertificates</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="p">(</span><span class="n">__bridge</span> <span class="n">CFArrayRef</span><span class="p">)</span><span class="n">self</span><span class="p">.</span><span class="n">anchors</span><span class="p">);</span>
+  <span class="n">SecTrustSetAnchorCertificatesOnly</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="n">true</span><span class="p">);</span>
+  
+  <span class="n">SecTrustResultType</span> <span class="n">result</span><span class="p">;</span>
+  <span class="n">OSStatus</span> <span class="n">status</span> <span class="o">=</span> <span class="n">SecTrustEvaluate</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">errSecSuccess</span> <span class="o">&amp;&amp;</span>
+      <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="n">kSecTrustResultProceed</span> <span class="o">||</span>
+       <span class="n">result</span> <span class="o">==</span> <span class="n">kSecTrustResultUnspecified</span><span class="p">))</span> <span class="p">{</span>
+
+    <span class="n">NSURLCredential</span> <span class="o">*</span><span class="n">cred</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLCredential</span> <span class="nl">credentialForTrust:</span><span class="n">trust</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">challenge</span><span class="p">.</span><span class="n">sender</span> <span class="nl">useCredential:</span><span class="n">cred</span> <span class="nl">forAuthenticationChallenge:</span><span class="n">challenge</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">challenge</span><span class="p">.</span><span class="n">sender</span> <span class="nl">cancelAuthenticationChallenge:</span><span class="n">challenge</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>

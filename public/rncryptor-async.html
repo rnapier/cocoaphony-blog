@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RNCryptor async - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      RNCryptor async
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+I have completed the major work for RNCryptor asyn...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/rncryptor-async">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RNCryptor async</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I&rsquo;ll be documenting this more formally within a few weeks, but here are the high points:</p>
+
+<!-- more -->
+
+
+<p>There are now separate RNCryptor and RNDecryptor objects (as well as RNOpenSSLEncryptor and RNOpenSSLDecryptor).</p>
+
+<p>Aync usage looks like this:</p>
+
+<pre><code>RNEncryptor *encryptor = [[RNEncryptor alloc] initWithSettings:kRNCryptorAES256Settings
+                                                      password:password
+                                                       handler:^(RNCryptor *cryptor, NSData *data) {
+                                                          ...
+                                                       }];
+</code></pre>
+
+<p>You add data using <code>addData:</code>. <code>handler</code> may or may not be called once for every call to <code>addData:</code>. When you are done, you must call <code>finish</code>, at which point, <code>handler</code> will be called one last time. You can check this condition using <code>cryptor.isFinished</code>.</p>
+
+<p>There is still synchronous access such as:</p>
+
+<pre><code>NSData *encryptedData = [RNEncryptor encryptData:data
+                                    withSettings:kRNCryptorAES256Settings
+                                        password:password
+                                           error:&amp;error];
+</code></pre>
+
+<p>I have dropped all the URL, file and stream APIs. Please let me know if you have a general use case where you would like them. I don&rsquo;t mind creating some convenience methods, but the convenience methods in the original interface were becoming too numerous and that complicates testing. Input on this is welcome. I found that many people were either doing very small things where synchronous NSData is good, or they were using <code>NSURLConnection</code>, where you need all the callbacks (to handle redirects, authentication, etc.), so I&rsquo;ve supported those two cases the most.</p>
+
+<p>By default, <code>handler</code> is called on the GCD queue that the cryptor was created on. You can modify this by setting <code>responseQueue</code>.</p>
+
+<p>Input on the API is welcome. I&rsquo;m leaving it on the async branch until people have time to play with a little bit and I have time to document it fully.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    cocoa
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/mode-rncryptor" title="Previous Post: Mode changes for RNCryptor">&laquo; Mode changes for RNCryptor</a>
+      
+      
+        <a class="basic-alignment right" href="/phone-screen" title="Next Post: Phone-screening Cocoa developers">Phone-screening Cocoa developers &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

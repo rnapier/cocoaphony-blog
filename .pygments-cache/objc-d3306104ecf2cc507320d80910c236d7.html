@@ -1,0 +1,7 @@
+<div class="highlight"><pre><span class="n">uint</span> <span class="n">rounds</span> <span class="o">=</span> <span class="n">CCCalibratePBKDF</span><span class="p">(</span><span class="n">kCCPBKDF2</span><span class="p">,</span>
+                               <span class="mi">8</span><span class="p">,</span>   <span class="c1">// Password length</span>
+                               <span class="mi">8</span><span class="p">,</span>   <span class="c1">// Salt length</span>
+                               <span class="n">kCCPRFHmacAlgSHA1</span><span class="p">,</span>
+                               <span class="mi">32</span><span class="p">,</span>  <span class="c1">// Key length</span>
+                               <span class="mi">10</span><span class="p">);</span> <span class="c1">// Miliseconds</span>
+</pre></div>

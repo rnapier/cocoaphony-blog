@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Pinning your SSL Certs - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Pinning your SSL Certs
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+Short version: If you want to pin your SSL ...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/pinning-your-ssl-certs">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Pinning your SSL Certs</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-01-01T15:10:08-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
+
+<p>If your app uses SSL to communicate with your server (and it should), you generally don&rsquo;t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there&rsquo;s certainly no reason to trust the over 200 certificates in iOS 7&rsquo;s root store.</p>
+
+<p>The practice of trusting only your own certificate is called &ldquo;pinning,&rdquo; and I&rsquo;ve discussed it several times at conferences. I then say something like, &ldquo;It&rsquo;s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:&rdquo;</p>
+
+<!-- more -->
+
+
+<pre><code class="objc">...
+    NSError *error = NULL;
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"www.google.com"
+                                                     ofType:@"cer"];
+    NSData *certData = [NSData dataWithContentsOfFile:path
+                                              options:0
+                                                error:&amp;error];
+
+    if (! certData) {
+      // Handle error reading
+    }
+
+    SecCertificateRef
+    certificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)certData);
+
+    if (!certificate) {
+      // Handle error parsing
+    }
+
+    self.anchors = [NSArray arrayWithObject:CFBridgingRelease(certificate)];
+...
+
+- (void)connection:(NSURLConnection *)connection
+willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+
+  SecTrustRef trust = challenge.protectionSpace.serverTrust;
+
+  SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef)self.anchors);
+  SecTrustSetAnchorCertificatesOnly(trust, true);
+
+  SecTrustResultType result;
+  OSStatus status = SecTrustEvaluate(trust, &amp;result);
+  if (status == errSecSuccess &amp;&amp;
+      (result == kSecTrustResultProceed ||
+       result == kSecTrustResultUnspecified)) {
+
+    NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
+    [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
+  }
+  else {
+    [challenge.sender cancelAuthenticationChallenge:challenge];
+  }
+}
+</code></pre>
+
+<p>I mean, really, what could be simpler. OK, maybe it could be simpler. Maybe if it were a little simpler, everyone would do it. So how about this?</p>
+
+<pre><code class="objc">- (void)connection:(NSURLConnection *)connection
+willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+  NSString *path = [[NSBundle mainBundle] pathForResource:@"mycert"
+                                                   ofType:@"cer"];
+  RNPinnedCertValidator *validator = [[RNPinnedCertValidator alloc] initWithCertificatePath:path];
+  [validator validateChallenge:challenge];
+}
+</code></pre>
+
+<p>Is that simple enough? Then go grab <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2014-01-01T15:10:08-05:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    security
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/rncryptor-truncating-passwords" title="Previous Post: RNCryptor: Truncating Passwords">&laquo; RNCryptor: Truncating Passwords</a>
+      
+      
+        <a class="basic-alignment right" href="/renaissance-2014-materials" title="Next Post: Renaissance 2014 Materials">Renaissance 2014 Materials &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

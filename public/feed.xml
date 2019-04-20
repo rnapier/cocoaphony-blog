@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-04-20T14:12:20-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Cocoaphony</title><subtitle>Mac and iOS development with a focus on Swift and functional programming</subtitle><entry><title type="html">A Conditional Breakpoint</title><link href="http://localhost:4000/conditional-breakpoint" rel="alternate" type="text/html" title="A Conditional Breakpoint" /><published>2017-04-23T11:59:20-04:00</published><updated>2017-04-23T11:59:20-04:00</updated><id>http://localhost:4000/conditional-breakpoint</id><content type="html" xml:base="http://localhost:4000/conditional-breakpoint">&lt;p&gt;&lt;a href=&quot;https://twitter.com/jamesdempsey/status/855979622655291392&quot;&gt;I&amp;rsquo;m now a Conditional Breakpoint.&lt;/a&gt; It&amp;rsquo;s been a dream of mine for long time, and it finally happened at &lt;a href=&quot;http://cocoaconf.com/chicago-2017/sessions/breakpoint-jam&quot;&gt;CocoaConf Chicago&lt;/a&gt;. There are folks who have played extensively with &lt;a href=&quot;http://jamesdempsey.net/2013/03/02/introducing-the-breakpoint-jam-at-cocoaconf-chicago/&quot;&gt;James Dempsey&lt;/a&gt;, and those are the Breakpoints. If you&amp;rsquo;ve only played occasionally (even once), you&amp;rsquo;re a Conditional Breakpoint.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+
+&lt;p&gt;Originally, I wasn&amp;rsquo;t comfortable being a full &amp;ldquo;Conditional.&amp;rdquo; I&amp;rsquo;m not much of a guitarist. I can play along reasonably if there&amp;rsquo;s someone to cover my mistakes, and a group probably sounds slightly better with me than without. But listening to me play alone is an act of love and friendship, not something you&amp;rsquo;d do on purpose. So I kind of wanted to be called a &amp;ldquo;Provisional Breakpoint&amp;rdquo; instead. But that was wrong. Someone who&amp;rsquo;s played at a Breakpoint Jam is a Conditional Breakpoint. That&amp;rsquo;s what it means. If you&amp;rsquo;ve done it, you&amp;rsquo;ve earned it.&lt;/p&gt;
+
+&lt;p&gt;Everyone who played guitar that night was a Conditional, but &lt;a href=&quot;https://twitter.com/designatednerd&quot;&gt;Ellen Shapiro&lt;/a&gt; was clearly our leader. She plays with an energy and style that I want to emulate. She&amp;rsquo;s much better than I am, but what I&amp;rsquo;ve played in years, she&amp;rsquo;s played in decades, so maybe that&amp;rsquo;s natural. &lt;a href=&quot;/copying&quot;&gt;Choosing the right people to copy is a worthwhile skill in itself.&lt;/a&gt; There&amp;rsquo;s nothing wrong with being a beginner. There&amp;rsquo;s nothing wrong with learning and flailing and trying again. There&amp;rsquo;s nothing wrong with letting someone mentor you. And there are a lot of ways to mentor. You might not even know when you&amp;rsquo;re doing it.&lt;/p&gt;
+
+&lt;p&gt;When I first asked to play with the Breakpoints a few weeks ago, James said yes, and I immediately panicked a little on the inside, and I asked for the whole setlist so I could practice. And he said sure and sent them. But then he said, you know, it’s fine to just play some of the songs, or even drop out of parts if you’re not up for it. It’s better to have a few songs you’re good at than a bunch you stumble through. And I said yeah, yeah, yeah, I know that. I’m cool. And I did kind of know. But not really. I’d been planning to practice them all and just beat myself up a lot everywhere I stumbled. I needed someone who knows more than me to give me permission to be a beginner, but still let me play. Sometimes you&amp;rsquo;ll never know the impact of a small kindness.&lt;/p&gt;
+
+&lt;p&gt;After the show, &lt;a href=&quot;https://twitter.com/ejknapp&quot;&gt;Eric Knapp&lt;/a&gt; asked me a very useful question. &amp;ldquo;So, that was your dream, and now you&amp;rsquo;ve done it. What&amp;rsquo;s your next dream?&amp;rdquo; It&amp;rsquo;s easy to lose your direction when you get to a destination. If you want to keep growing, your goals have to grow with you. My next goal is to be good enough that I can play alone and you&amp;rsquo;d rather stay than leave, even if you&amp;rsquo;re not my friend. It&amp;rsquo;s what I call &amp;ldquo;a mediocre guitarist.&amp;rdquo; Eric thought it was a good goal, but suggested a more concrete one: Play one song at an open mic night. And he passed on some wisdom he&amp;rsquo;d received and I needed. &amp;ldquo;Don&amp;rsquo;t wait until you&amp;rsquo;re ready. Go play before you&amp;rsquo;re ready. There are lessons you can only learn by doing.&amp;rdquo; Eric has forgotten more about playing than I know (and I don&amp;rsquo;t believe I&amp;rsquo;m exaggerating). It&amp;rsquo;s good advice.&lt;/p&gt;
+
+&lt;p&gt;I talk a bit about learning guitar and make a bit of noise about being a beginner. Some of that is because I love to tell stories, and I hope my stories can help other people. But of course saying &amp;ldquo;I&amp;rsquo;m a beginner&amp;rdquo; lowers expectations and overdone is a cheap way of getting praise. It&amp;rsquo;s a dangerous thing to make too big a deal about. For all my &amp;ldquo;I&amp;rsquo;m a beginner and I&amp;rsquo;m scared,&amp;rdquo; &lt;a href=&quot;https://twitter.com/savinola&quot;&gt;Laura Savino&lt;/a&gt; has been playing guitar for less time than I have, and this &lt;em&gt;wasn&amp;rsquo;t&lt;/em&gt; her first Breakpoint Jam. So sometimes the brave ones don&amp;rsquo;t make as much noise. You have to look or you&amp;rsquo;ll never notice.&lt;/p&gt;
+
+&lt;p&gt;I may just have been lucky so far, but I&amp;rsquo;ve found the guitar community to be incredibly welcoming. James isn&amp;rsquo;t alone in inviting beginners to play, but the Breakpoints has a special history of it. Except for Ellen, the rest of us (Laura, myself, and &lt;a href=&quot;https://twitter.com/kognate&quot;&gt;Josh Smith&lt;/a&gt;) all made our first public performances at Breakpoint Jams. Creating that kind of opportunity is a gift and how you create and sustain a community. If we all &amp;ldquo;only hire the best,&amp;rdquo; where do you think the next generation will grow? Thankfully, James is willing to play with folks who are just trying their best. Are we as willing to develop software the same way?&lt;/p&gt;
+
+&lt;p&gt;There are senior developers and there are junior developers, and there are developers in between. Different people have different experience and skill. You might be a senior developer in one language or platform or style, and just learning another. But there&amp;rsquo;s no point talking about &amp;ldquo;real&amp;rdquo; developers. If you write software and it runs, you&amp;rsquo;re a real developer. That&amp;rsquo;s what it means. You develop software. If you&amp;rsquo;ve done it, you&amp;rsquo;ve earned it.&lt;/p&gt;
+
+&lt;p&gt;And if you develop software in Cocoa, then you really want to listen to &lt;a href=&quot;https://itunes.apple.com/us/album/backtrace/id926558924&quot;&gt;Backtrace&lt;/a&gt;. Hope to see you at the &lt;a href=&quot;http://jamesdempsey.net/splash/jdbp2017&quot;&gt;next show&lt;/a&gt; to benefit &lt;a href=&quot;http://appcamp4girls.com&quot;&gt;App Camp For Girls&lt;/a&gt;!&lt;/p&gt;</content><author><name></name></author><summary type="html">I&amp;rsquo;m now a Conditional Breakpoint. It&amp;rsquo;s been a dream of mine for long time, and it finally happened at CocoaConf Chicago. There are folks who have played extensively with James Dempsey, and those are the Breakpoints. If you&amp;rsquo;ve only played occasionally (even once), you&amp;rsquo;re a Conditional Breakpoint.</summary></entry><entry><title type="html">Refactoring Slow and Steady</title><link href="http://localhost:4000/refactoring" rel="alternate" type="text/html" title="Refactoring Slow and Steady" /><published>2017-02-13T12:21:55-05:00</published><updated>2017-02-13T12:21:55-05:00</updated><id>http://localhost:4000/refactoring</id><content type="html" xml:base="http://localhost:4000/refactoring">&lt;p&gt;I&amp;rsquo;ve been talking with folks on a Slack about refactoring today, and I thought I&amp;rsquo;d put some of my thoughts here. Maybe a little less polished than I&amp;rsquo;d like, but I wanted to get them out of my head and down on &amp;ldquo;paper.&amp;rdquo;&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+
+&lt;p&gt;&lt;em&gt;The conversation started by referencing the classic Joel piece, &lt;a href=&quot;https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/&quot;&gt;Things You should Never Do, Part I&lt;/a&gt;. Leading to my thoughts:&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Just finished some major refactoring work, moving ObjC to Swift and completely redesigning its state machine. I absolutely stand behind the pieces I rewrote (which were a constant source of subtle race conditions and bugs, with every fix causing two new problems). I absolutely stand behind the pieces that I have delayed rewriting (which are a spaghetti mess, and incredibly difficult to safely modify, but after some minor tweaks are stable enough to leave alone).&lt;/p&gt;
+
+&lt;p&gt;&lt;span class='pullquote-right' data-pullquote='I’m a big fan of &amp;#8220;radical refactoring.&amp;#8221;'&gt;
+I’m a big fan of &amp;ldquo;radical refactoring.&amp;rdquo; I’ve refactored several code bases until there was almost nothing left of the original code. But it was done steadily, only doing major rewrites to individual pieces after painstakingly detangling them from the rest of the code (usually over the course of several releases). And at the end, there was always some “ball of mud” part that was a bit crazy, but just worked and didn’t need to be touched that often, so we let it be.
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;I’ve even refactored a C program into a Go program, by turning it into two independent processes that communicated over sockets, and moving bits from one side of the API to the other.&lt;/p&gt;
+
+&lt;p&gt;(So even “we need to switch languages/platforms entirely” doesn’t stop you from evolving towards a goal.)&lt;/p&gt;
+
+&lt;p&gt;But there&amp;rsquo;s an exception that Joel doesn’t mention (but I think Martin Fowler does): if you have incredibly &lt;em&gt;buggy&lt;/em&gt; code, that is, if you &lt;em&gt;don’t&lt;/em&gt; have working code, then that’s the time to consider a rewrite. Not ugly code. Not badly designed or horrible to work with code. But code that doesn’t actually work, and several attempts to make it work have failed. That’s when a rewrite (at least of those portions) is likely appropriate.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The discussion then turned to unit testing, and particluarly &lt;a href=&quot;http://hamletdarcy.blogspot.com/2009/06/forgotten-refactorings.html&quot;&gt;Forgotten Refactorings&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Having had some very successful radical refactors on code without solid unit test coverage, I think it’s worth discussing how that can be done.&lt;/p&gt;
+
+&lt;p&gt;&lt;span class='pullquote-right' data-pullquote='redesigning for testablity will *itself* require massive refactoring without unit tests'&gt;
+First, unit test coverage is absolutely the best first step. That said, sometimes it is impossible in any meaningful way. When all the most likely and common bugs in your system are race conditions and corner cases involving things outside the program (non-trivial networking, bluetooth, version-specific OS interactions, complex animations, etc), I&amp;rsquo;ve found unit tests rapidly become tests of mocks, and not tests of the system. We can debate whether or not it is possible or profitable to redesign your system so it is more testable. I&amp;rsquo;ll even concede that it is and leave arguments about TDD for another day (I&amp;rsquo;m actually a fan of TDD). But redesigning for testablity will &lt;em&gt;itself&lt;/em&gt; require massive refactoring without unit tests (because you can&amp;rsquo;t unit test until you make it testable). Even if you have lots of tests, refactoring often means changing the tests dramatically (which means you&amp;rsquo;re not really testing the same thing). So at &lt;em&gt;some&lt;/em&gt; point, you&amp;rsquo;re going to find yourself needing to refactor without perfect (or even barely sufficient) unit tests. How do you do it?
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Slow down.&lt;/p&gt;
+
+&lt;p&gt;&lt;span class='pullquote-right' data-pullquote='Slow. Down. Expect your refactor to take many releases.'&gt;
+I cannot stress this enough. Slow. Down. Expect your refactor to take many releases. Do a small piece of refactoring, and run it through a full QA cycle (whatever that means for you) and ship it. Do it again and again. My &amp;ldquo;convert a C project to Go&amp;rdquo; project included a release where we just shipped the Go code alongside the C code, without even calling the Go code, just to prove it would install and not break anything. Then we built one, tiny, new feature in the Go code. It was so minor and impacted so few users, we were ready to declare it unsupported if it didn&amp;rsquo;t work. We&amp;rsquo;d been working on the Go code for almost two years before we cut over to it &amp;ldquo;for real&amp;rdquo; (and the vast majority of the code was still in C at that point). But at each step along the way, the system was better, and saner, and more reliable. And at each step along the way, it shipped, and got real field exercise. And we built a lot of tests for it, and we still found bugs that we were unable to build automated tests for. &amp;ldquo;Fails to determine domain on Mac previously joined to AD domain, but then removed, only on OS X prior to 10.8&amp;rdquo; or &amp;ldquo;SMB connection fails to Window 2000 server if username contains space&amp;rdquo; or &amp;ldquo;fails to determine correct IP address on Mac with case-sensitive file system if on Cisco VPN.&amp;rdquo; That kind of stuff.
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Second point that goes along with this is to keep your refactor steps contained. I&amp;rsquo;ve had so many experimental refactor branches that I threw away because they spiraled out of control and touched too many pieces of the system in non-trivial ways. Don&amp;rsquo;t be afraid to throw away several attempts at refactoring until you can get your change focused enough that the risk is contained. Sometimes that means creating &amp;ldquo;firebreaks,&amp;rdquo; an object that wraps the thing you&amp;rsquo;re refactoring and provides the old API for code you don&amp;rsquo;t want to touch yet. Creating a firebreak often starts as just a pass-through that does nothing but call methods on the original. Tedious, but often invaluable. They make it possible to move to your new API piece by piece rather than having to touch half the system in one go.&lt;/p&gt;
+
+&lt;p&gt;I strongly recommend keeping your commits very focused. &amp;ldquo;Rename FooAdapter to Foo&amp;rdquo; should be its own commit. Don&amp;rsquo;t mix it with changes to API. &amp;ldquo;Rename X to Y&amp;rdquo; commits are really easy to code review, even if they touch hundreds of files. But if you also changed logic in there, then it&amp;rsquo;s a monster. Similarly, anything that is an easy win with little risk (like naming things sanely, or moving some duplicated code into a function), do those first and get them into the main code base. That way, when you discover that your ambitious new design is out of control and have to start over, you don&amp;rsquo;t lose your easy wins.&lt;/p&gt;
+
+&lt;p&gt;&lt;span class='pullquote-right' data-pullquote='go slow and steady and keep shipping.'&gt;
+Testing is great. Testing is critical. Testing is necessary. But unit testing is not sufficient. And when there are hundreds of test cases that need to be rewritten, they can be a &lt;em&gt;hindrance&lt;/em&gt; to refactoring. The more important rule in my experience is go slow and steady and keep shipping.
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;And yes. Write your unit tests. We&amp;rsquo;re professionals here.&lt;/p&gt;</content><author><name></name></author><summary type="html">I&amp;rsquo;ve been talking with folks on a Slack about refactoring today, and I thought I&amp;rsquo;d put some of my thoughts here. Maybe a little less polished than I&amp;rsquo;d like, but I wanted to get them out of my head and down on &amp;ldquo;paper.&amp;rdquo;</summary></entry><entry><title type="html">Talking and Teaching</title><link href="http://localhost:4000/talking" rel="alternate" type="text/html" title="Talking and Teaching" /><published>2016-11-29T10:35:09-05:00</published><updated>2016-11-29T10:35:09-05:00</updated><id>http://localhost:4000/talking</id><content type="html" xml:base="http://localhost:4000/talking">&lt;p&gt;&lt;a href=&quot;https://twitter.com/pepibumur&quot;&gt;Pedro Piñera&lt;/a&gt; makes some important points in his article &lt;a href=&quot;http://ppinera.es/2016/11/16/in-a-world.html&quot;&gt;In a world&amp;hellip;&lt;/a&gt;. There are a number of things in there, and you should go read it, but I want to focus on one part, which is the observation that the core &amp;ldquo;iOS speaker circle&amp;rdquo; is a fairly small group of people. Pedro notes:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;There’s a huge difference when you compare a talk from someone that has been working a lot on the topic and from someone that studied the topic for giving a talk. Why do people do it then? Talks with a lot of value usually come from unknown people. From these people that from the anonymity worked on a topic and they achieved something that they were willing to share. &amp;hellip; People don’t care about the company that person had worked for, or the newsletter that the person had written, but instead, what that person wants to share.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;While I agree with Pedro&amp;rsquo;s concern, I disagree that this is the proper ideal.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+
+&lt;p&gt;I&amp;rsquo;ve learned more about programming from listening to &lt;a href=&quot;https://twitter.com/dimsumthinking&quot;&gt;Daniel Steinberg&lt;/a&gt; talk about baking cookies than I have from a dozen talks from intelligent, highly experienced people who don&amp;rsquo;t have his skill for teaching. There are a number of speakers whose sessions I will attend no matter their topic because it&amp;rsquo;ll always be worth the time. I get inspired every time I listen to &lt;a href=&quot;https://twitter.com/jaimeejaimee&quot;&gt;Jaimee Newberry&lt;/a&gt;, even though almost everything about her life and style is different than mine. If I watch &lt;a href=&quot;https://twitter.com/chriseidhof&quot;&gt;Chris Eidhof&lt;/a&gt; live-code, I know I&amp;rsquo;m going to see some amazing idea that forces me to rethink something in my code.&lt;/p&gt;
+
+&lt;p&gt;&lt;span class='pullquote-right' data-pullquote='I absolutely care who&amp;#8217;s giving the talk.'&gt;
+I absolutely care who&amp;rsquo;s giving the talk. And if we&amp;rsquo;re going to ask people to spend hours or days of their time and hundreds or thousands of dollars to attend conferences, I think we owe the best we can offer.
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;But while I disagree with some of Pedro&amp;rsquo;s analysis, he raises a very important point. A community with many teachers and broad sharing is better than one with few teachers and a hierarchical flow of knowledge. How do we improve?&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;We should recognize that there&amp;rsquo;s nothing wrong with having a core group of known, skilled speakers who draw a crowd. We should celebrate that. We should grow that group, and we should use them to make things even better.&lt;/p&gt;
+
+&lt;p&gt;At dotSwift, Daniel Steinberg reached out to all the speakers and offered assistance refining their talks. Conference organizers should encourage and facilitate that kind of mentorship, and use it to reduce the risks of inexperienced speakers. I hope conference organizers speak to each other and share names of promising speakers whom they didn&amp;rsquo;t have room for. CocoaHeads and other local groups should strive to video their local talks and &lt;a href=&quot;http://cocoaheads.tv&quot;&gt;make them available&lt;/a&gt;. Conference organizers should use those to find and contact promising speakers outside the usual suspects. Local lightning talks have a very low barrier to entry and make an excellent way to get into speaking. Not everyone has a local group, but it&amp;rsquo;s a start.&lt;/p&gt;
+
+&lt;p&gt;For those without a local group to video them, I always recommend blogging. Learning to write well is a major part of learning to speak well, and the barrier to entry for blogs is lower. A blog doesn&amp;rsquo;t have to be constantly updated to be helpful. A single, well-written article can be a huge value. This is another important place for conference organizers to search for new speakers, and I think those who are already well known have a duty to amplify lesser-known blogs that are well written and insightful.&lt;/p&gt;
+
+&lt;p&gt;To those who want to speak, I&amp;rsquo;d like to offer a little advice. I&amp;rsquo;m not a top-tier speaker. I don&amp;rsquo;t get invited to many different conferences (thanks to &lt;a href=&quot;http://cocoaconf.com&quot;&gt;CocoaConf&lt;/a&gt; for making room for me so often), and most of my CfP submissions are rejected, but I&amp;rsquo;ve spoken at 11 conferences over the last 4 years and some of my talks have been very well received, so take my advice for what it&amp;rsquo;s worth, remembering that it comes from someone with a lot of privilege. Not all of it applies easily to marginalized groups, but hopefully it can be of some help.&lt;/p&gt;
+
+&lt;p&gt;First, I want to quote Pedro again:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;New announcements from Apple are the perfect source of topics for talks, grabbing it quickly is crucial: Protocol Oriented, Swift Open Source, Extension, Swift in the server… You can build your developer brand around the topic. After a few conferences talking about it, the community will tag you as the expert in the topic X. You might not have worked in a production environment with that new thing, you might not have faced the real use cases and issues, but documentation is perfect to prepare a talk based on it, isn’t it?&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;span class='pullquote-right' data-pullquote='You don&amp;#8217;t have to chase the &amp;#8220;current cool thing.&amp;#8221;'&gt;
+Yes! I totally agree with most of this, except that this is &lt;em&gt;positive&lt;/em&gt;. I take exception to a few points, though. First, &amp;ldquo;grabbing it quickly&amp;rdquo; is not crucial. Few people talk about Bluetooth or CoreMotion despite them being around for years. If those interest you, there&amp;rsquo;s plenty of room for new talks. (I sure would love some more on Bluetooth!) Would you be a better speaker if you shipped many production products with them? Of course. But you can still help a lot of people understand what&amp;rsquo;s possible by spending a few months going a little further than most and coming back and teaching. Don&amp;rsquo;t think you have to know everything before you&amp;rsquo;re allowed to say something! Just be honest and don&amp;rsquo;t pretend to know more than you do. There are many topics to explore. &lt;a href=&quot;https://twitter.com/batalia&quot;&gt;Natalia Berdys&lt;/a&gt; gives a &lt;a href=&quot;https://realm.io/news/tryswift-natalia-berdy-random-talk-consistent-world-noise-swift-gamekit-ios/&quot;&gt;brilliant talk&lt;/a&gt; on random number generation. You can&amp;rsquo;t get much more niche than that. You don&amp;rsquo;t have to chase the &amp;ldquo;current cool thing.&amp;rdquo;
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t know how it is for most speakers, but for me, preparing a talk is very difficult. It took me nearly five months to develop my &lt;a href=&quot;https://realm.io/news/tryswift-rob-napier-swift-legacy-functional-programming/&quot;&gt;talk for try! Swift&lt;/a&gt;. I completely rewrote it four times and practiced it for weeks. I think many speakers are much faster at this than I am, so it may not be so hard for you. But if you find it challenging and find yourself throwing away draft after draft because you can&amp;rsquo;t figure out what you&amp;rsquo;re trying to say, just know you&amp;rsquo;re not alone. If it matters to you, keep at it, and don&amp;rsquo;t be afraid to throw away a draft that isn&amp;rsquo;t working.&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;If you want to give a talk, and think I can help you make it better, please reach out. I&amp;rsquo;ve critiqued talks before, and I&amp;rsquo;m happy to keep doing it. (I will start by asking you to evaluate the talk using &lt;a href=&quot;http://www.slideshare.net/garrets/goethes-three-questions&quot;&gt;Goethe&amp;rsquo;s Three Questions&lt;/a&gt;. You have been warned.)&lt;/p&gt;
+
+&lt;p&gt;And if you read all this and say &amp;ldquo;hey, I don&amp;rsquo;t even &lt;em&gt;want&lt;/em&gt; to give a talk,&amp;rdquo; that is absolutely fine. Most people don&amp;rsquo;t. As anyone who&amp;rsquo;s scheduled CocoaHeads talks before knows, public speaking isn&amp;rsquo;t for everyone and one reason there&amp;rsquo;s a small group who speaks so often is because they&amp;rsquo;re the ones willing to do it. It&amp;rsquo;s hard and it&amp;rsquo;s scary and it&amp;rsquo;s rewarding and it&amp;rsquo;s valuable. And sometimes it&amp;rsquo;s even fun. I hope we can include everyone who wants to be part of it. And I hope there&amp;rsquo;s always a venue for those who want to listen.&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+&lt;hr/&gt;
+&lt;ol&gt;
+&lt;li id=&quot;fn:1&quot;&gt;
+&lt;p&gt;I&amp;rsquo;m only talking here about whether and how to broaden the number of unique speakers, because I believe this is Pedro&amp;rsquo;s point. I think there&amp;rsquo;s a different, very important discussion about diversity of background and drawing from marginalized groups. What I&amp;rsquo;m going to discuss can help, but that problem requires and deserves more targeted effort than I&amp;rsquo;m discussing here.&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn:2&quot;&gt;
+&lt;p&gt;This advice assumes a lot of privilege. I know there are many people who don&amp;rsquo;t have the kind of time I do and don&amp;rsquo;t have the kind of family support I have. I don&amp;rsquo;t know the answer for that. If I didn&amp;rsquo;t have much of the privilege I have, I don&amp;rsquo;t know how I would speak at conferences. Take my advice for what it&amp;rsquo;s worth; it doesn&amp;rsquo;t apply to everyone.&lt;a href=&quot;#fnref:2&quot; rev=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">Pedro Piñera makes some important points in his article In a world&amp;hellip;. There are a number of things in there, and you should go read it, but I want to focus on one part, which is the observation that the core &amp;ldquo;iOS speaker circle&amp;rdquo; is a fairly small group of people. Pedro notes:</summary></entry><entry><title type="html">Copying</title><link href="http://localhost:4000/copying" rel="alternate" type="text/html" title="Copying" /><published>2016-09-03T13:56:14-04:00</published><updated>2016-09-03T13:56:14-04:00</updated><id>http://localhost:4000/copying</id><content type="html" xml:base="http://localhost:4000/copying">&lt;p&gt;I&amp;rsquo;m on my way back from &lt;a href=&quot;http://tryswiftnyc.com&quot;&gt;try! Swift&lt;/a&gt;, which was fantastic. Of course it had those obvious things I&amp;rsquo;d hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.&lt;/p&gt;
+
+&lt;p&gt;I travel pretty well, but sometimes I make mistakes, and this was one of those times. The deodorant I thought I&amp;rsquo;d packed turned out to be body wash. Now there are a dozen reason that this shouldn&amp;rsquo;t really matter, and wouldn&amp;rsquo;t really matter given the A/C and the weather, etc., but I&amp;rsquo;m a product of my culture, and it was a bit stressful. I tried to find a drug store on the way to the conference, but I was afraid of being late and finally resigned myself to accepting things as they are and moving on.&lt;/p&gt;
+
+&lt;p&gt;And then, in the conference rest room, I discovered a small cache of toiletries under a try! Swift sign saying &amp;ldquo;if you need one, please take one.&amp;rdquo; I was dumbfounded. It was a very small kindness, but it mattered to me.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+
+&lt;p&gt;I spoke to the conference organizer, &lt;a href=&quot;https://twitter.com/NatashaTheRobot&quot;&gt;Natasha&lt;/a&gt;, to thank her. She immediately told me it wasn&amp;rsquo;t her idea, she&amp;rsquo;d just copied it from &lt;a href=&quot;https://twitter.com/erikpub/&quot;&gt;Erik Romijn&lt;/a&gt;. I went to thank Erik, and he assured me it wasn&amp;rsquo;t his idea, he&amp;rsquo;d just copied it from Django conferences he&amp;rsquo;d been a part of. So I just wanted to say thanks to whomever came up with this very kind idea.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;To me, the best part of try! Swift was chatting with people during the breaks and in office hours. Hopefully the videos will be up soon, since I missed a few presentations due to conversations that ran long. So if you only &amp;ldquo;attend&amp;rdquo; by watching the videos online (like I did for the first one in Tokyo), you&amp;rsquo;ll unfortunately miss the best parts. I wish I could change that for you, but I can&amp;rsquo;t. I&amp;rsquo;m sorry.&lt;/p&gt;
+
+&lt;p&gt;One of the more interesting talks I had was about cut and pasting from Stack Overflow. This practice &lt;a href=&quot;https://www.gitbook.com/book/tra38/essential-copying-and-pasting-from-stack-overflow/details&quot;&gt;gets a lot of shaming&lt;/a&gt;, and we were discussing that. I can&amp;rsquo;t promise that this conversation actually took the form of a Platonic dialog, but I can&amp;rsquo;t promise it didn&amp;rsquo;t, either. You&amp;rsquo;ll have to see me at a conference to find out.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; I&amp;rsquo;ve only been programming for a little while. Swift is my first language, and I really don&amp;rsquo;t know anything yet. I find myself just searching Stack Overflow and cutting and pasting code. I know that&amp;rsquo;s a horrible way to program, but I don&amp;rsquo;t know what else to do. Before the Internet, I guess people had to figure it out themselves, but we&amp;rsquo;ve all gotten so lazy.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kakophonis:&lt;/strong&gt; Most of my first years programming were just copying BASIC out of &lt;a href=&quot;http://www.nibblemagazine.com/Nibble_Magazines.htm&quot;&gt;Nibble magazine&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; You mean reading articles and implementing what they taught?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kakophonis:&lt;/strong&gt; Oh, no. I mean typing hundreds and hundreds of lines of code for full programs that they included.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; So you didn&amp;rsquo;t really learn much those first few years.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kakophonis:&lt;/strong&gt; I learned a lot. I learned to use my tools. I learned to debug because I made a lot of typing mistakes. But most of all, I learned what good programs looked like. These were working programs written by good programmers. And I didn&amp;rsquo;t just read their code, I started changing it. Not a lot. I didn&amp;rsquo;t know a lot. But I learned to change the colors, or add a trivial feature, or just make random changes that made me happier with it.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; When did you stop copying other people&amp;rsquo;s code and become a real programmer?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kakophonis:&lt;/strong&gt; I copy code all the time.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; As a short-cut, right? To make a deadline?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kakophonis:&lt;/strong&gt; Not at all. I use others' code whenever it&amp;rsquo;s beautiful and useful and they&amp;rsquo;ve shared it. But you&amp;rsquo;re right that I copy code a little differently than a beginner does.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; How so?&lt;/p&gt;
+
+&lt;p&gt;&lt;span class='pullquote-right' data-pullquote='I usually retype the code by hand.'&gt;
+&lt;strong&gt;Kakophonis:&lt;/strong&gt; I rarely cut and paste. Maybe it&amp;rsquo;s a habit from my magazine days, but I usually retype the code by hand. Stack Overflow answers aren&amp;rsquo;t very long, and retyping gives me a chance to really think about what the code is doing. And then, if the code works and solves my problem, I usually restyle it to match my preferences and make it a little more my own. I almost always rename things. Sometimes I rewrite it from scratch. I make sure I know what each line does and why it&amp;rsquo;s there.
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; Is that all?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kakophonis:&lt;/strong&gt; If the code is more than a line or two, I generally add a comment crediting the source.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; For politeness?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kakophonis:&lt;/strong&gt; Yes, but more importantly, I want future maintainers, which is sometimes me, to know the context around the code, why it does things this way. That keeps them from creating regression bugs if they ever need to rewrite it further.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; It sounds like you might learn more about programming from copying that way than from doing it yourself.&lt;/p&gt;
+
+&lt;p&gt;&lt;span class='pullquote-right' data-pullquote='A mark of a good programmer is the ability to distinguish what they should copy from what they shouldn&amp;#8217;t.'&gt;
+&lt;strong&gt;Kakophonis:&lt;/strong&gt; Exactly. But copying only improves your code and your understanding if you choose the right things to copy. Many answers on Stack Overflow are incorrect, or they&amp;rsquo;re presented as magic incantations that may work, but are fragile. A mark of a good programmer is the ability to distinguish what they should copy from what they shouldn&amp;rsquo;t. Stack Overflow provides beginners some clues about quality, like votes and reputation and comments, but ultimately it&amp;rsquo;s experience that will help you recognize good code.
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anubis:&lt;/strong&gt; So Stack Overflow doesn&amp;rsquo;t make us weak programmers?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kakophonis:&lt;/strong&gt; It&amp;rsquo;s a tool. It is what you make of it. Programmers today have many more resources than they did before the Internet. It&amp;rsquo;s easy to think that the previous generations had it much harder. But computers and programs were also much, much simpler. No networking. No threading. Not even a GUI. I&amp;rsquo;m amazed that anyone is able to jump straight to building an iOS app with no programming experience. I had 25 years of experience before I encountered my first multi-threaded program. No, I don&amp;rsquo;t think beginning programmers today are weak.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Sometimes life is not unlike programming. Who and what we choose to copy says a lot about us. Choosing to use someone&amp;rsquo;s idea is still a choice. Give credit to your inspirations, but don&amp;rsquo;t discount the wisdom in picking something beautiful to copy.&lt;/p&gt;</content><author><name></name></author><summary type="html">I&amp;rsquo;m on my way back from try! Swift, which was fantastic. Of course it had those obvious things I&amp;rsquo;d hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.</summary></entry><entry><title type="html">Inspiration</title><link href="http://localhost:4000/inspiration" rel="alternate" type="text/html" title="Inspiration" /><published>2016-08-26T15:46:27-04:00</published><updated>2016-08-26T15:46:27-04:00</updated><id>http://localhost:4000/inspiration</id><content type="html" xml:base="http://localhost:4000/inspiration">&lt;p&gt;As a speaker, writer, and member of our community, &lt;a href=&quot;http://dimsumthinking.com&quot;&gt;Daniel Steinberg&lt;/a&gt; is my inspiration. That&amp;rsquo;s not a secret. If you and I have spent much time talking after a conference, I&amp;rsquo;ve probably mentioned it. It&amp;rsquo;s not the sort of thing you usually say to someone, and I don&amp;rsquo;t think I ever have, but I&amp;rsquo;ve learned a lot from his speaking style, and I constantly try to live up to his standard of kindness. I&amp;rsquo;m not by nature very kind, so if you see me behaving that way, I&amp;rsquo;m likely trying to do what I think Daniel might.&lt;/p&gt;
+
+&lt;p&gt;This isn&amp;rsquo;t to say we&amp;rsquo;re close. We see each other at conferences. We email and tweet. We&amp;rsquo;re members of a community. So of course I have some idealized picture of him in my mind, without all the this and that of a real person. Even so, he inspires me. When my wife, Janet, and I talk about what&amp;rsquo;s ahead for our future, we always talk about Daniel and his wife, Kim. I&amp;rsquo;ve seen them at conferences, traveling together, independent but a team, and I think, hey, we could pull that off when the kids go to school. And Janet and I talk about how to make that work. And we know we only have the shallowest understanding of their real lives, but they inspire us.&lt;/p&gt;
+
+&lt;p&gt;Kim died this week. I didn&amp;rsquo;t know her well. We&amp;rsquo;d met, and she was nice to me. She and Daniel always seemed so &amp;ldquo;together&amp;rdquo; even when they were apart most of the day. Hearing the news unmoored me and scared me and made me think about myself and my family and my plans. And then my heart broke for Daniel.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m not kind by nature. But I&amp;rsquo;m part of a community that is, and part of that is Daniel&amp;rsquo;s influence on us. &lt;a href=&quot;https://twitter.com/designatednerd&quot;&gt;Ellen Shapiro&lt;/a&gt; has been kind and &lt;a href=&quot;http://support.smiletrain.org/site/RedirectHandler?type=goto&amp;amp;key=ios-for-kim&quot;&gt;set up a fund&lt;/a&gt; to let us support SmileTrain, where Daniel and his daughter Maggie have asked us to give in Kim&amp;rsquo;s name. I had never heard of SmileTrain, but it is so perfect. It is kind. And it is practical. It is literally the gift of a smile. It is Daniel and Kim.&lt;/p&gt;</content><author><name></name></author><summary type="html">As a speaker, writer, and member of our community, Daniel Steinberg is my inspiration. That&amp;rsquo;s not a secret. If you and I have spent much time talking after a conference, I&amp;rsquo;ve probably mentioned it. It&amp;rsquo;s not the sort of thing you usually say to someone, and I don&amp;rsquo;t think I ever have, but I&amp;rsquo;ve learned a lot from his speaking style, and I constantly try to live up to his standard of kindness. I&amp;rsquo;m not by nature very kind, so if you see me behaving that way, I&amp;rsquo;m likely trying to do what I think Daniel might.</summary></entry><entry><title type="html">NSData, My Old Friend</title><link href="http://localhost:4000/nsdata" rel="alternate" type="text/html" title="NSData, My Old Friend" /><published>2015-10-07T20:27:00-04:00</published><updated>2015-10-07T20:27:00-04:00</updated><id>http://localhost:4000/nsdata</id><content type="html" xml:base="http://localhost:4000/nsdata">&lt;h2&gt;Or&amp;hellip; &amp;ldquo;How I learned to stop worrying, and love Foundation.&amp;rdquo;&lt;/h2&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Forgive me, NSData. I was running around with that flashy [UInt8], acting like you didn&amp;rsquo;t have everything I need. I&amp;rsquo;ve learned my lesson.&lt;/p&gt;
+
+&lt;p&gt;&amp;mdash; Rob Napier (@cocoaphony) &lt;a href=&quot;https://twitter.com/cocoaphony/status/648514927678910464&quot;&gt;September 28, 2015&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;I did a lot of writing and rewriting of the &lt;a href=&quot;https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1&quot;&gt;Swift version of RNCryptor&lt;/a&gt;. I struggled especially with what type to use for data. I gravitated quickly to &lt;code&gt;[UInt8]&lt;/code&gt; with all its apparent Swiftiness. But in the end, after many iterations, I refactored back to &lt;code&gt;NSData&lt;/code&gt;, and I&amp;rsquo;m really glad I did.&lt;/p&gt;
+
+&lt;p&gt;This is the story of why.&lt;/p&gt;
+
+&lt;!-- MORE --&gt;
+
+
+&lt;h3&gt;In fair frameworks, where we lay our scene&lt;/h3&gt;
+
+&lt;p&gt;First, I want to be clear that I don&amp;rsquo;t think &lt;code&gt;[UInt8]&lt;/code&gt; is bad. In some places it&amp;rsquo;s better than &lt;code&gt;NSData&lt;/code&gt;, but there are tradeoffs, and ultimately I found the tradeoffs favored &lt;code&gt;NSData&lt;/code&gt; today. Some of those will improve in Future Swift, and I suspect something more Swifty than &lt;code&gt;NSData&lt;/code&gt; will be the way of the future. But today, in the kinds of projects I work on, there&amp;rsquo;s a lot going for &lt;code&gt;NSData&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;In the kinds of projects I work on&amp;rdquo; is an important caveat. I mostly build things that are used by other developers; frameworks, engines, services, even just snippets of code. I don&amp;rsquo;t build a lot of full applications that an end user would see. And the systems I build typically have a very small API surface. They typically do just one thing, and they&amp;rsquo;re built to be easily clicked together with things that I didn&amp;rsquo;t write.&lt;/p&gt;
+
+&lt;p&gt;To achieve that, I try to make most of my code as self-contained as possible, with minimal dependencies. I try to make it easy to plug into whatever system you prefer. That usually means sticking as much as possible to the types provided by the system. Much as I love &lt;a href=&quot;https://github.com/antitypical/Result&quot;&gt;&lt;code&gt;Result&lt;/code&gt;&lt;/a&gt;, none of my systems use it externally (and only a few use it internally). I try to avoid exposing my caller to any cleverness. If they&amp;rsquo;re familiar with the platform, I want them to find my API obvious, even boring. If they have a preferred error handling system, they probably have a way to convert &lt;code&gt;throws&lt;/code&gt; to it, since that&amp;rsquo;s what Cocoa generates. So I use &lt;code&gt;throws&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;The elephant in the room&lt;/h3&gt;
+
+&lt;p&gt;I see a lot of Swift devs behaving as though Cocoa has somehow disappeared. Cocoa has become the embarrassing uncle that no one wants to acknowledge, even though he&amp;rsquo;s sitting right there at Thanksgiving dinner passing you the potatoes. And this is crazy. First, Cocoa is a &lt;em&gt;great&lt;/em&gt; framework, filled with all kinds of tools that we use every day, implemented well and refined for years. And second, Cocoa is a &lt;em&gt;required&lt;/em&gt; framework, filled with tools that we &lt;em&gt;have&lt;/em&gt; to use every day if we want to write apps.&lt;/p&gt;
+
+&lt;p&gt;Trying to cordon off Cocoa means constantly converting your types and patterns. That&amp;rsquo;s horrible for programs, and it&amp;rsquo;s very unswifty. Swift is all about integrating cleanly with Cocoa.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re writing Cocoa apps you wind up with &lt;code&gt;NSData&lt;/code&gt; all the time. You get it when you read or write files, when you download things from the network, when you create PNGs, when you serialize. You can&amp;rsquo;t escape &lt;code&gt;NSData&lt;/code&gt;. Swift automatically bridges &lt;code&gt;NSString&lt;/code&gt; and &lt;code&gt;String&lt;/code&gt;, &lt;code&gt;NSArray&lt;/code&gt; and &lt;code&gt;Array&lt;/code&gt;, &lt;code&gt;NSError&lt;/code&gt; and &lt;code&gt;ErrorType&lt;/code&gt;. Some day I hope &lt;a href=&quot;http://www.openradar.me/23010231&quot;&gt;&lt;code&gt;NSData&lt;/code&gt; gets a bridge&lt;/a&gt;, but it doesn&amp;rsquo;t have one today. So the question is what to do in the meantime?&lt;/p&gt;
+
+&lt;p&gt;There are basically two options: build the bridge or use &lt;code&gt;NSData&lt;/code&gt;. Building the bridge (without modifying stdlib) is tricky if you want to avoid copying. It&amp;rsquo;s not hard if you&amp;rsquo;re not worried about performance, but an &lt;code&gt;NSData&lt;/code&gt; can easily be multiple megabytes and that&amp;rsquo;s both time and memory. Even temporary copies raise your high water mark, which hurts the whole system. Yes, I know all about premature optimization, but when you&amp;rsquo;re building frameworks you need to avoid patterns that are reasonably likely to cause performance problems. Even when you&amp;rsquo;re building just one app, there&amp;rsquo;s a difference between &amp;ldquo;build simply, then optimize&amp;rdquo; and &amp;ldquo;throw performance out the window until Apple rejects your app, then optimize.&amp;rdquo; If it were just one copy, and it made everything else really simple, that might be worth discussing. But making a copy every time you move from one part of the system to another is a problem.&lt;/p&gt;
+
+&lt;p&gt;With enough work you can solve this problem. It&amp;rsquo;s not tons of code, but it is a little bit tricky to be certain you&amp;rsquo;ve done it exactly right and won&amp;rsquo;t leak or crash (and much trickier to do from outside of stdlib). But is that work and complexity worth it? What problems were we really solving converting &lt;code&gt;NSData&lt;/code&gt; to &lt;code&gt;[UInt8]&lt;/code&gt;?&lt;/p&gt;
+
+&lt;h3&gt;The magic that is &lt;code&gt;Array&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Even if you don&amp;rsquo;t care about &lt;code&gt;NSData&lt;/code&gt; interop, using &lt;code&gt;[UInt8]&lt;/code&gt; doesn&amp;rsquo;t give you a magical unicorn API. &lt;code&gt;Array&lt;/code&gt; has all kinds of little sharp edges that surprise and confuse if you want to very careful of making copies.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start with a simple function using &lt;code&gt;NSData&lt;/code&gt; and see what happens with &lt;code&gt;[UInt8]&lt;/code&gt;. This function takes a &lt;code&gt;CCCryptorRef&lt;/code&gt; and updates it with some data, writes the resulting encrypted data to a buffer and returns the buffer.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func updateCryptor(cryptor: CCCryptorRef, data: NSData) -&amp;gt; NSData {
+    let outputLength = CCCryptorGetOutputLength(cryptor, data.length, false)
+    let buffer = NSMutableData(length: outputLength)!
+    var dataOutMoved: Int = 0
+
+    let result = CCCryptorUpdate(cryptor,
+        data.bytes, data.length,
+        buffer.mutableBytes, buffer.length,
+        &amp;amp;dataOutMoved)
+    guard result == 0 else { fatalError() }
+
+    buffer.length = dataOutMoved
+    return buffer
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;No problems there IMO. That&amp;rsquo;s a fine implementation. Easy to read and understand (if you understand &lt;code&gt;CCCryptorRef&lt;/code&gt;). The &lt;code&gt;[UInt8]&lt;/code&gt; implementation is about the same. I don&amp;rsquo;t think you could say one is really much cleaner than the other.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func updateCryptor_(cryptor: CCCryptorRef, data: [UInt8]) -&amp;gt; [UInt8] {
+    let outputLength = CCCryptorGetOutputLength(cryptor, data.length, false)
+    var buffer = [UInt8](count: outputLength, repeatedValue: 0)
+    var dataOutMoved: Int = 0
+
+    let result = CCCryptorUpdate(cryptor,
+        data, data.count,
+        &amp;amp;buffer, buffer.count,
+        &amp;amp;dataOutMoved)
+    guard result == 0 else { fatalError() }
+
+    buffer[dataOutMoved..&amp;lt;buffer.endIndex] = []
+    return buffer
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But is it correct? Can we be certain that &lt;code&gt;data&lt;/code&gt; is contiguous memory and isn&amp;rsquo;t really an &lt;code&gt;NSArray&amp;lt;NSNumber&amp;gt;&lt;/code&gt; under the covers? If it is an &lt;code&gt;NSArray&lt;/code&gt;, will this work or will we get the wrong data? Should we use &lt;code&gt;.withUnsafePointer&lt;/code&gt; here? I studied the docs, and talked to several devs (including Apple devs), and in the end am pretty sure that this will always work. But I&amp;rsquo;m only &amp;ldquo;pretty sure.&amp;rdquo; And that&amp;rsquo;s only because of kind people at Apple (especially @jckarter) taking time to walk through it with me. Not everyone has that.&lt;/p&gt;
+
+&lt;p&gt;This &amp;ldquo;but is it correct?&amp;rdquo; came up all over the place. Would this operation cause a copy? Exactly how long is an &lt;code&gt;UnsafeBufferPointer&lt;/code&gt; valid? There&amp;rsquo;s a lot of bridging magic in &lt;code&gt;Array&lt;/code&gt;, and it&amp;rsquo;s not always clear what is &lt;em&gt;promised&lt;/em&gt;. Testing only gets you so far if the current implementation just happens to work. Sometimes behaviors change just by importing Foundation.&lt;/p&gt;
+
+&lt;p&gt;I thought I might avoid the Cocoa-bridging ambiguities of &lt;code&gt;Array&lt;/code&gt; by using &lt;code&gt;ContiguousArray&lt;/code&gt; instead. That way I could be very precise about my expectations. But it turns out that passing &lt;code&gt;ContiguousArray&lt;/code&gt; to C behaves very differently than passing &lt;code&gt;Array&lt;/code&gt;. &lt;code&gt;Array&lt;/code&gt; gets turned into a pointer to the first element, but &lt;code&gt;ContiguousArray&lt;/code&gt; gets turned into a pointer to the struct. So the &lt;code&gt;ContiguousArray&lt;/code&gt; gets corrupted and you crash. &lt;code&gt;Array&lt;/code&gt; is more magical than you think. Magic is wonderful until your program crashes and you don&amp;rsquo;t know why.&lt;/p&gt;
+
+&lt;p&gt;I struggled with copy-on-write behavior. How do I know if an array&amp;rsquo;s buffer is shared so that a copy will happen on mutation? Will this code allocate 10MB or 20MB?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func makeArray() -&amp;gt; [UInt8] {
+    return Array(count: 10_000_000, repeatedValue: 0)
+}
+var array = makeArray() + [1]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What tests would prove that? Is it promised or just the current implementation? Does optimization level matter? Is it the same if &lt;code&gt;makeArray()&lt;/code&gt; is in another module than the caller? Would small changes in my code lead to dramatic and surprising performance changes in apps that use my framework? This was a common problem in Scala before the &lt;code&gt;@tailrec&lt;/code&gt; annotation was added. Very small tweaks to a recursive function could cause your stack to explode because you quietly broke tail call optimization. All your unit tests still pass, but the program crashes.&lt;/p&gt;
+
+&lt;p&gt;In the end, I spent hours trying to be certain of the precise behaviors of &lt;code&gt;Array&lt;/code&gt; bridging and copying. And all that to replace &lt;code&gt;NSData&lt;/code&gt; code that is perfectly fine.&lt;/p&gt;
+
+&lt;h3&gt;Slice and dice&lt;/h3&gt;
+
+&lt;p&gt;When updating the cryptor, it is common that you&amp;rsquo;ll only want some of the data you were passed. You might want to slice off a header, or you might want to chunk the data up to reduce your encryption buffer size. In either case, you want to pass &lt;code&gt;updateCryptor()&lt;/code&gt; a slice.&lt;/p&gt;
+
+&lt;p&gt;For an immutable &lt;code&gt;NSData&lt;/code&gt; that&amp;rsquo;s easy. Call &lt;code&gt;.subdataWithRange()&lt;/code&gt; and you get another &lt;code&gt;NSData&lt;/code&gt; back with no copying.&lt;/p&gt;
+
+&lt;p&gt;But the &lt;code&gt;SubSequence&lt;/code&gt; of &lt;code&gt;Array&lt;/code&gt; is &lt;code&gt;ArraySlice&lt;/code&gt;, and &lt;code&gt;updateCryptor()&lt;/code&gt; doesn&amp;rsquo;t accept that. Of course you can copy your slice into a new &lt;code&gt;Array&lt;/code&gt;, but unnecessary copying was what we wanted to avoid.&lt;/p&gt;
+
+&lt;p&gt;We could make all the functions take &lt;code&gt;ArraySlice&lt;/code&gt; and overload all the functions with an &lt;code&gt;Array&lt;/code&gt; interface that forwards to the &lt;code&gt;ArraySlice&lt;/code&gt; interface. But it&amp;rsquo;s a lot of duplication.&lt;/p&gt;
+
+&lt;p&gt;So I decided to just convert everything to &lt;code&gt;UnsafeBufferPointer&lt;/code&gt; and then pass that around internally. Easier semantics after a one-time conversion. No bridging worries. No unexpected copies. It seemed like a good idea at the time.&lt;/p&gt;
+
+&lt;p&gt;The problem is that using &lt;code&gt;UnsafeBufferPointer&lt;/code&gt; everywhere tends to turn your code inside out. Where you used to say:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;updateCryptor(cryptor, data: data)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You now have to say:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;data.withUnsafeBufferPointer { updateCryptor(cryptor, data: $0) }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Two solutions present themselves. First you decide that you are very clever, and use the &lt;code&gt;UnsafeBufferPointer&lt;/code&gt; constructor:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Never do this
+updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then @jckarter points out that by the time &lt;code&gt;updateCryptor&lt;/code&gt; runs, there&amp;rsquo;s no promise that the &lt;code&gt;UnsafeBufferPointer&lt;/code&gt; is still valid. ARC could destroy &lt;code&gt;data&lt;/code&gt; before the statement even completes. (If you know that &lt;code&gt;data&lt;/code&gt; is life-extended, then it is possible to know this will work, but it&amp;rsquo;s very unsafe, fragile, and hard to audit. Coding that way breaks everything Swift was trying to fix.)&lt;/p&gt;
+
+&lt;p&gt;So then you start creating function overloads to accept &lt;code&gt;Array&lt;/code&gt; and &lt;code&gt;ArraySlice&lt;/code&gt; and convert them into &lt;code&gt;UnsafeBufferPointer&lt;/code&gt;, and you have even more duplicated code. And then you realize you want to accept &lt;code&gt;NSData&lt;/code&gt; here, too, so you write an extension that adds &lt;code&gt;.withUnsafeBufferPointer()&lt;/code&gt; to &lt;code&gt;NSData&lt;/code&gt;, and now you have four versions of every function, and you realize you really should use a protocol instead. Brilliant!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protocol BufferType {
+    func withUnsafeBufferPointer&amp;lt;R&amp;gt;(body: (UnsafeBufferPointer&amp;lt;UInt8&amp;gt;) throws -&amp;gt; R) rethrows -&amp;gt; R
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This really feels like it&amp;rsquo;ll solve all these problems very elegantly. Except for this one problem. You want &lt;code&gt;[UInt8]&lt;/code&gt; to be a &lt;code&gt;BufferType&lt;/code&gt;, but you don&amp;rsquo;t want &lt;code&gt;[String]&lt;/code&gt; to be a &lt;code&gt;BufferType&lt;/code&gt;. And then you discover that while you can write extensions that only apply to &lt;code&gt;[UInt8]&lt;/code&gt;, you can&amp;rsquo;t use those extensions to conform to a protocol. And that&amp;rsquo;s when the screaming starts. And then the barginning, and then the drinking.&lt;/p&gt;
+
+&lt;p&gt;When you get to the muttering, you came back and start building a &lt;code&gt;Buffer&lt;/code&gt; class to wrap &lt;code&gt;Array&lt;/code&gt;, &lt;code&gt;ArraySlice&lt;/code&gt;, &lt;code&gt;NSData&lt;/code&gt;, and even &lt;code&gt;CollectionType&lt;/code&gt; to give it all a consistent interface. It&amp;rsquo;s ok, but it creates another &amp;ldquo;thing&amp;rdquo; for callers to deal with. In almost all cases, they have an &lt;code&gt;NSData&lt;/code&gt;. There is almost no chance they had a &lt;code&gt;[UInt8]&lt;/code&gt;. This is all just an extra layer for callers to deal with and to get in the way of the optimizer.&lt;/p&gt;
+
+&lt;p&gt;I want to remind you that all of this, all these many, many hours of struggle, were to avoid the simple &lt;code&gt;NSData&lt;/code&gt; code that took two minutes to write, works great, and is pretty darn Swifty as long as you don&amp;rsquo;t define &amp;ldquo;Swifty&amp;rdquo; as &amp;ldquo;does not import Foundation.&amp;rdquo;&lt;/p&gt;
+
+&lt;h2&gt;What&amp;rsquo;s the matter with NSData?&lt;/h2&gt;
+
+&lt;p&gt;So why did I resist using &lt;code&gt;NSData&lt;/code&gt; anyway? Well, even though I believe the Foundation is absolutely a part of Swift, some of it isn&amp;rsquo;t &lt;em&gt;great&lt;/em&gt; Swift. Notably &lt;code&gt;NSData&lt;/code&gt; isn&amp;rsquo;t a &lt;code&gt;CollectionType&lt;/code&gt;. But fixing that is &lt;a href=&quot;https://gist.github.com/rnapier/da148690af63c401097d&quot;&gt;pretty easy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;End-to-end &lt;code&gt;NSData&lt;/code&gt; also opened up some other opportunities for me, namely &lt;code&gt;dispatch_data&lt;/code&gt;, which had threatened to be another can of worms with &lt;code&gt;[UInt8]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;For some, none of this will matter. The vast majority of my problems come from trying to dodge unnecessary copies. Much of this is very simple if you&amp;rsquo;re willing to just copy the data all over the place. For many kinds of problems, that&amp;rsquo;s fine. Use whatever you like. The copy-on-write system is actually pretty awesome and for most problems you can certainly trust it.&lt;/p&gt;
+
+&lt;p&gt;But for those in my situation, where performance is a serious consideration in much of your code, you&amp;rsquo;re looking for predictability as much as speed, and data can be huge, my hope is we get a &lt;code&gt;Buffer&lt;/code&gt; type (or &lt;code&gt;Data&lt;/code&gt; or whatever) that acts as a bridge to &lt;code&gt;NSData&lt;/code&gt;, supports &lt;code&gt;dispatch_data&lt;/code&gt;, and plays nicely with stdlib. But until that comes, I think &lt;code&gt;NSData&lt;/code&gt; is just fine.&lt;/p&gt;</content><author><name></name></author><summary type="html">Or&amp;hellip; &amp;ldquo;How I learned to stop worrying, and love Foundation.&amp;rdquo;</summary></entry><entry><title type="html">Type-erasure in stdlib</title><link href="http://localhost:4000/type-erasure-in-stdlib" rel="alternate" type="text/html" title="Type-erasure in stdlib" /><published>2015-10-06T19:05:13-04:00</published><updated>2015-10-06T19:05:13-04:00</updated><id>http://localhost:4000/type-erasure-in-stdlib</id><content type="html" xml:base="http://localhost:4000/type-erasure-in-stdlib">&lt;p&gt;When &lt;a href=&quot;http://robnapier.net/erasure&quot;&gt;last we talked about type erasure&lt;/a&gt;, I described an easy way to build type erasures using closures. And I mentioned:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;(While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;At the time I thought I&amp;rsquo;d pretty well nailed it down, but every time I dug into it I found another little thing I&amp;rsquo;d missed, and it never seemed to end. And with stdlib open sourcing soon, you&amp;rsquo;ll all just be able to read this yourselves, so why embarrass myself getting it all wrong? Over time I kind of hoped you all had forgotten that comment and planned to move on to other things. But then I was &lt;a href=&quot;https://twitter.com/My_kl/status/650796108789219328&quot;&gt;busted by Michael Welch&lt;/a&gt;, and so I had to finish the spelunking and here you go.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+
+&lt;p&gt;So, &lt;a href=&quot;https://github.com/rnapier/MyAnySequence&quot;&gt;here&lt;/a&gt; is my annotated implementation of &lt;code&gt;AnyGenerator&lt;/code&gt; and &lt;code&gt;AnySequence&lt;/code&gt; that I believe pretty closely matches Apple&amp;rsquo;s implementation in stdlib (minus some low-level optimizations in &lt;code&gt;AnySequence&lt;/code&gt; that I&amp;rsquo;ll call out when we get there). I&amp;rsquo;ve named my versions of public symbols with a trailing underscore to differentiate from the Swift version. For private symbols (with leading underscore), I&amp;rsquo;ve used the same name Swift does.&lt;/p&gt;
+
+&lt;p&gt;All type information was determined using &lt;code&gt;:type lookup&lt;/code&gt; in the Swift REPL. In a few places I checked the implementation with Hopper, but in most cases, once you have the types, the implementation is obvious. (There&amp;rsquo;s a deep lesson in there if you pay attention.)&lt;/p&gt;</content><author><name></name></author><summary type="html">When last we talked about type erasure, I described an easy way to build type erasures using closures. And I mentioned:</summary></entry><entry><title type="html">RNCryptor v4</title><link href="http://localhost:4000/rncryptor-v4" rel="alternate" type="text/html" title="RNCryptor v4" /><published>2015-10-04T12:38:36-04:00</published><updated>2015-10-04T12:38:36-04:00</updated><id>http://localhost:4000/rncryptor-v4</id><content type="html" xml:base="http://localhost:4000/rncryptor-v4">&lt;p&gt;After months of writing and rewriting, I am happy to finally announce &lt;a href=&quot;https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1&quot;&gt;RNCryptor 4 beta 1&lt;/a&gt; in Swift.&lt;/p&gt;
+
+&lt;p&gt;RNCryptor 4 is a complete rewrite of RNCryptor for Swift 2 with full bridging support to Objective-C. It has a streamlined API, simpler installation, and improved internals. It continues to use the &lt;a href=&quot;https://github.com/RNCryptor/RNCryptor-Spec/blob/master/RNCryptor-Spec-v3.md&quot;&gt;v3 data format&lt;/a&gt; and is fully interoperable with &lt;a href=&quot;https://github.com/RNCryptor&quot;&gt;other RNCryptor implementations&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+
+&lt;p&gt;For users desiring a fully Objective-C solution, &lt;a href=&quot;https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-3.0.1&quot;&gt;v3&lt;/a&gt; is still available. I don&amp;rsquo;t currently plan to do significant new work on v3, but will consider it if there is strong interest. Going forward, I expect most OS X and iOS projects to be able to accept a mix of ObjC and Swift code. Objective-C continues to be a fully supported language in RNCryptor 4.&lt;/p&gt;
+
+&lt;p&gt;I plan to convert this to a final release in a week or so if no major issues are discovered.&lt;/p&gt;
+
+&lt;p&gt;I now move onto:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Continuing to prepare for &lt;a href=&quot;http://www.dotswift.io&quot;&gt;dotSwift&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Getting back to the blog.&lt;/li&gt;
+&lt;li&gt;RNCryptor v5, which will finally update the data format to improve performance, security, and robustness. Much of the v4 design was specifically to make v5 easier to write.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">After months of writing and rewriting, I am happy to finally announce RNCryptor 4 beta 1 in Swift.</summary></entry><entry><title type="html">A Little Respect for AnySequence</title><link href="http://localhost:4000/erasure" rel="alternate" type="text/html" title="A Little Respect for AnySequence" /><published>2015-08-04T15:42:00-04:00</published><updated>2015-08-04T15:42:00-04:00</updated><id>http://localhost:4000/erasure</id><content type="html" xml:base="http://localhost:4000/erasure">&lt;p&gt;Once upon a time, when Swift was young, there were a couple of types called &lt;code&gt;SequenceOf&lt;/code&gt; and &lt;code&gt;GeneratorOf&lt;/code&gt;, and they could type erase stuff. &amp;ldquo;Type erase?&amp;rdquo; you may ask. &amp;ldquo;I thought we &lt;em&gt;loved&lt;/em&gt; types.&amp;rdquo; We do. Don&amp;rsquo;t worry. Our types aren&amp;rsquo;t going anywhere. But sometimes we want them to be a little less&amp;hellip;precise.&lt;/p&gt;
+
+&lt;p&gt;In Swift 2, our little type erasers got a rename and some friends. Now they&amp;rsquo;re all named &amp;ldquo;Any&amp;rdquo;-something. So &lt;code&gt;SequenceOf&lt;/code&gt; became &lt;code&gt;AnySequence&lt;/code&gt; and &lt;code&gt;GeneratorOf&lt;/code&gt; became &lt;code&gt;AnyGenerator&lt;/code&gt; and there are a gaggle of indexes and collections from &lt;code&gt;AnyForwardIndex&lt;/code&gt; to &lt;code&gt;AnyRandomAccessCollection&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;So what are these type erasers? Let&amp;rsquo;s start with how to use one and we&amp;rsquo;ll work backwards to why.&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;let seq = AnySequence([1,2,3])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This creates an &lt;code&gt;AnySequence&amp;lt;Int&amp;gt;&lt;/code&gt;. It&amp;rsquo;s just a sequence of Ints that we can iterate over. Isn&amp;rsquo;t &lt;code&gt;[1,2,3]&lt;/code&gt; also a sequence of Ints we can iterate over? Well, yeah. But it&amp;rsquo;s also explicitly an Array. And sometimes you don&amp;rsquo;t want to have to deal with that kind of implementation detail.&lt;/p&gt;
+
+&lt;h2&gt;Who Needs Types Like That?&lt;/h2&gt;
+
+&lt;p&gt; Let&amp;rsquo;s consider a little more complicated case:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;let xs = [1,2,3]
+let ys = [&quot;A&quot;,&quot;B&quot;,&quot;C&quot;]
+let zs = zip(xs.reverse(), ys.reverse())
+// Zip2Sequence&amp;lt;ReverseRandomAccessCollection&amp;lt;Array&amp;lt;Int&amp;gt;&amp;gt;, ReverseRandomAccessCollection&amp;lt;Array&amp;lt;String&amp;gt;&amp;gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s quite a type. Imagine it as the return type of a function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func reverseZip&amp;lt;T,U&amp;gt;(xs: [T], _ ys: [U]) -&amp;gt; Zip2Sequence&amp;lt;ReverseRandomAccessCollection&amp;lt;[T]&amp;gt;, ReverseRandomAccessCollection&amp;lt;[U]&amp;gt;&amp;gt; {
+  return zip(xs.reverse(), ys.reverse())
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s insane. Let&amp;rsquo;s not do that. Not only is the type overwhelming, but it ties us to this particular implementation. We might want to refactor the code like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  return zip(xs, ys).reverse()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then the return type would change to &lt;code&gt;[(T,U)]&lt;/code&gt; and all the callers would have to be updated. Clearly we&amp;rsquo;re leaking too much information about our implementation. What&amp;rsquo;s the point of &lt;code&gt;reverseZip&lt;/code&gt;? Is it to return a &lt;code&gt;Zip2Sequence&amp;lt;...&amp;gt;&lt;/code&gt;? No. It&amp;rsquo;s to return a sequence of tuples. We want a type that means &amp;ldquo;a sequence of tuples.&amp;rdquo; Often we use &lt;code&gt;Array&lt;/code&gt; for that, but there&amp;rsquo;s an even less restrictive way that doesn&amp;rsquo;t require making an extra copy: &lt;code&gt;AnySequence&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func reverseZip&amp;lt;T,U&amp;gt;(xs: [T], _ ys: [U]) -&amp;gt; AnySequence&amp;lt;(T,U)&amp;gt; {
+    return AnySequence(zip(xs, ys).reverse())
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can keep our implementation details private. If we have some internal sequence type, we don&amp;rsquo;t have to share it with our callers. We just give them what they need and no more.&lt;/p&gt;
+
+&lt;p&gt;Notice that &lt;code&gt;AnySequence&lt;/code&gt; is not a protocol. It&amp;rsquo;s a generic &lt;code&gt;struct&lt;/code&gt; that wraps another sequence. You can&amp;rsquo;t use an &lt;code&gt;[Int]&lt;/code&gt; in a place that expects an &lt;code&gt;AnySequence&amp;lt;Int&amp;gt;&lt;/code&gt;. You still want to use &lt;code&gt;SequenceType&lt;/code&gt; for parameters in most cases.&lt;/p&gt;
+
+&lt;p&gt;These &amp;ldquo;Any&amp;rdquo; type erasers also aren&amp;rsquo;t like &lt;code&gt;Any&lt;/code&gt; and &lt;code&gt;AnyObject&lt;/code&gt;, which are protocols that just &amp;ldquo;hide&amp;rdquo; the type. You can still &lt;code&gt;as!&lt;/code&gt; an &lt;code&gt;AnyObject&lt;/code&gt; back to its original type. &lt;code&gt;AnySequence&lt;/code&gt; and its kin completely encapsulate the underlying data. You can&amp;rsquo;t get the original back. This creates a very strong abstraction layer and strengthens type safety by making &lt;code&gt;as!&lt;/code&gt; casting impossible.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.openradar.me/radar?id=5528602095386624&quot;&gt;The new names worry me a little&lt;/a&gt; because they make it look like &lt;code&gt;AnyObject&lt;/code&gt; and &lt;code&gt;AnySequence&lt;/code&gt; are the same kind of thing when they&amp;rsquo;re not. But the new naming convention is definitely more flexible. You couldn&amp;rsquo;t have named the &lt;code&gt;AnyIndex&lt;/code&gt; types using the old &lt;code&gt;...Of&lt;/code&gt; convention. So, I&amp;rsquo;m getting used to the new names.&lt;/p&gt;
+
+&lt;h2&gt;Chains of Association&lt;/h2&gt;
+
+&lt;p&gt;Hopefully by now you&amp;rsquo;re sold on why you&amp;rsquo;d want to use a type eraser. But would you ever want to build one? Let&amp;rsquo;s look at an example that comes up pretty often around associated types in protocols.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// An Animal can eat
+protocol Animal {
+    typealias Food
+    func feed(food: Food)
+}
+
+// Kinds of Food
+struct Grass {}
+struct Worm {}
+
+struct Cow: Animal {
+    func feed(food: Grass) { print(&quot;moo&quot;) }
+}
+
+struct Goat: Animal {
+    func feed(food: Grass) { print(&quot;bah&quot;) }
+}
+
+struct Bird: Animal {
+    func feed(food: Worm) { print(&quot;chirp&quot;) }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So now let&amp;rsquo;s say we have a bunch of grass available and we&amp;rsquo;d like to feed it to some grass eaters. Seems easy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for animal in grassEaters {
+    animal.feed(Grass())
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we just have to create this array of grass eaters. Should be simple, right? Hmmm&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;let grassEaters = [Cow(), Goat()] // error: '_' is not convertible to 'Goat'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s a weird error. We probably just need to be explicit about the the type.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;let grassEaters: [Animal] = [Cow(), Goat()]
+// error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We all know that error, don&amp;rsquo;t we? OK, let&amp;rsquo;s try generics.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;let grassEaters: [Animal&amp;lt;Grass&amp;gt;] = [Cow(), Goat()]
+// error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Still? Oh right. You can&amp;rsquo;t specialize an associated type using generic syntax. That&amp;rsquo;s fine, we&amp;rsquo;ll just make the protocol generic.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protocol Animal&amp;lt;Food&amp;gt; {
+    func feed(food: Food)
+}
+// error: Statement cannot begin with a closure expression
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Right, protocols can&amp;rsquo;t be generic. Type-safety is for chumps. Let&amp;rsquo;s go back to Objective-C.&lt;/p&gt;
+
+&lt;p&gt;&amp;hellip;Or maybe type erasure is what we need. Let&amp;rsquo;s build &lt;code&gt;AnyAnimal&lt;/code&gt;. There are several ways to do this, but the easiest in my opinion is with closures.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;struct AnyAnimal&amp;lt;Food&amp;gt;: Animal {
+    private let _feed: (Food) -&amp;gt; Void
+    init&amp;lt;Base: Animal where Food == Base.Food&amp;gt;(_ base: Base) {
+        _feed = base.feed
+    }
+    func feed(food: Food) { _feed(food) }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(While this works exactly like &lt;code&gt;AnySequence&lt;/code&gt;, this isn&amp;rsquo;t how &lt;code&gt;AnySequence&lt;/code&gt; is implemented. In my next post I&amp;rsquo;ll discuss why and how to implement type erasers like stdlib does.)&lt;/p&gt;
+
+&lt;p&gt;Now we can make &lt;code&gt;grassEaters&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;let grassEaters = [AnyAnimal(Cow()), AnyAnimal(Goat())] // Type is [AnyAnimal&amp;lt;Grass&amp;gt;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But we still get type safety if we try to incorrectly mix our animals:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())]
+// error: type of expression is ambiguous without more context
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This kind of type eraser lets us convert a protocol with associated types into a generic type. That means we can put it in properties and return values and other places that we can&amp;rsquo;t use protocols directly. As you use more protocols in your Swift (and &lt;a href=&quot;https://developer.apple.com/videos/wwdc/2015/?id=408&quot;&gt;you should be&lt;/a&gt;), I think this will become an important tool in your toolbelt.&lt;/p&gt;
+
+&lt;p&gt;So get out there and erase some over-specific types. Focus on the protocol, hide the implementation.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gist.github.com/rnapier/03674b399e3bc517b9cd&quot;&gt;And here&amp;rsquo;s the code for your amusement.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">Once upon a time, when Swift was young, there were a couple of types called SequenceOf and GeneratorOf, and they could type erase stuff. &amp;ldquo;Type erase?&amp;rdquo; you may ask. &amp;ldquo;I thought we loved types.&amp;rdquo; We do. Don&amp;rsquo;t worry. Our types aren&amp;rsquo;t going anywhere. But sometimes we want them to be a little less&amp;hellip;precise.</summary></entry><entry><title type="html">Product or Process?</title><link href="http://localhost:4000/product-or-process" rel="alternate" type="text/html" title="Product or Process?" /><published>2015-07-20T11:20:17-04:00</published><updated>2015-07-20T11:20:17-04:00</updated><id>http://localhost:4000/product-or-process</id><content type="html" xml:base="http://localhost:4000/product-or-process">&lt;p&gt;Forgive a slight divergence. I&amp;rsquo;ll bring it back to software development before the end.&lt;/p&gt;
+
+&lt;p&gt;A friend of mine is an arborist. He takes care of a large forest, trimming and culling trees. He&amp;rsquo;s quite good at it and enjoys it, but he&amp;rsquo;s worried about job security. He thinks cabinet making would be a good career move. He likes to work with wood, and high-end cabinets are very expensive so there&amp;rsquo;s clearly a lot of money there. I&amp;rsquo;m a hobbyist woodworker, so we were talking about it.&lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Me: So, what saws are you looking at?&lt;/p&gt;
+
+&lt;p&gt;Him: I have a Husqvarna 3120. That should be all I need.&lt;/p&gt;
+
+&lt;p&gt;Me: Husqvarna? Isn&amp;rsquo;t that a&amp;hellip;chainsaw?&lt;/p&gt;
+
+&lt;p&gt;Him: It&amp;rsquo;s the best! I use it every day. I plan to do everything with it.&lt;/p&gt;
+
+&lt;p&gt;Me: It&amp;rsquo;s a good saw, sure, but&amp;hellip; um&amp;hellip; How are you going to join the pieces?&lt;/p&gt;
+
+&lt;p&gt;Him: Dovetail joints. I&amp;rsquo;ve heard those are best and you just have to cut notches. My chainsaw will make quick work of that.&lt;/p&gt;
+
+&lt;p&gt;Me: Dovetails have really tight tolerances. I can barely get them to work with a dovetail saw. Maybe you should start with pocket screws? They&amp;rsquo;re much easier and make great joints. A chainsaw&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Him: I&amp;rsquo;ve worked it all out. I modded this router table to hold my chainsaw upright so that&amp;rsquo;s just like a table saw. And I can make the other cuts freehand. I&amp;rsquo;m really good with a chainsaw. See, I already have a proof-of-concept.&lt;/p&gt;
+
+&lt;p&gt;Me: Um&amp;hellip; that&amp;rsquo;s just a board with a notch in it.&lt;/p&gt;
+
+&lt;p&gt;Him: Yeah, but a cabinet is just a bunch of boards with notches. I&amp;rsquo;ll make some more and they should snap together.&lt;/p&gt;
+
+&lt;p&gt;Me: Cabinet tolerances are really tight. I mean, it&amp;rsquo;s not that hard to make a box, but making a full cabinet is difficult, even with proper tools. Why would you want to use some cobbled-together thing? That table looks terrifying.&lt;/p&gt;
+
+&lt;p&gt;Him: Look, I know chainsaws. I&amp;rsquo;m not going to go learn a bunch of new tools just to build cabinets. Wood is wood. Saws are saws. I&amp;rsquo;m using the saw I&amp;rsquo;m comfortable with. If I use the tools I know, I&amp;rsquo;m sure I can make really great cabinets.&lt;/p&gt;
+
+&lt;p&gt;Me: &amp;hellip;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;In unrelated news, a lot of folks have asked if I&amp;rsquo;m excited that Go 1.5 can build iOS apps.&lt;/p&gt;
+
+&lt;p&gt;My wife&amp;rsquo;s background is art education. When you&amp;rsquo;re teaching art, she tells me, it&amp;rsquo;s important to remember whether you&amp;rsquo;re doing process art or product art in order to judge its success. Is the end result the goal, or how you got there? Am I trying to make the most beautiful painting I can, or am I trying to make a painting using only recycled materials? Does the audience need to know the process in order to appreciate the art, or does the end result stand on its own?&lt;/p&gt;
+
+&lt;p&gt;A lot of great hacks are process art. Can you run VMS on Linux? &lt;a href=&quot;http://www.wherry.com/gadgets/retrocomputing/vax-simh.html&quot;&gt;Sure you can!&lt;/a&gt; Is that awesome? It is absolutely awesome. Is there any commercial reason to develop new VMS apps to run on Linux? Of course not. That would be ridiculous.&lt;/p&gt;
+
+&lt;p&gt;Is it fun to get the Go runtime working on surprising platforms? Sure, and the process may improve Go. That&amp;rsquo;s why process art is so common in art education. You put unnecessary restrictions on students so that they have to develop new skills that will be useful when they work on product art. &amp;ldquo;Draw without looking at your work&amp;rdquo; is an important exercise, but not usually how you create a masterpiece.&lt;/p&gt;
+
+&lt;p&gt;So let&amp;rsquo;s get to the &amp;ldquo;unnecessary restrictions&amp;rdquo; I&amp;rsquo;m talking about if you want to write excellent iOS apps in Go (or C# or JavaScript or&amp;hellip;.) I don&amp;rsquo;t want to spend too much time on the great memory management debate. Do modern concurrent garbage collection engines work well on dual-core, 1GB iPhones? I don&amp;rsquo;t know. I&amp;rsquo;m still hearing a lot of complaints about GC pauses on Lollipop with 2x the memory. It&amp;rsquo;s hard to imagine that Go GC on iOS is going to be faster and more memory efficient than Java GC on Android. But let&amp;rsquo;s put that question aside for the moment. Let&amp;rsquo;s assume there is a large genre of apps for which Go performance and memory usage is adequate, even excellent, on iOS devices. (This might even be true.)&lt;/p&gt;
+
+&lt;p&gt;The real question is &amp;ldquo;what&amp;rsquo;s the hard part of iOS development?&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;If you think the answer is &amp;ldquo;Objective-C&amp;rdquo; then you don&amp;rsquo;t understand iOS development at all. Learning Objective-C is the &lt;em&gt;easiest&lt;/em&gt; part of iOS development, doubly-so for anyone who is comfortable in a wacky (and awesome) language like Go. And when it finally settles down a bit, Swift will likely be easier to learn than Objective-C for Java-esque developers.&lt;/p&gt;
+
+&lt;p&gt;The sort-of hard piece of iOS development is UIKit, CloudKit, HomeKit, SpriteKit, SceneKit, HealthKit, WebKit, MapKit, StoreKit, GameplayKit, and another new Kit every release. It&amp;rsquo;s power management and backgrounding and handoff and watch integration and multitasking and adaptive fonts and auto layout and animations and app thinning. You can sometimes ignore those pieces, but they&amp;rsquo;re what separate barely acceptable apps from great apps. If your only goal is something that kind of works, fine. Anything can do that. Web apps can do that. But if you want to make a really great app, integrating with the platform is a must. And the platform is designed for Cocoa. And Cocoa is designed for ObjC and Swift. This stuff is hard when you&amp;rsquo;re using the tools Apple &lt;em&gt;intends&lt;/em&gt; you to use. Working through translation layers is surgery with welding gloves.&lt;/p&gt;
+
+&lt;p&gt;And that brings us around to the &lt;em&gt;really&lt;/em&gt; hard piece of iOS development. It changes. Constantly. Apple moves forward fast and they deprecate old APIs mercilessly. Clever work-arounds have short half-lives. You have to adapt every release, and find ways to be backward compatible while still compiling against the latest SDK. Once you&amp;rsquo;ve lived through a few releases of iOS, you discover how hard this piece can be even in ObjC, even when you&amp;rsquo;ve followed all the rules. I don&amp;rsquo;t envy anyone trying to deal with it through an unsupported layer. By the time anyone knows what the next iOS version breaks, the clock is already ticking. Whoever supports your extra layer has to fix their piece, and then you have to fix your piece. And with open iOS betas, your customers are already yelling.&lt;/p&gt;
+
+&lt;p&gt;So I may celebrate your chainsaw router table as a glorious (and terrifying) hack. But I&amp;rsquo;ll stick with my table saw for cabinets and my chainsaw for cutting up trees. A good crafter is capable with many tools, not just their favorite. And most iOS apps are about product, not process.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.elementscompiler.com/elements/silver/&quot;&gt;Swift on Android?&lt;/a&gt; I&amp;rsquo;ll take Java, thanks.&lt;/p&gt;
+
+&lt;p&gt;Lee Whitney has &lt;a href=&quot;http://www.whitneyland.com/2015/07/xamarin-review-2015.html&quot;&gt;an interesting take on this subject&lt;/a&gt; from the C# side.&lt;/p&gt;</content><author><name></name></author><summary type="html">Forgive a slight divergence. I&amp;rsquo;ll bring it back to software development before the end.</summary></entry></feed>

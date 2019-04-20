@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Wrapping C++ Final Edition - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Wrapping C++ Final Edition
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+I have always strong recommended segreg...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/wrapping-cppfinal-edition">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Wrapping C++ Final Edition</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a &ldquo;language.&rdquo; It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code>.mm</code> is a blight on your code. Never let it spread.</p>
+
+<p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple&rsquo;s frameworks are implemented in C++.</p>
+
+<p>So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your &ldquo;middleware&rdquo; in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).</p>
+
+<!-- more -->
+
+
+<p>(As a side note, I also recommend that OS-related things like file management, network management, and threading all be handled natively. GCD is much better than pthreads. NSURLConnection is much better than writing your own C++ networking layer in BSD sockets. But this is tangental to the main point.)</p>
+
+<p>Saying all that, how do you wrap a C++ object so that Objective-C can read it? This used to be a question that required some significant thought. See <a href="http://robnapier.net/blog/wrapping-c-take-2-1-486">Wrapping C++, Take 2 Part 1</a> and <a href="http://robnapier.net/blog/wrapping-c-take-2-2-493">Part 2</a> for my previous thinking on the subject.</p>
+
+<p>Improvements in Objective-C have made all of the previous hoop-jumping irrelevant. The problem all my previous solutions was trying to solve was that you had to declare ivars in the header. Your ivar was a C++ class (which might be in a namespace or might be a template), and that made it difficult to declare in the header without forcing all the importers to be ObjC++. So to solve this generally you needed opaque types, or at the very least forward declared structs, etc. And it was all a big pain.</p>
+
+<p>But that&rsquo;s over. You can now declare all your ivars in the implementation file. So everything&rsquo;s easy. Your wrapper class can have C++ ivars without having any impact on users of the wrapper class.</p>
+
+<p>Consider a simple C++ class (but throwing in the headache of a namespace):</p>
+
+<pre><code>namespace MY {
+class Cpp {
+  public:
+    std::string getName() { return _name; };
+    void setName(std::string aName) { _name = aName; };
+  private:
+    std::string _name;
+};
+}
+</code></pre>
+
+<p>The wrapper for this is trivial:</p>
+
+<pre><code>@interface CPPWrapper : NSObject
+@property (nonatomic, readwrite, copy) NSString *name;
+@end
+
+@interface CPPWrapper ()
+@property (nonatomic, readwrite, assign) MY::Cpp *cpp;
+@end
+
+@implementation CPPWrapper
+@synthesize cpp = _cpp;
+
+- (id)init {
+  self = [super init];
+  if (self) {
+    _cpp = new MY::Cpp();
+  }
+  return self;
+}
+
+- (void)dealloc {
+  delete _cpp;
+}
+
+- (NSString *)name {
+  return [NSString stringWithUTF8String:self.cpp-&gt;getName().c_str()];
+}
+
+- (void)setName:(NSString *)aName {
+  self.cpp-&gt;setName([aName UTF8String]);
+}
+@end
+</code></pre>
+
+<p>Couldn&rsquo;t be easier really. The one headache that really remains in my experience is enums inside of a namespace (or more generally enums declared in a C++ header). The best solution is to use <code>#if __cplusplus</code> blocks to strip away the namespace and still declare the enum in pure C. Do this if at all possible. Otherwise you&rsquo;ll wind up with an C enum that mirrors the C++ enum. This is a maintenance nightmare, since changes to the C++ enum will often be missed in the ObjC enum, and you&rsquo;ll get very difficult-to-debug errors with enum mismatches.</p>
+
+<p>Just to ask and answer a possible question: why <code>*Cpp</code> and not just <code>Cpp</code>? The reason is that in almost all cases the C++ object will be created outside of your wrappers. So in almost all cases, there&rsquo;s going to be a method like <code>initWithCpp:(Cpp *)cpp</code>. How does that work? Easy, wrap it in <code>#if __cplusplus</code>:</p>
+
+<pre><code>#if __cplusplus
+#include "Cpp.h"
+...
+- (CppWrapper *)initWithCpp:(Cpp *)cpp;
+#endif
+</code></pre>
+
+<p>Anyway, most of my research into opaque types and generally how to manage C++ wrappers has now become trivial. I&rsquo;m just giving one more post to let you all know that. (And because <a href="http://robnapier.net/blog/wrapping-c-take-2-1-486#comment-15967">Orpheus</a> asked.) Post comments if there are more questions.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    cocoa
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/github-pricing" title="Previous Post: Github and its pricing">&laquo; Github and its pricing</a>
+      
+      
+        <a class="basic-alignment right" href="/simple-gcd-timer-rntimer" title="Next Post: Simple GCD Timer (RNTimer)">Simple GCD Timer (RNTimer) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

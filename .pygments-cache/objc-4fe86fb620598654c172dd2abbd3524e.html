@@ -1,0 +1,7 @@
+<div class="highlight"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithLayer:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">layer</span> <span class="p">{</span>
+  <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithLayer:</span><span class="n">layer</span><span class="p">];</span>
+  <span class="p">...</span>
+  <span class="p">[</span><span class="n">self</span> <span class="nl">setTouchPointForIdentifier:</span><span class="p">[[</span><span class="n">layer</span> <span class="n">touchPointForIdentifier</span><span class="p">]</span> <span class="n">copy</span><span class="p">]];</span>
+  <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>

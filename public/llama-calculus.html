@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Your lips keep moving, but all I hear is "applicator functive monastic llama calculus..." - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Your lips keep moving, but all I hear is "applicator functive monastic llama calculus..."
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+  ...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/llama-calculus">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Your lips keep moving, but all I hear is "applicator functive monastic llama calculus..."</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-08-09T16:16:19-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>...and I hated calculus.</p>
+
+<p>Yes, the functional world seems to overflow with bizarre terms that defy
+intuition. Faced with words like <em>object</em>, <em>property</em>, <em>inherit</em>, <em>class</em>, even
+non-programmers can get some handle on what they might mean. <em>Applicative
+functor</em> is not so kind. Nor is the ubiquitous <em>monad</em>, a word that feels
+designed to obscure its meaning (plus the ensuing
+<a href="http://www.haskell.org/pipermail/haskell-cafe/2009-January/053317.html">arguments over whether something is really a monad or a monoid</a>).</p>
+
+<p>Let me boil functional programming down to its basics, the part you need before
+we can really get started: variables are evil. Stop mutating them. It just makes
+them more evil. If I could do just one thing to improve your Swift programs, it
+would be to generate an electric keyboard shock every time you typed <code>v</code> <code>a</code>
+<code>r</code>. Yeah, you&rsquo;ll need it sometimes, but each time you should ask &ldquo;is it worth
+the shock?&rdquo; And by &ldquo;the shock,&rdquo; I mean &ldquo;hard to find bugs.&rdquo;<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<!-- more -->
+
+
+<p>We inherit a very unfortunate piece of syntax from the earliest days of FORTRAN.
+It&rsquo;s so common that you&rsquo;ve probably never considered how insane it is. Here it
+is in Swift:</p>
+
+<pre><code>var x: Int
+x = 5
+x = 7
+</code></pre>
+
+<p>This program makes no sense. Read it out loud the way we usually do. &ldquo;X is an
+Int.&rdquo; Good. &ldquo;X equals five.&rdquo; Cool, got it. &ldquo;X equals seven.&rdquo; What? Didn&rsquo;t you
+just say it equals five? Does 5 equal 7? What are you trying to pull here? The
+more reasonable result of this program should be <code>undefined</code> or possibly
+<code>false</code>. Both of these statements cannot be true. Yet we write this kind of
+stuff all the time and we expect it to mean something other than &ldquo;equals.&rdquo;</p>
+
+<p>The correct way to read this out loud is &ldquo;assign five to <em>x</em>, then assign seven
+to <em>x</em>.&rdquo;<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p>I know that sounds pedantic. A lot of the build-up to functional programming
+sounds pedantic, but bear with me. I&rsquo;m going to keep bringing it back to
+problems we all face every day, in mostly the terms we&rsquo;re all used to.</p>
+
+<p>Let&rsquo;s compare this to another piece of Swift:</p>
+
+<pre><code>let x = 5
+</code></pre>
+
+<p>Here, the <code>=</code> is fundamentally different (and so should really have a different
+operator). This doesn&rsquo;t say &ldquo;assign 5 to x.&rdquo; This says &ldquo;x <em>is</em> 5&rdquo; and
+equivalently, &ldquo;5 <em>is</em> x.&rdquo; They are just different names for the same thing.
+Anywhere in this scope that you encounter <em>x</em>, the compiler may replace it with
+5 and vice versa. This is the equals sign that you learned in elementary school
+arithmetic. It says these two things are the same. In your first Algebra class,
+you learned how to use this equivalence to solve problems. But somewhere along
+the way (well, in FORTRAN), we merged this simple and powerful idea into a much
+more complicated, but less general, idea: assignment.</p>
+
+<p>Assignment is complicated because it creates state. The world is different
+before the assignment than after the assignment. State makes it hard to know
+exactly what a function will do. It makes it hard to test. And the broader the
+state, the more confusing it gets. A local variable defined three lines above
+doesn&rsquo;t create a lot of state to juggle. An instance variable that may change
+from call to call can be tricky. A global variable that may be set on any thread
+at any time is a nightmare.</p>
+
+<p><span class='pullquote-right' data-pullquote='Fixing bugs is fundamentally about
+distinguishing between what *should be* and what *is*.'></p>
+
+<p>Much of our job as programmers is to reason about programs. This word, <em>reason</em>,
+comes up a lot in academic discussions, but I don&rsquo;t think we use it as much as
+we should in the code mines. Fixing bugs is fundamentally about
+distinguishing between what <em>should be</em> and what <em>is</em>. Both of these require
+reasoning about your code. Given a function, what are its inputs and outputs?
+What is it <em>supposed</em> to do? What does it <em>actually</em> do?</p>
+
+<p></span></p>
+
+<p>Perhaps the most overlooked part of that process is &ldquo;what are its inputs and
+outputs?&rdquo; It&rsquo;s really the question &ldquo;what things could <em>possibly</em> be breaking
+this, and what other things could this <em>possibly</em> be breaking.&rdquo; And this is where
+state comes in. Consider a method:</p>
+
+<pre><code>class RestaurantMeal {
+    ...
+    func calculateTheBill() { ... }
+}
+</code></pre>
+
+<p>This is pure OOP. The object has some state. I ask the object to mutate itself.
+Later, I&rsquo;ll ask the object for its new state. All the details, including what
+goes into the bill, are encapsulated in the object and are hidden from the
+caller.</p>
+
+<p>It&rsquo;s very simple, but consider how hard it is to reason about this method. What
+are its inputs and outputs? Well, in principle, the entire current state of the
+object is the input, and the entire mutated state of the object is the
+output.<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup> What test cases would you write? And if the implementation
+details changed, would those test cases still provide sufficient coverage? If my
+final bill is wrong, how I do reproduce the state of this object to debug it?
+The whole point of OOP is that the internal details of <code>calculateTheBill()</code> are
+private. But in the real world of testing and debugging, they often turn out to
+be very important because we have to recreate the relevant state.</p>
+
+<p>Now consider the following free function (i.e. not part of an object):</p>
+
+<pre><code>func totalCostForItems(items: [Double], taxRate: Double) -&gt; Double { ... }
+</code></pre>
+
+<p>You pass data to a function, and it returns you data. There is no state. If you
+pass the same values, you will always get the same result. All of the inputs and
+outputs are obvious and knowable from the code (unlike documentation, which can
+become out of date). Internal changes cannot change whether the tests are
+sufficient. If there are new inputs or outputs, the public signature has to
+reflect them. There are no external concurrency concerns. You can compute the
+result on as many queues as you like. You know that none of your inputs can
+change behind your back. You don&rsquo;t have to worry about whether your parameters
+are thread-safe because you have your own, immutable copies.</p>
+
+<p><code>calculateTheBill()</code> <em>assigns</em>. <code>totalCostForItems(taxRate:)</code> <em>is</em>. This is a
+pure functional approach to the problem.</p>
+
+<p>&ldquo;Functional? But there&rsquo;s not a single <code>map</code> or closure or <code>&lt;*&gt;</code> to be seen.
+Wasn&rsquo;t the point of <a href="/swift-is-not-functional">Swift is not Functional</a> that
+just using a few functions doesn&rsquo;t make a language functional? Isn&rsquo;t this
+all possible in C?&rdquo;</p>
+
+<p>All true. The point here isn&rsquo;t to lay out the entirety of functional
+programming. It&rsquo;s to capture the first intuitions about mutable state, and why
+even programmers with no interest in CS theory might want to minimize it. It&rsquo;s a
+way of thinking about the problem rather than a particular set of features. I&rsquo;ll
+discuss more in later posts.</p>
+
+<p>In the earliest FORTRAN programs, mutable state was already a regular source of
+bugs. Today we have highly concurrent apps with dynamic user interfaces and
+things have only gotten worse. Programs have gotten bigger, more complicated,
+and harder to get right. That means long hours of difficult testing, frustrating
+debugging, missed ship dates, and hard-to-reproduce bug reports from your
+customers. Excessive state is a major contributor.</p>
+
+<p>Totally eliminating state from your programs is challenging at best, counter-productive
+at worst. But as we go along in this series, I hope you start to see why you&rsquo;d
+want to treat state as a powerful and somewhat dangerous tool to be used in
+moderation. And the first step down that road is to stop typing <code>var</code> (ouch!)</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Swift unfortunately overloads <code>var</code> to mean both &ldquo;mutable&rdquo; and &ldquo;computed property&rdquo; even if the computed property is immutable. I am only referring to the first use.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>ALGOL, and later Pascal, got this at least half-right: <code>x := 5</code>. There wasn&rsquo;t a <code>&lt;</code> key on early keyboards, so <code>:</code> had to do. This really should be written <code>5 -&gt; x</code>, since the assignment happens after evaluation, but at least &ldquo;x receives 5&rdquo; is more sensible than &ldquo;x equals 5.&rdquo; So many C bugs could have been avoided if it had used ALGOL syntax. It amazes me that Swift held onto <code>=</code> for assignment.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p>For this discussion, assume there are no mutable globals or singletons (which are just globals by another name). If there were, they create the same problems for every approach.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2014-08-09T16:16:19-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    swiftfunctional
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/should-i-swift" title="Previous Post: But should I...Swift?">&laquo; But should I...Swift?</a>
+      
+      
+        <a class="basic-alignment right" href="/functional-wish-fulfillment" title="Next Post: Functional Wish Fulfillment">Functional Wish Fulfillment &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

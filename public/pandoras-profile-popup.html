@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Pandora's "Profile" pop-up - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Pandora's "Profile" pop-up
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+Several people have noted that PandoraB...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/pandoras-profile-popup">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Pandora's "Profile" pop-up</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2010-08-06T10:14:58-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Several people have noted that PandoraBoy is displaying a &ldquo;Profile&rdquo; window over the player that interferes with the player. This is a notification from Pandora because they&rsquo;ve changed their privacy settings (you can now make your profile private, and they want to know if you want that).</p>
+
+<p>This should be a one-time event for existing accounts. I suspect that new accounts will not see it. The solution is to open www.pandora.com in Safari, answer the question, and then re-launch PB.</p>
+
+<p>PandoraBoy goes directly to the the mini-player on launch. Pandora doesn&rsquo;t code for that since it&rsquo;s impossible from the website. So sometimes they make interfaces that are larger than the mini-player without updating the mini-player code to resize. PB doesn&rsquo;t resize the window (it doesn&rsquo;t know how large it should be). It just relies on the mini-player to do it in Javascript, but in cases like this, the mini-player also doesn&rsquo;t know how large the window should be.</p>
+
+<p>BTW, I often am asked why PB doesn&rsquo;t make the window resizable for cases like this. The answer is that it doesn&rsquo;t help. The mini-player is a flash app, and has a clipping frame independent of the window. So while you can resize the window, the content is still clipped at the border of the flash app. Ah, the wonders of Flash.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2010-08-06T10:14:58-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    PandoraBoy
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/pandoraboy-082-fixes-flash" title="Previous Post: PandoraBoy 0.8.2 - Fixes Flash">&laquo; PandoraBoy 0.8.2 - Fixes Flash</a>
+      
+      
+        <a class="basic-alignment right" href="/clipping-cgrect-cgpath" title="Next Post: Clipping a CGRect to a CGPath">Clipping a CGRect to a CGPath &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
