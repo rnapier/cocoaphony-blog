@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Cocoaphony]]></title>
-  <link href="https://rnapier.github.io/atom.xml" rel="self"/>
-  <link href="https://rnapier.github.io/"/>
-  <updated>2019-04-20T15:11:40-04:00</updated>
-  <id>https://rnapier.github.io/</id>
+  <link href="http://localhost:4000/atom.xml" rel="self"/>
+  <link href="http://localhost:4000/"/>
+  <updated>2019-04-20T15:17:04-04:00</updated>
+  <id>http://localhost:4000/</id>
   <author>
     <name><![CDATA[]]></name>
     <email><![CDATA[rob@neverwood.org]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[A Conditional Breakpoint]]></title>
-    <link href="https://rnapier.github.io/conditional-breakpoint"/>
+    <link href="http://localhost:4000/conditional-breakpoint"/>
     <updated>2017-04-23T11:59:20-04:00</updated>
-    <id>https://rnapier.github.io/conditional-breakpoint</id>
+    <id>http://localhost:4000/conditional-breakpoint</id>
     <content type="html"><![CDATA[<p><a href="https://twitter.com/jamesdempsey/status/855979622655291392">I&rsquo;m now a Conditional Breakpoint.</a> It&rsquo;s been a dream of mine for long time, and it finally happened at <a href="http://cocoaconf.com/chicago-2017/sessions/breakpoint-jam">CocoaConf Chicago</a>. There are folks who have played extensively with <a href="http://jamesdempsey.net/2013/03/02/introducing-the-breakpoint-jam-at-cocoaconf-chicago/">James Dempsey</a>, and those are the Breakpoints. If you&rsquo;ve only played occasionally (even once), you&rsquo;re a Conditional Breakpoint.</p>
 
 <!--more-->
@@ -43,9 +43,9 @@
   
   <entry>
     <title type="html"><![CDATA[Refactoring Slow and Steady]]></title>
-    <link href="https://rnapier.github.io/refactoring"/>
+    <link href="http://localhost:4000/refactoring"/>
     <updated>2017-02-13T12:21:55-05:00</updated>
-    <id>https://rnapier.github.io/refactoring</id>
+    <id>http://localhost:4000/refactoring</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been talking with folks on a Slack about refactoring today, and I thought I&rsquo;d put some of my thoughts here. Maybe a little less polished than I&rsquo;d like, but I wanted to get them out of my head and down on &ldquo;paper.&rdquo;</p>
 
 <!--more-->
@@ -93,9 +93,9 @@ Testing is great. Testing is critical. Testing is necessary. But unit testing is
   
   <entry>
     <title type="html"><![CDATA[Talking and Teaching]]></title>
-    <link href="https://rnapier.github.io/talking"/>
+    <link href="http://localhost:4000/talking"/>
     <updated>2016-11-29T10:35:09-05:00</updated>
-    <id>https://rnapier.github.io/talking</id>
+    <id>http://localhost:4000/talking</id>
     <content type="html"><![CDATA[<p><a href="https://twitter.com/pepibumur">Pedro Piñera</a> makes some important points in his article <a href="http://ppinera.es/2016/11/16/in-a-world.html">In a world&hellip;</a>. There are a number of things in there, and you should go read it, but I want to focus on one part, which is the observation that the core &ldquo;iOS speaker circle&rdquo; is a fairly small group of people. Pedro notes:</p>
 
 <blockquote><p>There’s a huge difference when you compare a talk from someone that has been working a lot on the topic and from someone that studied the topic for giving a talk. Why do people do it then? Talks with a lot of value usually come from unknown people. From these people that from the anonymity worked on a topic and they achieved something that they were willing to share. &hellip; People don’t care about the company that person had worked for, or the newsletter that the person had written, but instead, what that person wants to share.</p></blockquote>
@@ -149,9 +149,9 @@ Yes! I totally agree with most of this, except that this is <em>positive</em>. I
   
   <entry>
     <title type="html"><![CDATA[Copying]]></title>
-    <link href="https://rnapier.github.io/copying"/>
+    <link href="http://localhost:4000/copying"/>
     <updated>2016-09-03T13:56:14-04:00</updated>
-    <id>https://rnapier.github.io/copying</id>
+    <id>http://localhost:4000/copying</id>
     <content type="html"><![CDATA[<p>I&rsquo;m on my way back from <a href="http://tryswiftnyc.com">try! Swift</a>, which was fantastic. Of course it had those obvious things I&rsquo;d hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.</p>
 
 <p>I travel pretty well, but sometimes I make mistakes, and this was one of those times. The deodorant I thought I&rsquo;d packed turned out to be body wash. Now there are a dozen reason that this shouldn&rsquo;t really matter, and wouldn&rsquo;t really matter given the A/C and the weather, etc., but I&rsquo;m a product of my culture, and it was a bit stressful. I tried to find a drug store on the way to the conference, but I was afraid of being late and finally resigned myself to accepting things as they are and moving on.</p>
@@ -221,9 +221,9 @@ Yes! I totally agree with most of this, except that this is <em>positive</em>. I
   
   <entry>
     <title type="html"><![CDATA[Inspiration]]></title>
-    <link href="https://rnapier.github.io/inspiration"/>
+    <link href="http://localhost:4000/inspiration"/>
     <updated>2016-08-26T15:46:27-04:00</updated>
-    <id>https://rnapier.github.io/inspiration</id>
+    <id>http://localhost:4000/inspiration</id>
     <content type="html"><![CDATA[<p>As a speaker, writer, and member of our community, <a href="http://dimsumthinking.com">Daniel Steinberg</a> is my inspiration. That&rsquo;s not a secret. If you and I have spent much time talking after a conference, I&rsquo;ve probably mentioned it. It&rsquo;s not the sort of thing you usually say to someone, and I don&rsquo;t think I ever have, but I&rsquo;ve learned a lot from his speaking style, and I constantly try to live up to his standard of kindness. I&rsquo;m not by nature very kind, so if you see me behaving that way, I&rsquo;m likely trying to do what I think Daniel might.</p>
 
 <p>This isn&rsquo;t to say we&rsquo;re close. We see each other at conferences. We email and tweet. We&rsquo;re members of a community. So of course I have some idealized picture of him in my mind, without all the this and that of a real person. Even so, he inspires me. When my wife, Janet, and I talk about what&rsquo;s ahead for our future, we always talk about Daniel and his wife, Kim. I&rsquo;ve seen them at conferences, traveling together, independent but a team, and I think, hey, we could pull that off when the kids go to school. And Janet and I talk about how to make that work. And we know we only have the shallowest understanding of their real lives, but they inspire us.</p>
@@ -236,9 +236,9 @@ Yes! I totally agree with most of this, except that this is <em>positive</em>. I
   
   <entry>
     <title type="html"><![CDATA[NSData, My Old Friend]]></title>
-    <link href="https://rnapier.github.io/nsdata"/>
+    <link href="http://localhost:4000/nsdata"/>
     <updated>2015-10-07T20:27:00-04:00</updated>
-    <id>https://rnapier.github.io/nsdata</id>
+    <id>http://localhost:4000/nsdata</id>
     <content type="html"><![CDATA[<h2>Or&hellip; &ldquo;How I learned to stop worrying, and love Foundation.&rdquo;</h2>
 
 <blockquote><p>Forgive me, NSData. I was running around with that flashy [UInt8], acting like you didn&rsquo;t have everything I need. I&rsquo;ve learned my lesson.</p>
@@ -387,9 +387,9 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   
   <entry>
     <title type="html"><![CDATA[Type-erasure in stdlib]]></title>
-    <link href="https://rnapier.github.io/type-erasure-in-stdlib"/>
+    <link href="http://localhost:4000/type-erasure-in-stdlib"/>
     <updated>2015-10-06T19:05:13-04:00</updated>
-    <id>https://rnapier.github.io/type-erasure-in-stdlib</id>
+    <id>http://localhost:4000/type-erasure-in-stdlib</id>
     <content type="html"><![CDATA[<p>When <a href="http://robnapier.net/erasure">last we talked about type erasure</a>, I described an easy way to build type erasures using closures. And I mentioned:</p>
 
 <blockquote><p>(While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p></blockquote>
@@ -407,9 +407,9 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   
   <entry>
     <title type="html"><![CDATA[RNCryptor v4]]></title>
-    <link href="https://rnapier.github.io/rncryptor-v4"/>
+    <link href="http://localhost:4000/rncryptor-v4"/>
     <updated>2015-10-04T12:38:36-04:00</updated>
-    <id>https://rnapier.github.io/rncryptor-v4</id>
+    <id>http://localhost:4000/rncryptor-v4</id>
     <content type="html"><![CDATA[<p>After months of writing and rewriting, I am happy to finally announce <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">RNCryptor 4 beta 1</a> in Swift.</p>
 
 <p>RNCryptor 4 is a complete rewrite of RNCryptor for Swift 2 with full bridging support to Objective-C. It has a streamlined API, simpler installation, and improved internals. It continues to use the <a href="https://github.com/RNCryptor/RNCryptor-Spec/blob/master/RNCryptor-Spec-v3.md">v3 data format</a> and is fully interoperable with <a href="https://github.com/RNCryptor">other RNCryptor implementations</a>.</p>
@@ -434,9 +434,9 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   
   <entry>
     <title type="html"><![CDATA[A Little Respect for AnySequence]]></title>
-    <link href="https://rnapier.github.io/erasure"/>
+    <link href="http://localhost:4000/erasure"/>
     <updated>2015-08-04T15:42:00-04:00</updated>
-    <id>https://rnapier.github.io/erasure</id>
+    <id>http://localhost:4000/erasure</id>
     <content type="html"><![CDATA[<p>Once upon a time, when Swift was young, there were a couple of types called <code>SequenceOf</code> and <code>GeneratorOf</code>, and they could type erase stuff. &ldquo;Type erase?&rdquo; you may ask. &ldquo;I thought we <em>loved</em> types.&rdquo; We do. Don&rsquo;t worry. Our types aren&rsquo;t going anywhere. But sometimes we want them to be a little less&hellip;precise.</p>
 
 <p>In Swift 2, our little type erasers got a rename and some friends. Now they&rsquo;re all named &ldquo;Any&rdquo;-something. So <code>SequenceOf</code> became <code>AnySequence</code> and <code>GeneratorOf</code> became <code>AnyGenerator</code> and there are a gaggle of indexes and collections from <code>AnyForwardIndex</code> to <code>AnyRandomAccessCollection</code>.</p>
@@ -580,9 +580,9 @@ struct Bird: Animal {
   
   <entry>
     <title type="html"><![CDATA[Product or Process?]]></title>
-    <link href="https://rnapier.github.io/product-or-process"/>
+    <link href="http://localhost:4000/product-or-process"/>
     <updated>2015-07-20T11:20:17-04:00</updated>
-    <id>https://rnapier.github.io/product-or-process</id>
+    <id>http://localhost:4000/product-or-process</id>
     <content type="html"><![CDATA[<p>Forgive a slight divergence. I&rsquo;ll bring it back to software development before the end.</p>
 
 <p>A friend of mine is an arborist. He takes care of a large forest, trimming and culling trees. He&rsquo;s quite good at it and enjoys it, but he&rsquo;s worried about job security. He thinks cabinet making would be a good career move. He likes to work with wood, and high-end cabinets are very expensive so there&rsquo;s clearly a lot of money there. I&rsquo;m a hobbyist woodworker, so we were talking about it.<!-- more --></p>
@@ -645,9 +645,9 @@ struct Bird: Animal {
   
   <entry>
     <title type="html"><![CDATA[Throw money at it]]></title>
-    <link href="https://rnapier.github.io/throw-money"/>
+    <link href="http://localhost:4000/throw-money"/>
     <updated>2015-06-22T14:41:00-04:00</updated>
-    <id>https://rnapier.github.io/throw-money</id>
+    <id>http://localhost:4000/throw-money</id>
     <content type="html"><![CDATA[<p>My dad has always been an engineer, but by the end of his career he had three-letter titles starting with &ldquo;C&rdquo;. And all my life he&rsquo;s taught me lessons, but the most important ones to me professionally were never about technical matters; they were always the talks about how large companies work. Watching some of the reactions from devs to the recent <a href="http://taylorswift.tumblr.com/post/122071902085/to-apple-love-taylor">Taylor Swift</a>/<a href="https://twitter.com/cue/status/612824775220555776">Apple</a> back-and-forth, I realized that one of my dad&rsquo;s lessons might be helpful to others.<!-- more --></p>
 
 <p>&ldquo;Can we solve this by throwing money at it?&rdquo; Problems come in two major forms: money problems and not-money problems. Money problems are the easy ones. If you can write a check and the whole problem goes away, that&rsquo;s the kind of problem you want. Lots of problems aren&rsquo;t like that. Sometimes it&rsquo;s because the check would have to be too big, but many times it&rsquo;s because no amount of money would fix the problem alone. It&rsquo;s not a &ldquo;throwing money&rdquo; problem. In fact, <em>most</em> problems are not-money problems when you dig into them.</p>
@@ -674,9 +674,9 @@ struct Bird: Animal {
   
   <entry>
     <title type="html"><![CDATA[Re...throws?]]></title>
-    <link href="https://rnapier.github.io/re-throws"/>
+    <link href="http://localhost:4000/re-throws"/>
     <updated>2015-06-18T11:12:00-04:00</updated>
-    <id>https://rnapier.github.io/re-throws</id>
+    <id>http://localhost:4000/re-throws</id>
     <content type="html"><![CDATA[<p><a href="/throw-what-dont-throw">Last time</a> we talked about how a function that can
 throw errors is a different type in Swift than a function that cannot throw
 errors. And then I briefly mentioned this other thing, &ldquo;rethrows.&rdquo; Let&rsquo;s talk
@@ -927,9 +927,9 @@ can promise it&rsquo;ll only return X.</p>
   
   <entry>
     <title type="html"><![CDATA[Throw what don't throw]]></title>
-    <link href="https://rnapier.github.io/throw-what-dont-throw"/>
+    <link href="http://localhost:4000/throw-what-dont-throw"/>
     <updated>2015-06-16T20:58:00-04:00</updated>
-    <id>https://rnapier.github.io/throw-what-dont-throw</id>
+    <id>http://localhost:4000/throw-what-dont-throw</id>
     <content type="html"><![CDATA[<p>So say you are trying out all this interesting new <code>throw</code> stuff in Swift 2. And
 say you&rsquo;re running an early Beta in which many stdlib functions don&rsquo;t handle
 throw closures yet. Or maybe you&rsquo;re in the future and dealing with some other
@@ -1121,9 +1121,9 @@ discover how to build great things with it.</p>
   
   <entry>
     <title type="html"><![CDATA[I, for one, welcome our new Haskell overlords]]></title>
-    <link href="https://rnapier.github.io/haskell-overlords"/>
+    <link href="http://localhost:4000/haskell-overlords"/>
     <updated>2014-09-29T10:57:00-04:00</updated>
-    <id>https://rnapier.github.io/haskell-overlords</id>
+    <id>http://localhost:4000/haskell-overlords</id>
     <content type="html"><![CDATA[<p><a href="https://twitter.com/TacticalGrace/status/506079987565613056">Manuel Chakravarty</a> made a comment a few weeks ago:</p>
 
 <blockquote><p>By not using standard FP terminology in emerging languages like Swift, we deny learners access to a lot of existing literature.</p></blockquote>
@@ -1225,9 +1225,9 @@ discover how to build great things with it.</p>
   
   <entry>
     <title type="html"><![CDATA[Go is a shop-built jig]]></title>
-    <link href="https://rnapier.github.io/go-is-a-shop-built-jig"/>
+    <link href="http://localhost:4000/go-is-a-shop-built-jig"/>
     <updated>2014-09-17T15:50:00-04:00</updated>
-    <id>https://rnapier.github.io/go-is-a-shop-built-jig</id>
+    <id>http://localhost:4000/go-is-a-shop-built-jig</id>
     <content type="html"><![CDATA[<p><a href="https://al3x.net/about.html">Alex Payne</a> wrote an excellent essay called <a href="https://al3x.net/2014/09/16/thoughts-on-five-years-of-emerging-languages.html">Thoughts on Five Years of Emerging Languages</a>. It called to mind something I wrote a while ago for a limited audience that I never got around to turning into a public form. Thanks to <a href="https://twitter.com/TacticalGrace">Manuel Chakravarty</a> for the link and the inspiration.</p>
 
 <p>For those who read my blog for Cocoa (and recently Swift) discussion, you may be surprised that most of my professional work right now is in Go, C, and C++ (in that order). So I thought I might take a moment to discuss Go.</p>
@@ -1341,9 +1341,9 @@ discover how to build great things with it.</p>
   
   <entry>
     <title type="html"><![CDATA[Reduction in force]]></title>
-    <link href="https://rnapier.github.io/reduction-in-force"/>
+    <link href="http://localhost:4000/reduction-in-force"/>
     <updated>2014-09-14T20:14:00-04:00</updated>
-    <id>https://rnapier.github.io/reduction-in-force</id>
+    <id>http://localhost:4000/reduction-in-force</id>
     <content type="html"><![CDATA[<p>Our last <a href="/flatmap">talk about >>==</a> was full of twists and turns, some
 philosophy, surprising connections, and a radical new operator. It was a lot to
 absorb, and you may have to play with it some in your own code before you really
@@ -1607,9 +1607,9 @@ make you look smart.</p>
   
   <entry>
     <title type="html"><![CDATA[Flattenin' your mappenin']]></title>
-    <link href="https://rnapier.github.io/flatmap"/>
+    <link href="http://localhost:4000/flatmap"/>
     <updated>2014-09-07T09:13:15-04:00</updated>
-    <id>https://rnapier.github.io/flatmap</id>
+    <id>http://localhost:4000/flatmap</id>
     <content type="html"><![CDATA[<blockquote><p>In which our heroes create for themselves a convenience and discover a
 surprising thing.</p></blockquote>
 
@@ -2081,9 +2081,9 @@ a lot of things to cover. Until then, stop mutating. Evolve.</p>
   
   <entry>
     <title type="html"><![CDATA[Maps... Wait, they don't love you like I love you]]></title>
-    <link href="https://rnapier.github.io/maps"/>
+    <link href="http://localhost:4000/maps"/>
     <updated>2014-08-28T08:20:25-04:00</updated>
-    <id>https://rnapier.github.io/maps</id>
+    <id>http://localhost:4000/maps</id>
     <content type="html"><![CDATA[<p>I had a bit of a throw-away line in
 <a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>:</p>
 
@@ -2399,9 +2399,9 @@ can do for us. Until then, stop mutating. Evolve.</p>
   
   <entry>
     <title type="html"><![CDATA[Functional Wish Fulfillment]]></title>
-    <link href="https://rnapier.github.io/functional-wish-fulfillment"/>
+    <link href="http://localhost:4000/functional-wish-fulfillment"/>
     <updated>2014-08-18T22:00:00-04:00</updated>
-    <id>https://rnapier.github.io/functional-wish-fulfillment</id>
+    <id>http://localhost:4000/functional-wish-fulfillment</id>
     <content type="html"><![CDATA[<p>Yes, this is another of those &ldquo;how to parse JSON in Swift&rdquo; blog posts that seem
 to be required of every Swift blogger. And yes, several of the techniques we&rsquo;ll
 work through come from the functional programming world. And, <em>yes</em>,
@@ -2824,9 +2824,9 @@ same place, just a bit more gently.</p>
   
   <entry>
     <title type="html"><![CDATA[Your lips keep moving, but all I hear is "applicator functive monastic llama calculus..."]]></title>
-    <link href="https://rnapier.github.io/llama-calculus"/>
+    <link href="http://localhost:4000/llama-calculus"/>
     <updated>2014-08-09T16:16:19-04:00</updated>
-    <id>https://rnapier.github.io/llama-calculus</id>
+    <id>http://localhost:4000/llama-calculus</id>
     <content type="html"><![CDATA[<p>...and I hated calculus.</p>
 
 <p>Yes, the functional world seems to overflow with bizarre terms that defy

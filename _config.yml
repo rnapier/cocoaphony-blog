@@ -37,6 +37,9 @@ root: /cocoaphony-blog
 permalink: /:title
 source: source
 destination: docs
+plugins: 
+  - jekyll-paginate
+  - jekyll-feed
 plugins_dir: plugins
   # - jekyll-feed
 
