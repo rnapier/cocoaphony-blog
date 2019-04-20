@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="http://localhost:4000/atom.xml" rel="self"/>
   <link href="http://localhost:4000/"/>
-  <updated>2019-04-20T15:17:04-04:00</updated>
+  <updated>2019-04-20T16:24:56-04:00</updated>
   <id>http://localhost:4000/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -25,7 +25,7 @@
 
 <p>Originally, I wasn&rsquo;t comfortable being a full &ldquo;Conditional.&rdquo; I&rsquo;m not much of a guitarist. I can play along reasonably if there&rsquo;s someone to cover my mistakes, and a group probably sounds slightly better with me than without. But listening to me play alone is an act of love and friendship, not something you&rsquo;d do on purpose. So I kind of wanted to be called a &ldquo;Provisional Breakpoint&rdquo; instead. But that was wrong. Someone who&rsquo;s played at a Breakpoint Jam is a Conditional Breakpoint. That&rsquo;s what it means. If you&rsquo;ve done it, you&rsquo;ve earned it.</p>
 
-<p>Everyone who played guitar that night was a Conditional, but <a href="https://twitter.com/designatednerd">Ellen Shapiro</a> was clearly our leader. She plays with an energy and style that I want to emulate. She&rsquo;s much better than I am, but what I&rsquo;ve played in years, she&rsquo;s played in decades, so maybe that&rsquo;s natural. <a href="/copying">Choosing the right people to copy is a worthwhile skill in itself.</a> There&rsquo;s nothing wrong with being a beginner. There&rsquo;s nothing wrong with learning and flailing and trying again. There&rsquo;s nothing wrong with letting someone mentor you. And there are a lot of ways to mentor. You might not even know when you&rsquo;re doing it.</p>
+<p>Everyone who played guitar that night was a Conditional, but <a href="https://twitter.com/designatednerd">Ellen Shapiro</a> was clearly our leader. She plays with an energy and style that I want to emulate. She&rsquo;s much better than I am, but what I&rsquo;ve played in years, she&rsquo;s played in decades, so maybe that&rsquo;s natural. <a href="http://localhost:4000/copying">Choosing the right people to copy is a worthwhile skill in itself.</a> There&rsquo;s nothing wrong with being a beginner. There&rsquo;s nothing wrong with learning and flailing and trying again. There&rsquo;s nothing wrong with letting someone mentor you. And there are a lot of ways to mentor. You might not even know when you&rsquo;re doing it.</p>
 
 <p>When I first asked to play with the Breakpoints a few weeks ago, James said yes, and I immediately panicked a little on the inside, and I asked for the whole setlist so I could practice. And he said sure and sent them. But then he said, you know, it’s fine to just play some of the songs, or even drop out of parts if you’re not up for it. It’s better to have a few songs you’re good at than a bunch you stumble through. And I said yeah, yeah, yeah, I know that. I’m cool. And I did kind of know. But not really. I’d been planning to practice them all and just beat myself up a lot everywhere I stumbled. I needed someone who knows more than me to give me permission to be a beginner, but still let me play. Sometimes you&rsquo;ll never know the impact of a small kindness.</p>
 
@@ -677,7 +677,7 @@ struct Bird: Animal {
     <link href="http://localhost:4000/re-throws"/>
     <updated>2015-06-18T11:12:00-04:00</updated>
     <id>http://localhost:4000/re-throws</id>
-    <content type="html"><![CDATA[<p><a href="/throw-what-dont-throw">Last time</a> we talked about how a function that can
+    <content type="html"><![CDATA[<p><a href="http://localhost:4000/throw-what-dont-throw">Last time</a> we talked about how a function that can
 throw errors is a different type in Swift than a function that cannot throw
 errors. And then I briefly mentioned this other thing, &ldquo;rethrows.&rdquo; Let&rsquo;s talk
 about that, and along the way explore closure types a little more and their
@@ -1185,7 +1185,7 @@ discover how to build great things with it.</p>
 
 <h2>Swift is a Special Flower</h2>
 
-<p>Every so often there are special opportunities. Swift represents a real chance to advance the state of common practice in our industry. <a href="/swift-is-not-functional">Swift isn&rsquo;t functional</a>, but it has a lot of very interesting pieces available. And Swift will be extremely popular, by luck of birth as much as anything. I don&rsquo;t mean to disparage the Swift dev team. They&rsquo;ve done an admirable job. But if Swift weren&rsquo;t the language of iOS development, it would likely be a pretty minor thing. But since it&rsquo;s the favored language of an incredibly popular platform, and since it <em>does</em> have functional leanings, and frankly it&rsquo;s a pretty nice language to work in, it represents an incredible opportunity to positively impact a whole discipline.</p>
+<p>Every so often there are special opportunities. Swift represents a real chance to advance the state of common practice in our industry. <a href="http://localhost:4000/swift-is-not-functional">Swift isn&rsquo;t functional</a>, but it has a lot of very interesting pieces available. And Swift will be extremely popular, by luck of birth as much as anything. I don&rsquo;t mean to disparage the Swift dev team. They&rsquo;ve done an admirable job. But if Swift weren&rsquo;t the language of iOS development, it would likely be a pretty minor thing. But since it&rsquo;s the favored language of an incredibly popular platform, and since it <em>does</em> have functional leanings, and frankly it&rsquo;s a pretty nice language to work in, it represents an incredible opportunity to positively impact a whole discipline.</p>
 
 <p>To make the most of that opportunity takes live code in non-trivial apps, not just playing around with data structures and algorithms. Many of my code examples come out of a small <a href="https://github.com/rnapier/WikipediaSearcher">Wikipedia front-end</a> I play with to see how these things might work in practice. I try to solve problems in a real (if small) iOS app and see where it takes me.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> This is the approach I recommend for any would-be FP evangelist. Build a real program with a real UI before forming too strong an opinion of what FP should look like in Swift. Engage with stdlib and Cocoa (and GCD, and Core Animation, and&hellip;), don&rsquo;t try to replace them. Don&rsquo;t assume stdlib is the way it is out of ignorance. Yes, it&rsquo;s backwards from Haskell. Yes, that makes certain kinds of composition really annoying. Maybe that just means those kinds of composition aren&rsquo;t going to be good Swift.</p>
 
@@ -1201,7 +1201,7 @@ discover how to build great things with it.</p>
 
 <p>I&rsquo;m looking for help. I&rsquo;m looking for FP veterans to bring what they&rsquo;ve learned elsewhere, mix it with the experience of long-time Cocoa devs, and build a great foundation for Swift, maybe even nudge Apple in the process.</p>
 
-<p>Much of that, I believe, is education. I have an <a href="/categories/functional">ongoing series here</a>. I&rsquo;d love to learn to teach it more effectively.</p>
+<p>Much of that, I believe, is education. I have an <a href="http://localhost:4000/categories/functional">ongoing series here</a>. I&rsquo;d love to learn to teach it more effectively.</p>
 
 <p>It&rsquo;s also about good tools. The tools we use shape our thinking. I want it to be as easy as possible to write great code, and Swift has a few glaring omissions. To that end, I started a project called <a href="https://github.com/llamakit/llamakit">LlamaKit</a>, aimed at providing a small set of important tools that are easy to integrate into existing projects and should be nearly universally useful. There are much more full-lambda projects out there, particularly <a href="https://github.com/typelift">TypeLift</a>. LlamaKit isn&rsquo;t trying to fill that whole need, just provide the bare minimum to make functional programming approachable in Swift for common Cocoa problems, provide a foundation for more powerful frameworks, and help those frameworks interoperate more easily than they can today. I welcome input on the <a href="https://groups.google.com/forum/#!forum/llamakit">mailing list</a>. It&rsquo;s still early days for LlamaKit, but I think it will stabilize into something useful very soon.</p>
 
@@ -1344,7 +1344,7 @@ discover how to build great things with it.</p>
     <link href="http://localhost:4000/reduction-in-force"/>
     <updated>2014-09-14T20:14:00-04:00</updated>
     <id>http://localhost:4000/reduction-in-force</id>
-    <content type="html"><![CDATA[<p>Our last <a href="/flatmap">talk about >>==</a> was full of twists and turns, some
+    <content type="html"><![CDATA[<p>Our last <a href="http://localhost:4000/flatmap">talk about >>==</a> was full of twists and turns, some
 philosophy, surprising connections, and a radical new operator. It was a lot to
 absorb, and you may have to play with it some in your own code before you really
 know what it&rsquo;s about. That&rsquo;s ok.</p>
@@ -1393,7 +1393,7 @@ the combining function, but we can of course use Swift shortcuts for this:</p>
 <pre><code>let sum = reduce(xs, 0, +)
 </code></pre>
 
-<p>What&rsquo;s up with that? <a href="/flatmap">I told you before</a>, <code>+</code> is just a function:</p>
+<p>What&rsquo;s up with that? <a href="http://localhost:4000/flatmap">I told you before</a>, <code>+</code> is just a function:</p>
 
 <pre><code>func +(lhs: Float, rhs: Float) -&gt; Float
 </code></pre>
@@ -1477,7 +1477,7 @@ anything we can imagine. We could join strings just as easily.</p>
 }
 </code></pre>
 
-<p>Or, <a href="/flatmap#fn:1">as promised</a>, here&rsquo;s <code>flatten</code>, which takes a nested array
+<p>Or, <a href="http://localhost:4000/flatmap#fn:1">as promised</a>, here&rsquo;s <code>flatten</code>, which takes a nested array
 and removes one level of structure:</p>
 
 <pre><code>func flatten&lt;T&gt;(xs: [[T]]) -&gt; [T] {
@@ -1613,7 +1613,7 @@ make you look smart.</p>
     <content type="html"><![CDATA[<blockquote><p>In which our heroes create for themselves a convenience and discover a
 surprising thing.</p></blockquote>
 
-<p><a href="/maps">Last time</a> we looked at the incredible little <code>map</code> function, and saw
+<p><a href="http://localhost:4000/maps">Last time</a> we looked at the incredible little <code>map</code> function, and saw
 how it could be used to simplify a lot of tedious for-loops while making our
 code more clear and less error-prone. This time, we&rsquo;re going to see if we can
 solve a common problem that happens with mapping, nesting.</p>
@@ -1657,8 +1657,8 @@ map(F&lt;T&gt;, T -&gt; U) -&gt; F&lt;U&gt;
 <p>Learning to see these shapes helps us find patterns we can reuse and combine.</p>
 
 <p>For more introduction, see
-<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a> and
-<a href="/maps">Maps&hellip;Wait, They Don&rsquo;t Love You Like I Love You</a>.</p>
+<a href="http://localhost:4000/functional-wish-fulfillment">Functional Wish Fulfillment</a> and
+<a href="http://localhost:4000/maps">Maps&hellip;Wait, They Don&rsquo;t Love You Like I Love You</a>.</p>
 
 <h2>Boxes in boxes</h2>
 
@@ -1802,7 +1802,7 @@ to compare shapes:</p>
 </code></pre>
 
 <p>That looks very familiar. Back in
-<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a> we developed a
+<a href="http://localhost:4000/functional-wish-fulfillment">Functional Wish Fulfillment</a> we developed a
 function called <code>continueWith</code> that let us chain together functions so that we&rsquo;d
 get a success if they all succeeded, and a failure if any of them failed. Here&rsquo;s
 what it looked like:</p>
@@ -2085,7 +2085,7 @@ a lot of things to cover. Until then, stop mutating. Evolve.</p>
     <updated>2014-08-28T08:20:25-04:00</updated>
     <id>http://localhost:4000/maps</id>
     <content type="html"><![CDATA[<p>I had a bit of a throw-away line in
-<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>:</p>
+<a href="http://localhost:4000/functional-wish-fulfillment">Functional Wish Fulfillment</a>:</p>
 
 <blockquote><p>Kind of like map, but kind of different.</p></blockquote>
 
@@ -2339,7 +2339,7 @@ Optional-chaining is just a more method-friendly version of <code>map</code>.</p
 
 <p>So if we can map over an array, and we can map over an optional, can we map over
 anything else? How about the <code>Result</code> type we built in
-<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>?<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+<a href="http://localhost:4000/functional-wish-fulfillment">Functional Wish Fulfillment</a>?<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
 
 <pre><code>func map&lt;T, U&gt;(x: Result&lt;T&gt;, f: T -&gt; U) -&gt; Result&lt;U&gt; {
   switch x {
@@ -2949,7 +2949,7 @@ are thread-safe because you have your own, immutable copies.</p>
 pure functional approach to the problem.</p>
 
 <p>&ldquo;Functional? But there&rsquo;s not a single <code>map</code> or closure or <code>&lt;*&gt;</code> to be seen.
-Wasn&rsquo;t the point of <a href="/swift-is-not-functional">Swift is not Functional</a> that
+Wasn&rsquo;t the point of <a href="http://localhost:4000/swift-is-not-functional">Swift is not Functional</a> that
 just using a few functions doesn&rsquo;t make a language functional? Isn&rsquo;t this
 all possible in C?&rdquo;</p>
 

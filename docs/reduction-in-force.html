@@ -9,33 +9,9 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="
-
-  
-  
-    
-      Reduction in force
-    
-    
-      
-        
-
-
-
-
-
-
-
-
-
-
-        
-      
-    
-  
-
-
-Our last talk about >>== was full of twists and...">
+  <meta name="description" content="Our last talk about >>== was full of twists and turns, some
+philosophy, surprising connections, and a radical new operator. It was a lot to
+absorb, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -105,7 +81,7 @@ Our last talk about >>== was full of twists and...">
   </header>
 
 
-<div class="entry-content"><p>Our last <a href="/flatmap">talk about >>==</a> was full of twists and turns, some
+<div class="entry-content"><p>Our last <a href="/cocoaphony-blog/flatmap">talk about >>==</a> was full of twists and turns, some
 philosophy, surprising connections, and a radical new operator. It was a lot to
 absorb, and you may have to play with it some in your own code before you really
 know what it&rsquo;s about. That&rsquo;s ok.</p>
@@ -154,7 +130,7 @@ the combining function, but we can of course use Swift shortcuts for this:</p>
 <pre><code>let sum = reduce(xs, 0, +)
 </code></pre>
 
-<p>What&rsquo;s up with that? <a href="/flatmap">I told you before</a>, <code>+</code> is just a function:</p>
+<p>What&rsquo;s up with that? <a href="/cocoaphony-blog/flatmap">I told you before</a>, <code>+</code> is just a function:</p>
 
 <pre><code>func +(lhs: Float, rhs: Float) -&gt; Float
 </code></pre>
@@ -238,7 +214,7 @@ anything we can imagine. We could join strings just as easily.</p>
 }
 </code></pre>
 
-<p>Or, <a href="/flatmap#fn:1">as promised</a>, here&rsquo;s <code>flatten</code>, which takes a nested array
+<p>Or, <a href="/cocoaphony-blog/flatmap#fn:1">as promised</a>, here&rsquo;s <code>flatten</code>, which takes a nested array
 and removes one level of structure:</p>
 
 <pre><code>func flatten&lt;T&gt;(xs: [[T]]) -&gt; [T] {
@@ -402,10 +378,10 @@ make you look smart.</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/flatmap" title="Previous Post: Flattenin' your mappenin'">&laquo; Flattenin' your mappenin'</a>
+        <a class="basic-alignment left" href="/cocoaphony-blog/flatmap" title="Previous Post: Flattenin' your mappenin'">&laquo; Flattenin' your mappenin'</a>
       
       
-        <a class="basic-alignment right" href="/go-is-a-shop-built-jig" title="Next Post: Go is a shop-built jig">Go is a shop-built jig &raquo;</a>
+        <a class="basic-alignment right" href="/cocoaphony-blog/go-is-a-shop-built-jig" title="Next Post: Go is a shop-built jig">Go is a shop-built jig &raquo;</a>
       
     </p>
   </footer>

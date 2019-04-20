@@ -9,33 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="
-
-  
-  
-    
-      Building the Build System - Part 1 - Abandoning the Build Panel
-    
-    
-      
-        
-
-
-
-
-
-
-
-
-
-
-        
-      
-    
-  
-
-
-XC...">
+  <meta name="description" content="XCode has a decent build system, but it doesn&rsquo;t work as well as it could out of the box. With just a little work, you can make your projects &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -109,7 +83,7 @@ XC...">
 
 <p>The first thing we want to do is get rid of one of the great obfuscations of Xcode: The Build panel.</p>
 
-<p><img class="center" src="/images/build-system-1-build-panel/buildpanel.png"></p>
+<p><img class="center" src="/cocoaphony-blog/images/build-system-1-build-panel/buildpanel.png"></p>
 
 <p>The build panel seems convenient at first, but in practice it makes it hard to see what&rsquo;s going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you&rsquo;ve done this so someone doesn&rsquo;t come along later switch the setting. The Build Panel doesn&rsquo;t give you an easy way to include comments right along with the setting (the &ldquo;Comments&rdquo; panel is pretty useless in my experience), and it&rsquo;s easy to lose settings or accidentally apply them to only to one configuration.</p>
 
@@ -247,10 +221,10 @@ XC...">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/app-delegate" title="Previous Post: App Delegate">&laquo; App Delegate</a>
+        <a class="basic-alignment left" href="/cocoaphony-blog/app-delegate" title="Previous Post: App Delegate">&laquo; App Delegate</a>
       
       
-        <a class="basic-alignment right" href="/pandoraboy-work" title="Next Post: PandoraBoy work">PandoraBoy work &raquo;</a>
+        <a class="basic-alignment right" href="/cocoaphony-blog/pandoraboy-work" title="Next Post: PandoraBoy work">PandoraBoy work &raquo;</a>
       
     </p>
   </footer>

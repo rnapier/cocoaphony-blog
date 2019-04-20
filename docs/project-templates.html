@@ -9,33 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="
-
-  
-  
-    
-      Building the Build System - Part 2 - Project Templates
-    
-    
-      
-        
-
-
-
-
-
-
-
-
-
-
-        
-      
-    
-  
-
-
-In Part 1 o...">
+  <meta name="description" content="In Part 1 of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -105,7 +79,7 @@ In Part 1 o...">
   </header>
 
 
-<div class="entry-content"><p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn&rsquo;t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it&rsquo;s easier than ever. Let&rsquo;s make one.</p>
+<div class="entry-content"><p>In <a href="/cocoaphony-blog/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn&rsquo;t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it&rsquo;s easier than ever. Let&rsquo;s make one.</p>
 
 <!-- more -->
 
@@ -157,7 +131,7 @@ ___PROJECTNAME___
 
 <h3>Walking through it all</h3>
 
-<p>Now that we&rsquo;ve talked it to death, let&rsquo;s walk through actually doing it based on our work <a href="/blog/build-system-1-build-panel">last time</a>.</p>
+<p>Now that we&rsquo;ve talked it to death, let&rsquo;s walk through actually doing it based on our work <a href="/cocoaphony-blog/blog/build-system-1-build-panel">last time</a>.</p>
 
 <ul>
 <li>Open <code>~/Library/Application Support/Developer/Shared/Xcode</code> in Finder and make a directory called <code>Project Templates</code></li>
@@ -165,7 +139,7 @@ ___PROJECTNAME___
 <li>Open <code>/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode/Project Templates/Application</code> in Finder.</li>
 <li>Copy (don&rsquo;t move), <code>Window-Based Application</code> from the <code>/Developer</code> window to <code>~/Library</code> window.</li>
 <li>Open the <code>Window-Based Application</code> folder and open <code>___PROJECTNAME___.xcodeproj</code> in Xcode.</li>
-<li>Go back to <a href="/blog/build-system-*-build-panel">&ldquo;Abandoning the Build Panel&rdquo;</a> and apply the changes there. Or apply whatever changes you want to be in every project. In your <code>Application.xcconfig</code>, you&rsquo;ll want this:
+<li>Go back to <a href="/cocoaphony-blog/blog/build-system-*-build-panel">&ldquo;Abandoning the Build Panel&rdquo;</a> and apply the changes there. Or apply whatever changes you want to be in every project. In your <code>Application.xcconfig</code>, you&rsquo;ll want this:
 <code>
 PRODUCT_NAME = ___PROJECTNAME___
 GCC_PREFIX_HEADER = ___PROJECTNAMEASIDENTIFIER____Prefix.pch
@@ -222,10 +196,10 @@ GCC_PREFIX_HEADER = ___PROJECTNAMEASIDENTIFIER____Prefix.pch
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/pandoraboy-work" title="Previous Post: PandoraBoy work">&laquo; PandoraBoy work</a>
+        <a class="basic-alignment left" href="/cocoaphony-blog/pandoraboy-work" title="Previous Post: PandoraBoy work">&laquo; PandoraBoy work</a>
       
       
-        <a class="basic-alignment right" href="/cgeventtimestamps-are-big" title="Next Post: CGEventTimestamps are big">CGEventTimestamps are big &raquo;</a>
+        <a class="basic-alignment right" href="/cocoaphony-blog/cgeventtimestamps-are-big" title="Next Post: CGEventTimestamps are big">CGEventTimestamps are big &raquo;</a>
       
     </p>
   </footer>
