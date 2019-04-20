@@ -1,0 +1,652 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Flattenin' your mappenin' - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Flattenin' your mappenin'
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+In which our heroes create for themselve...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/flatmap">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Flattenin' your mappenin'</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-09-07T09:13:15-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><blockquote><p>In which our heroes create for themselves a convenience and discover a
+surprising thing.</p></blockquote>
+
+<p><a href="/maps">Last time</a> we looked at the incredible little <code>map</code> function, and saw
+how it could be used to simplify a lot of tedious for-loops while making our
+code more clear and less error-prone. This time, we&rsquo;re going to see if we can
+solve a common problem that happens with mapping, nesting.</p>
+
+<!-- more -->
+
+
+<h2>When we left our heroes</h2>
+
+<p>First, a very quick recap on mapping. We can use <code>map</code> to transform an array of
+elements into an new array of different elements. For example, we can transform
+an array of strings into an array of string lengths in a variety of syntaxes:</p>
+
+<pre><code>let domains = ["apple.com", "google.com", "robnapier.net"]
+let lengths = domains.map { countElements($0) }
+let lengths = map(domains) { countElements($0) }
+let lengths = domains.map(countElements)
+let lengths = map(domains, countElements)
+</code></pre>
+
+<p>Or we could transform an array of strings into an array of URLs:</p>
+
+<pre><code>let urls = domains.map { NSURL(scheme: "http", host: $0, path: "/") }
+</code></pre>
+
+<p>We learned that we can map optionals and our custom
+<a href="https://gist.github.com/rnapier/42ef28d52ac92744730f">result</a> type.
+In both cases, successful values (<code>Some</code>, <code>Success</code>) are transformed with the
+function, while failing values (<code>None</code>, <code>nil</code>, <code>Failure</code>) are simply returned.
+In this way, mapping is very similar to optional chaining (<code>?.</code>).</p>
+
+<p>We discovered that the different <code>map</code> functions all have the same &ldquo;shape&rdquo;:</p>
+
+<pre><code>map(Array&lt;T&gt;, T -&gt; U) -&gt; Array&lt;U&gt;
+map(Optional&lt;T&gt;, T -&gt; U) -&gt; Optional&lt;U&gt;
+map(Result&lt;T&gt;, T -&gt; U) -&gt; Result&lt;U&gt;
+// or more generally:
+map(F&lt;T&gt;, T -&gt; U) -&gt; F&lt;U&gt;
+</code></pre>
+
+<p>Learning to see these shapes helps us find patterns we can reuse and combine.</p>
+
+<p>For more introduction, see
+<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a> and
+<a href="/maps">Maps&hellip;Wait, They Don&rsquo;t Love You Like I Love You</a>.</p>
+
+<h2>Boxes in boxes</h2>
+
+<p>Let&rsquo;s take a
+<a href="https://gist.github.com/rnapier/e0d91580d613fb21a52b">simple example</a> to get
+ourselves started on a new problem. We have customers with some properties:</p>
+
+<pre><code>struct Customer {
+  let name: String
+  let emails: [String]
+}
+
+let customers = [
+  Customer(name: "Alice", emails: ["alice@example.com"]),
+  Customer(name: "Bob", emails: ["bob@example.org", "bobby@home.example"])
+]
+</code></pre>
+
+<p>Now we&rsquo;d like a list of all our customer names for our upcoming report. Easy!</p>
+
+<pre><code>let names = customers.map { $0.name }
+// ["Alice", "Bob"]
+</code></pre>
+
+<p>Perfect. Just what we want. Now, we also have had a major security issue and
+need to alert all of our users at all of their email addresses. Let&rsquo;s grab
+those:</p>
+
+<pre><code>let emails = customers.map { $0.emails }
+// [["alice@example.com"], ["bob@example.org", "bobby@home.example"]]
+</code></pre>
+
+<p>Wait. That&rsquo;s not quite what we meant. We wanted a list of email addresses, not a
+list-of-lists of email addresses. What are we going to do now? I wouldn&rsquo;t be
+surprised if you&rsquo;ve encountered this before and fixed it with some kind of
+&ldquo;flatten&rdquo; function that removes one layer of structure. It&rsquo;s slightly surprising
+that Swift doesn&rsquo;t have one of these built in, but it&rsquo;s easy enough to
+make.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<pre><code>func flatten&lt;T&gt;(array: [[T]]) -&gt; [T] {
+  var result = [T]()
+  for subarray in array {
+    result.extend(subarray)
+  }
+  return result
+}
+</code></pre>
+
+<p>With that, let&rsquo;s try again:</p>
+
+<pre><code>let flatEmails = flatten(customers.map { $0.emails })
+// ["alice@example.com", "bob@example.org", "bobby@home.example"]
+</code></pre>
+
+<p>Great. Well, pretty great. There are a few small annoyances. Throwing
+<code>flatten()</code> on the start is kind of tedious, especially if this is part of a
+chain of maps and filters. Consider if we wanted these to be URLs. We&rsquo;d want to
+do this:</p>
+
+<pre><code>let emails =
+  customers.map { $0.emails }
+  .flatten      // &lt;== this isn't possible
+  .map { NSURL(string:"mailto:\($0)") }
+</code></pre>
+
+<p>But that&rsquo;s not really possible in Swift. You can&rsquo;t easily add an Array extension
+for <code>flatten</code> because it only applies to arrays of arrays. Swift can&rsquo;t apply
+extensions only to certain kinds of arrays. So we&rsquo;re forced to do this:</p>
+
+<pre><code>let emails =
+  flatten(customers.map { $0.emails })
+  .map { NSURL(string:"mailto:\($0)") }
+</code></pre>
+
+<p>That&rsquo;s kind of ugly, and gets worse if the chain is long and has multiple points
+where flattening is needed.</p>
+
+<p>Like I said, this &ldquo;map plus flatten&rdquo; is pretty common, so maybe it&rsquo;s worth
+making a little convenience method for it that we could stick on Array. Let&rsquo;s
+call it <code>flatMap</code>:</p>
+
+<pre><code>extension Array {
+  func flatMap&lt;U&gt;(transform: T -&gt; [U]) -&gt; [U] {
+    return flatten(self.map(transform))
+  }
+}
+</code></pre>
+
+<p>Just like it says on the tin. Apply the map. Flatten. Ta-da! And now we can
+call:</p>
+
+<pre><code>let flatMapEmails = customers.flatMap { $0.emails }
+// ["alice@example.com", "bob@example.org", "bobby@home.example"]
+</code></pre>
+
+<p>Just like we wanted.</p>
+
+<h2>Flat all the things</h2>
+
+<p>Since we can map optionals and <code>Result</code>, can we flatten them too? Let&rsquo;s look at
+the shape of <code>flatten</code> and how it might apply:</p>
+
+<pre><code>flatten(Array&lt;Array&lt;T&gt;&gt;) -&gt; Array&lt;T&gt;
+flatten(Optional&lt;Optional&lt;T&gt;&gt;) -&gt; Optional&lt;T&gt;
+flatten(Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt;
+</code></pre>
+
+<p>So we could flatten a <code>T??</code> to <code>T?</code> or a <code>Result&lt;Result&lt;T&gt;&gt;</code> to <code>Result&lt;T&gt;</code>.
+That makes sense and sounds useful.</p>
+
+<pre><code>func flatten&lt;T&gt;(result: Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt; {
+  switch result {
+  case .Success(let box):
+    switch box.unbox {
+    case .Success(let nestedBox): return .Success(nestedBox)
+    case .Failure(let err):       return .Failure(err)
+    }
+  case .Failure(let err): return .Failure(err)
+  }
+}
+</code></pre>
+
+<p>And if we can map and flatten, then of course we can write <code>flatMap</code>:</p>
+
+<pre><code>extension Result {
+  func flatMap&lt;U&gt;(transform: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+    return flatten(self.map(transform))
+  }
+}
+</code></pre>
+
+<h2>What <em>is</em> this flatMap?</h2>
+
+<p>That was easy enough to do, but who cares? Why would you ever want to do that?</p>
+
+<p>Let&rsquo;s go back to the shape of this function. It&rsquo;s a method, so we put the type
+of <code>self</code> as the first parameter to get a function form. That makes it easier
+to compare shapes:</p>
+
+<pre><code>flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+</code></pre>
+
+<p>That looks very familiar. Back in
+<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a> we developed a
+function called <code>continueWith</code> that let us chain together functions so that we&rsquo;d
+get a success if they all succeeded, and a failure if any of them failed. Here&rsquo;s
+what it looked like:</p>
+
+<pre><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+  switch x {
+  case .Success(let box): return f(box.unbox)
+  case .Failure(let err): return .Failure(err)
+  }
+}
+</code></pre>
+
+<p>Using that, we were able to turn our big, complicated JSON parser, full of
+conditional logic, into this:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result&lt;[Page]&gt;
+}
+</code></pre>
+
+<p>Let&rsquo;s compare the shapes of these functions:</p>
+
+<pre><code>     flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+continueWith(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+</code></pre>
+
+<p>Look familiar?</p>
+
+<p>In functional programming, when two generic functions have the same shape, you
+should have a strong suspicion that they are at least related. There may be
+some more basic function that they both derive from, or they may turn out to be
+the same thing.</p>
+
+<p>I&rsquo;m not going to bore you with the fairly trivial (if slightly tedious) proof
+that <code>continueWith</code> and <code>flatMap</code> are in fact the same function. You can work it
+out on your own if you&rsquo;re interested, or see
+<a href="https://gist.github.com/rnapier/b383d2542c9fabe913c9">my version in this gist</a>.
+But I will call out two facts: (1) they are the same function, and (2) it&rsquo;s
+possible to <em>prove</em> it.</p>
+
+<h2>Proving the program</h2>
+
+<p>I am not going to wander into the &ldquo;programming is math&rdquo; debate. It&rsquo;s a silly
+argument. What is important, and should be incontrovertible, is that functional
+programming makes it easier to use well-established tools that are common among
+mathematicians. One of those tools is the proof. We use proofs all the time, we
+just don&rsquo;t call them that. Every correct automatic refactoring is based on a
+proof that the code before the refactor is identical to the code after the
+refactor.</p>
+
+<p><span class='pullquote-right' data-pullquote='An optimizing compiler in a strongly typed language is essentially a giant
+proof engine.'></p>
+
+<p>An optimizing compiler in a strongly typed language is essentially a giant
+proof engine. When you get errors like
+<a href="http://stackoverflow.com/a/25645689/97337">&ldquo;C is not convertible to Self,&rdquo;</a>
+it means you asserted something that the compiler couldn&rsquo;t prove. It may mean
+that you asserted something that isn&rsquo;t true, or it may mean that the proof
+engine isn&rsquo;t powerful enough to prove it, or it may even mean that the language
+isn&rsquo;t powerful enough to express what you are trying to assert.</p>
+
+<p></span></p>
+
+<p>Functional programming makes it is easier to apply proofs. In other words, it
+makes your code easier to refactor mechanically and easier to optimize
+performance. A key reason is the lack of mutable state. The more mutable state
+is tied up in something, the harder it is to prove that a dramatically different
+implementation behaves identically.</p>
+
+<p>Test cases are not the same thing as a proof. I can&rsquo;t create enough test cases
+to be certain that every number divisible by 6 is also divisible by 2 and 3.
+It&rsquo;d take an infinite number of test cases. But if I prove it, I don&rsquo;t need any
+tests at all. The key to making that easy is ensuring that <code>isDivisibleBySix(n:
+Int) -&gt; Bool</code> relies on nothing but <code>n</code>. If there is no mutable state, if there
+are no side effects, if it&rsquo;s just a function that takes a value and returns a
+value, then I can much more easily replace it with a different implementation
+and be confident it will behave the same.</p>
+
+<p>I don&rsquo;t want to wander down this road too far. I&rsquo;m not arguing that we don&rsquo;t
+need tests, and I&rsquo;m not arguing for proof-of-correctness as a general practice.
+I&rsquo;m saying that if you understand the difference between test and proof, and
+write your code in a way to favors proofs, you will get better code, fewer
+tests, simpler refactoring, and safer performance optimizations. And step one
+of that is the elimination of mutable state.</p>
+
+<h2>A method to our functional madness</h2>
+
+<p>OK, back to more hands-on, practical concerns.</p>
+
+<p>We implemented <code>continueWith</code> as a function, but we implemented <code>flatMap</code> as an
+extension method on <code>Result</code>. Does that change anything? Here&rsquo;s our
+function-based syntax:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result&lt;[Page]&gt;
+}
+</code></pre>
+
+<p>Using a method approach, here&rsquo;s what we get:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return asJSON(data)
+    .flatMap(asJSONArray)
+    .flatMap(secondElement)
+    .flatMap(asStringList)
+    .flatMap(asPages)
+}
+</code></pre>
+
+<p>Yeah, that&rsquo;s definitely easier to read, understand, and modify. Swift syntax
+tends to favor chaining methods over chaining functions. That&rsquo;s somewhat
+unfortunate. Functions are easier to reason about (prove) because they don&rsquo;t
+contain an implicit <code>self</code> that might hide state. Functions in Swift are also
+much more flexible in how they can be made generic (type-parameterized). As we
+saw before, it&rsquo;s not possible to write <code>flatten</code> as a method on a generic type.
+Overuse of methods can get us into really frustrating situations if we want to
+write really reusable code.</p>
+
+<p>But the syntax favors methods&hellip; mostly.</p>
+
+<p>Swift offers a very powerful way to chain together functions: operators.
+Operators are just functions that allow some syntax benefits:</p>
+
+<ul>
+<li>They don&rsquo;t require parentheses</li>
+<li>They can be prefix (<code>!x</code>), infix (<code>x + y</code>) or postfix (<code>x++</code>)</li>
+</ul>
+
+
+<p>So what if we defined an operator for <code>flatMap</code>? We&rsquo;ll call it <code>&gt;&gt;==</code> for
+reasons I&rsquo;ll explain later.</p>
+
+<pre><code>infix operator &gt;&gt;== {}
+func &gt;&gt;== &lt;T,U&gt;(x: Result&lt;T&gt;, f:T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+  return x.flatMap(f)
+}
+</code></pre>
+
+<p>With that, here&rsquo;s
+<a href="https://gist.github.com/rnapier/067156ac404cc42f17b6">our new parser</a>:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return asJSON(data)
+    &gt;&gt;== asJSONArray
+    &gt;&gt;== secondElement
+    &gt;&gt;== asStringList
+    &gt;&gt;== asPages
+}
+</code></pre>
+
+<p>I think this reads very nicely, even nicer than the method version (though we
+can still improve it). Each line says &ldquo;as long as it hasn&rsquo;t failed, transform
+with&hellip;.&rdquo;</p>
+
+<p>Using operators like this can be dangerous. It&rsquo;s easy to wind up with obscure
+symbol soup. The key is finding a small number of highly reusable operators that
+are used consistently. There&rsquo;s a cost to forcing people to learn and memorize
+your operator; make sure it&rsquo;s going to be used often enough to be worth it.</p>
+
+<p>That said, we all use operators every day, and they&rsquo;re an important part of
+programming. There is no difference between <code>+</code> and <code>&gt;&gt;==</code> other than you
+learned one when you were a child. <code>+</code> is nothing more than an infix function:</p>
+
+<pre><code>infix operator + { associativity left precedence 140 }
+func +(lhs: Float, rhs: Float) -&gt; Float
+func +(lhs: Int, rhs: Int) -&gt; Int
+...
+</code></pre>
+
+<p>We could just as well use a function called <code>add()</code> to do the same thing, but
+instead everyone memorizes this arbitrary symbol because it&rsquo;s easier to use.
+That&rsquo;s important. There is nothing more <em>meaningful</em> about <code>+</code>, <code>-</code>, and <code>*</code>
+versus <code>&gt;&gt;==</code>. They&rsquo;re just symbols you&rsquo;ve memorized. I&rsquo;m suggesting you should
+memorize one more. Well, several. But you&rsquo;ll learn them over time just as you
+learned <code>√</code>, <code>∫</code>, <code>∑</code>, and <code>∞</code> later than you learned <code>+</code> and <code>-</code>.</p>
+
+<p>That doesn&rsquo;t mean you should go crazy with operators. In fact, I generally
+suggest you avoid creating new ones until you&rsquo;ve thought quite a lot about it
+and looked into how other languages solve similar problems. But as we go along,
+I&rsquo;m going to introduce several general-purpose operators that will make your
+code clearer and easier to write when used appropriately.</p>
+
+<h2>A rose by any other name would be confusing</h2>
+
+<p>You might ask now what this function should be called. We started by calling it
+<code>continueWith</code>, but then it changed to <code>flatMap</code>, and then to <code>&gt;&gt;==</code>. I didn&rsquo;t
+mention it here, but it&rsquo;s also called <code>Bind</code> and <code>&gt;&gt;=</code>. Other Swift developers
+have called it
+<a href="http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics">>>></a>
+and <a href="http://nomothetis.svbtle.com/the-culmination-i">>>=-</a>. Its math name is a
+monadic bind. But what should we call it?</p>
+
+<p>I believe Swift programmers should call the function <code>flatMap</code> (as in Scala) and
+should use <code>&gt;&gt;==</code> as the operator (derived from Haskell). The operator should be
+pronounced &ldquo;bind&rdquo; or colloquially &ldquo;and then.&rdquo; <code>bind()</code> and <code>&gt;&gt;=</code> are existing
+functions in Swift, and it&rsquo;s dangerous to overload things with completely
+different meanings (I&rsquo;m looking at you, C++ <code>&lt;&lt;</code>). I think the operator should
+preserve as much of the &ldquo;shape&rdquo; as possible from Haskell&rsquo;s, and I think <code>&gt;&gt;==</code>
+does that best.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p><span class='pullquote-right' data-pullquote='spend time looking at how other
+languages and other Swift developers have approached the same problem.'></p>
+
+<p>That&rsquo;s not really important, though. It&rsquo;s just my suggestion, and others might
+reasonably disagree. The point is that before foisting a new operator on the
+world (or even your team), you should spend time looking at how other
+languages and other Swift developers have approached the same problem.
+Otherwise you cut yourself off from a lot of insight and you make it hard for
+others coming to your code. Maybe they won&rsquo;t know Haskell or F# or Scala, but
+maybe they will. They definitely won&rsquo;t know the operator you made up over lunch.
+Make sure it&rsquo;s valuable enough to be worth teaching them.</p>
+
+<p></span></p>
+
+<h2>Maps flat, maybe brains too</h2>
+
+<p>If you&rsquo;ve gotten this far, you&rsquo;ve come a long way. It&rsquo;s a lot to take in. Let me
+sum up where we are in our parser:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return asJSON(data)
+    &gt;&gt;== asJSONArray
+    &gt;&gt;== secondElement
+    &gt;&gt;== asStringList
+    &gt;&gt;== asPages
+}
+</code></pre>
+
+<blockquote><p>Given some data, convert it to JSON and then to a JSON array and then take the
+second element and then convert that to a string list and then convert those to
+a list of pages and return the result.</p></blockquote>
+
+<p>I think that captures our algorithm about as clearly as we can. Compare it to
+the <a href="https://gist.github.com/rnapier/9e8f92a1ce6be5c3d295">original version</a>. It
+handles errors without littering our code with error handling or requiring
+exceptions. It&rsquo;s compact, but not dense. It&rsquo;s easy to modify or extend. And each
+of the individual functions is about as simple as it could be and easy to unit
+test (or so simple that it literally can&rsquo;t be wrong). There&rsquo;s still more work to
+make it generic. Things like <code>secondElement</code> obviously don&rsquo;t scale, and we&rsquo;ll
+work on that in future posts. But the basic structure is quite nice I think.</p>
+
+<p>Until then, here are some take-aways:</p>
+
+<ul>
+<li>Swift makes it easier to chain together methods than functions</li>
+<li>&hellip;but methods are harder to reason about because of <code>self</code></li>
+<li>Generic operators like <code>&gt;&gt;==</code> make it easy to chain together functions that peal away a small part of the problem while maintaining structure like error handling</li>
+<li>&hellip;but new operators should be created with caution, founded in the lessons of history</li>
+</ul>
+
+
+<p>That&rsquo;s enough for this time. This was a major turning point, but there are still
+a lot of things to cover. Until then, stop mutating. Evolve.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>In a later post we&rsquo;ll discuss how <code>flatten</code> is insanely simple to implement with <code>reduce</code>. The fact that its so simple is probably the reason they didn&rsquo;t bother to add <code>flatten</code> to stdlib. But I&rsquo;m guessing.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>I also have found it easy to type. I tried <code>&gt;&gt;=-</code> for a while and kept getting <code>&gt;&gt;=0-</code> when I was typing fast.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2014-09-07T09:13:15-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    functionalswift
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/maps" title="Previous Post: Maps... Wait, they don't love you like I love you">&laquo; Maps... Wait, they don't love you like I love you</a>
+      
+      
+        <a class="basic-alignment right" href="/reduction-in-force" title="Next Post: Reduction in force">Reduction in force &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

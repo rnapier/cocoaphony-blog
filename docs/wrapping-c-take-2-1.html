@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Wrapping C++ - Take 2, Part 1 - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Wrapping C++ - Take 2, Part 1
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+Last year, I presented an approach t...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/wrapping-c-take-2-1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Wrapping C++ - Take 2, Part 1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2010-06-09T02:39:04-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Last year, I presented <a href="/wrapping-c-objc">an approach to wrapping C++</a>. Since then, I&rsquo;ve been introduced to other approaches, particularly from gf who helped me better understand opaque objects. Since I do a lot of cross-language work, I&rsquo;ve had some opportunity to play with and expand this, and so I&rsquo;d like to update my C++ wrapping approach.</p>
+
+<p>First, to remind everyone of the problem: you have a C++ object that you want to consume in Objective-C. That&rsquo;s easy in ObjC++, but if you make an ivar that references a C++ class, then the header file can only be included by ObjC++ classes. This quickly spreads .mm files throughout your project, creating all kinds of headaches. ObjC is a beautiful thing, and C++ is fine, but ObjC++ is a crazy land that should be carefully segregated from civilized code. So how do we do it?</p>
+
+<!-- more -->
+
+
+<p>We create a thin wrapper object to provide an ObjC face on a C++ object. The challenge is how to hide C++ classes from the header file. The answer is to put them in a struct that you forward declare so you don&rsquo;t have to expose its contents. Structs are almost identical with C++ classes, but their forward declaration syntax is C-compatible (unlike class). Let&rsquo;s look at how this is done.</p>
+
+<p>For this example, we will consider a C++ class called <code>RN::Wrap</code>. It holds a simple string with set and get accessors.</p>
+
+<pre><code>class Wrap {
+public:
+    Wrap(string str) : m_string(str) {};
+    string getString() { return m_string; };
+    void setString(string str) { m_string = str; };
+private:
+    string m_string;
+};
+</code></pre>
+
+<p>We wrap this into Objective-C++ using an opaque structure, <code>RNWrapOpaque</code>:</p>
+
+<pre><code>struct RNWrapOpaque;
+@interface RNWrap : NSObject {
+    struct RNWrapOpaque *_cpp;
+}
+</code></pre>
+
+<p>Since we only include a raw pointer to <code>RNWrapOpaque</code>, we don&rsquo;t have to declare anything else about it in the header file. If we tried to store the actual struct here (rather than a pointer), then that would defeat the purpose. This is the only raw pointer we will need.</p>
+
+<p>Since structs are almost identical to classes in C++, we can use class features like constructors and destructors in the implementation (.mm file):</p>
+
+<pre><code>struct RNWrapOpaque {
+public:
+    RNWrapOpaque(string aStr) : wrap(aStr) {};
+    RN::Wrap wrap;
+};
+</code></pre>
+
+<p>Now initializing and using the opaque object is easy in ObjC++ code:</p>
+
+<pre><code>- (id)initWithString:(NSString *)aString {
+    self = [super init];
+    if (self != nil) {
+        self.cpp = new RNWrapOpaque([aString UTF8String]);
+    }
+    return self;
+}
+
+- (void)dealloc {
+    delete _cpp;
+    _cpp = NULL;    
+    [super dealloc];
+}
+
+- (void)setString:(NSString *)aString {
+    self.cpp-&gt;wrap.setString([aString UTF8String]);
+}
+
+- (NSString *)string {
+    return [NSString stringWithUTF8String:
+        self.cpp-&gt;wrap.getString().c_str()];
+}
+</code></pre>
+
+<p>A nice side effect of this usages is that C++ objects are easy to detect through the <code>self.cpp</code> prefix. Memory management is easy since there is only one raw C++ pointer.</p>
+
+<p>Using the class requires no special work. It&rsquo;s pure ObjC:</p>
+
+<pre><code>RNWrap *wrap = [[[RNWrap alloc] initWithString:@"my string"] autorelease];
+NSLog(@"wrap = %@", [wrap string]);
+</code></pre>
+
+<p>In <a href="/wrapping-c-take-2-2">part two</a>, we&rsquo;ll discuss how to extend this approach to more complex problems such as smart pointers, listeners/delegates, and bindings.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2010-06-09T02:39:04-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    cocoaiphone
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/chinese-study" title="Previous Post: Chinese study">&laquo; Chinese study</a>
+      
+      
+        <a class="basic-alignment right" href="/wrapping-c-take-2-2" title="Next Post: Wrapping C++ - Take 2, Part 2">Wrapping C++ - Take 2, Part 2 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

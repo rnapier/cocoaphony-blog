@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Throw what don't throw - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Throw what don't throw
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+So say you are trying out all this interest...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/throw-what-dont-throw">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Throw what don't throw</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2015-06-16T20:58:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>So say you are trying out all this interesting new <code>throw</code> stuff in Swift 2. And
+say you&rsquo;re running an early Beta in which many stdlib functions don&rsquo;t handle
+throw closures yet. Or maybe you&rsquo;re in the future and dealing with some other
+piece of code that you wish could handle a throw closure, but doesn&rsquo;t. What do
+you do?</p>
+
+<!-- more -->
+
+
+<p>By now you may be asking &ldquo;what the heck is a throw closure? Talk sense, man!&rdquo;
+Let&rsquo;s take a small step back and quickly introduce the new <code>throws</code> feature.
+That&rsquo;s not the point of this article, though. You should go watch the WWDC
+videos. But basically, it&rsquo;s like this. Say you have a function that might fail.
+In Swift 2, you can write it this way:</p>
+
+<pre><code>enum Error: ErrorType { case Negative }
+
+let f: (Int) throws -&gt; String = {
+    guard $0 &gt;= 0 else { throw Error.Negative }
+    return "".join(Repeat(count: $0, repeatedValue: "X"))
+}
+</code></pre>
+
+<p>First, the <code>throws</code> in the signature tells us that this function may throw.
+Functions may not throw errors unless they explicitly indicate that they can.</p>
+
+<p>You might think of &ldquo;throwing errors&rdquo; as equivalent to &ldquo;exceptions&rdquo; in languages
+you&rsquo;re familiar with, but it&rsquo;s a little different. A throw is really just a
+fancy return. A throwing function can return <em>either</em> a type or an <code>ErrorType</code>.
+And &ldquo;throws&rdquo; is probably best thought of as somewhat opaque sugar around an
+Either type.</p>
+
+<p>That tells us something very important:</p>
+
+<blockquote><p>A function that throws errors is a different <em>type</em> than one that doesn&rsquo;t.</p></blockquote>
+
+<p>I don&rsquo;t mean that it&rsquo;s &ldquo;some other kind of thing.&rdquo; I mean like <code>Int</code> is a
+different type than <code>String</code>, and <code>String</code> is a different type than <code>(Int) -&gt;
+String</code>, <code>(Int) -&gt; String</code> is a different type than <code>(Int) throws -&gt; String</code>. In
+fact, <code>(Int) -&gt; String</code> is a <em>subtype</em> of <code>(Int) throws -&gt; String</code>, which is
+pretty awesome and a little subtle, but we&rsquo;ll get to that in another post.</p>
+
+<p>So what does that mean? Let&rsquo;s think of a simple case of map today (Swift 2 Beta
+1):</p>
+
+<pre><code>print([1,2,3].map(f)) // Cannot invoke 'map' with an argument list of type '((Int) throws -&gt; String)'
+</code></pre>
+
+<p>What&rsquo;s going on here? Let&rsquo;s look at the type signature:</p>
+
+<pre><code>func map&lt;T&gt;(@noescape transform: (Self.Generator.Element) -&gt; T) -&gt; [T]
+</code></pre>
+
+<p>So <code>transform</code> is of type <code>(Element) -&gt; T</code>. We&rsquo;re passing <code>(Element) throws -&gt;
+T</code>. Remember I said that a non-throwing function is a subtype of a throwing
+function. So <code>(Element) throws -&gt; T</code> is a <em>supertype</em> of what what this function
+wants. That&rsquo;s like passing NSObject to something that wants UIView. You can&rsquo;t do
+that.</p>
+
+<p>So what do we do? Well for map, this is easy. We can just implement our own throwing version:</p>
+
+<pre><code>extension Array {
+    func map&lt;T&gt;(@noescape transform: (Generator.Element) throws -&gt; T) rethrows -&gt; [T] {
+        var result: [T] = []
+        for x in self {
+            result.append(try transform(x))
+        }
+        return result
+    }
+}
+</code></pre>
+
+<p>And now we can use it:</p>
+
+<pre><code>print(try [1,2,3].map(f))
+</code></pre>
+
+<p>Notice the use of <code>try</code>. This is pretty different than how <code>try</code> is used in
+other langauges, and another way that Swift&rsquo;s error handling doesn&rsquo;t quite match
+&ldquo;exceptions.&rdquo; Swift uses <code>try</code> to remind the programmer about functions that
+may throw errors. The compiler doesn&rsquo;t need <code>try</code>. It doesn&rsquo;t create scope, or
+mark control flow points, or anything like that. It&rsquo;s not a function or a
+constructor. It&rsquo;s just a keyword that Swift forces you to include so that <em>you</em>
+(and your coworkers) remember what&rsquo;s going on. When you see <code>try</code>, you should
+think &ldquo;hey, control could suddenly jump somewhere else from this point.&rdquo; It
+reduces surprise when that happens, and conversely tells you where control
+<em>can&rsquo;t</em> suddenly jump (i.e. everywhere without <code>try</code>). I think that&rsquo;s pretty
+nice.</p>
+
+<p>You may also notice both <code>throws</code> and <code>rethrows</code> in the method signature. I&rsquo;ll
+get to that in a later blog post. Just trust me for now. This code would also
+work if you used <code>throws</code> in both places, but this is the better signature.</p>
+
+<p>And one more &ldquo;also notice.&rdquo; Also notice that this is an <em>overload</em> of map. The
+closures have different types, so the compiler can pick the right one. Nice.</p>
+
+<p>OK, that was a lot of setup, and you could probably figure out on your own how
+to rewrite map this way. And besides, by beta 2, I&rsquo;m sure there will be a
+proper (re)throwing version of map. So why bother? For the next step.</p>
+
+<p>I know how map is implemented. It&rsquo;s really simple. But what if I <em>didn&rsquo;t</em> know
+how it was implemented? How about some function that I&rsquo;m not sure I could write
+correctly? How about a more obscure function that may not get throwing love
+quite so quickly? How about <code>Array.withUnsafeBufferPointer</code>? Ooohhh&hellip;.</p>
+
+<p>So here&rsquo;s our signature:</p>
+
+<pre><code>func withUnsafeBufferPointer&lt;R&gt;(@noescape body: (UnsafeBufferPointer&lt;T&gt;) -&gt; R) -&gt; R
+</code></pre>
+
+<p>We want to accept a <code>body</code> that can throw, but we want to pass it to the
+existing method, which can&rsquo;t accept a throwing closure. So what do we do? We go
+back to our old friend, Result. Here&rsquo;s a super-simple Result implementation that
+can convert to and from throwing closures:</p>
+
+<pre><code>enum Result&lt;T&gt; {
+    case Success(T)
+    case Failure(ErrorType)
+
+    func value() throws -&gt; T {
+        switch self {
+        case .Success(let value): return value
+        case .Failure(let err): throw err
+        }
+    }
+
+    init(@noescape f: () throws -&gt; T) {
+        do    { self = .Success(try f()) }
+        catch { self = .Failure(error) }
+    }
+}
+</code></pre>
+
+<p>If you&rsquo;re familiar with Result or Either, this should be pretty self-evident,
+but the key pieces are that <code>result.value()</code> will unwrap the result into either
+a value or a thrown error. And <code>init</code> will take a throwing closure and convert
+it into a Result. With that piece, here&rsquo;s how we build our method:</p>
+
+<pre><code>extension Array {
+    func withUnsafeBufferPointer&lt;R&gt;(@noescape body: (UnsafeBufferPointer&lt;T&gt;) throws -&gt; R) throws -&gt; R {
+        return try self.withUnsafeBufferPointer { buf in
+            return Result{ try body(buf) }
+            }.value()
+    }
+}
+</code></pre>
+
+<p>The closure <code>body</code> is of type <code>(UnsafeBufferPointer&lt;T&gt;) throws -&gt; R</code>, which we
+can&rsquo;t pass to <code>withUnsafeBufferPointer</code>. But <em>our</em> closure is of type
+<code>(UnsafeBufferPointer&lt;T&gt;) -&gt; Result&lt;R&gt;</code>, which is just fine (no throws here,
+move along).</p>
+
+<p>Let&rsquo;s walk through the closure from the inside out.</p>
+
+<ol>
+<li><code>try body(buf)</code>. Execute our throwing closure using the <code>buf</code> provided to us by the default implementation.</li>
+<li><code>Result{...}</code>. Capture it into a Result enum</li>
+<li><code>return Result{...}</code>. Return the Result, not the underlying value.</li>
+<li>The whole function nows looks like <code>return try result.value()</code></li>
+<li>This either returns the computed value (type <code>R</code>), or throws</li>
+</ol>
+
+
+<p>This method is marked <code>throws</code> rather than <code>rethrows</code> because &hellip; reasons. (The
+final throw doesn&rsquo;t come directly from <code>body</code>, but from <code>value()</code>. That&rsquo;ll
+hopefully make more sense when I explain <code>rethrows</code>.)</p>
+
+<p>And just for completeness (and because I needed it myself), we can do the same
+thing to <code>withUnsafeMutableBufferPointer</code>, but we need to give the compiler more
+type information because of the <code>inout</code> parameter:</p>
+
+<pre><code>extension Array {
+    mutating func withUnsafeMutableBufferPointer&lt;R&gt;(@noescape body: (inout UnsafeMutableBufferPointer&lt;T&gt;) throws -&gt; R) throws-&gt; R {
+        return try self.withUnsafeMutableBufferPointer { (inout buf: UnsafeMutableBufferPointer&lt;T&gt;) in
+            return Result{try body(&amp;buf)}}.value()
+    }
+}
+</code></pre>
+
+<p>These particular implementations probably won&rsquo;t be useful for long. I&rsquo;m sure the
+stdlib team will quickly clean this up (and you probably shouldn&rsquo;t be using
+<code>withUnsafeBufferPointer</code> very much anyway). But hopefully exploring how this
+works can give some insight into Swift&rsquo;s new error handling system. Result isn&rsquo;t
+dead; it still has interesting use cases like this one. But I expect those use
+cases to shrink, and I highly recommend exploring the new error handling and
+discover how to build great things with it.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2015-06-16T20:58:00-04:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/haskell-overlords" title="Previous Post: I, for one, welcome our new Haskell overlords">&laquo; I, for one, welcome our new Haskell overlords</a>
+      
+      
+        <a class="basic-alignment right" href="/re-throws" title="Next Post: Re...throws?">Re...throws? &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Clipping a CGRect to a CGPath - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Clipping a CGRect to a CGPath
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+I&rsquo;ve been playing with Core Te...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/clipping-cgrect-cgpath">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Clipping a CGRect to a CGPath</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2010-09-09T10:49:07-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;ve been playing with Core Text recently, and one of the things I wanted to do was layout text in an arbitrary CGPath. On Mac, you&rsquo;d do this with NSLayoutManager, but iOS doesn&rsquo;t have that so we have to build our own. I&rsquo;ll discuss Core Text more later, but one of the steps along this problem is how to clip a CGRect to a CGPath. I found several discussions of finding CGPath intersections, all explaining the basic technique. Draw the things you care about into a bitmap context and then inspect the pixels to see where they overlap. Clear enough, but it was hard to find a small code sample that demonstrated this with Core Graphics.</p>
+
+<p>For my purposes, I want the first full-height rectangle within the intersection of the line rectangle and the CGPath. Later I will expand this code to find all full-height rectangles within the intersection (there can be more than one), but this is enough to demonstrate the point.</p>
+
+<!-- more -->
+
+
+<p>First, we quickly clip the rectangle to the bounding box of the CGPath using <code>CGPathGetBoundingBox()</code>. In iOS 4, they&rsquo;ve added <code>CGPathGetPathBoundingBox()</code>, which can create a tighter box if you have control points outside your path, but I don&rsquo;t know yet if there&rsquo;s a performance trade-off for using it.</p>
+
+<pre><code>CGRect rect = someRect();
+CGPathRef path = somePath();
+
+CGRect boundingBox = CGPathGetBoundingBox(path);
+CGRect clippedRect = CGRectIntersection(boundingBox, rect);
+clippedRect = clipRectToPath(clippedRect, path);
+</code></pre>
+
+<p>You could do this first-pass clipping in <code>clipRectToPath()</code>, but my actual code uses <code>CGMakeRect()</code> to build up the clippedRect because I&rsquo;m making them in a loop.</p>
+
+<p>Without further fanfare, here is <code>clipRectToPath()</code>:</p>
+
+<pre><code>CGRect clipRectToPath(CGRect rect, CGPathRef path)
+{
+    size_t width = floorf(rect.size.width);
+    size_t height = floorf(rect.size.height);
+    uint8_t *bits = calloc(width * height, sizeof(*bits));
+    CGContextRef bitmapContext =
+        CGBitmapContextCreate(bits, 
+                              width,
+                              height,
+                              sizeof(*bits) * 8,
+                              width,
+                              NULL,
+                              kCGImageAlphaOnly);
+    CGContextSetShouldAntialias(bitmapContext, NO);
+
+    CGContextTranslateCTM(bitmapContext, -rect.origin.x, -rect.origin.y);
+    CGContextAddPath(bitmapContext, path);
+    CGContextFillPath(bitmapContext);
+
+    BOOL foundStart = NO;
+    NSRange range = NSMakeRange(0, 0);
+    NSUInteger x = 0;
+    for (; x &lt; width; ++x)
+    {
+        BOOL isGoodColumn = YES;
+        for (NSUInteger y = 0; y &lt; height; ++y)
+        {
+            if (bits[y * width + x] &lt; 128)
+            {
+                isGoodColumn = NO;
+                break;
+            }
+        }
+
+        if (isGoodColumn &amp;&amp; ! foundStart)
+        {
+            foundStart = YES;
+            range.location = x;
+        }
+        else if (!isGoodColumn &amp;&amp; foundStart)
+        {
+            break;
+        }
+    }
+    if (foundStart)
+    {
+        // x is 1 past the last full-height column
+        range.length = x - range.location - 1;
+    }
+
+    CGContextRelease(bitmapContext);
+    free(bits);
+
+    CGRect clipRect = 
+        CGRectMake(rect.origin.x + range.location, rect.origin.y, 
+            range.length, rect.size.height);    
+    return clipRect;
+}
+</code></pre>
+
+<p>First, we work out the size of the image and create a buffer to hold the bytes, one byte per pixel. We create an alpha-only bitmap context. We don&rsquo;t need color; just black and white, and we don&rsquo;t want anti-aliasing since we just care about clipped and not clipped. We translate the context to match our box and draw our path.</p>
+
+<p>Now we have a two-dimensional array of bytes which are either 0 or 255. We walk through each column, row by row, to see if there are any uncolored pixels. If there are, then this is not a full-height column, and we skip it. Once we find a full-height column, we continue looking until we find one that isn&rsquo;t. If we find it, we mark that as the end of our range (we&rsquo;ll subtract one later). Finally, we create our new rectangle using our range.</p>
+
+<p>Later I will expand this to return a CFArrayRef rather than a single CGRect. That way I can return multiple rectangles if the path intersects the rectangle multiple times. That just requires appending the rectangle to a list and starting over rather than calling &lsquo;break&rsquo; in the last &ldquo;else if&rdquo; clause.</p>
+
+<p>This technique is applicable to many other problems, such as finding the intersection of an arbitrary set of CGPaths. If you can draw it, you can use this approach to find the holes or the overlaps.</p>
+
+<p>There are several optimizations available here. In particular, we could create a single CGBitmapContext and a single buffer large enough for our largest rectangle. That would get rid of some memory churn.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2010-09-09T10:49:07-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    cocoaiphone
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/pandoras-profile-popup" title="Previous Post: Pandora's "Profile" pop-up">&laquo; Pandora's "Profile" pop-up</a>
+      
+      
+        <a class="basic-alignment right" href="/returning-deep-hack" title="Next Post: Returning from the Deep Hack">Returning from the Deep Hack &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,444 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Reduction in force - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Reduction in force
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+Our last talk about >>== was full of twists and...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/reduction-in-force">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Reduction in force</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-09-14T20:14:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Our last <a href="/flatmap">talk about >>==</a> was full of twists and turns, some
+philosophy, surprising connections, and a radical new operator. It was a lot to
+absorb, and you may have to play with it some in your own code before you really
+know what it&rsquo;s about. That&rsquo;s ok.</p>
+
+<p>Let&rsquo;s take a little break and talk about a handy functional tool built into
+Swift stdlib. I promise no big reveals, no new operators, no fancy types; just
+hands-on, practical discussion of the Swiss Army knife of transform functions:
+<code>reduce</code>.</p>
+
+<!-- more -->
+
+
+<p>Reducing is almost easier to show than to explain. Let&rsquo;s start with a trivial
+example. You have an array of numbers and you want to know the sum. We might say
+you want to &ldquo;reduce&rdquo; a <code>[Int]</code> to a single <code>Int</code>. <code>reduce</code> takes a sequence, an
+intial value, and a &ldquo;combining&rdquo; function like this:</p>
+
+<pre><code>let xs = [1,2,3,4,5]
+let sum = reduce(xs, 0) { accumulator, value in accumulator + value }
+// ==&gt; 15
+</code></pre>
+
+<p>The most interesting part is the combining function. It is passed a &ldquo;value so
+far&rdquo; and a &ldquo;next value from the list&rdquo; and it needs to return the result of
+combining them. Its signature looks like this:</p>
+
+<pre><code>(U, T) -&gt; U
+</code></pre>
+
+<p>So it doesn&rsquo;t have to return the same kind of thing as is in the list, but it
+often does. In our example, since we want the sum, we just add the two values.
+We could just as easily reduce the list to its product:</p>
+
+<pre><code>let product = reduce(xs, 1) { accumulator, value in accumulator * value }
+// ==&gt; 120
+</code></pre>
+
+<p>I&rsquo;m spelling out parameters to make it clear exactly what is being passed to
+the combining function, but we can of course use Swift shortcuts for this:</p>
+
+<pre><code>let sum = reduce(xs, 0) { $0 + $1 }
+</code></pre>
+
+<p>Or we can go futher, and shorten it to:</p>
+
+<pre><code>let sum = reduce(xs, 0, +)
+</code></pre>
+
+<p>What&rsquo;s up with that? <a href="/flatmap">I told you before</a>, <code>+</code> is just a function:</p>
+
+<pre><code>func +(lhs: Float, rhs: Float) -&gt; Float
+</code></pre>
+
+<p>And it&rsquo;s in the form <code>(T, T) -&gt; T</code>, which is just a special case of <code>(U, T) -&gt;
+U</code>. So that&rsquo;s fine, and we can pass it as the combining function.</p>
+
+<p>There&rsquo;s also a method form that can be convenient:</p>
+
+<pre><code>let sum = xs.reduce(0, combine: +)
+</code></pre>
+
+<p>We can think of that as &ldquo;take the list of x values, and add them, starting with
+zero.&rdquo;</p>
+
+<h3>A note on origami and names</h3>
+
+<p>Another common name for this function is &ldquo;fold.&rdquo; Sometimes, in other languages,
+you&rsquo;ll see &ldquo;fold left&rdquo; or &ldquo;fold right.&rdquo; Swift&rsquo;s &ldquo;reduce&rdquo; is the same as &ldquo;fold
+left.&rdquo; <strike>(A right fold starts at the end of the list and goes
+backwards.</strike><sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>) You may also see it called &ldquo;aggregate&rdquo; or
+&ldquo;accumulate&rdquo; or &ldquo;inject.&rdquo; They&rsquo;re all pretty much the same function.</p>
+
+<h2>Finding a starting point</h2>
+
+<p>OK, so we can add and multiply stuff. What else you got? We can get minimums and
+maximums. Let&rsquo;s implement stdlib&rsquo;s <code>minElement</code> for arrays with
+<code>reduce</code>.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p>Reducing requires an initial value. So, what should it be? For types that have a
+known minimum (like <code>Int.min</code>), you might be tempted to use it. But that&rsquo;s not
+very flexible, and some orderable types don&rsquo;t have an obvious minimum. For
+example, what if we implemened a <code>BigNum</code> type that supported arbitrarily large
+or small values?</p>
+
+<p>A common solution is to treat the first element as the initial value, and then
+reduce the rest:</p>
+
+<pre><code>func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
+  return dropFirst(xs).reduce(xs[0], combine: min)
+}
+</code></pre>
+
+<p>That&rsquo;s a reusable pattern, so we could, if we wanted to, extract it:</p>
+
+<pre><code>extension Array {
+  func reduce1(combine: (T, T) -&gt; T) -&gt; T {
+    return dropFirst(self).reduce(self[0], combine: combine)
+  }
+}
+
+func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
+  return xs.reduce1(min)
+}
+</code></pre>
+
+<p>Notice that <code>reduce1</code> requires a combining function that takes and returns the
+same type. It&rsquo;s worth taking a moment and thinking about why that has to be
+true.</p>
+
+<p>Of course, <code>reduce1</code> crashes if the array is empty. What if we wanted to get
+back an <code>Int?</code> to guard against that? Here&rsquo;s one way we could do it:</p>
+
+<pre><code>func safeMinElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T? {
+  return xs.reduce(nil) { m, x in min(m ?? x, x) }
+}
+</code></pre>
+
+<p>So we start with <code>nil</code>, and for each element if the current minimum is <code>nil</code>, we
+take whatever was passed in, and otherwise we take the minimum. Notice how we
+rely on Swift&rsquo;s habit of promiting anything into an optional when required.
+Let&rsquo;s us be pretty <strike>sloppy</strike> expressive.</p>
+
+<h2>Beyond math</h2>
+
+<p>The combining function <code>(U, T) -&gt; U</code> says nothing about numbers. We can reduce
+anything we can imagine. We could join strings just as easily.</p>
+
+<pre><code>func join(elements: [String]) -&gt; String {
+  return elements.reduce("", +)
+}
+</code></pre>
+
+<p>Or, <a href="/flatmap#fn:1">as promised</a>, here&rsquo;s <code>flatten</code>, which takes a nested array
+and removes one level of structure:</p>
+
+<pre><code>func flatten&lt;T&gt;(xs: [[T]]) -&gt; [T] {
+  return xs.reduce([], +)
+}
+</code></pre>
+
+<p>Told you it was simple. Notice how summing numbers, joining strings, and
+flattening arrays all have the same implementation, differing only in their
+initial value? That&rsquo;s another thing worth thinking about for a while, but it&rsquo;s
+too much theory for this post. (If you want to research it, the magic search
+term you want is <em>monoid</em>.)</p>
+
+<p>Mapping an array is just a special case of reducing:<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+
+<pre><code>func map&lt;T, U&gt;(xs: [T], f: T -&gt; U) -&gt; [U] {
+  return xs.reduce([]) { $0 + [f($1)] }
+}
+</code></pre>
+
+<p>So is filtering:</p>
+
+<pre><code>func filter&lt;T&gt;(xs: [T], includeElement: T -&gt; Bool) -&gt; [T] {
+  return xs.reduce([]) { filtered, x in includeElement(x) ? filtered + [x] : filtered }
+}
+</code></pre>
+
+<p>FlatMap:</p>
+
+<pre><code>func flatMap&lt;T, U&gt;(xs: [T], f: T -&gt; [U]) -&gt; [U] {
+  return xs.reduce([]) { $0 + f($1) }
+}
+</code></pre>
+
+<p>Reverse:</p>
+
+<pre><code>func reverse&lt;T&gt;(xs: [T]) -&gt; [T] {
+  return reduce(xs, []) { [$1] + $0 }
+}
+</code></pre>
+
+<p>Even counting!</p>
+
+<pre><code>func countElements&lt;T&gt;(xs: [T]) -&gt; Int {
+  return reduce(xs, 0) { c, _ in c + 1 }
+}
+</code></pre>
+
+<p>You can do a lot of stuff this way. It&rsquo;s particularly useful when you find
+yourself declaring a <code>var</code> just so you can initialize it with a loop. Any time
+you find yourself using <code>var</code> inside a function, consider whether this is better
+done with something else (<code>map</code>, <code>filter</code>, <code>reduce</code>, etc). Usually the answer is
+yes.</p>
+
+<h2>From whence would you return?</h2>
+
+<p>How about <code>contains</code>?</p>
+
+<pre><code>func contains&lt;T: Equatable&gt;(xs: [T], find: T) -&gt; Bool {
+  return xs.reduce(false) { found, x in found || find == x }
+}
+</code></pre>
+
+<p>Hmmm&hellip;. It works, but it&rsquo;s a poor choice in my opinion. <code>reduce</code> computes over
+the full list, so this is wasting a lot of effort checking values that aren&rsquo;t
+needed. A good way to think about it is how you would expect this function to
+behave if the sequence were infinite. If you would never expect the function to
+return (like for <code>sum</code>), then <code>reduce</code> is proably a good fit. If you might
+expect it to return anyway (like for <code>contains</code>), then <code>reduce</code> is probably the
+wrong tool.</p>
+
+<p>Another good way to think about it is whether you would include a <code>return</code> or
+<code>break</code> in your for-loop (or just use a while-loop). If so, your problem
+probably doesn&rsquo;t match <code>reduce</code> well.</p>
+
+<p>To make it more clear, let&rsquo;s see how <code>reduce</code> can be implemented:</p>
+
+<pre><code>func reduce&lt;T, U&gt;(xs: [T], initial: U, combine: (U, T) -&gt; U) -&gt; U {
+  var result = initial
+  for x in xs {
+    result = combine(result, x)
+  }
+  return result
+}
+</code></pre>
+
+<p>If your problem can be &ldquo;reduced&rdquo; to this, then <code>reduce</code> may be a good choice. If
+you need to stop the for-in loop, then you&rsquo;ll probably want another tool like
+<code>find</code>.</p>
+
+<h2>So doctor, should I reduce?</h2>
+
+<p>I&rsquo;ve given a bunch of examples here to show how powerful and flexible <code>reduce</code>
+is. I want to get your imagination going a little bit and give you some ideas on
+how to use this function to solve a wide range of problem. But just because you
+<em>can</em> write <code>map</code> in terms of <code>reduce</code> doesn&rsquo;t mean you <em>should</em>.</p>
+
+<p>Most of the time if your result is an array, mapping and filtering are the right
+tools. If you&rsquo;re taking an array and deriving a single value, then <code>reduce</code> (or
+<code>find</code>) is often the best tool. But if you have a complex combination of mapping
+and filtering, then a single <code>reduce</code> may simplify that and also speed it up.</p>
+
+<p>Reducing is a quite popular operation in functional languages. In fact, a lot of
+people (including your humble author) spend a lot of time trying to solve
+complicated problems with a single, elegant reduce. When I started this blog
+post, I got about half-way through implementing sorting that way when I realized
+I needed to stop. Reduce is the kind of function that makes people try to be
+clever, much like regular expressions. Resist the temptation, at least in your
+production code. Use the tools that make your code clear, not the tools that
+make you look smart.</p>
+
+<p>But with that in mind, reduce your problems away!</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>UPDATE: After some <a href="https://twitter.com/cocoaphony/status/511339551915511808">helpful discussion</a> with @TacticalGrace and @pyrtsa, I&rsquo;ve decided this description of fold right is too misleading. I usually favor simple-but-slightly-wrong explanations over more-correct-but-requires-lots-of-background-to-understand-and-is-still-slightly-wrong, but in this case, &ldquo;goes backwards&rdquo; really confuses how foldr is commonly used. We don&rsquo;t have foldr in Swift, so I&rsquo;m not going to dig into it here in a footnote; I&rsquo;ll leave it to your <a href="https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29">exploration</a>.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>In this post, and in many of my posts, I will focus on Array implementations rather than the more general Sequence. That&rsquo;s because Sequence (and Collection) can introduce a lot of complexity and obscure the key points being discussed. Some of their complexity is due to the nature of type constraints, and some is due to quirks about Swift that will likely improve. I&rsquo;ve chosen to dodge all of that and focus on the most common and simplest case: Arrays.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p>If you&rsquo;re familiar with Haskell, you may know that <code>map</code> is usually implemented as a <code>foldr</code>, while this is a <code>foldl</code>. That&rsquo;s just for performance. In Haskell, list prepending (<code>:</code>) is much faster than appending (<code>++</code>). In Swift, array appending is the faster operation. So <code>foldr</code> is common in Haskell, but isn&rsquo;t even in Swift stdlib. Keep this in mind when translating Haskell algorithms to Swift. Haskell often walks lists backwards for performance reasons. It&rsquo;s more natural in Swift to walk them forward.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2014-09-14T20:14:00-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    swiftfunctional
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/flatmap" title="Previous Post: Flattenin' your mappenin'">&laquo; Flattenin' your mappenin'</a>
+      
+      
+        <a class="basic-alignment right" href="/go-is-a-shop-built-jig" title="Next Post: Go is a shop-built jig">Go is a shop-built jig &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

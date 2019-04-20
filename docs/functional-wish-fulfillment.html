@@ -1,0 +1,603 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Functional Wish Fulfillment - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Functional Wish Fulfillment
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+Yes, this is another of those &ldquo;h...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/functional-wish-fulfillment">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Functional Wish Fulfillment</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-08-18T22:00:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Yes, this is another of those &ldquo;how to parse JSON in Swift&rdquo; blog posts that seem
+to be required of every Swift blogger. And yes, several of the techniques we&rsquo;ll
+work through come from the functional programming world. And, <em>yes</em>,
+Swift+Functional+JSON is itself a well-worn trail. But still, I hope you find
+this exploration helpful. Don&rsquo;t think of it as functional programming. Think of
+it as the path of &ldquo;I wish there were a function that&hellip;.&rdquo;</p>
+
+<!-- more -->
+
+
+<p>Let&rsquo;s start with the setup. We want to build a nice Wikipedia front end, so step
+one is to allow the user to type in some search term, and return a list of
+pages. Our input is a piece of JSON like this from the Wikipedia API (after
+searching for &ldquo;a&rdquo;):</p>
+
+<pre><code>["a",["Animal","Association football","Arthropod","Australia","AllMusic",...]]
+</code></pre>
+
+<p>Our output should be a list of pages or an error. &ldquo;A list of pages or an error.&rdquo;
+That&rsquo;s kind of a funny thing. What type would that be? If you&rsquo;re an old ObjC dev
+like me, then you&rsquo;d probably think (in Swift):</p>
+
+<pre><code>struct Page { let title: String }
+func pagesFromData(data: NSData, error: NSErrorPointer) -&gt; [Page]?
+</code></pre>
+
+<p>But that&rsquo;s kind of a pain to use. We have to create an <code>NSError</code> variable and
+pass it with <code>&amp;error</code> and then check whether there was a result. Bleh. Gotta be
+a better way in this new Swift world.</p>
+
+<p>Let&rsquo;s say it again. &ldquo;A list of pages or an error.&rdquo; That means it&rsquo;s something
+that could be one of a couple of types. That&rsquo;s just an enum. Let&rsquo;s make it:</p>
+
+<pre><code>enum PageListResult {
+  case Success([Page])
+  case Failure(NSError)
+}
+</code></pre>
+
+<p><em>I&rsquo;m going to assume that you&rsquo;ve already seen enums with associated values and
+you understand the above type. If you don&rsquo;t, stop here and go read the
+&ldquo;Associated Values&rdquo; section of &ldquo;Enumerations&rdquo; from
+<a href="https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html">The Swift Programming Language</a>.
+This is a really important concept in Swift. Seriously, go read it. It&rsquo;s like
+two pages long and we&rsquo;re going to use it a lot. Don&rsquo;t worry. We&rsquo;ll wait for
+you.</em></p>
+
+<p>So that gives us a much better function signature:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; PageListResult
+</code></pre>
+
+<p>I&rsquo;m amazed how often just figuring out the type I want and the function
+signature really simplifies everything else. You may be familiar with this
+approach from TDD, but to me, it&rsquo;s WDD: Wish Driven Development. &ldquo;I wish there
+were a function that would take data and return me a list of pages or an error.&rdquo;</p>
+
+<p>A very interesting thing happened when we phrased the wish this way. The &ldquo;happy
+path&rdquo; and the &ldquo;error path&rdquo; are now the same path. For every possible input,
+there is a result. It might be an error, but an error is just a kind of result.
+That seems kind of nice.</p>
+
+<p>Anyway, back to our wish fulfillment. We wished that there were this function,
+so let&rsquo;s get to work writing it. (In software, we are our own genies.) To parse
+this data, we need to do several things, any of which could fail:</p>
+
+<ol>
+<li>Parse the <code>NSData</code> into a JSON object</li>
+<li>Make sure the JSON object is an array</li>
+<li>Get the second element</li>
+<li>Make sure the second element is a list of strings</li>
+<li>Convert those strings into pages</li>
+</ol>
+
+
+<p>If we write this in a straightforward style, we get the following
+(<a href="https://gist.github.com/rnapier/9e8f92a1ce6be5c3d295">complete gist</a>):</p>
+
+<pre><code>typealias JSON = AnyObject
+typealias JSONArray = [JSON]
+struct Page { let title: String }
+
+func pagesFromData(data: NSData) -&gt; PageListResult {
+
+  // 1. Parse the NSData into a JSON object
+  var error: NSError?
+  let json: JSON? = NSJSONSerialization.JSONObjectWithData(data,
+                      options: NSJSONReadingOptions(0), error: &amp;error)
+
+  if let json: JSON = json {
+
+    // 2. Make sure the JSON object is an array
+    if let array = json as? JSONArray {
+
+      // 3. Get the second element
+      if array.count &lt; 2 {
+        // Failure leg for 3
+        return .Failure(NSError(localizedDescription: "Could not get second element. Got: \(array.count)"))
+      }
+      let element: JSON = array[1]
+
+      // 4. Make sure the second element is a list of strings
+      if let titles = element as? [String] {
+
+        // 5. Convert those strings into pages
+        return .Success(titles.map { Page(title: $0) })
+      }
+      else {
+        // Failure leg for 4
+        return .Failure(NSError(localizedDescription: "Expected string list. Got: \(array[1])"))
+      }
+    }
+    else {
+      // Failure leg for 2
+      return .Failure(NSError(localizedDescription: "Expected array. Got: \(json)"))
+    }
+  }
+  else if let error = error {
+    // Failure leg for 1
+    return .Failure(error)
+  }
+  else {
+    fatalError("Received neither JSON nor an error")
+    return .Failure(NSError())
+  }
+}
+</code></pre>
+
+<p>That&rsquo;s a lot of code, and frankly, it&rsquo;s hard to tell what&rsquo;s going on in there,
+even with the comments. Some of it is because of how <code>if let</code> works, so the
+errors wind up being in distant <code>else</code> clauses. But even if you rearranged it, I
+think most approaches would look something like this. Lots of if&rsquo;s and returns
+to deal with all the possible error conditions. (Or maybe you just skip the
+error legs because they&rsquo;re too hard, but then you pay for it later when you&rsquo;re
+trying to debug crazy problems in the field. You know I&rsquo;m talking to you. Don&rsquo;t
+deny it.)</p>
+
+<p>I&rsquo;m going to skip way ahead now and show you where we&rsquo;re going. You&rsquo;re not meant
+to understand this code quite yet, but I just want you to compare readability.
+This function does <em>exactly</em> the same thing as the above function. It has the
+same error checks, same success and failure results, passes the same unit tests,
+returns the same <code>NSError</code> values. Even with no idea what <code>&gt;==</code> means, even if
+you just call it &ldquo;the thing you put at the beginning of each step,&rdquo; I&rsquo;d say this
+function is a lot easier to understand and maintain.</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return data
+    &gt;== asJSON
+    &gt;== asJSONArray
+    &gt;== atIndex(1)
+    &gt;== asStringList
+    &gt;== asPages
+}
+</code></pre>
+
+<p>This isn&rsquo;t about fancy operators or clever tricks. We&rsquo;re not going to discuss
+category theory, monads, functors, or combinators (at least not for a
+while). We&rsquo;re just going to follow a sequence of &ldquo;as a real-world developer who
+needs to get code out the door, I wish there were a function that&hellip;&rdquo; and see
+where it takes us. This is about making code easier to read, understand, write,
+and debug. And there are several stops along the way where you can jump off and
+still have better code for your trouble.</p>
+
+<p>So, what&rsquo;s the first thing we wish for? Well, a lot of our confusing code is
+tied up in different ways of managing success versus failure. It would be nice
+if each step dealt with success or failure in the same way. For example, I wish
+there were a function that took an <code>NSData</code> and returned parsed JSON or an
+error. Then it&rsquo;d look just like the <code>pagesFromData</code> function. How about:</p>
+
+<pre><code>enum JSONResult {
+  case Success(JSON)
+  case Failure(NSError)
+}
+func asJSON(data: NSData) -&gt; JSONResult
+</code></pre>
+
+<p>That&rsquo;s OK, but now we have this <code>PageListResult</code> and <code>JSONResult</code> that are
+almost identical, and obviously that&rsquo;s going to keep repeating. This feels like
+a generic problem that we should solve in a generic way:</p>
+
+<pre><code>enum Result&lt;A&gt; {
+  case Success(A)
+  case Failure(NSError)
+}
+</code></pre>
+
+<p>And that would be great, except that Beta6 can&rsquo;t quite handle it (known bug,
+will hopefully be fixed soon). So in the meantime, to get this we need a <code>Box</code>
+for our <code>Success</code> case:</p>
+
+<pre><code>enum Result&lt;A&gt; {
+  case Success(Box&lt;A&gt;)
+  case Failure(NSError)
+}
+
+final class Box&lt;T&gt; {
+  let unbox: T
+  init(_ value: T) { self.unbox = value }
+}
+</code></pre>
+
+<p>So back to our wished-for function, using our awesome new <code>Result</code>:</p>
+
+<pre><code>func asJSON(data: NSData) -&gt; Result&lt;JSON&gt; {
+  var error: NSError?
+  let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &amp;error)
+
+  switch (json, error) {
+  case (_, .Some(let error)): return .Failure(error)
+  case (.Some(let json), _):  return .Success(Box(json))
+  default:
+    fatalError("Received neither JSON nor an error")
+    return .Failure(NSError())
+  }
+}
+</code></pre>
+
+<p>(If the <code>.Some</code> cases are unfamiliar to you, read
+<a href="http://natashatherobot.com/swift-unwrap-multiple-optionals/">Unwrapping Multiple Optionals</a>
+from Natasha the Robot.)</p>
+
+<p>Let&rsquo;s see what happens if we do that for all our functions (you can find all the
+helper functions in
+<a href="https://gist.github.com/rnapier/2c2bccc40b24fb9d54fc">this gist</a>):</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+
+  // 1. Parse the NSData into a JSON object
+  switch asJSON(data) {
+  case .Success(let boxJson):
+
+    // 2. Make sure the JSON object is an array
+    switch asJSONArray(boxJson.unbox) {
+    case .Success(let boxArray):
+
+      // 3. Get the second element
+      switch secondElement(boxArray.unbox) {
+      case .Success(let elementBox):
+
+        // 4. Make sure the second element is a list of strings
+        switch asStringList(elementBox.unbox) {
+        case .Success(let titlesBox):
+
+          // 5. Convert those strings into pages
+          return asPages(titlesBox.unbox)
+
+        case .Failure(let error):
+          return .Failure(error)
+        }
+      case .Failure(let error):
+        return .Failure(error)
+      }
+    case .Failure(let error):
+      return .Failure(error)
+    }
+  case .Failure(let error):
+    return .Failure(error)
+  }
+}
+</code></pre>
+
+<p>We haven&rsquo;t saved any code here. This function, plus the helper functions, is
+actually a bit longer than the original. But short code wasn&rsquo;t the goal. Don&rsquo;t
+focus on typing. Focus on consistency and clarity. Conciseness will often follow
+on its own.</p>
+
+<p>Our function is now incredibly consistent. At each step down the tree we call
+a function that takes <code>something</code> and returns a <code>Result&lt;something-else&gt;</code>. And
+if any of those results are <code>.Failure</code>, we return the error. I wish&hellip;</p>
+
+<p>Hmmm&hellip;. what do I wish? There&rsquo;s clearly a pattern here, and where there are
+patterns there are opportunities for functions. Let&rsquo;s think harder about this
+pattern.</p>
+
+<pre><code>  switch asJSON(data) {
+  case .Success(let boxJson):
+    switch asJSONArray(boxJson.unbox) {
+    case .Success(let boxArray):
+      switch secondElement(boxArray.unbox) {
+    ...
+              return asPages(titlesBox.unbox)
+    ...
+    case .Failure(let error):
+      return .Failure(error)
+    }
+  case .Failure(let error):
+    return .Failure(error)
+  }
+</code></pre>
+
+<p>Let&rsquo;s write it a bit more generally:</p>
+
+<pre><code>  switch f1(x0) {                // Pass x0 to some function
+  case .Success(let x1box):      // If successful,  
+    switch f2(x1box.unbox) {        // continue to another function   
+    case .Success(let x2box):    // If successful,
+      switch f3(x2box.unbox) {      // continue to another function
+    ...
+              return fn(xn.unbox)     // Return the result of the last function
+    ...
+    case .Failure(let error):   // If anyone fails, return failure
+      return .Failure(error)
+    }
+  case .Failure(let error):
+    return .Failure(error)
+  }
+</code></pre>
+
+<p>So I wish I had a function that took &ldquo;the <code>Result</code> so far&rdquo; and &ldquo;the next step&rdquo;
+and returned a <code>Result</code>. If passed a <code>.Success</code>, then it should pass the
+contents to the next step. If passed a <code>.Failure</code>, then it should stop and
+return that. Let&rsquo;s call it <code>continueWith</code> for the time being.</p>
+
+<pre><code>func continueWith&lt;T,U&gt;(a: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+</code></pre>
+
+<p>Stop. I know you just skimmed over that signature. Go read it again. Make sure
+you know what it says. Say it out loud. It takes a result, and a function that
+takes something and returns a result, and returns a result. That probably still
+didn&rsquo;t make any sense. Go back and think about it until it does. This function
+is important. Think about where it says <code>A</code> and where it says <code>B</code>. It should
+start to click in your head pretty quickly once you stop and think about it for
+a second and stop speed-reading.</p>
+
+<p>&hellip;</p>
+
+<p>Really, don&rsquo;t go on until it makes 90% sense to you. You might be thinking
+something like &ldquo;hey, this kind of converts A into B, but inside a Result.&rdquo; Yeah,
+that kind of makes sense. Kind of like <code>map</code>, but kind of different. Hold onto
+that thought, or whatever thought made it make sense to you (we&rsquo;re all
+different). Maybe what you&rsquo;re thinking will be useful later.</p>
+
+<p>&hellip;</p>
+
+<p>OK, now that we&rsquo;re on the same page, if we had a function like that, we could
+write:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result&lt;[Page]&gt;
+}
+</code></pre>
+
+<p>That&rsquo;s starting to look kind of nice. I like this <code>continueWith</code> function. I
+wonder how we&rsquo;d write it. Well, if it&rsquo;s passed a <code>.Success</code>, it unboxes it and
+calls the next function.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> If it&rsquo;s passed a <code>.Failure</code>, it returns a
+<code>.Failure</code>. That doesn&rsquo;t seem too hard:</p>
+
+<pre><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+  switch x {
+  case .Success(let box): return f(box.unbox)
+  case .Failure(let err): return .Failure(err)
+  }
+}
+</code></pre>
+
+<p>That was actually pretty simple. Don&rsquo;t get too used to the name <code>continueWith</code>.
+We&rsquo;ll be discussing other names for this function later. It&rsquo;s more powerful than
+it looks.</p>
+
+<p>You can look at the <a href="https://gist.github.com/rnapier/0f5611d0bf89a9645713">full gist</a> if you like.</p>
+
+<p>Go back and ponder that last version of <code>pagesFromData</code> for a moment. What do
+you like about it? What still bothers you?</p>
+
+<hr />
+
+<p>I told you there were several jumping off points in this discussion, and we&rsquo;ve
+reached one of them. The nested version of this function using <code>continueWith</code> is
+already a lot easier to reason about than the original version. The techniques
+are pretty vanilla for Swift: an enum with associated data, and a function that
+takes function. All you need to do is structure your code so each failable step
+takes a value and returns a <code>Result</code>. You can continue this pattern
+indefinitely, keeping the code easy to understand, while still getting good
+error messages.</p>
+
+<p>So let&rsquo;s leave it there for this post. Soon we&rsquo;ll push this further, make it
+easier to read and more generic. We might even talk more about this interesting
+<code>continueWith</code> function.</p>
+
+<p>In the meantime, you may be interested in some other explorations of these
+topics. They all have spoilers of where we&rsquo;re going, but there&rsquo;s no harm in
+that. We each learn in our own way, so maybe one of these approaches will click
+best with you.</p>
+
+<ul>
+<li>Alexandros Salazar&rsquo;s
+<a href="http://nomothetis.svbtle.com/error-handling-in-swift">Error Handling in Swift</a>.
+A must-read series in my opinion. My use of the <code>Result</code> type is based directly
+on his.</li>
+<li>Tony DiPasquale&rsquo;s
+<a href="http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics">Efficient JSON in Swift with Functional Concepts and Generics</a>, which is a
+direct influence on this work, but may be a bit fast-paced for many readers.</li>
+<li>Chris Eidhof&rsquo;s
+<a href="http://chris.eidhof.nl/posts/json-parsing-in-swift.html">Parsing JSON in Swift</a>
+which is quite nice if you already understand where this is going, but jumps
+into the deep end very quickly.</li>
+</ul>
+
+
+<p>If Tony or Chris&rsquo;s posts make perfect sense to you, maybe you don&rsquo;t need my
+series. If you leave them a little befuddled, then this series will get to the
+same place, just a bit more gently.</p>
+
+<p>Until then, stop mutating. Evolve.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Remember that the &ldquo;unbox&rdquo; step is just because of a Beta6 compiler limitation.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2014-08-18T22:00:00-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    swiftfunctional
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/llama-calculus" title="Previous Post: Your lips keep moving, but all I hear is "applicator functive monastic llama calculus..."">&laquo; Your lips keep moving, but all I hear is "applicator functive monastic llama calculus..."</a>
+      
+      
+        <a class="basic-alignment right" href="/maps" title="Next Post: Maps... Wait, they don't love you like I love you">Maps... Wait, they don't love you like I love you &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

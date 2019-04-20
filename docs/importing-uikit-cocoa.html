@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Importing UIKit vs. Cocoa - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Importing UIKit vs. Cocoa
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+I work on a lot of projects that share s...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/importing-uikit-cocoa">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Importing UIKit vs. Cocoa</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-20T11:28:40-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I work on a lot of projects that share significant code between iPhone and Mac versions. This is the beauty of Cocoa. While working on these projects, I&rsquo;ve bumped into this idiom many times:</p>
+
+<pre><code>#ifdef TARGET_OS_IPHONE
+#import &lt;UIKit/UIKit.h&gt;
+#else
+#import &lt;Cocoa/Cocoa.h&gt;
+#endif
+</code></pre>
+
+<p>This is almost never correct, and almost always means that someone imported Cocoa.h into a model class. Model classes should never rely on UIKit or Cocoa. They should just import Foundation.h.</p>
+
+<p>There is one interesting exception that we&rsquo;ve run into: NSImage versus UIImage. These are really model classes, but they&rsquo;re part of AppKit and UIKit. They have very similar interfaces, so in most code you should be able to interchange them and keep everything portable. What to do?</p>
+
+<!-- more -->
+
+
+<pre><code>#ifdef TARGET_OS_IPHONE
+#import &lt;UIKit/UIImage.h&gt;
+typedef UIImage XXImage;
+#else
+#import &lt;AppKit/NSImage.h&gt;
+typedef NSImage XXImage;
+#endif
+</code></pre>
+
+<p>You can now import XXimage.h into your model classes and use XXImage anywhere you would normally use NSImage or UIImage (as long as you&rsquo;re using them in a portable way). In your UI (platform) code, you can still use NSImage or UIImage normally; no need to use XXImage everywhere, since the types are compatible.</p>
+
+<p>Or you could go to CGImages exclusively, but what a pain if you don&rsquo;t need them already.</p>
+
+<p><b>EDIT Sep 24, 2009:</b> In light of a Radar I&rsquo;ve recently opened (radar://7224053), I need to amend the above. It&rsquo;s better to use #define rather than typedef. I strongly prefer typedef, but there&rsquo;s a bizarre bug that it bumps into. Typedef confuses <code>valueForKey:</code> for some reason. You can use the following code to determine if the bug has been fixed yet:</p>
+
+<pre><code>#import &lt;Foundation/Foundation.h&gt;
+// Swapping #define for typedef makes this work
+typedef NSString MYString;
+//#define MYString NSString
+@interface MYObject : NSObject {}
+- (MYString *)string;
+@end
+@implementation MYObject
+- (MYString *)string {
+    return @"a string";
+}
+@end
+int main (int argc, const char * argv[]) {
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    MYObject *object = [[[MYObject alloc] init] autorelease];
+    MYString *string = [object valueForKey:@"string"];  // Fails w/ "not KVC-compliant for key string"
+//    MYString *string = [object string];   // Works
+    NSLog(@"image = %@", string);
+    [pool drain];
+    return 0;
+}
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-20T11:28:40-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    cocoaiphone
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/regrowling-song" title="Previous Post: Re-growling song in PB">&laquo; Re-growling song in PB</a>
+      
+      
+        <a class="basic-alignment right" href="/implementing-nscopying" title="Next Post: Implementing NSCopying (or NSCopyObject() considered harmful)">Implementing NSCopying (or NSCopyObject() considered harmful) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Review of <i>iPhone Developer's Cookbook</i> - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Review of iPhone Developer's Cookbook
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+Summary: If you want a real ...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/review-iphone-developers-cookbook">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Review of <i>iPhone Developer's Cookbook</i></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-04-27T10:17:47-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em>Summary: If you want a real understanding of Cocoa and Cocoa Touch, this book is too recipe-based to give you that. If you really want recipes, consider Apple&rsquo;s <a href="http://developer.apple.com/iphone/library/navigation/SampleCode.html">Sample Code</a>.
+</em></p>
+
+<p>I haven&rsquo;t been thrilled with the first crop of iPhone development books that hit the market. This shouldn&rsquo;t be surprising. It&rsquo;s a new platform and, as with the first AppStore apps, the pressure to be first to market fights the authors' desire to provide the best possible product.</p>
+
+<p>I was specifically asked about <a href="http://www.amazon.com/gp/product/0321555457?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0321555457" rel="nofollow">iPhone Developer&rsquo;s Cookbook: Building Applications with the iPhone SDK</a> by Erica Sadun. My biggest concern is that it&rsquo;s a cookbook based on &ldquo;recipes&rdquo; to do this or that. This is often exactly the problem with how people learn Mac and iPhone development. They think that it&rsquo;s just Java or C++ with a different syntax and if they learn where the brackets go, then they&rsquo;ll be a Cocoa developer. <!-- more --></p>
+
+<p>As <em>Cookbook</em> describes itself:</p>
+
+<blockquote>This book is written for new iPhone developers with projects to get done and a new unfamiliar SDK in their hands. Although each programmer brings different goals and experiences to the table, most developers end up solving similar tasks in their development work: "How do I build a table?"; "How do I create a secure keychain entry?"; "How do I search the Address Book?"; "How do I move between views?"; and "How do I use Core Location?"</blockquote>
+
+
+<p>What&rsquo;s missing are questions like &ldquo;What are the key patterns for this platform?&rdquo;; &ldquo;How is memory management and object ownership handled?&rdquo;; &ldquo;What functions are generally provided by the framework, and what must I generally code?&rdquo; Each of these questions has a very different answer in Cocoa than in Java, and each has caused my students (especially those with a Java background) a lot of confusion.</p>
+
+<p>Good Cocoa is much more than the Objective-C syntax and a bunch of AWT-style widgets you need to learn.<sup><a href="#footnote-1">[1]</a></sup> It&rsquo;s really a set of patterns. If you know the patterns, then the widgets will be obvious. If you only know the widgets, then you will tend to be very confused about why it&rsquo;s &ldquo;so hard&rdquo; (because you don&rsquo;t know how Cocoa thinks about the problem), and you&rsquo;ll tend to write the kind of junk code that so dominates the AppStore.</p>
+
+<p>At this point, I should emphasize that much of my objection is philosophical and pedagogical in nature. As the book notes, it &ldquo;is written for new iPhone developers with projects to get done and a new unfamiliar SDK in their hands.&rdquo; If you&rsquo;re facing a tight deadline to get &ldquo;something out&rdquo; and you just want something that runs right now, this book pulls several useful problem sets into one place.<sup><a href="#footnote-2">[2]</a></sup></p>
+
+<p>The second recipe, &ldquo;Dragging Views&rdquo; (p45), is a good example. When I teach, concepts like multi-touch are very late in the course. <em>Cookbook</em> dives into UIView, UITouch, collections, NSUserDefaults, and private APIs right off the bat. No foundation is provided for any of these; it&rsquo;s just a bunch of code that &ldquo;does it.&rdquo; My approach takes a lot longer (several days at least), but the student ends with an understanding of Cocoa views, the Touch event cycle, and what kind of automatic touch-handling is common in the Apple-provided subclasses. <em>Cookbook</em> gives a recipe for draggable images in a few dozen lines of code.</p>
+
+<p>I&rsquo;ve seen the code that comes out of learning this way. New Cocoa developers mistakenly study UIView and UITouch first, and then spend a lot of time reinventing UIScrollView badly (true story). I don&rsquo;t deny its short-term benefits, and this book may very well help you make the one big looming deadline in front of you. But I&rsquo;ve spent a lot of time helping debug the kind of code that gets written this way. It&rsquo;s not pretty or quick.</p>
+
+<p>So this book is a good example of what I recommend against in a first book on Cocoa programming. A good Cocoa book should spend a lot of time on the Cocoa design patterns (MVC, delegation, notifications), and give you a solid foundation in Foundation. I know all the exciting, sexy stuff is in UIKit, but without a basis in how to properly manage your object interaction, you&rsquo;re going to wind up with code that fights you every time you turn around. In some ways, iPhone apps are small enough that you might get away with this, but I wouldn&rsquo;t bet on it if you&rsquo;re building more than the latest version of iBeer.</p>
+
+<p>One last point about cookbooks in general: I love cookbooks. One of the most-used books on my bookshelf is <a href="http://www.amazon.com/gp/product/0596003137?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0596003137"><em>Perl Cookbook</em></a><img src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&l=as2&o=1&a=0596003137" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />. But it isn&rsquo;t the book I use to teach Perl. <em>Perl Cookbook</em> epitomizes a good programming cookbook by providing carefully-written, easily-applied solutions to non-trivial problems that are too small or specialized to justify a full Perl module. It assumes you already know Perl pretty well, you just need to know the best way to split a string up into individual characters. That&rsquo;s what a good cookbook does.</p>
+
+<p>&ndash;</p>
+
+<p><sup><a name="footnote-1">[1]</a></sup> This is in contrast to .NET which really <em>is</em> just Java with a new syntax and a bunch of arcane widgets that you need to learn.</p>
+
+<p><sup><a name="footnote-2">[2]</a></sup> For people facing this problem, my usual advice is that when we have no time, that&rsquo;s exactly when we need to make sure we&rsquo;re doing it right the first time. That said, I am well aware of deadline pressures, and for those who just want &ldquo;working code,&rdquo; Apple provides a great deal of <a href="http://developer.apple.com/iphone/library/navigation/SampleCode.html">Sample Code</a> that cover many of the most important topics from this book.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2009-04-27T10:17:47-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    iphone
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/iphone-course-syllabus" title="Previous Post: iPhone Course Syllabus">&laquo; iPhone Course Syllabus</a>
+      
+      
+        <a class="basic-alignment right" href="/scripting-bridge" title="Next Post: Scripting Bridge">Scripting Bridge &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

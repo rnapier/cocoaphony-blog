@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Implementing NSCopying (or NSCopyObject() considered harmful) - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Implementing NSCopying (or NSCopyObject() considered harmful)
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+NSCo...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/implementing-nscopying">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Implementing NSCopying (or NSCopyObject() considered harmful)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-09-04T17:24:05-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><code>NSCopying</code> is not always as simple to implement as you would think. Apple has a good <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmImplementCopy.html">write-up</a> discussing the complexities, but let me elaborate. Forgive some ranting digressions. It&rsquo;s important to know how to work around the problems I&rsquo;m going to discuss, but it&rsquo;s also important to understand how insane it is to have to work around this issue.</p>
+
+<p>First, there&rsquo;s the fairly obvious problem of deep versus shallow copies. If object <code>foo</code> has an instance variable <code>*bar</code>, should a copy of <code>foo</code> have a second pointer to <code>bar</code>, or should it have its own copy of whatever <code>bar</code> points to? There is no way to answer this question generally; it depends on the nature of the objects.</p>
+
+<p>Most of the time, this can be dealt with fairly easily by implementing the accessors with the correct behavior (retain versus copy), and you wind up with a <code>copyWithZone:</code> like this:</p>
+
+<pre><code>- (id)copyWithZone:(NSZone *)zone
+{
+    Product *copy = [[[self class] allocWithZone: zone] init];
+    [copy setProductName:[self productName]];
+    return copy;
+}
+</code></pre>
+
+<p>That works really well as long as your superclass doesn&rsquo;t implement <code>NSCopying</code>, but if it does, you may not have enough information or access to cleanly copy it. Now you would think this would be easy:</p>
+
+<pre><code>- (id)copyWithZone:(NSZone *)zone
+{
+    Product *copy = [super copy];
+    [copy setProductName:[self productName]];
+    return copy;
+}
+</code></pre>
+
+<p>But that may or may not work. If <code>super</code> implements <code>-copyWithZone:</code> as described above, then all is fine. But what if your superclass uses <code>NSCopyObject()</code>? Things go badly, and in ways very difficult to understand and debug. <!-- more --><code>NSCopyObject()</code>, in my opinion, is evil. Yes it&rsquo;s quick and easy to use, but it&rsquo;s incredibly dangerous and there are better ways (I&rsquo;ll discuss one approach later). Never use this function in your own code. But Apple used it in <code>NSCell</code>, and so we have to deal with it. <code>NSCopyObject()</code> breaks object orientation (it forces subclasses to know implementation details of their superclass) and memory management (it breaks retain counts).</p>
+
+<p><code>NSCopyObject()</code> makes a perfect copy of an object&rsquo;s ivars, optionally expanding the size of the resulting copy. By &ldquo;perfect copy&rdquo; I mean &ldquo;copies the pointers in the ivars to the new object.&rdquo; So this is what happens in our example above:</p>
+
+<pre><code>- (id)copyWithZone:(NSZone *)zone
+{
+    // Assume -productName = someProduct
+    // We'll call this point [1]. 
+    Product *copy = [super copy];       // [2]
+    [copy setProductName:[self productName]];   // [3]
+    return copy;
+}
+</code></pre>
+
+<p>At point [1], <code>productName</code> is pointing to <code>someProduct</code>, which has some positive retain count. At point [2], <code>copy</code>&rsquo;s <code>productName</code> also points to the same object, but the retain count has not changed. It does not matter how <code>-setProductName:</code> is implemented because this isn&rsquo;t called. <code>NSCopyObject()</code> has just copied the raw pointer.</p>
+
+<p>At [3], we call <code>[copy setProductName:...]</code>, which will likely <code>[productName release]</code>. Remember that <code>copy-&gt;productName</code> points to <code>someProduct</code> at this point, so we just reduced this retain count by 1. That might deallocate <code>someProduct</code> immediately, or it might not. Then we&rsquo;ll <code>[newValue retain]</code> (<code>newValue</code> also points to <code>someProduct</code>), either crashing immediately, or setting the retain count back up by one, equal to its original value. <strong>But we now have an extra object pointing to it!</strong></p>
+
+<p>So what do we do? Well, the problem is that <code>NSCopyObject()</code> copied pointers without changing the retain counts. So before we mess with the retain counts, we need to clear out those pointers. Here is the canonical way to solve this problem. It&rsquo;s terrible ObjC, but it is the &ldquo;correct&rdquo; way to solve Apple&rsquo;s bug:</p>
+
+<pre><code>- (id)copyWithZone:(NSZone *)zone
+{
+    Product *copy = [super copy];
+
+    copy-&gt;productName = nil;
+    [copy setProductName:[self productName]];
+
+    return copy;
+}
+</code></pre>
+
+<p>That <code>-&gt;</code> is dereferencing the <code>struct*</code> that underlies <code>id</code>. This bypasses all accessors and modifies the underlying ivar. You should never do this, but here it&rsquo;s the best way. The other solution would be to randomly call <code>[[copy productName] retain]</code>, but that&rsquo;s even more confusing and error-prone.</p>
+
+<p>If you don&rsquo;t do this, when your two objects deallocate they&rsquo;ll over-release <code>someProduct</code>, and you&rsquo;ll crash. And you will be dumbfounded by the crash because all of your memory management will be correct. You&rsquo;ll spend a few hours before hopefully Google brings you to a page like this one.</p>
+
+<p>Since it is a private implementation detail whether a class uses <code>NSCopyObject()</code>, you must assume that any class you don&rsquo;t control might, and so you should implement <code>-copyWithZone:</code> as above in all cases that your superclass implements <code>NSCopying</code>. Even if all the relevant superclasses are yours, you want to implement as above in case you ever change the superclass of your top-level class (which is itself an implementation detail and your subclasses shouldn&rsquo;t rely on). This problem exists for <em>all</em> decedents of the class that uses <code>NSCopyObject()</code>, not just the first subclass. Your parent class can&rsquo;t fix it for you.</p>
+
+<p>I am horrified that <code>NSCopyObject()</code> has been carried over to iPhone. They&rsquo;ve been so good about cleaning up these kinds of things. I understand the desire for a fast and easy copy, but there are better ways. <code>objc_object</code> is a struct of ivars. We could have a fast memory copy of all the ivars for the <em>current</em> class. The rest of the struct could have been initialized to NULL as usual. If this sounds complex it should be as simple as calling <code>class_getInstanceSize()</code> for your parent, adding that to <code>self</code> to get your first ivar&rsquo;s offset, and <code>memcpy()</code> the number of bytes for your <code>class_getInstanceSize()</code> minus your superclass&rsquo;s. Then you could clean up your own retain counts without screwing up your subclasses. Even better, multiple sub-classes could use this fast-copy without impacting each other, versus <code>NSCopyObject()</code> which can only be use by the top-level class.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2009-09-04T17:24:05-04:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    cocoa
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/importing-uikit-cocoa" title="Previous Post: Importing UIKit vs. Cocoa">&laquo; Importing UIKit vs. Cocoa</a>
+      
+      
+        <a class="basic-alignment right" href="/gcd-iphone-long-batter" title="Next Post: GCD + iPhone">GCD + iPhone &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

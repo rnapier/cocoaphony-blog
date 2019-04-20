@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Re...throws? - Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      Re...throws?
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+        
+      
+    
+  
+
+
+Last time we talked about how a function that can
+thr...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/re-throws">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Re...throws?</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2015-06-18T11:12:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="/throw-what-dont-throw">Last time</a> we talked about how a function that can
+throw errors is a different type in Swift than a function that cannot throw
+errors. And then I briefly mentioned this other thing, &ldquo;rethrows.&rdquo; Let&rsquo;s talk
+about that, and along the way explore closure types a little more and their
+weird and woolly ways. <!-- more --></p>
+
+<p>Like last time, we start with <code>map</code> (<code>mymap</code> so there&rsquo;s no confusion with the
+built-in).</p>
+
+<pre><code>extension Array {
+    func mymap&lt;T&gt;(@noescape transform: (Generator.Element) -&gt; T) -&gt; [T] {
+        var ts: [T] = []
+        for x in self {
+            ts.append(transform(x))
+        }
+        return ts
+    }
+}
+</code></pre>
+
+<p>So that&rsquo;s the simple <code>map</code>. As we discussed previously, we can&rsquo;t pass a throwing
+closure to it because it would be the wrong type. Let&rsquo;s rewrite <code>mymap</code> so it
+can throw:</p>
+
+<pre><code>extension Array {
+    func mymapThrows&lt;T&gt;(@noescape transform: (Generator.Element) throws -&gt; T) throws -&gt; [T] {
+        var ts: [T] = []
+        for x in self {
+            ts.append(try transform(x))
+        }
+        return ts
+    }
+}
+</code></pre>
+
+<p>Now <code>transforms</code> can throw, and so it needs <code>try</code> when we call it. And since we
+don&rsquo;t handle the error ourselves, the whole method has to be marked <code>throws</code>.</p>
+
+<p>Let&rsquo;s create a couple of functions to check this out:</p>
+
+<pre><code>func double(x: Int) -&gt; Int { return x*2 }
+
+extension NSCalculationError: ErrorType {}
+
+func reciprocal(x: Int) throws -&gt; Double {
+    guard x != 0 else { throw NSCalculationError.DivideByZero }
+    return 1.0 / Double(x)
+}
+</code></pre>
+
+<p>The first function, <code>double</code>, always succeeds. The second function,
+<code>reciprocal</code>, may throw.</p>
+
+<pre><code>let xs = [1,2,3]
+let ds = xs.mymap(double) // No problem
+let rs = try xs.mymapThrows(reciprocal) // No problem
+</code></pre>
+
+<p>And if we pass them to the other methods?</p>
+
+<pre><code>let ds = try xs.mymapThrows(double) // No problem
+let rs = xs.mymap(reciprocal) 
+// Invalid conversion from throwing function of type '(Int) throws -&gt; Double' to non-throwing function type '@noescape Int -&gt; `T'
+</code></pre>
+
+<p>So we can pass a non-throwing closure to the throwing <code>map</code>, but not vice versa.
+Why? Let&rsquo;s take a step back and talk about subtypes.</p>
+
+<p>A good way to think about types is as a set of promises. In the OOP world, we
+create types like this:</p>
+
+<pre><code>class Animal {
+  func eat() {...}
+}
+
+class Cat : Animal {
+  func purr() {...}
+}
+</code></pre>
+
+<p>Every Animal promises it can eat. Every Cat promises it can purr. Since a Cat is
+an Animal, it also promises it can eat. But not every Animal promises to purr
+(other Animals <em>may</em> be able to purr, it&rsquo;s just not promised). You&rsquo;re used to
+calling Cat a subclass of Animal, and that&rsquo;s true. But it&rsquo;s more generally a
+<em>subtype</em>. This idea isn&rsquo;t restricted to classes. After all, the same thing is
+true of protocols:</p>
+
+<pre><code>protocol Animal {
+  func eat()
+}
+
+protocol Cat : Animal {
+  func purr()
+}
+</code></pre>
+
+<p>No classes required. The important thing about the type/subtype relationship is
+that a subtype can only <em>add</em> promises. It can never remove promises.
+Understanding what promises are being made is very important to understanding
+your types.</p>
+
+<p><code>NSArray</code> doesn&rsquo;t promise to be immutable. That may surprise you, but you know
+it&rsquo;s true because you copy them when they&rsquo;re passed as parameters. If <code>NSArray</code>
+promised to be immutable (like <code>NSDate</code> does), you&rsquo;d never do that. If <code>NSArray</code>
+promised to be immutable, then <code>NSMutableArray</code> couldn&rsquo;t be its subclass,
+because it breaks that promise.</p>
+
+<p><code>NSArray</code> only promises to be <em>readable</em>. That&rsquo;s a completely different thing.
+<code>NSMutableArray</code> <em>also</em> promises to be readable. It keeps the promise <code>NSArray</code>
+made. <code>NSMutableArray</code> also promises to be writable, and any subclass of
+<code>NSMutableArray</code> would also have to keep that promise.</p>
+
+<blockquote><p>A subtype can only add promises. It can never remove them.</p></blockquote>
+
+<p>So, what promises does <code>(T) throws -&gt; U</code> make? It promises to accept a <code>T</code>. And
+it promises that it will either return a <code>U</code> or it will throw an error.</p>
+
+<p>What promises does <code>(T) -&gt; U</code> make? It promises to accept a <code>T</code>. And
+it promises that it will return a <code>U</code>.</p>
+
+<p>How are these types related? Which one makes the stronger promise? A good way to
+figure this out is to think through some cases.</p>
+
+<ul>
+<li>Function returns <code>U</code>. Keeps both promises.</li>
+<li>Function throws an error. Keeps one promise, breaks the other.</li>
+</ul>
+
+
+<p>The stronger promise is the one that we broke. It&rsquo;s the non-throwing function
+that added a new, stricter promise. &ldquo;I will do X or Y, and furthermore I will
+only do X.&rdquo; Doing X keeps that promise. Doing Y breaks it.</p>
+
+<p>So that tells us that a non-throwing closure can be used anywhere a throwing
+closure is requested, just like a Cat can be used anywhere an Animal is
+requested. No conversions necessary. It&rsquo;s just types.</p>
+
+<p>So great, we have <code>mymapThrows</code>, and it takes either kind, so we&rsquo;re done, right?
+Well, we could be, but it&rsquo;d be really annoying. Consider if <code>map</code> were marked
+<code>throws</code>. That would mean that <em>every</em> <code>map</code> would have to include a <code>try</code>, and
+somewhere you&rsquo;d have to catch the error.</p>
+
+<pre><code>let ds: [Int]
+do {
+    ds = try xs.map { $0 * 2 }
+} catch {
+    // Really, Swift? Really? Every time? Even when it can't possibly throw?
+    // No, not really. Swift is smarter than that.
+}
+</code></pre>
+
+<p>There are two ways out of this annoyance. The obvious way is overloading. We can
+just have two methods with the same name but different types:</p>
+
+<pre><code>map&lt;T&gt;(@noescape transform: (Generator.Element) throws -&gt; T) throws -&gt; [T]
+map&lt;T&gt;(@noescape transform: (Generator.Element) -&gt; T) -&gt; [T]
+</code></pre>
+
+<p>Since overloading picks the most specific subtype available, this works fine for
+the caller. But it&rsquo;s a serious pain for the dev who has to write <code>map</code>. There&rsquo;s
+the obvious annoyance of needing two methods to do the job of one, but it gets
+worse if you try to share code between the implementations. You&rsquo;d think you
+could just call the throwing version from the non-throwing version like:</p>
+
+<pre><code>func map&lt;T&gt;(@noescape transform: (Generator.Element) -&gt; T) -&gt; [T] {
+    return try! self.map(transform as (Generator.Element) throws -&gt; T))
+}
+</code></pre>
+
+<p>But that runs afoul of <code>@noescape</code>, which doesn&rsquo;t allow the conversion. And even
+if that worked (might be a Swift bug), having to use <code>try!</code> all over the place
+is crazy, on top of the madness of having two (or three) methods for everything.
+My overload implementation looks like this:</p>
+
+<pre><code>extension Array {
+    func mymap&lt;T&gt;(@noescape transform: (Generator.Element) throws -&gt; T) throws -&gt; [T] {
+        return try self._mymap(transform)
+    }
+
+    func mymap&lt;T&gt;(@noescape transform: (Generator.Element) -&gt; T) -&gt; [T] {
+        return try! self._mymap(transform)
+    }
+
+    func _mymap&lt;T&gt;(@noescape transform: (Generator.Element) throws -&gt; T) throws -&gt; [T] {
+        var ts: [T] = []
+        for x in self {
+            ts.append(try transform(x))
+        }
+        return ts
+    }
+}
+</code></pre>
+
+<p>If Swift had shipped this way, I suspect the stdlib folks would be having words
+with the compiler folks by now. &ldquo;Please come over to my desk. I&rsquo;d like to
+introduce you to another kind of throws.&rdquo;</p>
+
+<p>Luckily, Swift is much smarter than that. It&rsquo;s nice that you can overload based
+on throwing, but in many cases we have a better tool. We can mark the method
+<code>rethrows</code> rather than <code>throws</code>.</p>
+
+<pre><code>func map&lt;T&gt;(@noescape transform: (Generator.Element) throws -&gt; T) rethrows -&gt; [T]
+</code></pre>
+
+<p>So what promise does <code>rethrows</code> make? It promises that the only way it will
+throw is if a closure it is passed throws. So if it&rsquo;s passed a closure that
+can&rsquo;t throw, the compiler knows that the function can&rsquo;t throw either.</p>
+
+<p>(Why isn&rsquo;t stdlib&rsquo;s <code>map</code> marked <code>rethrows</code> today? Because it&rsquo;s beta 1, and the
+Swift team hasn&rsquo;t updated all of stdlib yet. They&rsquo;ve indicated that a lot of
+stdlib will be fixed in future betas. Have patience.)</p>
+
+<p>It&rsquo;s natural to think of <code>rethrows</code> as a subtype of <code>throws</code>, and non-throwing
+closures as a subtype of <code>rethrows</code>, but that doesn&rsquo;t quite seem to be true.
+Swift doesn&rsquo;t treat <code>rethrows</code> as a full type. For example, you can&rsquo;t write
+overloads with both <code>throws</code> and <code>rethrows</code>, and closures can&rsquo;t include
+<code>rethrows</code> in their type. Instead, <code>rethrows</code> acts more like a function
+attribute (like <code>@noreturn</code>). It just modifies the rules around what contexts
+can call the function. The real types are throwing and non-throwing, and
+&ldquo;rethrowing&rdquo; can just morph between the two based on context.</p>
+
+<p>A function that accepts a closure has three throwing options:</p>
+
+<ul>
+<li><p>It can throw. That means that the function may throw errors whether or not the
+closure throws errors.</p></li>
+<li><p>It can rethrow, like <code>map</code>. This means that the function cannot create any
+errors of its own, but may propagate errors from the closure it was passed.</p></li>
+<li><p>It can not throw. That means that it either handles the errors thrown by the
+closure, or it does not evaluate the closure. For example, a setter on a closure
+property doesn&rsquo;t throw just because the closure might throw. It just sets the
+property and returns.</p></li>
+</ul>
+
+
+<p>Which one you use is completely dependent on your situation. There&rsquo;s no &ldquo;best&rdquo;
+answer, though you should generally choose the most restrictive one you can. You
+shouldn&rsquo;t just make all your functions <code>throws</code> for the same reasons you
+shouldn&rsquo;t make all your variables <code>Any</code>. It&rsquo;s all about choosing the right type.</p>
+
+<p>So when you use the new Swift error handling system, don&rsquo;t think &ldquo;exceptions.&rdquo;
+Think types. Your function returns &ldquo;either X or an error.&rdquo; And sometimes, you
+can promise it&rsquo;ll only return X.</p>
+
+<p>Throw in peace.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2015-06-18T11:12:00-04:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/throw-what-dont-throw" title="Previous Post: Throw what don't throw">&laquo; Throw what don't throw</a>
+      
+      
+        <a class="basic-alignment right" href="/throw-money" title="Next Post: Throw money at it">Throw money at it &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
