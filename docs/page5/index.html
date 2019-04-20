@@ -1,0 +1,521 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="I know this exists out there somewhere already, but I couldn&rsquo;t find it anywhere and I was sick of writing it over and over again&hellip;. If &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/page5">
+  <link href="/cocoaphony-blog/favicon.png" rel="icon">
+  <link href="/cocoaphony-blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/cocoaphony-blog/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/cocoaphony-blog/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/cocoaphony-blog/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/cocoaphony-blog/">Blog</a></li>
+  <li><a href="/cocoaphony-blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/simple-gcd-timer-rntimer">Simple GCD Timer (RNTimer)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-05-29T21:37:25-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn&rsquo;t find it anywhere and I was sick of writing it over and over again&hellip;. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot&rsquo;s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash&rsquo;s</a>, but they solve different problems.</i></p>
+
+<p>Have you ever noticed how hard it is to write a repeating <code>NSTimer</code> that doesn&rsquo;t create a retain loop? Almost always you wind up with something like this:</p>
+
+<pre><code>[NSTimer scheduledTimerWithTimeInterval:1
+                                 target:self
+                               selector:@selector(something)
+                               userInfo:nil 
+                                repeats:YES];
+</code></pre>
+
+<p>Seems easy enough, except it&rsquo;s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you&rsquo;d think this would be easy. And it should be, so I fixed it. I just still can&rsquo;t quite believe I&rsquo;m the first to do so.</p>
+
+<p>Anyway, for your consideration I present a very simple class called <code>RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn&rsquo;t address.</p>
+
+<p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/wrapping-cppfinal-edition">Wrapping C++ Final Edition</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a &ldquo;language.&rdquo; It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code>.mm</code> is a blight on your code. Never let it spread.</p>
+
+<p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple&rsquo;s frameworks are implemented in C++.</p>
+
+<p>So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your &ldquo;middleware&rdquo; in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/wrapping-cppfinal-edition">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/github-pricing">Github and its pricing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-30T22:48:49-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It&rsquo;s a good interface. It works. I could use a few more features in the Issues module, but it&rsquo;s nice that they keep it simple. I&rsquo;ve tried BitBucket and Assembla, and looked at several others. I&rsquo;ve managed my own servers. In every test, github wins.</p>
+
+<p>Except for price. github is often the most expensive. Especially if you need what I need, which is several small repositories, each with a small number of collaborators (often just one or two). But just a few of those can push you into the Medium plan, or even into the Bronze plan.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/github-pricing">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/contribution-vs-compensation">Some math behind "contribution != compensation"</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-24T18:16:32-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thanks to @codinghorror, I recently read a blog post from Steve McConnell called <a href="http://blogs.construx.com/blogs/stevemcc/archive/2011/01/22/10x-productivity-myths-where-s-the-10x-difference-in-compensation.aspx">10x Productivity Myths: Where’s the 10x Difference in Compensation?</a> Steve quotes a question from Pete McBreen:</p>
+
+<blockquote>"One point in his article that McConnell did not address--<strong>programmer compensation does not vary accordingly.</strong> This is a telling point--if the difference is productivity can be 10X, why is it that salaries rarely fall outside the 2X range for experienced developers?" [emphasis in original]</blockquote>
+
+
+<p>He then provides some fairly satisfying answers. &ldquo;The other guy is actually overpaid.&rdquo; &ldquo;You&rsquo;re confusing coding with actual business value.&rdquo; &ldquo;Companies pay the least they can get away with.&rdquo; etc. All his answers make good, intuitive sense. Unfortunately, despite being a longtime fan of Steve McConnell&rsquo;s work, I believe most are irrelevant or incorrect.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/contribution-vs-compensation">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/triangle-cocoaheads-march">Triangle CocoaHeads (and Building a (Core) Foundation)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-23T21:48:30-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Last night&rsquo;s <a href="http://meetup.trianglecocoa.com/events/49569052/">CocoaHeads</a> was a blast. <a href="http://www.dtsquaredsoftware.com/">Alondo</a>, you have to come give an intermediate/advanced talk on Storyboards. Thanks a lot to @scottpenrose for his lightning and thunder, and @flightblog for his inspiration (METAR gave me a lot of headaches, too). And of course, thanks especially to <a href="http://log.jsh.in/">Josh</a> for organizing everything. And a new place for NSCoder? You rock.</p>
+
+<p>For those who didn&rsquo;t scribble notes fast enough, my Core Foundation presentation is attached (including the fix for my memory leak; was it Jay who found that?) I&rsquo;ll make sure to fix the code in the book for the next edition.</p>
+
+<p><a href="/cocoaphony-blog/assets/Building-a-Core-Foundation.pdf">Building a Core Foundation Presentation</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/faster-bezier">Even Faster Bezier</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-06T12:53:40-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When <a href="/cocoaphony-blog/fast-bezier-intro">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That&rsquo;s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code>-Os</code> optimized function. But we&rsquo;re just getting warmed up. We haven&rsquo;t yet gotten half of the performance available.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/faster-bezier">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/fast-bezier-intro">Introduction to Fast Bezier (and trying the Accelerate.framework)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-02-24T14:22:46-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[If you want the answer to last time&rsquo;s homework, skip to the end.]</p>
+
+<p>So you want to hand-calculate Bézier curves. Good for you. It comes up more often then you&rsquo;d think on iOS, even though <code>UIBezierPath</code> is supposed to do it all for you. The truth is, sometimes you need the numbers yourself. For instance if you want to calculate intersections, or you want to draw text along the curve (like in <a href="https://github.com/rnapier/ios5ptl/tree/master/ch18/CurvyText">CurvyText</a> from <a href="http://iosptl.com">iOS:PTL</a> chapter 18).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/fast-bezier-intro">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/equations-matrices-accelerate">Converting algebra to matrices for Accelerate framework</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-02-06T11:19:28-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+<p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/cocoaphony-blog/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I&rsquo;ll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
+
+<p>In this post, I&rsquo;m targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it&rsquo;s hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you&rsquo;re like me, and once upon a time you actually took linear algebra, but today you wouldn&rsquo;t know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn&rsquo;t been released…) My goal isn&rsquo;t to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/equations-matrices-accelerate">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/offline-uiwebview-nsurlprotocol">Drop-in offline caching for UIWebView (and NSURLProtocol)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-01-29T14:56:11-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>The most up-to-date source for this is now available at <a href="https://github.com/rnapier/RNCachingURLProtocol">github</a>.</em></p>
+
+<p>Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://iosptl.com">our book</a> is devoted to the ins-and-outs of this subject.</p>
+
+<p>But sometimes you just have a simple <code>UIWebView</code>, and you want to cache the last version of the page. You&rsquo;d think that <code>NSURLCache</code> would handle this for you, but it&rsquo;s much more complicated than that. <code>NSURLCache</code> doesn&rsquo;t cache everything you&rsquo;d think it would. Sometimes this is because of Apple&rsquo;s decisions in order to save space. Just as often, however, it&rsquo;s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
+
+<p>What I wanted was a simple mechanism for the following case:</p>
+
+<ul>
+<li>You have a UIWebView that points to a website with embedded images</li>
+<li>When you&rsquo;re online, you want the normal caching algorithms (nothing fancy)</li>
+<li>When you&rsquo;re offline, you want to show the last version of the page</li>
+</ul>
+
+
+<p>My test case was simple: a webview that loads cnn.com (a nice complicated webpage with lots of images). Run it once. Quit. Turn off the network. Run it again. CNN should display.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/offline-uiwebview-nsurlprotocol">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/ios5-ptl-kindle">Kindle!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2011-12-22T10:47:36-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those who have asked (and it&rsquo;s the #1 question I&rsquo;m asked about the book), <em>iOS 5 Programming Pushing the Limits</em> is now available in <a href="http://www.amazon.com/Programming-Pushing-Limits-Extraordinary-ebook/dp/B006OP97QI/ref=sr_1_11?s=digital-text&ie=UTF8&qid=1324561899&sr=1-11">Kindle format</a>, along with iBook and Adobe eBook. Enjoy</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/cocoaphony-blog/page6">&larr; Older</a>
+    
+    <a href="/cocoaphony-blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/cocoaphony-blog/page4">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="I&rsquo;ve built a candidate fix for the RNCryptor HMAC vulnerability. It&rsquo;s on a branch (issue44) currently, but I&rsquo;ll merge it to master &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/page4">
+  <link href="/cocoaphony-blog/favicon.png" rel="icon">
+  <link href="/cocoaphony-blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/cocoaphony-blog/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/cocoaphony-blog/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/cocoaphony-blog/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/cocoaphony-blog/">Blog</a></li>
+  <li><a href="/cocoaphony-blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/rncryptor-vulnerability-fix">Update on RNCryptor vulnerability fix</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-01-17T17:12:12-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve built a candidate fix for the RNCryptor <a href="http://robnapier.net/blog/rncryptor-hmac-vulnerability-827">HMAC vulnerability</a>. It&rsquo;s on a branch (<a href="https://github.com/rnapier/RNCryptor/tree/issue44">issue44</a>) currently, but I&rsquo;ll merge it to master next week if no one sees problems, and update the docs. By default it is incompatible with v1 files. If you need to be able to decrypt v1 files, you can define RNCRYPTOR_ALLOW_V1_BAD_HMAC when building.</p>
+
+<p>Please let me know if anyone encounters issues.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/rncryptor-hmac-vulnerability">RNCryptor HMAC Vulnerability (My Security Blunder)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-01-14T13:52:38-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thank you to Allen Mann for discovering the following significant security vulnerability in RNCryptor.</p>
+
+<h3>The Vulnerability</h3>
+
+
+<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> computes the HMAC over the ciphertext only. It does not compute an HMAC over the header, particularly the IV. This allows an attacker to modify the IV and thus manipulate the first block (16-bytes) of decrypted plaintext. This is a major issue, and is exactly the kind of problem that RNCryptor is designed to avoid.</p>
+
+<p>I will be modifying RNCryptor shortly to fix this. This will rev the file version to 2. I will provide a backward-compatibly option to read v1 files (default off). I strongly recommend that developers move to the v2 format.</p>
+
+<p>I will try to get this out as quickly as I can, hopefully this week.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/rncryptor-hmac-vulnerability">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/animating-arbitrary-keypaths">Animating Arbitrary KeyPaths</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-12-17T21:44:41-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</a>, I discussed my PinchView from <a href="http://robnapier.net/blog/laying-out-text-with-coretext-547">Laying out text with Core Text</a>. It&rsquo;s a text view that squeezes the glyphs towards your finger when you touch it. I built it to demonstrate per-glyph layout in Core Text. While demonstrating it, I was pretty unsatisfied with how it looked when you touched it or let go. When you drag your finger on the view, the glyphs move around like water. It&rsquo;s quite pretty. But when you initially touch the screen, the glyphs suddenly jump to their new locations, and then they jump back when you release the screen. Well, that&rsquo;s no good. So I wanted to add animations.</p>
+
+<p>But here&rsquo;s the thing: what do you animate? While you do want to animate the glyph positions, you&rsquo;re not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer&rsquo;s list of animatable properties confirmed that there&rsquo;s nothing like that. But no problem, I added a custom property called <code>touchPointScale</code> and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/animating-arbitrary-keypaths">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/cocoaconf">CocoaConf</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-11-29T22:50:04-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here are some useful links you&rsquo;re probably looking for.</p>
+
+<p><a href="https://github.com/rnapier/richtext-coretext/blob/master/Rich%20Text%2C%20Core%20Text.pdf">Rich Text, Core Text</a> Presentation</p>
+
+<p><a href="http://www.linotype.com/2762/zapfinoextra.html">Zapfino Extra Pro</a></p>
+
+<p><a href="http://www.iamcal.com/understanding-bidirectional-text/">Understanding Bidirectional (BIDI) Text in Unicode</a> by Cal Henderson</p>
+
+<p><a href="http://www.unicode.org/reports/tr9">Unicode Standard Annex #9</a> Unicode Bidirectional Algorithm</p>
+
+<p><a href="https://github.com/rnapier/richtext-coretext">GitHub for Rich Text, Core Text</a></p>
+
+<p><a href="https://github.com/rnapier/practical-security/blob/master/Practical%20Security.pdf">Practical Security</a> Presentation</p>
+
+<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor GitHub</a></p>
+
+<p><a href="https://github.com/rnapier/security-blunders">GitHub for Security Blunders</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/pbkdf2-sha1">PBKDF2 and SHA-1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-09-18T11:01:11-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve posted a new errata on the iosptl site about <a href="http://iosptl.com/posts/new-prf-functions-for-pbkdf2/">PBKDF2 and SHA-1 versus SHA-2</a>. If you&rsquo;re using CommonCryptor (and particularly CommonKeyDerivation), you may be interested.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/rncryptor-titanium">RNCryptor and my Titanium experiment</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-08-21T10:13:18-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Several months ago, I received a request to port my <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> module to <a href="http://www.appcelerator.com">Titanium</a>. I&rsquo;ve never been a fan of the JavaScript wrappers for iOS and Android. My belief and experience is that they&rsquo;re far more trouble than their worth. But the goal of RNCryptor was always to help people use AES correctly, and that&rsquo;s as important in JavaScript as it is in Objective-C. So I wrapped up RNCyptor into a Titanium module and stuck it on the <a href="https://marketplace.appcelerator.com">Appcelerator Marketplace</a>. Though RNCryptor is free, the pain of wrapping it into JavaScript led me to charge $10 for the Titanium version.</p>
+
+<p>The pain of maintaining this thing has gotten to be too much, though. I&rsquo;m releasing it today on <a href="https://github.com/rnapier/Cryptor-titanium">GitHub</a> in its current form, which is based on the older, synchronous form of RNCryptor. I may not have updated all the license text yet; if I miss any, it is under the MIT license. Thanks to those who purchased Cryptor-Titanium during its commercial life. Anyone who is interested in continuing development, please contact me (or submit a pull request).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/rncryptor-titanium">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/updated-rncryptor">Updated RNCryptor</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-07-13T16:06:30-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have brought the <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> async branch to master. This is a major change in API, but I believe much more flexible. I&rsquo;ve stripped the API down quite a lot, so please let me know if there are missing features. I&rsquo;m particularly interested in anyone who needs better support for reading and writing files. I haven&rsquo;t added any methods for that until I see how people are really using it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/phone-screen">Phone-screening Cocoa developers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-06-26T11:15:12-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There was an <a href="http://stackoverflow.com/questions/1019636/phone-screen-questions-for-mac-os-x-developer-positions/1019759#1019759">interesting question</a> on StackOverflow that was unfortunately closed as off topic. It was off topic, but it&rsquo;s still a useful question. When phone screening potential Cocoa developers, what kinds of questions should you ask? I&rsquo;ve helped several clients screen potential candidates over the years, and so I have several questions I use to help with that.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/phone-screen">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/rncryptor-async">RNCryptor async</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I&rsquo;ll be documenting this more formally within a few weeks, but here are the high points:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/rncryptor-async">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/mode-rncryptor">Mode changes for RNCryptor</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-06-18T19:37:41-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I&rsquo;ve decided to make a change to the default AES mode used by RNCryptor from its current CTR to the much more ubiquitous CBC.</p>
+
+<p>CTR mode has several advantages that I was hoping to exploit. First, it does not require padding, so it is not subject to padding oracle attacks (the cipher text is also generally a few bytes shorter than the equivalent CBC). That said, if the same nonce+counter+key combination is ever reused, an attacker can easily compute the key. This is pretty unlikely given how RNCryptor generates its nonce, but it&rsquo;s not impossible. If the same IV+key is used for CBC mode, then some information is leaked to an attacker, but its not nearly as catastrophic as reusing a nonce. The point is that CTR is not a home run here. It&rsquo;s different, exchanging one possible vulnerability for a different one (since RNCryptor does not store previous nonces to prevent reuse).</p>
+
+<p>It is also possible to compute CTR in parallel on multiple cores. Apple doesn&rsquo;t currently do this, and is not highly likely to do so in the future. They might, but it&rsquo;s not something to adapt the design to.</p>
+
+<p>Almost every AES system out there implements CBC, so using any other mode introduces a significant interoperability problem. A mode would need to be dramatically better to be worth that. CTR has not lived up to that requirement, and so I&rsquo;m switching to CBC.</p>
+
+<p>This will make it much easier to write RNCryptor-compatible modules in Java, JavaScript, etc., as have been requested.</p>
+
+<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code>CCKeyDerivationPBKDF</code>.</p>
+
+<p>If you update, note that this is incompatible with your existing encrypted files. I doubt there is enough field usage out there that this is an issue, but if it is, let me know and I can discuss with you how to convert.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/cocoaphony-blog/page5">&larr; Older</a>
+    
+    <a href="/cocoaphony-blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/cocoaphony-blog/page3">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

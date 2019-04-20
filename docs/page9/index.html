@@ -1,0 +1,497 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cocoaphony</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="Thank you stinkblog, thank you for saving me a great deal of pain debugging this. PandoraBoy work can now continue.
+">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/page9">
+  <link href="/cocoaphony-blog/favicon.png" rel="icon">
+  <link href="/cocoaphony-blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/cocoaphony-blog/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/cocoaphony-blog/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/cocoaphony-blog/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/cocoaphony-blog/">Blog</a></li>
+  <li><a href="/cocoaphony-blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/flash-bug-sigint-debugger">Flash bug, SIGINT from Debugger()</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-16T21:17:14-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thank you <a href="http://www.stinkbot.com/blog/archives/69">stinkblog</a>, thank you for saving me a great deal of pain debugging this. PandoraBoy work can now continue.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/quit-stringwithstring">Quit using +stringWithString:</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-12T10:48:10-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I keep coming across <a href="http://dotnetaddict.dotnetdevelopersjournal.com/leopard_nscollectionview.htm">code</a> like this:</p>
+
+<pre><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
+</code></pre>
+
+<p>It&rsquo;s time to say stop it already with the extra <code>+stringWithString:</code>. I haven&rsquo;t worked out yet where this anti-pattern comes from. Maybe it&rsquo;s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it&rsquo;s a Java/.NET thing? I&rsquo;m not sure. But I see it so often from so many places that it&rsquo;s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/quit-stringwithstring">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/view-controllers-notifications">View controllers and notifications</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-05T14:33:56-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Observing NSNotifications in a view control is a good thing. But remember, just because you&rsquo;re not onscreen doesn&rsquo;t mean that you&rsquo;re not still observing. This is particularly noteworthy on iPhone, where your view can get dropped any time memory is tight and you&rsquo;re offscreen, but it can bite you anywhere.</p>
+
+<p>ViewControllers, WindowControllers and other UI controllers are often better off registering and uregistering for notifications when they are put on and off the screen rather than when they are allocated and deallocated. This often means that they will need to update their state when put on screen. For example, an icon indicating &ldquo;connected&rdquo; might be part of a StatusViewController. When StatusView comes on screen, StatusViewController should update the connected status and then begin observing changes on it. When StatusView goes off screen, StatusViewController should stop observing.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/view-controllers-notifications">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/broader-use-of-objc">Broader use of ObjC</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-03T21:37:56-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><i>Based on a <a href="http://stackoverflow.com/questions/874690/is-objective-c-only-used-for-development-on-mac-os-iphone/874837">post</a> at StackOverflow. The question was whether Objective-C is only used for development on Mac OS/iPhone and why.</i></p>
+
+<p>I think ObjC has been isolated to the Apple world through a quirk of history and the nature of proprietary systems.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/broader-use-of-objc">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/understanding-systemprofiler">Understanding system_profiler</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-26T17:25:53-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is &ldquo;what does system_profiler actually do?&rdquo;  But it&rsquo;s a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It&rsquo;s a whirlwind tour of how you begin to attack programs using pretty standard tools. I&rsquo;m not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you&rsquo;re going to hide how your program works, make sure you research those first. You&rsquo;ll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/understanding-systemprofiler">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/obfuscating-cocoa">Obfuscating Cocoa</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-26T14:28:27-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><i>We recently had a discussion on cocoa-students (the excellent list for Big Nerd Ranch alumni; yet another reason to go to BNR classes) about protecting Cocoa programs from reverse engineering, mostly around some anti-copying code. I had some thoughts on the subject since I happen to have a background in anti-counterfeiting.</i></p>
+
+<p>Cocoa is a reverse-engineer&rsquo;s dream. Spend some time at <a href="http://www.culater.net/wiki/moin.cgi/CocoaReverseEngineering">culater</a> before dreaming you can really protect a Cocoa program. Objective-C is meant to be highly readable both in source and at run time. Obfuscation is not in its nature. This only points out Objective-C&rsquo;s particular difficulties in this area; it is not to suggest C or C++ will save you. They&rsquo;re just not quite as trivial as Objective-C.</p>
+
+<p>That said, the world of obfuscation falls into three big camps: you can try to deal with 70% of your problem, 75% of your problem or 90% of your problem.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/obfuscating-cocoa">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/latest-news">Latest news</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-26T11:40:44-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s been quiet here for a while. I&rsquo;ve been spending most of my time working on <a href="http://xmppframework.googlecode.com">XMPPFramework</a>, an opensource framework that makes it easier to build XMPP clients for Mac and iPhone. I&rsquo;ve been working on this nonstop for several weeks now in preparation for a demo based on this, so there hasn&rsquo;t been a lot of time to post here. My code for that demo is done now, and I&rsquo;m headed off on vacation for two weeks. So you should see more traffic here in July. I have quite a backlog of topics I just haven&rsquo;t had time to really capture.</p>
+
+<p>If you&rsquo;re interested in a less edited form of my Cocoa musings, I still answer questions at <a href="http://stackoverflow.com">Stack Overflow</a> (<a href="feed://stackoverflow.com/feeds/user/97337">feed</a>), and I&rsquo;ve started experimenting with <a href="https://twitter.com/cocoaphony">Twitter</a>, though I&rsquo;m not sure yet how much I like tweeting.</p>
+
+<p>See you all in July!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/cgeventtimestamps-are-big">CGEventTimestamps are big</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-02T17:45:47-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I can&rsquo;t take credit for finding this myself. Gilad Gurantz forwarded it to me. From the Quartz Event Services documentation:</p>
+
+<blockquote><p><b>CGEventTimestamp</b></p>
+Defines the elapsed time in nanoseconds since startup that a Quartz event occurred.
+
+<code>typedef uint64_t CGEventTimestamp;</code>
+
+<b>Discussion</b>
+An event timestamp is a big, unsigned, 64-bit number. That's big, really big. You just won't believe how vastly, hugely, mind-bogglingly big it is. You may think your application has been running for a long time, but that's just peanuts to an event timestamp.</blockquote>
+
+
+<p>So if my math is right, &ldquo;a long time&rdquo; translates into over 2850 years. And it&rsquo;s counted since the last reboot. I think we&rsquo;ll avoid the Y2K problem on this one.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/project-templates">Building the Build System - Part 2 - Project Templates</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-05-20T18:00:42-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In <a href="/cocoaphony-blog/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn&rsquo;t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it&rsquo;s easier than ever. Let&rsquo;s make one.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cocoaphony-blog/project-templates">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaphony-blog/pandoraboy-work">PandoraBoy work</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-05-17T22:00:51-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those of you worried about the trouble with PandoraBoy&rsquo;s hotkeys and Applescript, I&rsquo;ve finally carved out some time to work on this stuff. I keep getting hung up on the hotkeys preference pane, which can&rsquo;t be opened in IB3, due to the use of the Shortcut Recorder IB Palette. The answer, I&rsquo;ve always known, is just to rewrite the hotkey pref pane. It isn&rsquo;t that hard, I&rsquo;ve just avoided it, and it&rsquo;s finally time to do it and fix a few bugs in the process.</p>
+
+<p>Have I mentioned recently that PandoraBoy is an excellent small project to practice and hone your Cocoa skills?</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/cocoaphony-blog/page10">&larr; Older</a>
+    
+    <a href="/cocoaphony-blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/cocoaphony-blog/page8">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
