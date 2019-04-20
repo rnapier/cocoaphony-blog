@@ -33,9 +33,10 @@ rdiscount:
 
 paginate: 10          # Posts per page on the blog index
 
+root: /cocoaphony-blog
 permalink: /:title
 source: source
-destination: public
+destination: docs
 plugins_dir: plugins
   # - jekyll-feed
 
