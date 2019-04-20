@@ -17,8 +17,8 @@ title: Cocoaphony
 email: rob@neverwood.org
 description: >- # this means to ignore newlines until "baseurl:"
   Mac and iOS development with a focus on Swift and functional programming
-baseurl: "/cocoaphony-blog" # the subpath of your site, e.g. /blog
-url: "https://rnapier.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/" # the subpath of your site, e.g. /blog
+url: "https://robnapier.net" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: cocoaphony
 github_username:  rnapier
 
@@ -36,7 +36,7 @@ excerpt_link: "Read on &rarr;"  # "Continue reading" link text at the bottom of 
 excerpt_separator: "<!--more-->"
 
 
-root: "/cocoaphony-blog"
+root: "/"
 permalink: /:title
 source: source
 destination: docs

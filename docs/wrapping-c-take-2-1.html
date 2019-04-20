@@ -19,23 +19,23 @@
 
   
   <link rel="canonical" href="http://localhost:4000/wrapping-c-take-2-1">
-  <link href="/cocoaphony-blog/favicon.png" rel="icon">
-  <link href="/cocoaphony-blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
   <link href="https://micro.blog/cocoaphony" rel="me" />
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <link href="https://github.com/robnapier" rel="me" />
-  <!-- <script src="/cocoaphony-blog/javascripts/modernizr-2.0.js"></script> -->
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <!-- <script src="/cocoaphony-blog/javascripts/octopress.js" type="text/javascript"></script> -->
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
   <script src='/javascripts/footnotes.js' type="text/javascript"></script>
 
 </head>
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/cocoaphony-blog/">Cocoaphony</a></h1>
+  <h1><a href="/">Cocoaphony</a></h1>
   
 </hgroup>
 
@@ -46,8 +46,8 @@
 </ul>
 
 <ul class="main-navigation">
-  <li><a href="/cocoaphony-blog/">Blog</a></li>
-  <li><a href="/cocoaphony-blog/archives">Archives</a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
 </ul>
 
 </nav>
@@ -79,7 +79,7 @@
   </header>
 
 
-<div class="entry-content"><p>Last year, I presented <a href="/cocoaphony-blog/wrapping-c-objc">an approach to wrapping C++</a>. Since then, I&rsquo;ve been introduced to other approaches, particularly from gf who helped me better understand opaque objects. Since I do a lot of cross-language work, I&rsquo;ve had some opportunity to play with and expand this, and so I&rsquo;d like to update my C++ wrapping approach.</p>
+<div class="entry-content"><p>Last year, I presented <a href="/wrapping-c-objc">an approach to wrapping C++</a>. Since then, I&rsquo;ve been introduced to other approaches, particularly from gf who helped me better understand opaque objects. Since I do a lot of cross-language work, I&rsquo;ve had some opportunity to play with and expand this, and so I&rsquo;d like to update my C++ wrapping approach.</p>
 
 <p>First, to remind everyone of the problem: you have a C++ object that you want to consume in Objective-C. That&rsquo;s easy in ObjC++, but if you make an ivar that references a C++ class, then the header file can only be included by ObjC++ classes. This quickly spreads .mm files throughout your project, creating all kinds of headaches. ObjC is a beautiful thing, and C++ is fine, but ObjC++ is a crazy land that should be carefully segregated from civilized code. So how do we do it?</p>
 
@@ -153,7 +153,7 @@ public:
 NSLog(@"wrap = %@", [wrap string]);
 </code></pre>
 
-<p>In <a href="/cocoaphony-blog/wrapping-c-take-2-2">part two</a>, we&rsquo;ll discuss how to extend this approach to more complex problems such as smart pointers, listeners/delegates, and bindings.</p>
+<p>In <a href="/wrapping-c-take-2-2">part two</a>, we&rsquo;ll discuss how to extend this approach to more complex problems such as smart pointers, listeners/delegates, and bindings.</p>
 </div>
 
 
@@ -193,10 +193,10 @@ NSLog(@"wrap = %@", [wrap string]);
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/cocoaphony-blog/chinese-study" title="Previous Post: Chinese study">&laquo; Chinese study</a>
+        <a class="basic-alignment left" href="/chinese-study" title="Previous Post: Chinese study">&laquo; Chinese study</a>
       
       
-        <a class="basic-alignment right" href="/cocoaphony-blog/wrapping-c-take-2-2" title="Next Post: Wrapping C++ - Take 2, Part 2">Wrapping C++ - Take 2, Part 2 &raquo;</a>
+        <a class="basic-alignment right" href="/wrapping-c-take-2-2" title="Next Post: Wrapping C++ - Take 2, Part 2">Wrapping C++ - Take 2, Part 2 &raquo;</a>
       
     </p>
   </footer>
