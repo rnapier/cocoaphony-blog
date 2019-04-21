@@ -25,3 +25,4 @@ end
 
 gem 'pygments.rb'
 gem 'rdiscount'
+gem 'octopress'
