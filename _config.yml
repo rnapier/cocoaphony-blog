@@ -50,7 +50,7 @@ plugins_dir: plugins
 
 highlighter: null # default python pygments have been replaced by pygments.rb
 
-# subscribe_rss: /atom.xml
+subscribe_rss: /atom.xml
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
