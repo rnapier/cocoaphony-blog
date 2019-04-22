@@ -6,10 +6,10 @@
 <head>
   <meta charset="utf-8">
   <title>Cocoaphony</title>
-  <meta name="author" content="">
+  <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="XCode has a decent build system, but it doesn&rsquo;t work as well as it could out of the box. With just a little work, you can make your projects &hellip;">
+  <meta name="description" content="For those of you worried about the trouble with PandoraBoy&rsquo;s hotkeys and Applescript, I&rsquo;ve finally carved out some time to work on this &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -55,6 +55,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-work">PandoraBoy Work</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-05-17T22:00:51-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those of you worried about the trouble with PandoraBoy&rsquo;s hotkeys and Applescript, I&rsquo;ve finally carved out some time to work on this stuff. I keep getting hung up on the hotkeys preference pane, which can&rsquo;t be opened in IB3, due to the use of the Shortcut Recorder IB Palette. The answer, I&rsquo;ve always known, is just to rewrite the hotkey pref pane. It isn&rsquo;t that hard, I&rsquo;ve just avoided it, and it&rsquo;s finally time to do it and fix a few bugs in the process.</p>
+
+<p>Have I mentioned recently that PandoraBoy is an excellent small project to practice and hone your Cocoa skills?</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -440,45 +476,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/core-data-rdbms">Core Data vs. RDBMS</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-03-05T11:16:25-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>For those of you familiar with SQL and coming to Core Data, you probably want to separate the concept of &ldquo;database&rdquo; into the two kinds we&rsquo;re discussing here. There are relational databases, which is what you&rsquo;re probably used to, and object databases, which is what Core Data provides. Core Data happens to implement its object database on top of a relational database (SQLite), but that is a opaque implementation detail.</p>
-
-<p>In a relational database, the key actions are the select and the transaction. In the select, you ask the database to form itself into a collection of columns (joins are just a fancy way of doing that), filter and sort itself according to some set of rules, and then return you a linear collection of rows. In the transaction, you inform the system that you are beginning a transaction, instruct the database to perform a series of transformations, and then commit or roll-back the transaction. It&rsquo;s a great model, but Core Data doesn&rsquo;t look much like it.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/core-data-rdbms">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page11">&larr; Older</a>
@@ -498,7 +495,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

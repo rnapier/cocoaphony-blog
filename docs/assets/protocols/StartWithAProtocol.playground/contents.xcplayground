@@ -3,5 +3,9 @@
     <pages>
         <page name='Classes'/>
         <page name='Protocols!'/>
+        <page name='Structs'/>
+        <page name='Canvas'/>
+        <page name='Reverse'/>
+        <page name='Backwards Networking'/>
     </pages>
 </playground>

@@ -6,10 +6,10 @@
 <head>
   <meta charset="utf-8">
   <title>Cocoaphony</title>
-  <meta name="author" content="">
+  <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the &hellip;">
+  <meta name="description" content="I haven&rsquo;t forgotten about PandoraBoy, but I&rsquo;ve been very busy these last couple of weeks. I&rsquo;m now a full-time Mac programmer, and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -55,6 +55,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/89">89</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-01-08T16:49:00-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I haven&rsquo;t forgotten about PandoraBoy, but I&rsquo;ve been very busy these last couple of weeks. I&rsquo;m now a full-time Mac programmer, and so I&rsquo;ve been spending most of my time doing &ldquo;real&rdquo; hacking. Next week I go to Big Nerd Ranch for training, so I&rsquo;ll take PB with me to hack on.</p>
+
+<p>I just built my first kernel extension and begun trying it out. Kernel programming is a whole different world&hellip; When it doesn&rsquo;t work, Gray Screen/Reboot. I&rsquo;m glad that (a) OSX boots quick, and (b) I have a lot of computers&hellip;</p>
+
+<p>I&rsquo;m trying to waste system resources in a guaranteed way. I have these boxes with 2G of memory, and need to test problems that show up on 512MB machines and I don&rsquo;t have any 512MB sticks&hellip;.</p>
+
+<p>As I study Mac OS X Advanced Programming, I think I may be able to do this with mlock() and not have to use a kext. I&rsquo;ve read other things that suggest that mlock() won&rsquo;t work the way I want in a user app. So testing is in my future.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -395,45 +435,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/73">73</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-01T15:30:03-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It&rsquo;s been quite a while since I&rsquo;ve updated the Rob Report, but I have some things to chat about on the technical front. Most of my work these days is on the Mac, and my main hobby project is <a href="http://pandoraboy.googlecode.com/">PandoraBoy</a>, which will probably dominate these blog posts for a while. It&rsquo;s been a great project for teaching me how to deal with some interesting parts of Cocoa, while being small enough to keep my brain around.</p>
-
-<p>My current project for PandoraBoy is getting control of station changing. I now have a set of proxy NSURLProtocols that I can use to eavesdrop on the Pandora traffic (rather than having to post requests like listStations twice). That&rsquo;s how I grab album art. I&rsquo;m using it to learn much more about how Pandora talks to its server, allowing me to provide more Mac-friendly ways to send those messages. I&rsquo;ve demonstrated now that I can send launchStationFromId messages from Cocoa, so now I just need to collect the results of listStations so I have the IDs to send. Shouldn&rsquo;t be hard now.</p>
-
-<p>In the process, I discovered <a href="http://www.getfirebug.com/">FireBug</a>, which is just incredible. Using it, I understand Pandora&rsquo;s code much better and am now mulling about what I could do with all this information. But my next project will probably be talking to Airport Express (after I fix a couple of new bugs in the 0.4 line). I&rsquo;m pretty close to calling this thing 1.0&hellip;.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/page14">&larr; Older</a>
     
     <a href="/archives">Blog Archives</a>
     
@@ -450,7 +454,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

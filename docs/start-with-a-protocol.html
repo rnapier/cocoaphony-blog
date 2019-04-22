@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Protocols I: Start With a Protocol - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="In the beginning, Crusty In 2015, at WWDC, Dave Abrahams gave what I believe is still the greatest Swift talk ever given, and certainly the most &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="https://robnapier.net/start-with-a-protocol">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Protocols I: Start With a Protocol</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2019-04-22T00:00:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>In the beginning, Crusty</h2>
+
+<p>In 2015, at WWDC, <a href="https://twitter.com/DaveAbrahams">Dave Abrahams</a> gave what I believe is still the greatest Swift talk ever given, and certainly the most influential. <a href="https://developer.apple.com/videos/play/wwdc2015/408/">”Protocol-Oriented Programming in Swift,”</a> or as it is more affectionately known, “The Crusty Talk.”</p>
+
+<p>This is the talk that introduced the phrase “protocol oriented programming.” The first time I watched it, I took away just one key phrase:</p>
+
+<blockquote><p>Start with a protocol.</p></blockquote>
+
+<p>And so, dutifully, I started with a protocol. I made a UserProtocol and a DocumentProtocol and a ShapeProtocol and on and on, and then started implementing all those protocols with generic subclasses and eventually I found myself in a corner.</p>
+
+<pre><code>Protocol 'P' can only be used as a generic constraint because it has Self or associated type requirements
+</code></pre>
+
+<p>And then I started throwing things.</p>
+
+<!--more-->
+
+
+<p>For several years, I was rather annoyed at the phrase &ldquo;protocol-oriented programming.&rdquo; If by &ldquo;protocol&rdquo; you just mean &ldquo;interface,&rdquo; then Go is much more &ldquo;protocol oriented&rdquo; than Swift. But the more I&rsquo;ve wrestled with this new paradigm, the more I realized that POP isn&rsquo;t really about the protocols. It&rsquo;s about the extensions. But &ldquo;extension-oriented programming&rdquo; would be an even worse name. And more than just extensions, it&rsquo;s really, deeply, about generic algorithms. And &ldquo;algorithm-oriented programming,&rdquo; well, aren&rsquo;t we all?</p>
+
+<p>Naming a paradigm is always fraught with trouble. Most modern &ldquo;object-oriented&rdquo; languages aren&rsquo;t object-oriented at all. They&rsquo;re class-oriented (vs Smalltalk and JavaScript). And most &ldquo;functional programming&rdquo; languages are mostly value-oriented (vs FP and point-free). But the point of the names is shorthand for concepts bigger than a word, so let&rsquo;s not get too caught up on the &ldquo;protocol&rdquo; in protocol-oriented programming. The Holy Roman Empire was in no way holy, nor Roman, nor an empire. Discuss.</p>
+
+<h2>Beware quotes traveling sans context</h2>
+
+<p>The famous &ldquo;start with a protocol&rdquo; quote is actually the end of a longer paragraph:</p>
+
+<blockquote><p>For example, if you want to write a generalized sort or binary search…Don&rsquo;t start with a class. Start with a protocol.</p></blockquote>
+
+<p>Or as Dave <a href="https://twitter.com/cocoaphony/status/1104114233288151043">clarified on Twitter</a>:</p>
+
+<blockquote><p>Use value types, then if you need polymorphism, make them conform to protocols.  Avoid classes.</p></blockquote>
+
+<p><em>If</em> you&rsquo;re reaching for class inheritance, try a protocol and value type instead. That&rsquo;s very different from &ldquo;start with a protocol for every problem.&rdquo; <a href="https://twitter.com/AirspeedSwift">Ben Cohen</a> covered this in much more detail in the WWDC 2018 talk <a href="https://developer.apple.com/videos/play/wwdc2018/406/">Swift Generics (Expanded)</a>.</p>
+
+<blockquote><p>So notice that we considered a varied number of concrete types first. And now, we&rsquo;re thinking about a kind of protocol that could join them all together. And, it&rsquo;s important to think of things as this way around. To start with some concrete types, and then try and unify them with a protocol.</p></blockquote>
+
+<p><span class='pullquote-right' data-pullquote='Write concrete code first. Then work out the generics.'>
+If you take away one thing from this series, I want it to be this: <em>Write concrete code first. Then work out the generics.</em> Start with concrete types and clear use cases, and find the places that duplication happens. Then find abstractions to fix those problems. The power of protocol-oriented programming is that you don’t have to decide when you make a type exactly how that type will be used. When you work with inheritance, you have to design your class hierarchy from the start. But with protocols, you can wait until later.
+</span></p>
+
+<p>When I most get into trouble with protocols is when I try to write code &ldquo;as generically as possible.&rdquo; That doesn&rsquo;t really mean anything. Abstractions are choices, and when you make a choice to be flexible in one direction, you generally make it harder to be flexible in other directions. Without some clear use cases, you don&rsquo;t know what abstractions make sense.</p>
+
+<p>So today, I want to come to protocol-oriented programming fresh, with a focus on very every-day problems we face when developing iOS apps in Swift.</p>
+
+<h2>Setting the stage</h2>
+
+<p>In the next several articles, I&rsquo;ll be developing a very common system, a general-purpose networking stack that can fetch data asynchronously and decode arbitrary types. You may have built a system like this yourself in Swift. You may have used a framework that does it. The point of this exercise isn&rsquo;t really the end result (though I think it&rsquo;s quite useful code), but the process. What questions should you ask, and when, and how do you know what good answers look like? And most importantly, how does this &ldquo;protocol oriented programming&rdquo; thing guide us? How is it different than other approaches?</p>
+
+<p>So to get started, I want to show a common starting point that never goes well for me. I&rsquo;ve tried to build it this way several times myself, and I always find myself in a corner eventually. I see a lot of other people make this same mistake.</p>
+
+<pre><code>// This will not go well.
+// Trying to model a Request as something that can fetch and parse a Response.
+protocol Request {
+    associatedtype Response
+    func parse(data: Data) throws -&gt; Response
+    var urlRequest: URLRequest { get }
+}
+</code></pre>
+
+<p>How do I know this won&rsquo;t go well? I&rsquo;ll discuss it much more in depth later, but Request is a protocol with associated type (PAT). Any time you create a PAT, you should ask yourself &ldquo;will I ever want to put this in an Array?&rdquo; If the answer is yes, you don&rsquo;t want a PAT. Requests are certainly something you&rsquo;d want to put in an Array. Lists of pending requests, lists of requests that need to be retried, request priority queues. There are lots of reasons to put a Request in an Array.</p>
+
+<p>You might be tempted to look for a work-around, but don&rsquo;t. Type-eraser? No. Generalized Existential?!?! &hellip;no&hellip; Even if you find some &ldquo;work-around&rdquo; to the problem at hand you&rsquo;ll run into other walls very quickly (and I&rsquo;ve seen that again and again). That <code>can only be used as a generic constraint</code> is actually telling you something important. This isn&rsquo;t a problem with Swift. This just isn&rsquo;t what PATs are for. We&rsquo;ll get to what they&rsquo;re for soon, but the basic problem here is starting with a protocol before we even know what algorithm we want to write.</p>
+
+<p>So what does &ldquo;know the algorithm&rdquo; look like in practice? Glad you asked. Stay tuned for part two.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2019-04-22T00:00:00-04:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/conditional-breakpoint" title="Previous Post: A Conditional Breakpoint">&laquo; A Conditional Breakpoint</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

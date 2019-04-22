@@ -6,10 +6,10 @@
 <head>
   <meta charset="utf-8">
   <title>Cocoaphony</title>
-  <meta name="author" content="">
+  <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Trying to solve this problem last night, I came across this great script to automate the process. Works great, right out of the box. &hellip;">
+  <meta name="description" content="For those of you familiar with SQL and coming to Core Data, you probably want to separate the concept of &ldquo;database&rdquo; into the two kinds we &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -55,6 +55,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/core-data-rdbms">Core Data vs. RDBMS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-03-05T11:16:25-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those of you familiar with SQL and coming to Core Data, you probably want to separate the concept of &ldquo;database&rdquo; into the two kinds we&rsquo;re discussing here. There are relational databases, which is what you&rsquo;re probably used to, and object databases, which is what Core Data provides. Core Data happens to implement its object database on top of a relational database (SQLite), but that is a opaque implementation detail.</p>
+
+<p>In a relational database, the key actions are the select and the transaction. In the select, you ask the database to form itself into a collection of columns (joins are just a fancy way of doing that), filter and sort itself according to some set of rules, and then return you a linear collection of rows. In the transaction, you inform the system that you are beginning a transaction, instruct the database to perform a series of transformations, and then commit or roll-back the transaction. It&rsquo;s a great model, but Core Data doesn&rsquo;t look much like it.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/core-data-rdbms">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -427,45 +466,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/searching-httpwebrequestdate">Searching for HttpWebRequest.Date</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2008-05-30T09:39:41-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A fie on useless attempts to stop hacking&hellip; At least that&rsquo;s my current assumption on why Microsoft did this. I&rsquo;m a Cocoa guy, but I actually like .NET and hack a bit of it now and then. It&rsquo;s a pretty good framework, though you can see some of the seams where Microsoft didn&rsquo;t quite think it through when they were designing it and had to tack on later (the whole System.Text.Encoding namespace that&rsquo;s made up of methods that should exist on String; but then C# doesn&rsquo;t have ObjC-style categories so they probably also being more careful about throwing 10k methods on a single class the way Cocoa does, but I&rsquo;m running off on a tangent here).</p>
-
-<p>The point today is the headache that is the HttpWebRequest.Date property. What HttpWebRequest.Date property you might ask? That&rsquo;s right; there isn&rsquo;t one. </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/searching-httpwebrequestdate">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page12">&larr; Older</a>
@@ -485,7 +485,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

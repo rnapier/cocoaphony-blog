@@ -6,10 +6,11 @@
 <head>
   <meta charset="utf-8">
   <title>Cocoaphony</title>
-  <meta name="author" content="">
+  <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I&rsquo;ve built a candidate fix for the RNCryptor HMAC vulnerability. It&rsquo;s on a branch (issue44) currently, but I&rsquo;ll merge it to master &hellip;">
+  <meta name="description" content="If you&rsquo;re using RNCryptor, you may want to join the forum I&rsquo;ve finally setup: https://groups.google.com/forum/#!forum/rncryptor
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -55,6 +56,40 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/forum-rncryptor">New Forum for RNCryptor</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-12-20T09:39:33-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you&rsquo;re using RNCryptor, you may want to join the forum I&rsquo;ve finally setup: <a href="https://groups.google.com/forum/#!forum/rncryptor">https://groups.google.com/forum/#!forum/rncryptor</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -418,52 +453,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/mode-rncryptor">Mode Changes for RNCryptor</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-06-18T19:37:41-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I&rsquo;ve decided to make a change to the default AES mode used by RNCryptor from its current CTR to the much more ubiquitous CBC.</p>
-
-<p>CTR mode has several advantages that I was hoping to exploit. First, it does not require padding, so it is not subject to padding oracle attacks (the cipher text is also generally a few bytes shorter than the equivalent CBC). That said, if the same nonce+counter+key combination is ever reused, an attacker can easily compute the key. This is pretty unlikely given how RNCryptor generates its nonce, but it&rsquo;s not impossible. If the same IV+key is used for CBC mode, then some information is leaked to an attacker, but its not nearly as catastrophic as reusing a nonce. The point is that CTR is not a home run here. It&rsquo;s different, exchanging one possible vulnerability for a different one (since RNCryptor does not store previous nonces to prevent reuse).</p>
-
-<p>It is also possible to compute CTR in parallel on multiple cores. Apple doesn&rsquo;t currently do this, and is not highly likely to do so in the future. They might, but it&rsquo;s not something to adapt the design to.</p>
-
-<p>Almost every AES system out there implements CBC, so using any other mode introduces a significant interoperability problem. A mode would need to be dramatically better to be worth that. CTR has not lived up to that requirement, and so I&rsquo;m switching to CBC.</p>
-
-<p>This will make it much easier to write RNCryptor-compatible modules in Java, JavaScript, etc., as have been requested.</p>
-
-<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code>CCKeyDerivationPBKDF</code>.</p>
-
-<p>If you update, note that this is incompatible with your existing encrypted files. I doubt there is enough field usage out there that this is an issue, but if it is, let me know and I can discuss with you how to convert.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page5">&larr; Older</a>
@@ -483,7 +472,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

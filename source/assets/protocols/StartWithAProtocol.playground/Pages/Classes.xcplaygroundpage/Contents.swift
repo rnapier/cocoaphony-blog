@@ -8,17 +8,17 @@ class Shape {
 }
 
 class Circle: Shape {
-    var radius: CGPoint
-    init(center: CGPoint, radius: CGPoint) {
+    var radius: CGFloat
+    init(center: CGPoint, radius: CGFloat) {
         self.radius = radius
         super.init(center: center)
     }
 }
 
-class Polygon: Shape {
-    var corners: [CGPoint]
-    init(corners: [CGPoint]) {
-        self.corners = corners
-        super.init(center: ???)
-    }
-}
+//class Polygon: Shape {
+//    var corners: [CGPoint]
+//    init(corners: [CGPoint]) {
+//        self.corners = corners
+//        super.init(center: ???)
+//    }
+//}

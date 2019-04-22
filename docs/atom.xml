@@ -4,14 +4,86 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-21T14:07:58-04:00</updated>
+  <updated>2019-04-22T17:58:46-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
-    <name><![CDATA[]]></name>
+    <name><![CDATA[Rob Napier]]></name>
     <email><![CDATA[rob@neverwood.org]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Protocols I: Start With a Protocol]]></title>
+    <link href="https://robnapier.net/start-with-a-protocol"/>
+    <updated>2019-04-22T00:00:00-04:00</updated>
+    <id>https://robnapier.net/start-with-a-protocol</id>
+    <content type="html"><![CDATA[<h2>In the beginning, Crusty</h2>
+
+<p>In 2015, at WWDC, <a href="https://twitter.com/DaveAbrahams">Dave Abrahams</a> gave what I believe is still the greatest Swift talk ever given, and certainly the most influential. <a href="https://developer.apple.com/videos/play/wwdc2015/408/">”Protocol-Oriented Programming in Swift,”</a> or as it is more affectionately known, “The Crusty Talk.”</p>
+
+<p>This is the talk that introduced the phrase “protocol oriented programming.” The first time I watched it, I took away just one key phrase:</p>
+
+<blockquote><p>Start with a protocol.</p></blockquote>
+
+<p>And so, dutifully, I started with a protocol. I made a UserProtocol and a DocumentProtocol and a ShapeProtocol and on and on, and then started implementing all those protocols with generic subclasses and eventually I found myself in a corner.</p>
+
+<pre><code>Protocol 'P' can only be used as a generic constraint because it has Self or associated type requirements
+</code></pre>
+
+<p>And then I started throwing things.</p>
+
+<!--more-->
+
+
+<p>For several years, I was rather annoyed at the phrase &ldquo;protocol-oriented programming.&rdquo; If by &ldquo;protocol&rdquo; you just mean &ldquo;interface,&rdquo; then Go is much more &ldquo;protocol oriented&rdquo; than Swift. But the more I&rsquo;ve wrestled with this new paradigm, the more I realized that POP isn&rsquo;t really about the protocols. It&rsquo;s about the extensions. But &ldquo;extension-oriented programming&rdquo; would be an even worse name. And more than just extensions, it&rsquo;s really, deeply, about generic algorithms. And &ldquo;algorithm-oriented programming,&rdquo; well, aren&rsquo;t we all?</p>
+
+<p>Naming a paradigm is always fraught with trouble. Most modern &ldquo;object-oriented&rdquo; languages aren&rsquo;t object-oriented at all. They&rsquo;re class-oriented (vs Smalltalk and JavaScript). And most &ldquo;functional programming&rdquo; languages are mostly value-oriented (vs FP and point-free). But the point of the names is shorthand for concepts bigger than a word, so let&rsquo;s not get too caught up on the &ldquo;protocol&rdquo; in protocol-oriented programming. The Holy Roman Empire was in no way holy, nor Roman, nor an empire. Discuss.</p>
+
+<h2>Beware quotes traveling sans context</h2>
+
+<p>The famous &ldquo;start with a protocol&rdquo; quote is actually the end of a longer paragraph:</p>
+
+<blockquote><p>For example, if you want to write a generalized sort or binary search…Don&rsquo;t start with a class. Start with a protocol.</p></blockquote>
+
+<p>Or as Dave <a href="https://twitter.com/cocoaphony/status/1104114233288151043">clarified on Twitter</a>:</p>
+
+<blockquote><p>Use value types, then if you need polymorphism, make them conform to protocols.  Avoid classes.</p></blockquote>
+
+<p><em>If</em> you&rsquo;re reaching for class inheritance, try a protocol and value type instead. That&rsquo;s very different from &ldquo;start with a protocol for every problem.&rdquo; <a href="https://twitter.com/AirspeedSwift">Ben Cohen</a> covered this in much more detail in the WWDC 2018 talk <a href="https://developer.apple.com/videos/play/wwdc2018/406/">Swift Generics (Expanded)</a>.</p>
+
+<blockquote><p>So notice that we considered a varied number of concrete types first. And now, we&rsquo;re thinking about a kind of protocol that could join them all together. And, it&rsquo;s important to think of things as this way around. To start with some concrete types, and then try and unify them with a protocol.</p></blockquote>
+
+<p><span class='pullquote-right' data-pullquote='Write concrete code first. Then work out the generics.'>
+If you take away one thing from this series, I want it to be this: <em>Write concrete code first. Then work out the generics.</em> Start with concrete types and clear use cases, and find the places that duplication happens. Then find abstractions to fix those problems. The power of protocol-oriented programming is that you don’t have to decide when you make a type exactly how that type will be used. When you work with inheritance, you have to design your class hierarchy from the start. But with protocols, you can wait until later.
+</span></p>
+
+<p>When I most get into trouble with protocols is when I try to write code &ldquo;as generically as possible.&rdquo; That doesn&rsquo;t really mean anything. Abstractions are choices, and when you make a choice to be flexible in one direction, you generally make it harder to be flexible in other directions. Without some clear use cases, you don&rsquo;t know what abstractions make sense.</p>
+
+<p>So today, I want to come to protocol-oriented programming fresh, with a focus on very every-day problems we face when developing iOS apps in Swift.</p>
+
+<h2>Setting the stage</h2>
+
+<p>In the next several articles, I&rsquo;ll be developing a very common system, a general-purpose networking stack that can fetch data asynchronously and decode arbitrary types. You may have built a system like this yourself in Swift. You may have used a framework that does it. The point of this exercise isn&rsquo;t really the end result (though I think it&rsquo;s quite useful code), but the process. What questions should you ask, and when, and how do you know what good answers look like? And most importantly, how does this &ldquo;protocol oriented programming&rdquo; thing guide us? How is it different than other approaches?</p>
+
+<p>So to get started, I want to show a common starting point that never goes well for me. I&rsquo;ve tried to build it this way several times myself, and I always find myself in a corner eventually. I see a lot of other people make this same mistake.</p>
+
+<pre><code>// This will not go well.
+// Trying to model a Request as something that can fetch and parse a Response.
+protocol Request {
+    associatedtype Response
+    func parse(data: Data) throws -&gt; Response
+    var urlRequest: URLRequest { get }
+}
+</code></pre>
+
+<p>How do I know this won&rsquo;t go well? I&rsquo;ll discuss it much more in depth later, but Request is a protocol with associated type (PAT). Any time you create a PAT, you should ask yourself &ldquo;will I ever want to put this in an Array?&rdquo; If the answer is yes, you don&rsquo;t want a PAT. Requests are certainly something you&rsquo;d want to put in an Array. Lists of pending requests, lists of requests that need to be retried, request priority queues. There are lots of reasons to put a Request in an Array.</p>
+
+<p>You might be tempted to look for a work-around, but don&rsquo;t. Type-eraser? No. Generalized Existential?!?! &hellip;no&hellip; Even if you find some &ldquo;work-around&rdquo; to the problem at hand you&rsquo;ll run into other walls very quickly (and I&rsquo;ve seen that again and again). That <code>can only be used as a generic constraint</code> is actually telling you something important. This isn&rsquo;t a problem with Swift. This just isn&rsquo;t what PATs are for. We&rsquo;ll get to what they&rsquo;re for soon, but the basic problem here is starting with a protocol before we even know what algorithm we want to write.</p>
+
+<p>So what does &ldquo;know the algorithm&rdquo; look like in practice? Glad you asked. Stay tuned for part two.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A Conditional Breakpoint]]></title>
@@ -2816,169 +2888,6 @@ same place, just a bit more gently.</p>
 <ol>
 <li id="fn:1">
 <p>Remember that the &ldquo;unbox&rdquo; step is just because of a Beta6 compiler limitation.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-</ol>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Your Lips Keep Moving, but All I Hear Is "Applicator Functive Monastic Llama Calculus..."]]></title>
-    <link href="https://robnapier.net/llama-calculus"/>
-    <updated>2014-08-09T16:16:19-04:00</updated>
-    <id>https://robnapier.net/llama-calculus</id>
-    <content type="html"><![CDATA[<p>...and I hated calculus.</p>
-
-<p>Yes, the functional world seems to overflow with bizarre terms that defy
-intuition. Faced with words like <em>object</em>, <em>property</em>, <em>inherit</em>, <em>class</em>, even
-non-programmers can get some handle on what they might mean. <em>Applicative
-functor</em> is not so kind. Nor is the ubiquitous <em>monad</em>, a word that feels
-designed to obscure its meaning (plus the ensuing
-<a href="http://www.haskell.org/pipermail/haskell-cafe/2009-January/053317.html">arguments over whether something is really a monad or a monoid</a>).</p>
-
-<p>Let me boil functional programming down to its basics, the part you need before
-we can really get started: variables are evil. Stop mutating them. It just makes
-them more evil. If I could do just one thing to improve your Swift programs, it
-would be to generate an electric keyboard shock every time you typed <code>v</code> <code>a</code>
-<code>r</code>. Yeah, you&rsquo;ll need it sometimes, but each time you should ask &ldquo;is it worth
-the shock?&rdquo; And by &ldquo;the shock,&rdquo; I mean &ldquo;hard to find bugs.&rdquo;<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
-
-<!-- more -->
-
-
-<p>We inherit a very unfortunate piece of syntax from the earliest days of FORTRAN.
-It&rsquo;s so common that you&rsquo;ve probably never considered how insane it is. Here it
-is in Swift:</p>
-
-<pre><code>var x: Int
-x = 5
-x = 7
-</code></pre>
-
-<p>This program makes no sense. Read it out loud the way we usually do. &ldquo;X is an
-Int.&rdquo; Good. &ldquo;X equals five.&rdquo; Cool, got it. &ldquo;X equals seven.&rdquo; What? Didn&rsquo;t you
-just say it equals five? Does 5 equal 7? What are you trying to pull here? The
-more reasonable result of this program should be <code>undefined</code> or possibly
-<code>false</code>. Both of these statements cannot be true. Yet we write this kind of
-stuff all the time and we expect it to mean something other than &ldquo;equals.&rdquo;</p>
-
-<p>The correct way to read this out loud is &ldquo;assign five to <em>x</em>, then assign seven
-to <em>x</em>.&rdquo;<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
-
-<p>I know that sounds pedantic. A lot of the build-up to functional programming
-sounds pedantic, but bear with me. I&rsquo;m going to keep bringing it back to
-problems we all face every day, in mostly the terms we&rsquo;re all used to.</p>
-
-<p>Let&rsquo;s compare this to another piece of Swift:</p>
-
-<pre><code>let x = 5
-</code></pre>
-
-<p>Here, the <code>=</code> is fundamentally different (and so should really have a different
-operator). This doesn&rsquo;t say &ldquo;assign 5 to x.&rdquo; This says &ldquo;x <em>is</em> 5&rdquo; and
-equivalently, &ldquo;5 <em>is</em> x.&rdquo; They are just different names for the same thing.
-Anywhere in this scope that you encounter <em>x</em>, the compiler may replace it with
-5 and vice versa. This is the equals sign that you learned in elementary school
-arithmetic. It says these two things are the same. In your first Algebra class,
-you learned how to use this equivalence to solve problems. But somewhere along
-the way (well, in FORTRAN), we merged this simple and powerful idea into a much
-more complicated, but less general, idea: assignment.</p>
-
-<p>Assignment is complicated because it creates state. The world is different
-before the assignment than after the assignment. State makes it hard to know
-exactly what a function will do. It makes it hard to test. And the broader the
-state, the more confusing it gets. A local variable defined three lines above
-doesn&rsquo;t create a lot of state to juggle. An instance variable that may change
-from call to call can be tricky. A global variable that may be set on any thread
-at any time is a nightmare.</p>
-
-<p><span class='pullquote-right' data-pullquote='Fixing bugs is fundamentally about
-distinguishing between what *should be* and what *is*.'></p>
-
-<p>Much of our job as programmers is to reason about programs. This word, <em>reason</em>,
-comes up a lot in academic discussions, but I don&rsquo;t think we use it as much as
-we should in the code mines. Fixing bugs is fundamentally about
-distinguishing between what <em>should be</em> and what <em>is</em>. Both of these require
-reasoning about your code. Given a function, what are its inputs and outputs?
-What is it <em>supposed</em> to do? What does it <em>actually</em> do?</p>
-
-<p></span></p>
-
-<p>Perhaps the most overlooked part of that process is &ldquo;what are its inputs and
-outputs?&rdquo; It&rsquo;s really the question &ldquo;what things could <em>possibly</em> be breaking
-this, and what other things could this <em>possibly</em> be breaking.&rdquo; And this is where
-state comes in. Consider a method:</p>
-
-<pre><code>class RestaurantMeal {
-    ...
-    func calculateTheBill() { ... }
-}
-</code></pre>
-
-<p>This is pure OOP. The object has some state. I ask the object to mutate itself.
-Later, I&rsquo;ll ask the object for its new state. All the details, including what
-goes into the bill, are encapsulated in the object and are hidden from the
-caller.</p>
-
-<p>It&rsquo;s very simple, but consider how hard it is to reason about this method. What
-are its inputs and outputs? Well, in principle, the entire current state of the
-object is the input, and the entire mutated state of the object is the
-output.<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup> What test cases would you write? And if the implementation
-details changed, would those test cases still provide sufficient coverage? If my
-final bill is wrong, how I do reproduce the state of this object to debug it?
-The whole point of OOP is that the internal details of <code>calculateTheBill()</code> are
-private. But in the real world of testing and debugging, they often turn out to
-be very important because we have to recreate the relevant state.</p>
-
-<p>Now consider the following free function (i.e. not part of an object):</p>
-
-<pre><code>func totalCostForItems(items: [Double], taxRate: Double) -&gt; Double { ... }
-</code></pre>
-
-<p>You pass data to a function, and it returns you data. There is no state. If you
-pass the same values, you will always get the same result. All of the inputs and
-outputs are obvious and knowable from the code (unlike documentation, which can
-become out of date). Internal changes cannot change whether the tests are
-sufficient. If there are new inputs or outputs, the public signature has to
-reflect them. There are no external concurrency concerns. You can compute the
-result on as many queues as you like. You know that none of your inputs can
-change behind your back. You don&rsquo;t have to worry about whether your parameters
-are thread-safe because you have your own, immutable copies.</p>
-
-<p><code>calculateTheBill()</code> <em>assigns</em>. <code>totalCostForItems(taxRate:)</code> <em>is</em>. This is a
-pure functional approach to the problem.</p>
-
-<p>&ldquo;Functional? But there&rsquo;s not a single <code>map</code> or closure or <code>&lt;*&gt;</code> to be seen.
-Wasn&rsquo;t the point of <a href="https://robnapier.net/swift-is-not-functional">Swift is not Functional</a> that
-just using a few functions doesn&rsquo;t make a language functional? Isn&rsquo;t this
-all possible in C?&rdquo;</p>
-
-<p>All true. The point here isn&rsquo;t to lay out the entirety of functional
-programming. It&rsquo;s to capture the first intuitions about mutable state, and why
-even programmers with no interest in CS theory might want to minimize it. It&rsquo;s a
-way of thinking about the problem rather than a particular set of features. I&rsquo;ll
-discuss more in later posts.</p>
-
-<p>In the earliest FORTRAN programs, mutable state was already a regular source of
-bugs. Today we have highly concurrent apps with dynamic user interfaces and
-things have only gotten worse. Programs have gotten bigger, more complicated,
-and harder to get right. That means long hours of difficult testing, frustrating
-debugging, missed ship dates, and hard-to-reproduce bug reports from your
-customers. Excessive state is a major contributor.</p>
-
-<p>Totally eliminating state from your programs is challenging at best, counter-productive
-at worst. But as we go along in this series, I hope you start to see why you&rsquo;d
-want to treat state as a powerful and somewhat dangerous tool to be used in
-moderation. And the first step down that road is to stop typing <code>var</code> (ouch!)</p>
-<div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>Swift unfortunately overloads <code>var</code> to mean both &ldquo;mutable&rdquo; and &ldquo;computed property&rdquo; even if the computed property is immutable. I am only referring to the first use.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-<li id="fn:2">
-<p>ALGOL, and later Pascal, got this at least half-right: <code>x := 5</code>. There wasn&rsquo;t a <code>&lt;</code> key on early keyboards, so <code>:</code> had to do. This really should be written <code>5 -&gt; x</code>, since the assignment happens after evaluation, but at least &ldquo;x receives 5&rdquo; is more sensible than &ldquo;x equals 5.&rdquo; So many C bugs could have been avoided if it had used ALGOL syntax. It amazes me that Swift held onto <code>=</code> for assignment.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
-<li id="fn:3">
-<p>For this discussion, assume there are no mutable globals or singletons (which are just globals by another name). If there were, they create the same problems for every approach.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
 </ol>
 </div>
 

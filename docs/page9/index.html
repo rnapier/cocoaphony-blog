@@ -6,11 +6,10 @@
 <head>
   <meta charset="utf-8">
   <title>Cocoaphony</title>
-  <meta name="author" content="">
+  <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Thank you stinkblog, thank you for saving me a great deal of pain debugging this. PandoraBoy work can now continue.
-">
+  <meta name="description" content="For the last couple of nights I&rsquo;ve finally gotten back to PandoraBoy work. The backlog of issues has gotten a bit out of hand as I&rsquo;ve &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -56,6 +55,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-moving-leopard">PandoraBoy Moving to Leopard</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-18T09:16:18-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For the last couple of nights I&rsquo;ve finally gotten back to PandoraBoy work. The backlog of issues has gotten a bit out of hand as I&rsquo;ve focused on other projects. One thing that has hung me up for a while has been the Hotkey preferences pane, which uses ShortcutRecorder. SR had an IB Pallet that only worked with IB2.5, not IB3, which made working on that panel very difficult. I&rsquo;ve finally upgraded SR to the latest version, which required a lot of recoding since PB relied SR&rsquo;s now-deprecated autosave functionality.</p>
+
+<p>The side effect of all of that is that the latest SR requires Leopard, and so now PB requires Leopard. I had planned to wait for SnowLeopard&rsquo;s release to drop Tiger support, but this accelerates that a bit. It does make my coding a work a bit easier, since 10.5 has many nice developer features.</p>
+
+<p>Drop me a note if you&rsquo;re still running PB on Tiger. Every other major user of ShortcutRecorder had already gone Leopard-only, which is why they made the move. Tigers are getting pretty rare out there.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -421,42 +458,6 @@ An event timestamp is a big, unsigned, 64-bit number. That's big, really big. Yo
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/pandoraboy-work">PandoraBoy Work</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-05-17T22:00:51-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>For those of you worried about the trouble with PandoraBoy&rsquo;s hotkeys and Applescript, I&rsquo;ve finally carved out some time to work on this stuff. I keep getting hung up on the hotkeys preference pane, which can&rsquo;t be opened in IB3, due to the use of the Shortcut Recorder IB Palette. The answer, I&rsquo;ve always known, is just to rewrite the hotkey pref pane. It isn&rsquo;t that hard, I&rsquo;ve just avoided it, and it&rsquo;s finally time to do it and fix a few bugs in the process.</p>
-
-<p>Have I mentioned recently that PandoraBoy is an excellent small project to practice and hone your Cocoa skills?</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page10">&larr; Older</a>
@@ -476,7 +477,7 @@ An event timestamp is a big, unsigned, 64-bit number. That's big, really big. Yo
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org"></a> - <a href="https://twitter.com/">@</a> - 
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
