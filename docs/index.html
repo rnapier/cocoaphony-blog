@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="In the beginning, Crusty In 2015, at WWDC, Dave Abrahams gave what I believe is still the greatest Swift talk ever given, and certainly the most &hellip;">
+  <meta name="description" content="You&rsquo;re not alone. Swift protocols confuse us all. This is going to be a fairly long series, in words if not in number of posts. I tend to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="https://robnapier.net">
+  <link rel="canonical" href="http://localhost:4000">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
@@ -55,6 +55,194 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/you're-not-alone">You're Not Alone</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2019-04-22T12:04:22-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>You&rsquo;re not alone. Swift protocols confuse us all.</h2>
+
+<p>This is going to be a fairly long series, in words if not in number of posts. I tend to ramble a bit about philosophy, and there will be quite a lot of code. Usually I&rsquo;d let the important points reveal themselves along the path. But Swift protocols are too important to let the most critical points be buried in mountains of text, so I&rsquo;m going to
+reveal all the important points here before I get started. If I forget something, I may come back and update this section. Also, if the statements in this list are either obvious to you, or not interesting, this series probably isn&rsquo;t for you.</p>
+
+<ul>
+<li>Write concrete code first. Then work out the generics.</li>
+<li>Do not create &ldquo;genericness&rdquo; for its own sake. Discover it in your concrete use case.</li>
+<li>Abstractions are choices. They cut you off from other abstractions. &ldquo;As generic as possible&rdquo; doesn&rsquo;t mean anything.</li>
+<li>The point of a PAT is to apply generic algorithms to a type. It is never to create a heterogeneous collection.</li>
+<li>Simple (non-PAT) protocols are commonly used to create a heterogeneous collection</li>
+<li>Before you add an associated type, ask: &ldquo;Would it be sensible to put this type in an array?&rdquo; If the answer is yes, do not add an associated type. Redesign.</li>
+<li>You probably don&rsquo;t need a type-eraser. If you&rsquo;re trying to put a PAT in an array, you <em>definitely</em> don&rsquo;t need a type-eraser. Redesign.</li>
+<li>Generalized existentials probably will not solve your problem. Redesign.</li>
+<li>Protocols are not abstract classes. Swift doesn&rsquo;t have abstract classes. If your protocol inheritance would make perfect sense as an abstract class hierarchy, you&rsquo;re probably on the wrong road.</li>
+<li>Protocols (almost) never conform to protocols. When you need &ldquo;a type that conforms to P,&rdquo; P is not that type.</li>
+<li>A protocol cannot <em>be</em> Equatable. It can only <em>require</em> Equatable.</li>
+<li>Aspire to more than &ldquo;mocks&rdquo; from your protocols.</li>
+<li>Protocols are not bags of syntax. They have have semantics (meanings) and exist to facilitate interesting algorithms.</li>
+</ul>
+
+
+<p>That&rsquo;s a lot to talk about, and this will be a dense and meandering series. It&rsquo;s time to dive into it. This article will just set the stage. I&rsquo;ve been wrestling with protocols since the the first day of Swift. I&rsquo;ve used them incorrectly and had to redesign so many times I&rsquo;ve lost count. I&rsquo;ve crashed the compiler so many times that it&rsquo;s lost count. You are not alone.</p>
+
+<hr />
+
+<h2>Revisiting Crusty</h2>
+
+<p>About half the Crusty talk revolves around one long example, a “diagramming app where you can drag and drop shapes on a drawing surface and interact with them.” It’s a very classic object-oriented problem, and in an OOP language I&rsquo;d probably focus on laying out the model classes first. Maybe something like this:</p>
+
+<pre><code>class Shape {
+    var center: CGPoint
+    init(center: CGPoint) {
+        self.center = center
+    }
+}
+
+class Circle : Shape {
+    var radius: CGFloat
+    init(center: CGPoint, radius: CGFloat) {
+        self.radius = radius
+        super.init(center: center)
+    }
+}
+</code></pre>
+
+<p>That feels ok at first glance, but it actually has some pretty major problems already. Yes, there&rsquo;s the reference/value type arguments about unintentional sharing and mutable state, but that&rsquo;s not really my focus here. We could make these types immutable and make those problems go away (creating other problems, but still&hellip;.) The real problem in my opinion is the <code>center</code> property. What happens when I try to implement Polygon?</p>
+
+<pre><code>class Polygon : Shape {
+    var corners: [CGPoint]
+    init(corners: [CGPoint]) {
+        self.corners = corners
+        super.init(center: ???) // What is the center?
+    }
+}
+</code></pre>
+
+<p>Is the center the <a href="https://en.wikipedia.org/wiki/Centroid">centroid</a>, or the center of the bounding box? It&rsquo;s implemented as a property in Shape, so every subclass must maintain it as a property and keep it in sync with any changes to other properties. Is it even used by anything? Do we need to make these decisions yet?</p>
+
+<p>The problem with class inheritance is that it pushes you to make all these choices early, before you&rsquo;ve worked out your use cases. The power of protocol-oriented programming is that it lets you make these decisions late. In Swift, I&rsquo;ve learned to implement Circle and Polygon this way:</p>
+
+<pre><code>struct Circle {
+    var center: CGPoint
+    var radius: CGFloat
+}
+
+struct Polygon {
+    var corners: [CGPoint]
+}
+</code></pre>
+
+<p>That&rsquo;s it. No protocols. No inheritance. Nothing. It&rsquo;s data, stored in whatever is convenient for that data. But I probably wouldn&rsquo;t create these at all, yet. I don&rsquo;t know what I&rsquo;m going to do with this data. Instead of starting with models, start with the caller.</p>
+
+<p>My goal is to draw &ldquo;things&rdquo; of some kind in a CGContext:</p>
+
+<pre><code>for thing in things {
+    thing.draw(in: context)
+}
+</code></pre>
+
+<p>What should I call these Things? Shapes? Kind of, but that&rsquo;s not really what defines them here. They&rsquo;re just &ldquo;something that can draw itself into a context.&rdquo; And they need exactly one method, <code>draw</code>, so Drawable is a good name.</p>
+
+<pre><code>protocol Drawable {
+    func draw(in context: CGContext)
+}
+</code></pre>
+
+<p>Some of you have seen Crusty&rsquo;s talk and you might be shouting &ldquo;no, no, not CGContext. You want Renderer.&rdquo; But I don&rsquo;t, at least not yet. That isn&rsquo;t my use case. I just need to draw &ldquo;drawable things&rdquo; in a CGContext. Build simply. Then find your protocols. I&rsquo;m hoping this is going to work out, but to be sure, I should make a few of these Drawables and see if this idea makes sense.</p>
+
+<p>The simplest thing to draw is a circle, so I&rsquo;m hoping this is easy to draw:</p>
+
+<pre><code>extension Circle : Drawable {
+    func draw(in context: CGContext) {
+        context.addArc(center: center, radius: radius,
+                       startAngle: 0, endAngle: .pi*2,
+                       clockwise: true)
+    }
+}
+</code></pre>
+
+<p>Looks good. That&rsquo;s exactly the kind of to-the-point method I expect in order to implement Drawable.</p>
+
+<pre><code>extension Polygon : Drawable {
+    func draw(in context: CGContext) {
+      context.move(to: corners.last!)
+      for p in corners { context.addLine(to: p) }
+    }
+}
+</code></pre>
+
+<p>And again, looking very good and to-the-point. We should try something a little different, like a container for other Drawables:</p>
+
+<pre><code>struct Diagram {
+    mutating func add(_ other: Drawable) {
+        elements.append(other)
+    }
+
+    var elements: [Drawable] = []
+}
+
+extension Diagram: Drawable {
+    func draw(in context: CGContext) {
+        for f in elements { f.draw(in: context) }
+    }
+}
+</code></pre>
+
+<p>Again, this looks very straight forward. It&rsquo;s important to try to conform several kinds of types early in the process. You want to find where your protocol might run into trouble. If all you implement are the trivial types, then there may be major problems lurking in your design. For example, here&rsquo;s a Drawable that Crusty didn&rsquo;t consider:</p>
+
+<pre><code>struct Text {
+    var position: CGPoint
+    var attributedString: NSAttributedString
+}
+
+extension Text: Drawable {
+    func draw(in context: CGContext) {
+
+        // Configure the context
+        context.textMatrix = .identity
+        context.textPosition = position
+
+        // Draw the text
+        let line = CTLineCreateWithAttributedString(attributedString)
+        CTLineDraw(line, context)
+    }
+}
+</code></pre>
+
+<p>That&rsquo;s actually a bit complicated. It&rsquo;s only four lines, but it already makes me a little nervous. I know I want to swap out CGContext at some point, but this requires Core Text functions that aren&rsquo;t part of CGContext. That tells me it&rsquo;s time to start thinking about abstracting CGContext before this gets out of hand.</p>
+
+<hr />
+
+<blockquote><blockquote><p>Another case is where the instances of the abstraction are just &ldquo;sinks.&rdquo; Like, our Renderers, for example. So, we&rsquo;re just pumping, we&rsquo;re just pumping information into that thing, into that Renderer, right?
+<a href="https://developer.apple.com/videos/play/wwdc2015/408/?time=2643">https://developer.apple.com/videos/play/wwdc2015/408/?time=2643</a>
+Dave Abrahams (Crusty)</p></blockquote></blockquote>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -103,6 +291,40 @@
     <footer>
       <a rel="full-article" href="/start-with-a-protocol">Read on &rarr;</a>
     </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/agile">Platitudes and Manifestos</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2018-02-25T00:00:00-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I had a brief <a href="https://twitter.com/cocoaphony/status/967801456962297856">Twitter discussion</a> about Agile and it got me thinking about what&rsquo;s worked and hasn&rsquo;t worked in my teams. I&rsquo;ve been a professional developer for about 30 years now. I&rsquo;ve worked on a few dozen products with about 20 different teams.</p>
+</div>
+  
   
 
 
@@ -191,6 +413,84 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/dates">La Trahison Du Temps</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2016-12-17T14:01:59-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p style="text-align:center;"><img src="/images/trahison.png" alt="La Trahison du Temps" /></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/dates">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/dates-orig">La Trahison Du Temps</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2016-12-17T14:01:59-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p style="text-align:center;"><img src="/images/trahison.png" alt="La Trahison du Temps" /></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/dates-orig">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/talking">Talking and Teaching</a></h1>
     
     
@@ -224,6 +524,52 @@
     <footer>
       <a rel="full-article" href="/talking">Read on &rarr;</a>
     </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/new-developer-advice">New Developer Advice</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2016-10-18T11:27:04-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>D.J. wrote to ask a question, and I figured others might have the same one, so I&rsquo;d write it once here.</p>
+
+<blockquote><p>I was wondering if you would be so kind as to offer some advice to a fledgling iOS developer! I am hoping to get my first job in iOS development soon.</p></blockquote>
+
+<p>Welcome to the community! I love that we are a community, and I think becoming a part of it is an important piece in becoming a great developer. iOS changes so fast and so often, that no one can really be an expert in all of it. We rely on each other to teach us the parts we don&rsquo;t know yet. And there so many new parts that even newcomers can become the expert in this or that piece. Every new &ldquo;Kit&rdquo; (GameKit, SpriteKit, CarKit, whatever) is a new world no one has explored yet. Every new platform (watches, TVs, who knows what&rsquo;s next) is another opportunity.</p>
+
+<p>I keep seeing people bring new ideas. Functional and reactive programming. Server-side Swift. Just this year I&rsquo;ve met people building ray tracers and neural nets. You can even work on the Swift language itself. The team marks &ldquo;bugs for beginners&rdquo; <a href="https://bugs.swift.org/browse/SR-2961?jql=labels%20%3D%20StarterBug">StarterBug</a> so you can find them easily.  There are so many things that no one has built yet, and every time Swift changes we have to figure out again &ldquo;what is good Swift?&rdquo; So we&rsquo;re all learning (and stumbling, and re-learning) all the time. It&rsquo;s a great time to jump in.</p>
+
+<p>We are a community. I&rsquo;m probably biased because I hang out on <a href="https://twitter.com/cocoaphony">Twitter</a>, but I think we hang out on Twitter. We hang out in <a href="http://cocoaheads.org">CocoaHeads</a> meetings. <a href="http://cocoaconf.com">We</a> <a href="http://www.dotswift.io">hang</a> <a href="http://www.tryswiftnyc.com">out</a> <a href="http://do-ios.com">in</a> <a href="https://www.playgroundscon.com">lots</a> <a href="http://nsscotland.com">and</a> <a href="http://pragmamark.org">lots</a> <a href="http://360idev.com">of</a> <a href="http://nsspain.com">conferences</a>. <a href="https://swiftconf.com">Oh</a>, <a href="http://nsnorth.ca">so</a> <a href="https://swiftsummit.com">many</a> <a href="http://www.uikonf.com">conferences</a>. Go to the places we hang out. Talking to other iOS developers will make you a better developer. Ask questions. We&rsquo;re mostly kind, though not always as kind as we should be. Be kind, and remind us when we forget.</p>
+
+<p>I learned the most about Cocoa by answering Stack Overflow questions. It wasn&rsquo;t that I knew a lot so I answered questions. It&rsquo;s that I answered questions so I learned a lot. I picked questions that seemed interesting and I researched the answer. It doesn&rsquo;t matter whether you get reputation or not. The worst thing that happens is someone else answers the question sooner or better than you do, and you learn something new anyway.</p>
+
+<p>Learn to read ObjC. You do not need to learn how to write it. It is our Latin. So much Cocoa knowledge, from blog posts to documentation to Stack Overflow, is written in ObjC. Don&rsquo;t just wait for someone to translate it for you.</p>
+</div>
+  
   
 
 
@@ -272,218 +618,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/inspiration">Inspiration</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2016-08-26T15:46:27-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As a speaker, writer, and member of our community, <a href="http://dimsumthinking.com">Daniel Steinberg</a> is my inspiration. That&rsquo;s not a secret. If you and I have spent much time talking after a conference, I&rsquo;ve probably mentioned it. It&rsquo;s not the sort of thing you usually say to someone, and I don&rsquo;t think I ever have, but I&rsquo;ve learned a lot from his speaking style, and I constantly try to live up to his standard of kindness. I&rsquo;m not by nature very kind, so if you see me behaving that way, I&rsquo;m likely trying to do what I think Daniel might.</p>
-
-<p>This isn&rsquo;t to say we&rsquo;re close. We see each other at conferences. We email and tweet. We&rsquo;re members of a community. So of course I have some idealized picture of him in my mind, without all the this and that of a real person. Even so, he inspires me. When my wife, Janet, and I talk about what&rsquo;s ahead for our future, we always talk about Daniel and his wife, Kim. I&rsquo;ve seen them at conferences, traveling together, independent but a team, and I think, hey, we could pull that off when the kids go to school. And Janet and I talk about how to make that work. And we know we only have the shallowest understanding of their real lives, but they inspire us.</p>
-
-<p>Kim died this week. I didn&rsquo;t know her well. We&rsquo;d met, and she was nice to me. She and Daniel always seemed so &ldquo;together&rdquo; even when they were apart most of the day. Hearing the news unmoored me and scared me and made me think about myself and my family and my plans. And then my heart broke for Daniel.</p>
-
-<p>I&rsquo;m not kind by nature. But I&rsquo;m part of a community that is, and part of that is Daniel&rsquo;s influence on us. <a href="https://twitter.com/designatednerd">Ellen Shapiro</a> has been kind and <a href="http://support.smiletrain.org/site/RedirectHandler?type=goto&amp;key=ios-for-kim">set up a fund</a> to let us support SmileTrain, where Daniel and his daughter Maggie have asked us to give in Kim&rsquo;s name. I had never heard of SmileTrain, but it is so perfect. It is kind. And it is practical. It is literally the gift of a smile. It is Daniel and Kim.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/nsdata">NSData, My Old Friend</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2015-10-07T20:27:00-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Or&hellip; &ldquo;How I learned to stop worrying, and love Foundation.&rdquo;</h2>
-
-<blockquote><p>Forgive me, NSData. I was running around with that flashy [UInt8], acting like you didn&rsquo;t have everything I need. I&rsquo;ve learned my lesson.</p>
-
-<p>&mdash; Rob Napier (@cocoaphony) <a href="https://twitter.com/cocoaphony/status/648514927678910464">September 28, 2015</a></p></blockquote>
-
-<p>I did a lot of writing and rewriting of the <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">Swift version of RNCryptor</a>. I struggled especially with what type to use for data. I gravitated quickly to <code>[UInt8]</code> with all its apparent Swiftiness. But in the end, after many iterations, I refactored back to <code>NSData</code>, and I&rsquo;m really glad I did.</p>
-
-<p>This is the story of why.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/nsdata">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/type-erasure-in-stdlib">Type-erasure in Stdlib</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2015-10-06T19:05:13-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When <a href="http://robnapier.net/erasure">last we talked about type erasure</a>, I described an easy way to build type erasures using closures. And I mentioned:</p>
-
-<blockquote><p>(While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p></blockquote>
-
-<p>At the time I thought I&rsquo;d pretty well nailed it down, but every time I dug into it I found another little thing I&rsquo;d missed, and it never seemed to end. And with stdlib open sourcing soon, you&rsquo;ll all just be able to read this yourselves, so why embarrass myself getting it all wrong? Over time I kind of hoped you all had forgotten that comment and planned to move on to other things. But then I was <a href="https://twitter.com/My_kl/status/650796108789219328">busted by Michael Welch</a>, and so I had to finish the spelunking and here you go.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/type-erasure-in-stdlib">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-v4">RNCryptor V4</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2015-10-04T12:38:36-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After months of writing and rewriting, I am happy to finally announce <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">RNCryptor 4 beta 1</a> in Swift.</p>
-
-<p>RNCryptor 4 is a complete rewrite of RNCryptor for Swift 2 with full bridging support to Objective-C. It has a streamlined API, simpler installation, and improved internals. It continues to use the <a href="https://github.com/RNCryptor/RNCryptor-Spec/blob/master/RNCryptor-Spec-v3.md">v3 data format</a> and is fully interoperable with <a href="https://github.com/RNCryptor">other RNCryptor implementations</a>.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-v4">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/erasure">A Little Respect for AnySequence</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2015-08-04T15:42:00-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Once upon a time, when Swift was young, there were a couple of types called <code>SequenceOf</code> and <code>GeneratorOf</code>, and they could type erase stuff. &ldquo;Type erase?&rdquo; you may ask. &ldquo;I thought we <em>loved</em> types.&rdquo; We do. Don&rsquo;t worry. Our types aren&rsquo;t going anywhere. But sometimes we want them to be a little less&hellip;precise.</p>
-
-<p>In Swift 2, our little type erasers got a rename and some friends. Now they&rsquo;re all named &ldquo;Any&rdquo;-something. So <code>SequenceOf</code> became <code>AnySequence</code> and <code>GeneratorOf</code> became <code>AnyGenerator</code> and there are a gaggle of indexes and collections from <code>AnyForwardIndex</code> to <code>AnyRandomAccessCollection</code>.</p>
-
-<p>So what are these type erasers? Let&rsquo;s start with how to use one and we&rsquo;ll work backwards to why.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/erasure">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page2">&larr; Older</a>
@@ -515,6 +649,21 @@
 
 
 
+<!-- Fathom - simple website analytics - https://usefathom.com -->
+<script>
+(function(f, a, t, h, o, m){
+a[h]=a[h]||function(){
+    (a[h].q=a[h].q||[]).push(arguments)
+};
+o=f.createElement('script'),
+m=f.getElementsByTagName('script')[0];
+o.async=1; o.src=t; o.id='fathom-script';
+m.parentNode.insertBefore(o,m)
+})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'MSRAZWIU');
+fathom('trackPageview');
+</script>
+<!-- / Fathom -->
 
 
 

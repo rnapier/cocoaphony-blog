@@ -9,7 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For those of you worried about the trouble with PandoraBoy&rsquo;s hotkeys and Applescript, I&rsquo;ve finally carved out some time to work on this &hellip;">
+  <meta name="description" content="Thank you stinkblog, thank you for saving me a great deal of pain debugging this. PandoraBoy work can now continue.
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="https://robnapier.net/page10">
+  <link rel="canonical" href="http://localhost:4000/page10">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
@@ -61,6 +62,370 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/flash-bug-sigint-debugger">Flash Bug, SIGINT From Debugger()</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-16T21:17:14-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thank you <a href="http://www.stinkbot.com/blog/archives/69">stinkblog</a>, thank you for saving me a great deal of pain debugging this. PandoraBoy work can now continue.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/quit-stringwithstring">Quit Using +stringWithString:</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-12T10:48:10-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I keep coming across <a href="http://dotnetaddict.dotnetdevelopersjournal.com/leopard_nscollectionview.htm">code</a> like this:</p>
+
+<pre><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
+</code></pre>
+
+<p>It&rsquo;s time to say stop it already with the extra <code>+stringWithString:</code>. I haven&rsquo;t worked out yet where this anti-pattern comes from. Maybe it&rsquo;s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it&rsquo;s a Java/.NET thing? I&rsquo;m not sure. But I see it so often from so many places that it&rsquo;s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/quit-stringwithstring">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/view-controllers-notifications">View Controllers and Notifications</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-05T14:33:56-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Observing NSNotifications in a view control is a good thing. But remember, just because you&rsquo;re not onscreen doesn&rsquo;t mean that you&rsquo;re not still observing. This is particularly noteworthy on iPhone, where your view can get dropped any time memory is tight and you&rsquo;re offscreen, but it can bite you anywhere.</p>
+
+<p>ViewControllers, WindowControllers and other UI controllers are often better off registering and uregistering for notifications when they are put on and off the screen rather than when they are allocated and deallocated. This often means that they will need to update their state when put on screen. For example, an icon indicating &ldquo;connected&rdquo; might be part of a StatusViewController. When StatusView comes on screen, StatusViewController should update the connected status and then begin observing changes on it. When StatusView goes off screen, StatusViewController should stop observing.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/view-controllers-notifications">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/broader-use-of-objc">Broader Use of ObjC</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-03T21:37:56-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><i>Based on a <a href="http://stackoverflow.com/questions/874690/is-objective-c-only-used-for-development-on-mac-os-iphone/874837">post</a> at StackOverflow. The question was whether Objective-C is only used for development on Mac OS/iPhone and why.</i></p>
+
+<p>I think ObjC has been isolated to the Apple world through a quirk of history and the nature of proprietary systems.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/broader-use-of-objc">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/understanding-systemprofiler">Understanding System_profiler</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-26T17:25:53-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is &ldquo;what does system_profiler actually do?&rdquo;  But it&rsquo;s a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It&rsquo;s a whirlwind tour of how you begin to attack programs using pretty standard tools. I&rsquo;m not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you&rsquo;re going to hide how your program works, make sure you research those first. You&rsquo;ll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/understanding-systemprofiler">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/obfuscating-cocoa">Obfuscating Cocoa</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-26T14:28:27-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><i>We recently had a discussion on cocoa-students (the excellent list for Big Nerd Ranch alumni; yet another reason to go to BNR classes) about protecting Cocoa programs from reverse engineering, mostly around some anti-copying code. I had some thoughts on the subject since I happen to have a background in anti-counterfeiting.</i></p>
+
+<p>Cocoa is a reverse-engineer&rsquo;s dream. Spend some time at <a href="http://www.culater.net/wiki/moin.cgi/CocoaReverseEngineering">culater</a> before dreaming you can really protect a Cocoa program. Objective-C is meant to be highly readable both in source and at run time. Obfuscation is not in its nature. This only points out Objective-C&rsquo;s particular difficulties in this area; it is not to suggest C or C++ will save you. They&rsquo;re just not quite as trivial as Objective-C.</p>
+
+<p>That said, the world of obfuscation falls into three big camps: you can try to deal with 70% of your problem, 75% of your problem or 90% of your problem.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/obfuscating-cocoa">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/latest-news">Latest News</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-26T11:40:44-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s been quiet here for a while. I&rsquo;ve been spending most of my time working on <a href="http://xmppframework.googlecode.com">XMPPFramework</a>, an opensource framework that makes it easier to build XMPP clients for Mac and iPhone. I&rsquo;ve been working on this nonstop for several weeks now in preparation for a demo based on this, so there hasn&rsquo;t been a lot of time to post here. My code for that demo is done now, and I&rsquo;m headed off on vacation for two weeks. So you should see more traffic here in July. I have quite a backlog of topics I just haven&rsquo;t had time to really capture.</p>
+
+<p>If you&rsquo;re interested in a less edited form of my Cocoa musings, I still answer questions at <a href="http://stackoverflow.com">Stack Overflow</a> (<a href="feed://stackoverflow.com/feeds/user/97337">feed</a>), and I&rsquo;ve started experimenting with <a href="https://twitter.com/cocoaphony">Twitter</a>, though I&rsquo;m not sure yet how much I like tweeting.</p>
+
+<p>See you all in July!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cgeventtimestamps-are-big">CGEventTimestamps Are Big</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-02T17:45:47-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I can&rsquo;t take credit for finding this myself. Gilad Gurantz forwarded it to me. From the Quartz Event Services documentation:</p>
+
+<blockquote><p><b>CGEventTimestamp</b></p>
+Defines the elapsed time in nanoseconds since startup that a Quartz event occurred.
+
+<code>typedef uint64_t CGEventTimestamp;</code>
+
+<b>Discussion</b>
+An event timestamp is a big, unsigned, 64-bit number. That's big, really big. You just won't believe how vastly, hugely, mind-bogglingly big it is. You may think your application has been running for a long time, but that's just peanuts to an event timestamp.</blockquote>
+
+
+<p>So if my math is right, &ldquo;a long time&rdquo; translates into over 2850 years. And it&rsquo;s counted since the last reboot. I think we&rsquo;ll avoid the Y2K problem on this one.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/project-templates">Building the Build System - Part 2 - Project Templates</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-05-20T18:00:42-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn&rsquo;t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it&rsquo;s easier than ever. Let&rsquo;s make one.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/project-templates">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/pandoraboy-work">PandoraBoy Work</a></h1>
     
     
@@ -85,390 +450,6 @@
   <div class="entry-content"><p>For those of you worried about the trouble with PandoraBoy&rsquo;s hotkeys and Applescript, I&rsquo;ve finally carved out some time to work on this stuff. I keep getting hung up on the hotkeys preference pane, which can&rsquo;t be opened in IB3, due to the use of the Shortcut Recorder IB Palette. The answer, I&rsquo;ve always known, is just to rewrite the hotkey pref pane. It isn&rsquo;t that hard, I&rsquo;ve just avoided it, and it&rsquo;s finally time to do it and fix a few bugs in the process.</p>
 
 <p>Have I mentioned recently that PandoraBoy is an excellent small project to practice and hone your Cocoa skills?</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/build-system-1-build-panel">Building the Build System - Part 1 - Abandoning the Build Panel</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-05-14T08:00:59-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>XCode has a decent build system, but it doesn&rsquo;t work as well as it could out of the box. With just a little work, you can make your projects easier to setup and maintain just the way you want them, improve your code, and even speed up your build times.</p>
-
-<p>The first thing we want to do is get rid of one of the great obfuscations of Xcode: The Build panel.</p>
-
-<p><img class="center" src="/images/build-system-1-build-panel/buildpanel.png"></p>
-
-<p>The build panel seems convenient at first, but in practice it makes it hard to see what&rsquo;s going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you&rsquo;ve done this so someone doesn&rsquo;t come along later switch the setting. The Build Panel doesn&rsquo;t give you an easy way to include comments right along with the setting (the &ldquo;Comments&rdquo; panel is pretty useless in my experience), and it&rsquo;s easy to lose settings or accidentally apply them to only to one configuration.</p>
-
-<p>XCode provides a better solution called xcconfig files. Everything you can do in the build panel can be done in xcconfig files, and you can actually read them and make comments. So let&rsquo;s make some.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/build-system-1-build-panel">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/app-delegate">App Delegate</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-05-12T08:00:16-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Answering a <a href="http://stackoverflow.com/questions/828827/what-describes-the-application-delegate-best-how-does-it-fit-into-the-whole-conc/829591#829591">question</a> on Stack Overflow, asking for an explanation of the Application Delegate, how it is accessed and created.</em></p>
-
-<p>In Cocoa, a delegate is an object that another object defers to on questions of behavior and informs about changes in its state. For instance, a UITableViewDelegate is responsible for answering questions about how the UITableView should behave when selections are made or rows are reordered. It is the object that the UITableView asks when it wants to know how high a particular row should be. In the Model-View-Controller paradigm, delegates are Controllers, and many delegates' names end in &ldquo;Controller.&rdquo;</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/app-delegate">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/review-beginning-iphone-development">Review of <i>Beginning iPhone Development</i></a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-04-29T18:06:05-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><i>Summary: <a href="http://www.amazon.com/gp/product/1430216263?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=1430216263">Beginning iPhone Development: Exploring the iPhone SDK</a><img src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&l=as2&o=1&a=1430216263" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> does not provide the student a strong foundation in Cocoa, but does teach key iPhone-UI topics well. For readers with a prior background in Cocoa, it is likely a good book for transitioning to iPhone, particularly iPhone UI.</i></p>
-
-<p><i>Beginning iPhone Development</i> is a pretty good book. It assumes you already have some background in ObjC, which makes it harder for people without any Cocoa experience (the most common place to get ObjC experience). A short ObjC intro would have been useful. Like other books in this space, it doesn&rsquo;t provide much background in basic Foundation features like Collections and Notifications, nor key patterns like delegation, memory management and naming. As students move beyond trivial projects, they will likely start to have trouble unless they shore up these skills elsewhere.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/review-beginning-iphone-development">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/scripting-bridge">Scripting Bridge</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-04-27T22:13:27-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Say you want to talk to another app through Applescript. With 10.5, you can much more easily get there from Cocoa without complex forays into CoreServices, Carbon and AppleEvents. The docs on how to do it are a little thin at times (as all Applescript docs are), so let&rsquo;s walk through it. The relevant docs you&rsquo;ll want to read are these:</p>
-
-<p><a href="http://www.apple.com/applescript/learn.html">Learning Applescript</a></p>
-
-<p><a href="http://developer.apple.com/documentation/ScriptingAutomation/Reference/ScriptingBridgeFramework">Scripting Bridge Framework Reference</a></p>
-
-<p><a href="http://developer.apple.com/samplecode/SBSystemPrefs/index.html">Scripting Bridge Sample Code</a></p>
-
-<p>And most importantly (and most hidden):</p>
-
-<p><a href="https://developer.apple.com/library/mac/#samplecode/SBSystemPrefs/Listings/ReadMe_txt.html">SBSystemPref&rsquo;s Magical README</a></p>
-
-<p>And now for a step-by-step example. We&rsquo;re going to send some mail with an attachment through Mail.app.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/scripting-bridge">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/review-iphone-developers-cookbook">Review of <i>iPhone Developer's Cookbook</i></a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-04-27T10:17:47-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Summary: If you want a real understanding of Cocoa and Cocoa Touch, this book is too recipe-based to give you that. If you really want recipes, consider Apple&rsquo;s <a href="http://developer.apple.com/iphone/library/navigation/SampleCode.html">Sample Code</a>.
-</em></p>
-
-<p>I haven&rsquo;t been thrilled with the first crop of iPhone development books that hit the market. This shouldn&rsquo;t be surprising. It&rsquo;s a new platform and, as with the first AppStore apps, the pressure to be first to market fights the authors' desire to provide the best possible product.</p>
-
-<p>I was specifically asked about <a href="http://www.amazon.com/gp/product/0321555457?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0321555457" rel="nofollow">iPhone Developer&rsquo;s Cookbook: Building Applications with the iPhone SDK</a> by Erica Sadun. My biggest concern is that it&rsquo;s a cookbook based on &ldquo;recipes&rdquo; to do this or that. This is often exactly the problem with how people learn Mac and iPhone development. They think that it&rsquo;s just Java or C++ with a different syntax and if they learn where the brackets go, then they&rsquo;ll be a Cocoa developer. </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/review-iphone-developers-cookbook">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/iphone-course-syllabus">iPhone Course Syllabus</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-04-23T22:20:14-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Now and then I teach Mac and iPhone courses, and several people have asked me to detail my syllabus, and provide some other pointers on how to get started. I&rsquo;ve taught this course in various forms, running from 3 to 10 days long. A week and a half is good; it gives you a weekend to absorb a little bit.</p>
-
-<p>I tend to teach Mac and iPhone together, though I been focusing on iPhone because that&rsquo;s what we&rsquo;ve needed most. I still favor Aaron Hillegass&rsquo;s <a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&amp;tag=cocoaphony-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img style="border:none !important; margin:0px !important;" src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&amp;l=as2&amp;o=1&amp;a=0321503619" border="0" alt="" width="1" height="1" /> as a textbook. I&rsquo;m open to suggestions for excellent iPhone-specific books for beginners, but when I was developing this course last August, I didn&rsquo;t find a lot on the market I was impressed with. Even the Big Nerd Ranch iPhone class I found disappointing, which is one of the reasons I had to write my own class for our new developers. The Big Nerd Ranch&rsquo;s Cocoa Bootcamp still cannot be beat if you&rsquo;re looking to learn Mac development and have several grand handy.</p>
-
-<p>So without further ado, the syllabus and resources. I can&rsquo;t promise that reading through this will be as effective as watching me pace around for a week telling you about it, but it perhaps it will give a nice kick-start.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/iphone-course-syllabus">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/wrapping-c-objc">Wrapping C++ in ObjC</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-04-14T10:20:03-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>See <a href="wrapping-c-take-2-1">Take 2</a> for an updated approach to this problem.</em></p>
-
-<p>When faced with mixing C++ and ObjC code, there are two main approaches. One is to just work in Objective-C++ through the entire project. I don&rsquo;t like this approach. I find the mixing of ObjC and C++ classes very confusing, since they cannot be used interchangeably and require completely different memory management. The mix of class hierarchies and naming conventions lead to a lot of confusion when we introduce people to code that does this kind of mixing.</p>
-
-<p>My opinion is that ObjC and C++ have very different patterns, so it is important to pick one to be in charge and wrap the other. So if you basically have an C++ program than needs a little ObjC to talk to the UI, then wrap the ObjC in C++ objects. If you basically have an ObjC program that needs a C++ middleware, then wrap the C++ objects.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/wrapping-c-objc">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/learning-iphone-scratch">Learning iPhone From Scratch</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-03-31T20:15:57-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ll talk more about it later, but the absolute best way to learn iPhone is to learn Mac first. That&rsquo;s how I teach my classes. The available Mac educational resources are just much better, at least today.</p>
-
-<p>The absolute gold standard for learning Cocoa on Mac is <a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&l=as2&o=1&a=0321503619" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
- by Aaron Hillegass. It is <em>the</em> book. I have a syllabus based on it that&rsquo;s stripped down to the chapters that are useful for iPhone programmers. I&rsquo;ll get that into a blog post.</p>
-
-<p>When I teach this, it runs between 5 and 10 full days depending on how in-depth I cover the Mac side.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/learning-iphone-scratch">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/memory-managing-iboutlets">Memory Managing IBOutlets</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-03-22T13:29:22-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Apple <em>finally </em>updated the <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmNibObjects.html">Memory Management Guide</a> to deal with IBOutlets.</p>
-
-<p>They came to the same recommendation that many of us have. Treat them exactly like other properties. Mark them as retain properties, release them in -dealloc, and overload -setView to clear them in low-memory situations. This last recommendation was one that many of us used, but was based on undocumented behaviors. Apple finally documented the behavior because there&rsquo;s no other good way to do it given their internal implementation.</p>
-
-<p>Unfortunately they haven&rsquo;t updated the &ldquo;Using View Controllers&rdquo; documentation to include this stuff, and the section on how -loadView works is still a bit vague. I&rsquo;ve sent them feedback on those pages.</p>
 </div>
   
   
@@ -509,6 +490,21 @@
 
 
 
+<!-- Fathom - simple website analytics - https://usefathom.com -->
+<script>
+(function(f, a, t, h, o, m){
+a[h]=a[h]||function(){
+    (a[h].q=a[h].q||[]).push(arguments)
+};
+o=f.createElement('script'),
+m=f.getElementsByTagName('script')[0];
+o.async=1; o.src=t; o.id='fathom-script';
+m.parentNode.insertBefore(o,m)
+})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'MSRAZWIU');
+fathom('trackPageview');
+</script>
+<!-- / Fathom -->
 
 
 

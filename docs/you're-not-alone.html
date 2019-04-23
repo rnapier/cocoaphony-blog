@@ -1,0 +1,155 @@
+<h2>You&rsquo;re not alone. Swift protocols confuse us all.</h2>
+
+<p>This is going to be a fairly long series, in words if not in number of posts. I tend to ramble a bit about philosophy, and there will be quite a lot of code. Usually I&rsquo;d let the important points reveal themselves along the path. But Swift protocols are too important to let the most critical points be buried in mountains of text, so I&rsquo;m going to
+reveal all the important points here before I get started. If I forget something, I may come back and update this section. Also, if the statements in this list are either obvious to you, or not interesting, this series probably isn&rsquo;t for you.</p>
+
+<ul>
+<li>Write concrete code first. Then work out the generics.</li>
+<li>Do not create &ldquo;genericness&rdquo; for its own sake. Discover it in your concrete use case.</li>
+<li>Abstractions are choices. They cut you off from other abstractions. &ldquo;As generic as possible&rdquo; doesn&rsquo;t mean anything.</li>
+<li>The point of a PAT is to apply generic algorithms to a type. It is never to create a heterogeneous collection.</li>
+<li>Simple (non-PAT) protocols are commonly used to create a heterogeneous collection</li>
+<li>Before you add an associated type, ask: &ldquo;Would it be sensible to put this type in an array?&rdquo; If the answer is yes, do not add an associated type. Redesign.</li>
+<li>You probably don&rsquo;t need a type-eraser. If you&rsquo;re trying to put a PAT in an array, you <em>definitely</em> don&rsquo;t need a type-eraser. Redesign.</li>
+<li>Generalized existentials probably will not solve your problem. Redesign.</li>
+<li>Protocols are not abstract classes. Swift doesn&rsquo;t have abstract classes. If your protocol inheritance would make perfect sense as an abstract class hierarchy, you&rsquo;re probably on the wrong road.</li>
+<li>Protocols (almost) never conform to protocols. When you need &ldquo;a type that conforms to P,&rdquo; P is not that type.</li>
+<li>A protocol cannot <em>be</em> Equatable. It can only <em>require</em> Equatable.</li>
+<li>Aspire to more than &ldquo;mocks&rdquo; from your protocols.</li>
+<li>Protocols are not bags of syntax. They have have semantics (meanings) and exist to facilitate interesting algorithms.</li>
+</ul>
+
+
+<p>That&rsquo;s a lot to talk about, and this will be a dense and meandering series. It&rsquo;s time to dive into it. This article will just set the stage. I&rsquo;ve been wrestling with protocols since the the first day of Swift. I&rsquo;ve used them incorrectly and had to redesign so many times I&rsquo;ve lost count. I&rsquo;ve crashed the compiler so many times that it&rsquo;s lost count. You are not alone.</p>
+
+<hr />
+
+<h2>Revisiting Crusty</h2>
+
+<p>About half the Crusty talk revolves around one long example, a “diagramming app where you can drag and drop shapes on a drawing surface and interact with them.” It’s a very classic object-oriented problem, and in an OOP language I&rsquo;d probably focus on laying out the model classes first. Maybe something like this:</p>
+
+<pre><code>class Shape {
+    var center: CGPoint
+    init(center: CGPoint) {
+        self.center = center
+    }
+}
+
+class Circle : Shape {
+    var radius: CGFloat
+    init(center: CGPoint, radius: CGFloat) {
+        self.radius = radius
+        super.init(center: center)
+    }
+}
+</code></pre>
+
+<p>That feels ok at first glance, but it actually has some pretty major problems already. Yes, there&rsquo;s the reference/value type arguments about unintentional sharing and mutable state, but that&rsquo;s not really my focus here. We could make these types immutable and make those problems go away (creating other problems, but still&hellip;.) The real problem in my opinion is the <code>center</code> property. What happens when I try to implement Polygon?</p>
+
+<pre><code>class Polygon : Shape {
+    var corners: [CGPoint]
+    init(corners: [CGPoint]) {
+        self.corners = corners
+        super.init(center: ???) // What is the center?
+    }
+}
+</code></pre>
+
+<p>Is the center the <a href="https://en.wikipedia.org/wiki/Centroid">centroid</a>, or the center of the bounding box? It&rsquo;s implemented as a property in Shape, so every subclass must maintain it as a property and keep it in sync with any changes to other properties. Is it even used by anything? Do we need to make these decisions yet?</p>
+
+<p>The problem with class inheritance is that it pushes you to make all these choices early, before you&rsquo;ve worked out your use cases. The power of protocol-oriented programming is that it lets you make these decisions late. In Swift, I&rsquo;ve learned to implement Circle and Polygon this way:</p>
+
+<pre><code>struct Circle {
+    var center: CGPoint
+    var radius: CGFloat
+}
+
+struct Polygon {
+    var corners: [CGPoint]
+}
+</code></pre>
+
+<p>That&rsquo;s it. No protocols. No inheritance. Nothing. It&rsquo;s data, stored in whatever is convenient for that data. But I probably wouldn&rsquo;t create these at all, yet. I don&rsquo;t know what I&rsquo;m going to do with this data. Instead of starting with models, start with the caller.</p>
+
+<p>My goal is to draw &ldquo;things&rdquo; of some kind in a CGContext:</p>
+
+<pre><code>for thing in things {
+    thing.draw(in: context)
+}
+</code></pre>
+
+<p>What should I call these Things? Shapes? Kind of, but that&rsquo;s not really what defines them here. They&rsquo;re just &ldquo;something that can draw itself into a context.&rdquo; And they need exactly one method, <code>draw</code>, so Drawable is a good name.</p>
+
+<pre><code>protocol Drawable {
+    func draw(in context: CGContext)
+}
+</code></pre>
+
+<p>Some of you have seen Crusty&rsquo;s talk and you might be shouting &ldquo;no, no, not CGContext. You want Renderer.&rdquo; But I don&rsquo;t, at least not yet. That isn&rsquo;t my use case. I just need to draw &ldquo;drawable things&rdquo; in a CGContext. Build simply. Then find your protocols. I&rsquo;m hoping this is going to work out, but to be sure, I should make a few of these Drawables and see if this idea makes sense.</p>
+
+<p>The simplest thing to draw is a circle, so I&rsquo;m hoping this is easy to draw:</p>
+
+<pre><code>extension Circle : Drawable {
+    func draw(in context: CGContext) {
+        context.addArc(center: center, radius: radius,
+                       startAngle: 0, endAngle: .pi*2,
+                       clockwise: true)
+    }
+}
+</code></pre>
+
+<p>Looks good. That&rsquo;s exactly the kind of to-the-point method I expect in order to implement Drawable.</p>
+
+<pre><code>extension Polygon : Drawable {
+    func draw(in context: CGContext) {
+      context.move(to: corners.last!)
+      for p in corners { context.addLine(to: p) }
+    }
+}
+</code></pre>
+
+<p>And again, looking very good and to-the-point. We should try something a little different, like a container for other Drawables:</p>
+
+<pre><code>struct Diagram {
+    mutating func add(_ other: Drawable) {
+        elements.append(other)
+    }
+
+    var elements: [Drawable] = []
+}
+
+extension Diagram: Drawable {
+    func draw(in context: CGContext) {
+        for f in elements { f.draw(in: context) }
+    }
+}
+</code></pre>
+
+<p>Again, this looks very straight forward. It&rsquo;s important to try to conform several kinds of types early in the process. You want to find where your protocol might run into trouble. If all you implement are the trivial types, then there may be major problems lurking in your design. For example, here&rsquo;s a Drawable that Crusty didn&rsquo;t consider:</p>
+
+<pre><code>struct Text {
+    var position: CGPoint
+    var attributedString: NSAttributedString
+}
+
+extension Text: Drawable {
+    func draw(in context: CGContext) {
+
+        // Configure the context
+        context.textMatrix = .identity
+        context.textPosition = position
+
+        // Draw the text
+        let line = CTLineCreateWithAttributedString(attributedString)
+        CTLineDraw(line, context)
+    }
+}
+</code></pre>
+
+<p>That&rsquo;s actually a bit complicated. It&rsquo;s only four lines, but it already makes me a little nervous. I know I want to swap out CGContext at some point, but this requires Core Text functions that aren&rsquo;t part of CGContext. That tells me it&rsquo;s time to start thinking about abstracting CGContext before this gets out of hand.</p>
+
+<hr />
+
+<blockquote><blockquote><p>Another case is where the instances of the abstraction are just &ldquo;sinks.&rdquo; Like, our Renderers, for example. So, we&rsquo;re just pumping, we&rsquo;re just pumping information into that thing, into that Renderer, right?
+<a href="https://developer.apple.com/videos/play/wwdc2015/408/?time=2643">https://developer.apple.com/videos/play/wwdc2015/408/?time=2643</a>
+Dave Abrahams (Crusty)</p></blockquote></blockquote>

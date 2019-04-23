@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I haven&rsquo;t forgotten about PandoraBoy, but I&rsquo;ve been very busy these last couple of weeks. I&rsquo;m now a full-time Mac programmer, and &hellip;">
+  <meta name="description" content="It&rsquo;s been a busy few weeks for PandoraBoy&hellip; well, for PandoraBoy&rsquo;s mailbox. I&rsquo;ve been incredibly busy getting my day-to-day &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="https://robnapier.net/page13">
+  <link rel="canonical" href="http://localhost:4000/page13">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
@@ -61,6 +61,357 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/pandoraboy-french">PandoraBoy in French</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-05-25T13:13:58-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s been a busy few weeks for PandoraBoy&hellip; well, for PandoraBoy&rsquo;s mailbox. I&rsquo;ve been incredibly busy getting my day-to-day work out for months now and have barely looked at PandoraBoy since about February. The backlog of Issues has grown to a troubling level, and it&rsquo;s probably another few weeks before I&rsquo;ll be able to get back into PB development. But in the meantime I&rsquo;ve been amazed at how much mail I&rsquo;ve been getting on the subject. Mostly small bugs people are running into, but then, this just in:</p>
+
+<p>PandoraBoy in French. Yes, Pierre Rudloff, out of the blue, sends me a fully translated lproj. I really appreciate it. I&rsquo;ll make sure to get it integrated into the next release. I probably won&rsquo;t get started on PB development until after WWDC because of other projects, but after WWDC it&rsquo;s top of my list. Especially all the annoying little bugs that have been creeping in (I suspect because of some backend Pandora changes).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/reporting-vulnerabilities">Reporting Vulnerabilities</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-04-04T16:31:32-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://security.itworld.com/5013/mac-hacked-first-in-contest-080327/page_1.html">The $10,000 Mac Hack</a></p>
+
+<p>I recently read a comment about this hack wondering how long the author had sat on the exploit rather than reporting it to Apple. It&rsquo;s a very important point.</p>
+
+<p>My opinion of these &ldquo;security researchers&rdquo; is well known: there&rsquo;s a difference between bird watching and research. Finding yet another buffer overflow isn&rsquo;t &ldquo;research.&rdquo; Creating a new way to secure systems is research. Coming up with whole new classes of attack might be research (along the lines of bioweapon research). Those who hunt new instances of old bugs are collectors of exotic animals, weapon manufacturers, volunteer quality testers, or a half-dozen other categories that have little to do with science or research.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/reporting-vulnerabilities">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/105">105</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-03-18T09:11:59-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><span><span class="Article_Date"><span class="txt"><strong><span><a href="http://www.eweek.com/index2.php?option=content&amp;task=view&amp;id=47212&amp;pop=1&amp;hide_ads=1&amp;page=0&amp;hide_js=1">Researchers at the University of Illinois at Urbana-Champaign build a new browser from scratch to help keep hackers at bay.</a></span>
+</strong></span></span></span><span id="formatbar_Buttons"><span id="formatbar_CreateLink" title="Link" onmousedown="CheckFormatting(event);FormatbarButton('richeditorframe', this, 8);ButtonMouseDown(this);" onmouseover="ButtonHoverOn(this);" onmouseout="ButtonHoverOff(this);">
+I was incredibly skeptical from the headline. It read to me like &ldquo;team builds near-useless browser that is probably a bit harder to hack than an unpatched Windows box.&rdquo; But it&rsquo;s actually an interesting architecture. I like their early consideration of plugin issue. Rather than banning plugins, sandboxing them till they can&rsquo;t do anything, or bemoaning that plugin writers will probably be stupid and break security but it won&rsquo;t be the browser&rsquo;s fault, these guys actually seem to have considered how to compartmentalize such that the plugin can be compromised without losing the farm. That&rsquo;s a good security lesson for us all. It&rsquo;s not about making sure nothing bad ever happens or banning everything that could ever let something bad happen. It&rsquo;s about making sure that when bad things do happen (and they will), that the damage is contained to the piece that was compromised. And to this feature, wow:</p>
+
+<blockquote>The UIUI team has also designed a browser-level information-flow tracking system to enable post-mortem analysis of browser-based attacks.</blockquote>
+
+
+<p>That&rsquo;s a team that &ldquo;gets it.&rdquo; You will get hacked. Designing for what you do <em>after</em> you get hacked is a sign of great security thinking.</span></span></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/garbage-collection">Garbage Collection</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-03-08T11:23:22-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Two posts in a day&hellip; but this was a completely different topic.</p>
+
+<p>I&rsquo;m beginning work on my first Leopard-only application, and so I&rsquo;m trying out garbage collection. Sure, I&rsquo;m excited about garbage collection. Sure, I have no great love of keeping track of my retain counts and autorelease pools. But&hellip;.</p>
+
+<p>It feels really, really weird to not release my variables. I tend to rely on autorelease a lot. I know there are some disadvantages, but I like the fact that it notes your intention when you allocate the memory. </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/garbage-collection">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/learning-cocoa">Learning Cocoa</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-03-08T10:59:43-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s a lazy day for me. That means I&rsquo;ll probably hack stuff all day.</p>
+
+<p>One of my best friends in the world just sent me a note asking for a good Cocoa reference. I thought I&rsquo;d pass on the same advice I gave him:</p>
+
+<p>This is <strong>the</strong> book on learning Cocoa:</p>
+
+<p><a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&tag=cocoaphony-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&l=as2&o=1&a=0321503619" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> by Aaron Hillegass</p>
+
+<p>Third edition is supposed to come out this summer. I&rsquo;ve read the proofs of the 3rd edition, and it does add some good stuff, but if you&rsquo;re anxious to get started, I&rsquo;d get 2nd edition and get started.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/learning-cocoa">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/private-frameworks-install-path">Private Frameworks' Install Path</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-03-05T10:03:30-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To all you aspiring Cocoa developers&hellip;.</p>
+
+<p>If you want to make a private framework, you need to remember to set the install path for it to <span>@executable_path/../Frameworks</span>. Just copying it into your bundle isn&rsquo;t good enough. Otherwise your app is going to think it&rsquo;s in (~)/Library/Frameworks once you package it up and give it to other people.</p>
+
+<p>In related news, PandoraBoy 0.5.1<span>a</span> is now released.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-051-released">PandoraBoy 0.5.1 Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-03-04T22:39:34-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Yes it is true, a new version of PandoraBoy is up, 0.5.1. I haven&rsquo;t put it into Sparkle yet, and probably will skip it because it only fixes a couple of things (most notably, paid accounts now work correctly). Technically there&rsquo;s an entire full-screen mode in there now with a plug-in architecture and public framework, but I&rsquo;ve disabled it because it&rsquo;s still kind of flakey and doesn&rsquo;t work very well. I&rsquo;m going to focus for a while instead on some of the bugs that have been reported and get those cleaned up.</p>
+
+<p>Maybe I&rsquo;ll play with the new version of ShortcutRecorder that just came out thanks to OmniGroup&rsquo;s contributions (great company, great products). Hopefully I can get rid of my IB2 dependencies and finally move 100% into XCode3.</p>
+
+<p>And of course I&rsquo;ve been promising improvements in Sparkle that will help PandoraBoy a little bit, and I more deeply need for my day job. I&rsquo;ve been mostly working on those during what I consider &ldquo;day job&rdquo; hours, but right now core product features are far more pressing than automatic updates. And #1 on my list: collapse the current branch back down to trunk! Ah, subversion, thou viper. Linus was right. There&rsquo;s no such thing as &ldquo;CVS done right.&rdquo; But in truth, it isn&rsquo;t so terrible, it just isn&rsquo;t so good either&hellip;.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/upcoming-pandoraboy-release">Upcoming PandoraBoy Release</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-02-12T16:08:56-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="post-body entry-content">No, I haven't forgotten about PandoraBoy, but I have been exceedingly busy of late. Of course it comes in the middle of my work on a large feature (Full Screen plugins), so I've done a lot of PB work, but haven't made a new release. I'm about to the point of releasing what I have (which works but isn't pretty) and rolling some critical bug fixes out in the not too distant future.</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-xcode3">PandoraBoy and XCode3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-01-13T17:38:47-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Well, I&rsquo;m spending a little more time hacking PandoraBoy today. It now will compile under XCode3 for anyone playing along at home. I&rsquo;m hoping to learn a lot this week to move things forward even more. Right now I'm <a href="http://www.serenbeinn.com/">here</a>, getting ready for <a href="http://bignerdranch.com/classes/cocoa.shtml">this</a>. Sometimes I think I picked a good life this time.</p>
+
+<p>Now if I can just get back into my home computer to get my PB todo list&hellip;. Back into full-screen mode stuff.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/89">89</a></h1>
     
     
@@ -89,345 +440,6 @@
 <p>I&rsquo;m trying to waste system resources in a guaranteed way. I have these boxes with 2G of memory, and need to test problems that show up on 512MB machines and I don&rsquo;t have any 512MB sticks&hellip;.</p>
 
 <p>As I study Mac OS X Advanced Programming, I think I may be able to do this with mlock() and not have to use a kext. I&rsquo;ve read other things that suggest that mlock() won&rsquo;t work the way I want in a user app. So testing is in my future.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/88">88</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-30T22:19:59-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the random noise in the picture. First secret: spend some time and read through every patch available, particularly the ones in Tools. It&rsquo;s important to know what&rsquo;s available so you don&rsquo;t spend hours trying to reinvent the basics. And don&rsquo;t forget that &ldquo;transparent&rdquo; defaults to meaning &ldquo;whatever random memory happens to be on the video card.&rdquo;</p>
-
-<p>I&rsquo;ll be spend quite a bit of time trying to improve the interface for the full-screen plugins. I&rsquo;m trying to make it as easy to write new full-screen modes as to write new screen savers. Once I&rsquo;ve gotten a second full-screen plugin written, I think I&rsquo;ll better know how to structure the interface.</p>
-
-<p>I&rsquo;ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you&rsquo;d get a stray &ldquo;ERROR: Could not find webNetscapePluggin&rdquo; error in your logs. Hopefully that&rsquo;s now fixed.</p>
-
-<div class="post-body entry-content">Should post a 0.6 (or at least 0.6 beta) sometime after the New Year.</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/87">87</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-24T23:18:04-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Huge changes in PandoraBoy on the way. I&rsquo;m working on full-screen mode, so you can run PandoraBoy from across the room and still see what&rsquo;s currently playing. Building a smooth transition from window to full-screen without interrupting playback has taken my a couple of days, but I think it&rsquo;s a pleasing effect. Right now it doesn&rsquo;t do a lot more than be a full-screen Pandora window (which isn&rsquo;t very exciting in itself, though much harder than it sounds), but next I&rsquo;ll work on a plug-in architecture to let you put various information on the bottom portion of the screen. Then it&rsquo;ll actually be useful.</p>
-
-<p>Why is it so hard to go full-screen you may ask? Afterall, it&rsquo;s just a webpage. But the mini-player is a web page that assumes the window is a specific size. Getting the background gradient to look right at any size is the main problem, since there is no direct way to scale a background in CSS2. repeat-x handles left-to-right scaling, but the pandora background isn&rsquo;t tileable vertically. My final solution was to build an NSImageView which holds a flipped version of the Pandora background, and then placed it immediately underneath the pandora webview. It handles all vertical stretching and gives a nice darker area at the bottom rather than just fading to white.</p>
-
-<p>I&rsquo;ll also investigate a black-screen mode with the pandora player standing with no background. I had that working at one point, but it&rsquo;s been hard to recreate it in a way to zooms cleanly. CSS2 and Javascript just aren&rsquo;t nearly as powerful as Cocoa&hellip;.</p>
-
-<p>If you&rsquo;re feeling insanely adventurous, it&rsquo;s all checked in on truck in subversion&hellip;.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/86">86</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-17T22:40:24-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>PandoraBoy 0.5 is live. Go forth.</p>
-
-<p>I may not get to work on PB for a few days at least. One-way call paths will be my life for a little while I suspect. Or maybe it&rsquo;s just USB audio input failing in some strange way&hellip; ah telephony.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/85">85</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-16T10:56:31-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>PB 0.5 is in my final testing. Just going to let it run a few hours before I post it on Monday. Adds station changing (finally) from menu, applescript or hotkeys. It&rsquo;s actually a much larger change than it looks. There was a lot of under-the-covers restructuring while I got that working.</p>
-
-<p>Next plans: either investigate how to masquerade as iTunes (so that stuff that works with iTunes will transparently work with PandoraBoy), or work on some eye-candy features (full-screen mode, floating semi-transparent windows, etc.)</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/83">83</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-15T17:53:09-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Why is it when I want to test PandoraBoy with an album that has no artwork available, suddenly Pandora becomes so good at having every piece of artwork on every track for 7 different stations until I run out of hourly skips?</p>
-
-<p>Well, at least I finally fixed that stupid &ldquo;thumbs-up in the lower left of the Pandora window&rdquo; bug that&rsquo;s been driving me crazy for so long. Check for nil returns people!</p>
-
-<p>I&rsquo;m still trying to understand how Pandora manages skip tracking. I&rsquo;m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don&rsquo;t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they&rsquo;re storing it in Flash local storage. I swear they didn&rsquo;t used to keep track of skips if you switched stations and then switched back, but then they also didn&rsquo;t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/81">81</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-15T12:09:48-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m switching jobs over this weekend from information security to Mac development. In the process, I&rsquo;m also moving mostly to work-from-home, taking over a corner of my wife&rsquo;s workrooms and turning it into a decent home office/lab. In the process of copying huge files around, I think I pushed my Linksys over the edge and it stopped talking on its WAN (PPPoE) port. In my researching trying to fix it, I learned that the Westell modems that Bellsouth gives you for FastAccess are in fact full routers. And actually I&rsquo;d say it&rsquo;s a bit nicer router than the Linksys. So project #3 in the the &ldquo;get ready for new job&rdquo; turned out to be &ldquo;completely reorganize home network.&rdquo; I like the new setup, though. I can get to the Westell directly now (192.168.1.254) for diagnostics. And the Westell has a nice NAT setup system.</p>
-
-<p>On the annoying front, for some reason my Microsoft Laser Mouse 6000 which has worked so well for me for so long at the office, now doesn&rsquo;t reliably click. Moving it works fine, it just doesn&rsquo;t always recognize clicking. It&rsquo;s driving me nuts. I&rsquo;m wondering what the change is. I&rsquo;m on Leopard now, which might impact it. Just not certain.</p>
-
-<p>Moving over to Leopard on my primary box also meant spending a lot of time trying to get PandoraBoy happy. I&rsquo;ve been having trouble with the Shortcut Recorder palette for a long time now where IB won&rsquo;t load the palette. I think I&rsquo;ve finally gotten it sane again. Definitely staying on Xcode 2.5 for now. I&rsquo;ll wait for SR to get their Leopard IB3 support solid before I consider moving. I&rsquo;ve had requests to get PB running on 10.3.9, and I&rsquo;m not ready to try that in XCode3.</p>
-
-<p>Oh, and first impressions of moving to Leopard: wow, Leopard rocks.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/79">79</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-07T23:22:11-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Have I mentioned recently how much I love Cocoa? Even when I hate Cocoa, I love working in it. And things that drive me nuts (like the lack of regexes) come along in due course (Leopard). I was listening to CocoaRadio today and there was a comment along these lines. Cocoa has been evolving for about 20 years now. Much of the core is carried over from NeXT. But rather than &ldquo;showing its age&rdquo; it keeps showing its wisdom, and those early guys thought it out well enough that Apple hasn&rsquo;t had to start over again and again as Windows has with Win32 to MFC/WTL to .NET. For how unusual Objective-C is, it&rsquo;s a constant rather than moving between C, C++, C#, and Java as the winds blow. (And the more I program in Objective-C, the more I enjoy it.)</p>
-
-<p>Tonight I added a station-changing menu to PandoraBoy. There&rsquo;s still a lot to add to make it really useful (hotkey support and Applescript at least), but the core&rsquo;s there, and it wasn&rsquo;t hard. It forced me to simplify a slight duplication in the object model (PandoraControl and Controller were doing almost exactly the same work so I&rsquo;ve merged them). That cleaned up a lot of redundant code. Even after merging the two objects, Controller is under 400 lines of code, so I don&rsquo;t think I need to worry about splitting Controller back up some other way.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/77">77</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-02T22:15:39-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>More hacking on station lists tonight. So far it&rsquo;s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through NSURLProtocols). The station list comes back as an XML document, and I can copy that off into an easy array for later use. The only thing I need to work more on is QuickMix management, since those are magically pulled out of the main channel list, and I should probably do the same to avoid confusion.</p>
-
-<p>I&rsquo;ve talked often with folks about XML and how there are so many good ways to compress it quite effectively and it&rsquo;s strange that XML developers have chosen not to do that. Rather, real XML winds up being insanely verbose and bloated on the wire. I hereby take back my earlier complaints. The fact that I can read XML by sniffing the traffic without having to apply any decoding (not even gunzip), and can recognize XML easily when I come across it, is one of the biggest boons to reverse engineering I&rsquo;ve ever encountered. Long live human readable data formats!</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/75">75</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-02T17:27:50-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I knew I&rsquo;d run into this when I released PandoraBoy 0.4.0, and someone ran into <a href="http://code.google.com/p/pandoraboy/issues/detail?id=17">Issue 17</a>. Moving from MacOS 10.4.10 to 10.4.11 included a massive change to WebKit, and the 0.4 line was meant to address this. Unfortunately I no longer had a 10.4.10 box to test against, and so I figured that something would probably break. Hope against hope, I figured everyone would have upgraded by now.</p>
-
-<p>Anyway, I will now undertake a series of &ldquo;did this fix it&rdquo; patches and we&rsquo;ll see if we can get it working again. Hopefully the entire problem was my removal of decidePolicyForNewWindowAction: which never seems to be called in the new WebKit under Pandora (but I should have kept for completeness anyway). But it&rsquo;s possible that the problem is deeper.</p>
 </div>
   
   
@@ -468,6 +480,21 @@
 
 
 
+<!-- Fathom - simple website analytics - https://usefathom.com -->
+<script>
+(function(f, a, t, h, o, m){
+a[h]=a[h]||function(){
+    (a[h].q=a[h].q||[]).push(arguments)
+};
+o=f.createElement('script'),
+m=f.getElementsByTagName('script')[0];
+o.async=1; o.src=t; o.id='fathom-script';
+m.parentNode.insertBefore(o,m)
+})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'MSRAZWIU');
+fathom('trackPageview');
+</script>
+<!-- / Fathom -->
 
 
 

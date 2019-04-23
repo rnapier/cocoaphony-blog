@@ -9,8 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="...and I hated calculus. Yes, the functional world seems to overflow with bizarre terms that defy
-intuition. Faced with words like object, property, &hellip;">
+  <meta name="description" content="Manuel Chakravarty made a comment a few weeks ago: By not using standard FP terminology in emerging languages like Swift, we deny learners access to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ intuition. Faced with words like object, property, &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="https://robnapier.net/page3">
+  <link rel="canonical" href="http://localhost:4000/page3">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
@@ -56,6 +55,276 @@ intuition. Faced with words like object, property, &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/haskell-overlords">I, for One, Welcome Our New Haskell Overlords</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-09-29T10:57:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://twitter.com/TacticalGrace/status/506079987565613056">Manuel Chakravarty</a> made a comment a few weeks ago:</p>
+
+<blockquote><p>By not using standard FP terminology in emerging languages like Swift, we deny learners access to a lot of existing literature.</p></blockquote>
+
+<p>I certainly agree. But there&rsquo;s a lot more to it, and I hope the functional programming community will get involved in new ways. We&rsquo;ll get there. First, a little history for the rest of us. FP folks, I&rsquo;ll get back to you in a couple of sections.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/haskell-overlords">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/go-is-a-shop-built-jig">Go Is a Shop-built Jig</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-09-17T15:50:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://al3x.net/about.html">Alex Payne</a> wrote an excellent essay called <a href="https://al3x.net/2014/09/16/thoughts-on-five-years-of-emerging-languages.html">Thoughts on Five Years of Emerging Languages</a>. It called to mind something I wrote a while ago for a limited audience that I never got around to turning into a public form. Thanks to <a href="https://twitter.com/TacticalGrace">Manuel Chakravarty</a> for the link and the inspiration.</p>
+
+<p>For those who read my blog for Cocoa (and recently Swift) discussion, you may be surprised that most of my professional work right now is in Go, C, and C++ (in that order). So I thought I might take a moment to discuss Go.</p>
+
+<p>First, it&rsquo;s important to say that I really like Go. I didn&rsquo;t think I would. I&rsquo;m a language snob at heart. Before Swift, I&rsquo;d been spending a lot of time on the <a href="http://learnyouahaskell.com">functional</a> side of the <a href="http://www.scala-lang.org">street</a> with a brief dallience with <a href="http://akka.io">actors</a>. I was just about to do deeper <a href="http://clojure.org">into the parens</a>, when I wound up taking a side trip into Google-land and Go. I&rsquo;d dipped my toe into the water once before and been turned off by what seemed to be the sloppiness of the language. How variables are declared bugged me (turns out it <a href="http://gophercon.sourcegraph.com/post/83845316771/panel-discussion-with-go-team-members">bugs the lead language designer</a>, too). The multiple return types of <code>range</code> bugged me. <a href="http://blog.golang.org/strings">Strings switching between code points and bytes</a> bugged me. The fact that Go can&rsquo;t implement its own <code>append()</code> harkened back to funky Perl magic. Go just seemed sloppy and under-considered.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/go-is-a-shop-built-jig">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/reduction-in-force">Reduction in Force</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-09-14T20:14:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Our last <a href="/flatmap">talk about >>==</a> was full of twists and turns, some
+philosophy, surprising connections, and a radical new operator. It was a lot to
+absorb, and you may have to play with it some in your own code before you really
+know what it&rsquo;s about. That&rsquo;s ok.</p>
+
+<p>Let&rsquo;s take a little break and talk about a handy functional tool built into
+Swift stdlib. I promise no big reveals, no new operators, no fancy types; just
+hands-on, practical discussion of the Swiss Army knife of transform functions:
+<code>reduce</code>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/reduction-in-force">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/flatmap">Flattenin' Your Mappenin'</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-09-07T09:13:15-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>In which our heroes create for themselves a convenience and discover a
+surprising thing.</p></blockquote>
+
+<p><a href="/maps">Last time</a> we looked at the incredible little <code>map</code> function, and saw
+how it could be used to simplify a lot of tedious for-loops while making our
+code more clear and less error-prone. This time, we&rsquo;re going to see if we can
+solve a common problem that happens with mapping, nesting.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/flatmap">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/maps">Maps... Wait, They Don't Love You Like I Love You</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-08-28T08:20:25-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I had a bit of a throw-away line in
+<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>:</p>
+
+<blockquote><p>Kind of like map, but kind of different.</p></blockquote>
+
+<p>And I tossed a call to <code>map</code>, unexplained, in the middle of the parsing code. I
+got a little ahead of myself there. Sorry about that. Cocoa has no <code>map</code>. Maybe
+not everyone coming to Swift has a long history with this amazing little
+function. In a field where monads get all the press, it&rsquo;s time to step back and
+talk about the humble map.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/maps">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-08-18T22:00:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Yes, this is another of those &ldquo;how to parse JSON in Swift&rdquo; blog posts that seem
+to be required of every Swift blogger. And yes, several of the techniques we&rsquo;ll
+work through come from the functional programming world. And, <em>yes</em>,
+Swift+Functional+JSON is itself a well-worn trail. But still, I hope you find
+this exploration helpful. Don&rsquo;t think of it as functional programming. Think of
+it as the path of &ldquo;I wish there were a function that&hellip;.&rdquo;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/functional-wish-fulfillment">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -217,7 +486,7 @@ more experience, but even so, I know a thing or two about Objective-C.</p>
       
   <header>
     
-      <h1 class="entry-title"><a href="/swift-is-not-functional">Swift Is Not Functional</a></h1>
+      <h1 class="entry-title"><a href="/code-is-technical-writing-plus-a-compiler">Code Is Technical Writing (Plus a Compiler)</a></h1>
     
     
       <p class="meta">
@@ -231,304 +500,98 @@ more experience, but even so, I know a thing or two about Objective-C.</p>
 
 
 
-<time datetime="2014-06-10T19:57:28-04:00" pubdate data-updated="true"></time>
+<time datetime="2014-06-16T16:19:14-04:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Ever since Swift came out, I keep seeing weird comments that Swift is a
-functional programming language. I&rsquo;ve puzzled a bit over why anyone would say
-that, since there&rsquo;s really very little &ldquo;functional&rdquo; about Swift. It&rsquo;s a pretty
-traditional object oriented language with a focus on generic programming.</p>
+  <div class="entry-content"><p>Good coding practices are those that make it easier to&hellip;</p>
 
-<p>My conjecture is that people are using a feature list to determine a
-language&rsquo;s paradigm. But there&rsquo;s a reason we use the word <em>paradigm</em>.</p>
+<ol>
+<li>write correct code (i.e. discourage behaviors that are likely to create new bugs)</li>
+<li>detect incorrect code (i.e. make it easier to code review and debug)</li>
+<li>understand and modify code, while maintaining its correctness</li>
+<li>reuse code in other projects while still keeping these properties</li>
+</ol>
 
-<blockquote><p>paradigm. (n) A worldview underlying the theories and methodology of a
-particular scientific subject</p></blockquote>
 
-<p>&ldquo;A worldview.&rdquo; Yeah, that captures it.</p>
+<p>I consider other concerns secondary. For example, I believe it&rsquo;s much more
+important that it be easy to write correct code than it be easy to write fast
+code.</p>
+
+<p>So what about &ldquo;shortness&rdquo; of code? It&rsquo;s the same as in other kinds of
+technical writing (and source code is a kind of techincal writing, with an
+audience of both programmers and compilers). It should be concise and to the
+point, but the first concern is not the number of letters the author must
+write. Good code should be the same. Extraneous details, obvious to the
+reader, should eliminated. But important details should not be omitted. And as
+in technical writing, assume that the reader may have jumped into this section
+without reading everything that came before. Yes, that means you occassionally
+repeat yourself. That is not a sin in writing or in code.</p>
+
+<p>Write with an eye to how it will be read. Since much code review is done with
+contextual diffs, your code should be understandable with limited context and
+without an IDE. Most importantly, incorrect code should be easy to spot with
+limited context. This is best done by making suspicious things look
+suspicious.</p>
+
+<p>Prior to ARC, the single most common cause of crashes in ObjC was directly
+accessing ivars rather than going through accessors. I saw this again and
+again in various product teams, with students, and on StackOverflow. It is
+just too easy to mess up retains and releases if you do them all by hand. But
+ObjC memory management is quite simple if you always use accessors. So when a
+program was crashing, the first place I always looked was for direct ivar
+accesses. But how do you find them? If I see <code>foo = bar</code>, is it a bug? If
+<code>foo</code> is a local variable it&rsquo;s probably correct. If it&rsquo;s an ivar, I need to
+dig in. How do I know?</p>
+
+<p>Over the years, ObjC developers learned to put an underscore on the front of
+ivars (eventually, Apple even made this automatic). Then <code>_foo = bar</code> is
+suspicious. Why are you messing with an ivar directly? You have a much better
+chance of finding the bug. That underscore (and using <code>self</code>) meant a few more
+letters to read and write, but it saved us many bugs by making the code much
+more clear and making suspicious things look suspicious. That&rsquo;s what good
+practice looks like.</p>
+
+<p>But it worked the other way too. It&rsquo;s somewhat common in ObjC for accessors to
+have side effects. Sometimes they post notifications, or put things on a
+dispatch queue, or fire a KVO. And this can be a source of bugs as well. I&rsquo;ve
+encountered several cases wher accessors lead to reentrance bugs because a
+notification fired and was posted to another thread. In those cases, it&rsquo;s very
+useful that ObjC requires <code>self</code> on accessors. When you&rsquo;re reading through the
+code, <code>_foo = bar</code> may be suspicious for memory management, but you know
+nothing else is happening. When you see <code>[self setFoo:bar]</code> in the middle of
+code that seems to be deadlocking, that&rsquo;s a very good place to go looking for
+side effects.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> Again, suspicious code looks suspicious, whether
+it&rsquo;s because it calls a function it shouldn&rsquo;t or because it doesn&rsquo;t call a
+function it should.</p>
+
+<p>Code sometimes is more like fiction. Imagine you are writing a book together
+with other authors. You&rsquo;re all writing your own chapters, but the plot and
+characters need to stay consistent. It&rsquo;s quite a challenge. It&rsquo;s easier if
+the characters have very very simple backstories, simple motivations, and
+follow a simple patterns. It&rsquo;s easier to write for Murder She Wrote</p>
+
+<p>Swift opens new doors for conciseness, but also for obfuscation. Some advice
+from the C++ world: think long and hard before you overload an operator. Will
+the overload make it easier or harder for a reviewer to know what your code is
+doing? Like acronyms, sometimes the shorter form is much easier to understand,
+especially if used very often and replacing something very long (like &ldquo;dynamic
+host configuration protocol&rdquo; versus &ldquo;DHCP&rdquo;). But sometimes it becomes a
+confusing soup of symbols. Make your decision based on clarity to the reader,
+not efficiency of keystrokes.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>This is a major reason that dot notation frustrates older ObjC developers, even those who use it. It obscures the fact that there&rsquo;s a function call, which leads to a lot of confusion when there are side effects. We&rsquo;ve gotten used to it over the years, but you used to be able to search your code for <code>setFoo:</code> and find all the setters. It&rsquo;s harder now, and more confusing that it used to be.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
 
 </div>
   
-  
-    <footer>
-      <a rel="full-article" href="/swift-is-not-functional">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/week-of-swift">A Week of Swift</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-06-09T09:54:30-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The first public beta of Swift has been out for a week. I&rsquo;ve been there since
-the beginning. I&rsquo;ve read almost the entire book and have  written many
-<em>dozens</em> of lines of Swift code. So as an expert in the field, I&rsquo;m finally in
-a position to write the definitive review of the language. That&rsquo;s a joke, son.
-But I&rsquo;m going to dive in anyway, since that&rsquo;s what you do once you hit your
-140 character limit.</p>
-
-<p>First, a spoiler. I basically like Swift. Given its goals and its constraints,
-I think it&rsquo;s a move in the right direction. Many of those complaining most
-about Swift seem to misunderstand one or the other.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/week-of-swift">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/renaissance-2014-materials">Renaissance 2014 Materials</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-30T16:07:11-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://renaissance.io/2014">Renaissance 2014</a> has been a great conference so far, and I loved getting the chance to discuss security today. If you&rsquo;re looking for the slides, code, and links, they&rsquo;re available at <a href="https://github.com/rnapier/security-right">github.com/rnapier/security-right</a>. If you missed my talk and would like to see it, don&rsquo;t forget that <a href="https://renaissance.io/membership">the videos</a> will be available for $49 through tomorrow (Jan 31). After that, it&rsquo;ll be $99.</p>
-
-<p>More later, but right now I&rsquo;m more interested in this talk on software ethics, so I&rsquo;m going to get back to listening.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/pinning-your-ssl-certs">Pinning Your SSL Certs</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-01T15:10:08-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
-
-<p>If your app uses SSL to communicate with your server (and it should), you generally don&rsquo;t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there&rsquo;s certainly no reason to trust the over 200 certificates in iOS 7&rsquo;s root store.</p>
-
-<p>The practice of trusting only your own certificate is called &ldquo;pinning,&rdquo; and I&rsquo;ve discussed it several times at conferences. I then say something like, &ldquo;It&rsquo;s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:&rdquo;</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/pinning-your-ssl-certs">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-truncating-passwords">RNCryptor: Truncating Passwords</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-12-30T21:30:11-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to RNCryptor 2.2 when it comes out this week.</strong></p>
-
-<p>I hate it when I do stupid things. But then you all get to learn something, so luckily some good can come of my shame. Please learn something so this isn&rsquo;t all for naught.</p>
-
-<p><a href="https://github.com/rnapier/RNCryptor/issues/77">Issue #77</a> in RNCryptor is one of those classic bugs. Here it is, as gently pointed out to me by <a href="https://github.com/arthurwalasek">Arthur Walasek</a>:</p>
-
-<pre><code class="objc">int result = CCKeyDerivationPBKDF(keySettings.PBKDFAlgorithm,      // algorithm
-                   password.UTF8String, // password
-                   password.length, // passwordLength
-                   ...
-</code></pre>
-
-<p>I have had this bug since I first wrote this code for iOS 5 PTL, and it&rsquo;s horrible. The problem, if you haven&rsquo;t seen it yet, is that <code>-length</code> returns the number of characters in <code>password</code>, not the number of bytes. In many languages you can get away with that, but not in multi-byte languages like Chinese.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-truncating-passwords">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/brute-forcing-passwords">Brute Forcing Passwords</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-12-27T15:15:30-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-
-<p>I got an <a href="https://github.com/rnapier/RNCryptor/issues/92">interesting question</a>
-recently:</p>
-
-<blockquote><p>Assuming a password is not in a dictionary, what length is required to make a
-brute force attack infeasible?</p></blockquote>
-
-<p>That&rsquo;s a pretty good question, and we should be able to answer it fairly easily
-given a few assumptions.</p>
-
-<p>The short answer is, using <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> and
-some reasonable security assumptions, it would be very difficult to brute-force
-an 8 character password randomly taken from all the easily typable characters on
-an English keyboard. The rest of this article will discuss my assumptions, and
-how you would calculate good lengths for other assumptions.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/brute-forcing-passwords">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/new-blog-site">New Blog Site</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-12-24T14:56:29-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After several years of WordPress, I finally decided to make a change. The main change was getting rid of comments. There were several useful comments over the years, but the vast majority of the comments that came in were spam. The spam filters got most of them, but over the last year, more and more have been getting through. They’ve become more subtle over the years, and so more of a headache to deal with on my side. The handful of useful comments weren’t worth it. Most of the time, people comment in order to ask me a question. They can still easily do that through email, and I can post any interesting threads as another blog post.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/new-blog-site">Read on &rarr;</a>
-    </footer>
   
 
 
@@ -567,6 +630,21 @@ how you would calculate good lengths for other assumptions.</p>
 
 
 
+<!-- Fathom - simple website analytics - https://usefathom.com -->
+<script>
+(function(f, a, t, h, o, m){
+a[h]=a[h]||function(){
+    (a[h].q=a[h].q||[]).push(arguments)
+};
+o=f.createElement('script'),
+m=f.getElementsByTagName('script')[0];
+o.async=1; o.src=t; o.id='fathom-script';
+m.parentNode.insertBefore(o,m)
+})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'MSRAZWIU');
+fathom('trackPageview');
+</script>
+<!-- / Fathom -->
 
 
 

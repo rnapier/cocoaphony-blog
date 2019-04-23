@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>La Trahison Du Temps - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="If you&rsquo;ve ever said &ldquo;this Date is in local time, but that Date is in UTC,&rdquo; you don&rsquo;t understand Date, and this post is &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://localhost:4000/dates-orig">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://github.com/robnapier" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">La Trahison Du Temps</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2016-12-17T14:01:59-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p style="text-align:center;"><img src="/images/trahison.png" alt="La Trahison du Temps" /></p>
+
+<!-- more -->
+
+
+<p>If you&rsquo;ve ever said &ldquo;this <code>Date</code> is in local time, but that <code>Date</code> is in UTC,&rdquo; you don&rsquo;t understand <code>Date</code>, and this post is written for you. I may ramble a little about philosophy, but stick with me. What we&rsquo;re going to talk about today is very practical, and when you understand it, you&rsquo;ll avoid one of the most common mistakes in Cocoa.</p>
+
+<p>We discovered time, but we invented dates. That&rsquo;s why date programming is hard. Dates are all about people, and people are weird, so dates are weird. Time is simple, at least to a first approximation, at least on the scale that humans experience it. So when programmers confuse dates and times, they over-simplify one and over-complicate the other.</p>
+
+<h2>What is time?</h2>
+
+<p>So what is time if it&rsquo;s so simple? For our purposes, it&rsquo;s just when things happen. I want you to put away any fancy Relativistic notions you think you know from skimming Wikipedia. Those don&rsquo;t matter here. I want you to forget about clock skew and leap seconds. For today, we all have a stopwatch, and if we reset our stopwatch together (which we can do because we say we can), we will always agree on how much time has passed since then. Writing software is math, and math says you can make up any rules you like, and those are our rules. Time is simple because we say it&rsquo;s simple.</p>
+
+<p>So if we all agree on how much time has passed, how do we represent that? With a <code>TimeInterval</code>, which is a vector in time. Time is one-dimensional, so we can represent our vector with one signed number scaled to some unit (seconds). And that&rsquo;s what we do. In Cocoa, <code>TimeInterval</code> is just a typealias for <code>Double</code>.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<p>So, when our <code>TimeInterval</code> says 120 seconds, what is it in Greenwich? <em>Umm… 120 seconds.</em> And what is it in San Francisco? <em>Umm… 120 seconds.</em> And what is it on the Moon or on Mars? <em>Umm… why do you keep asking stupid questions? It&rsquo;s always going to be 120 seconds for everyone!</em></p>
+
+<p>Exactly. Hold that thought.</p>
+
+<h2>What is a date?</h2>
+
+<p>How many seconds is it between now and 2:00 PM? Well, that depends, doesn&rsquo;t it? Where are we? If you look at your clock and it says 1:00 PM, then you might say 3600, but would someone 1000 miles to the east or west agree? What if you were traveling and crossing time zones? What does &ldquo;how long until 2:00 PM&rdquo; mean in that case? If you cross back and forth over a time zone line, you could avoid 2:00 PM indefinitely. What would someone on the Moon or Mars say? Does 2:00 PM make sense if you&rsquo;re not on the Earth? Clearly &ldquo;now until 2:00 PM&rdquo; isn&rsquo;t an unambiguous time interval. It requires a lot of context and might not even be a meaningful question.</p>
+
+<p>But maybe the problem is that the question includes &ldquo;now.&rdquo; Let&rsquo;s try something simpler. I want to sleep eight hours, and it is now 10:00 PM. When time should I wake up? There are at least three answers, depending on what day it is and what the local DST rules are. But if we are on the Moon, it might be something completely different.</p>
+
+<p>I like throwing the Moon in as a test because it forces you to think about context. If a calculation works the same on the Moon as it does in New York, then we are just talking about time. But if we need more context, then we probably need a date.</p>
+
+<h2>What is a <code>Date</code>?</h2>
+
+<p>So what does that tell us about <code>Date</code>? It tells us that <code>Date</code> is actually a time. In fact, it&rsquo;s an <em>absolute point</em> in time. That means if I have a <code>Date</code> and you have a <code>Date</code>, we will always agree which one occurs first. And this really is an <em>absolute</em> point in time. It&rsquo;s not relative to anything. If I create a <code>Date</code> using <code>Date(timeIntervalSince1970:)</code> and you create a <code>Date</code> using <code>Date(timeIntervalSinceReferenceDate:)</code>, we <em>still</em> will agree which one comes first. From the public interface, all <code>Date</code> objects are directly comparable. I can always subtract two <code>Date</code> objects, with no other information, and get a <code>TimeInterval</code> that everyone will agree on..</p>
+
+<p>Compare this to <code>CGPoint</code>, which is not a point. It&rsquo;s an offset (vector) applied to some unknown origin. If I give you two <code>CGPoint</code> objects, you can&rsquo;t tell me which one is &ldquo;to the left&rdquo; of the other unless I tell you separately what coordinate spaces they come from (and how those coordinate spaces relate to each other, if at all).<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p>So here&rsquo;s the takeaway. <strong>If you think a <code>Date</code> is &ldquo;in&rdquo; some timezone, you misunderstand <code>Date</code>.</strong> A <code>Date</code> does not care what city or planet you&rsquo;re on, what day it is, or what calendar you use. Everyone can agree on when a <code>Date</code> occurs. It neither requires, nor is influenced by, any external factor.</p>
+
+<h2>Stop throwing away the context</h2>
+
+<p>OK, so I&rsquo;ve ranted on about this for quite a while. Why do we care?</p>
+
+<p>Because developers <em>often</em> throw away necessary context by switching from a date to a time when they shouldn&rsquo;t. Let&rsquo;s say you&rsquo;re writing a calendaring app and a user creates an appointment for <a href="http://cocoaconf.com/yosemite">9:00 AM on March 21, 2017 in Yosemite National Park</a>. You want to store your data correctly, so you convert it to a &ldquo;UTC <code>Date</code>&rdquo; and store it.<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+
+<pre><code>let formatter = DateFormatter()
+formatter.dateStyle = .medium
+formatter.timeStyle = .long
+let date = formatter.date(from: "Mar 21, 2017, 9:00:00 AM PST")
+</code></pre>
+
+<p><strong>This is almost certainly wrong.</strong></p>
+
+<p>According to current law, on March 12, 2017, Yosmite will go from PST to PDT, and that&rsquo;s the assumption you&rsquo;ve stored in <code>date</code>. But what if the law changes? &ldquo;Oh, that would never happen.&rdquo; <a href="https://kb.iu.edu/d/atrm">Tell that to Microsoft.</a> In 2006, Indiana started observing DST, and Exchange calendars messed up their meeting times because they stored everything in UTC. In 2007, the whole United States changed the dates of DST observance and Exchange calendars broke again. Canada and Australia also changed their rules in 2007, Australia changed them again in 2009. Chile abolished it in 2015, but re-introduced it in 2016 (but not everywhere). Egypt, Haiti, and Uruguay abolished it in 2015. Tongo will started observing it in 2016. Until 2013, Israel <a href="https://en.wikipedia.org/wiki/Israel_Summer_Time#2005.E2.80.932012">changed the rules unpredictably every year</a>. Morocco changes four times a year rather than twice. The list goes on and on. Many countries (including the United States) continually debate whether to do away with DST, so future changes should not be a surprise (Hungary will abolish it in 2017). If you&rsquo;re storing future dates as &ldquo;seconds since the epoch&rdquo; or &ldquo;UTC,&rdquo; you&rsquo;re gambling that nothing is going to change in a field where things change all the time.</p>
+
+<p>The problem is that &ldquo;Mar 21, 2017, 9:00:00 AM PST&rdquo; is not a time. It is the <em>name</em> of a time. And it&rsquo;s possible that it refers to multiple times or to no time at all.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>I wish it weren&rsquo;t a typealias because then we could put extensions on it without extending <code>Double</code>, but that&rsquo;s how it is.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>Thanks to <a href="https://twitter.com/gte/status/809541556097130496">Guy English</a> for pointing this out.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p>As we discussed, there&rsquo;s no such things as a &ldquo;UTC <code>Date</code>,&rdquo; but I hear people say this all the time.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2016-12-17T14:01:59-05:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/talking" title="Previous Post: Talking and Teaching">&laquo; Talking and Teaching</a>
+      
+      
+        <a class="basic-alignment right" href="/dates" title="Next Post: La Trahison du Temps">La Trahison du Temps &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+<!-- Fathom - simple website analytics - https://usefathom.com -->
+<script>
+(function(f, a, t, h, o, m){
+a[h]=a[h]||function(){
+    (a[h].q=a[h].q||[]).push(arguments)
+};
+o=f.createElement('script'),
+m=f.getElementsByTagName('script')[0];
+o.async=1; o.src=t; o.id='fathom-script';
+m.parentNode.insertBefore(o,m)
+})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'MSRAZWIU');
+fathom('trackPageview');
+</script>
+<!-- / Fathom -->
+
+
+
+</body>
+</html>
