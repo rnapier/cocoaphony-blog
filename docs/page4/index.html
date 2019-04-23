@@ -9,9 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="or&hellip; &ldquo;Why I Agree With Andy Matuschak, But Would Rather Fix Swift&rdquo; Justin Spahr-Summers,
-Andy Matuschak, and I had a
-brief Twitter &hellip;">
+  <meta name="description" content="If you&rsquo;re using RNCryptor, you may want to join the forum I&rsquo;ve finally setup: https://groups.google.com/forum/#!forum/rncryptor
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@ brief Twitter &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://localhost:4000/page4">
+  <link rel="canonical" href="https://robnapier.net/page4">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
@@ -63,481 +62,6 @@ brief Twitter &hellip;">
       
   <header>
     
-      <h1 class="entry-title"><a href="/forsaking-self">Forsaking Self</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-06-16T09:29:09-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>or&hellip; &ldquo;Why I Agree With Andy Matuschak, But Would Rather Fix Swift&rdquo;</em></p>
-
-<p><a href="https://twitter.com/jspahrsummers">Justin Spahr-Summers</a>,
-<a href="http://andymatuschak.org">Andy Matuschak</a>, and I had a
-<a href="https://twitter.com/jspahrsummers/status/478055530036875264">brief Twitter exchange</a>
-a few days ago about when you should use <code>self</code>. These are smart guys who I&rsquo;ve
-been listening to for a long time now, and I&rsquo;m not saying they&rsquo;re not right.
-I&rsquo;m just saying it&rsquo;s a mistake in the language that should be fixed.</p>
-
-<p>Some background: Swift currently allows but does not require <code>self.</code> to refer
-to an object&rsquo;s own properties and methods. So the question is: what rules
-should Swift programmers use to decide whether to include <code>self.</code>, or should
-Swift be changed to require it?</p>
-
-<h3>Some principles</h3>
-
-<p>We need to agree first on a few principles. If you disagree with these things,
-we&rsquo;re never going to agree on the end result. But I hope these principles
-aren&rsquo;t particularly controversial among professional programmers in any
-language, and particularly among ObjC developers.</p>
-
-<p>Good coding practices are those that make it easier to&hellip;</p>
-
-<ol>
-<li>write correct code (i.e. discourage behaviors that are likely to create new bugs)</li>
-<li>detect incorrect code (i.e. make it easier to code review and debug)</li>
-<li>understand and modify code, while maintaining its correctness</li>
-</ol>
-
-
-<p>I consider other concerns secondary. For example, I believe it&rsquo;s much more
-important that it be easy to write correct code than it be easy to write fast
-code.</p>
-
-<p>So what about &ldquo;shortness&rdquo; of code? It&rsquo;s the same as in other kinds of
-technical writing (and source code is kind of techincal writing, with an
-audience of both programmers and compilers). It should be concise and to the
-point, but the first concern is not the number of letters the author must
-write. Good code should be the same. Extraneous details, obvious to the
-reader, should eliminated. But important details should not be omitted. And as
-in technical writing, assume that the reader may have jumped into this section
-without reading everything that came before.</p>
-
-<p>So all of this is just to dispel the possible answer &ldquo;do whichever takes fewer
-keystrokes.&rdquo;</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/swift-is-not-functional">Swift Is Not Functional</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-06-10T19:57:28-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ever since Swift came out, I keep seeing weird comments that Swift is a
-functional programming language. I&rsquo;ve puzzled a bit over why anyone would say
-that, since there&rsquo;s really very little &ldquo;functional&rdquo; about Swift. It&rsquo;s a pretty
-traditional object oriented language with a focus on generic programming.</p>
-
-<p>My conjecture is that people are using a feature list to determine a
-language&rsquo;s paradigm. But there&rsquo;s a reason we use the word <em>paradigm</em>.</p>
-
-<blockquote><p>paradigm. (n) A worldview underlying the theories and methodology of a
-particular scientific subject</p></blockquote>
-
-<p>&ldquo;A worldview.&rdquo; Yeah, that captures it.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/swift-is-not-functional">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/week-of-swift">A Week of Swift</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-06-09T09:54:30-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The first public beta of Swift has been out for a week. I&rsquo;ve been there since
-the beginning. I&rsquo;ve read almost the entire book and have  written many
-<em>dozens</em> of lines of Swift code. So as an expert in the field, I&rsquo;m finally in
-a position to write the definitive review of the language. That&rsquo;s a joke, son.
-But I&rsquo;m going to dive in anyway, since that&rsquo;s what you do once you hit your
-140 character limit.</p>
-
-<p>First, a spoiler. I basically like Swift. Given its goals and its constraints,
-I think it&rsquo;s a move in the right direction. Many of those complaining most
-about Swift seem to misunderstand one or the other.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/week-of-swift">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/renaissance-2014-materials">Renaissance 2014 Materials</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-30T16:07:11-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://renaissance.io/2014">Renaissance 2014</a> has been a great conference so far, and I loved getting the chance to discuss security today. If you&rsquo;re looking for the slides, code, and links, they&rsquo;re available at <a href="https://github.com/rnapier/security-right">github.com/rnapier/security-right</a>. If you missed my talk and would like to see it, don&rsquo;t forget that <a href="https://renaissance.io/membership">the videos</a> will be available for $49 through tomorrow (Jan 31). After that, it&rsquo;ll be $99.</p>
-
-<p>More later, but right now I&rsquo;m more interested in this talk on software ethics, so I&rsquo;m going to get back to listening.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/avoiding-timing-attacks-on-nsdata">Avoiding Timing Attacks on NSData</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-24T13:48:22-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Most comparison functions look something like this more or less:</p>
-
-<pre><code class="objc">BOOL compare(uint8_t *a, size_t aLen, uint8_t *b, size_t bLen) {
-  if (aLen != bLen) {
-    return NO;
-  }
-
-  for (size_t i = 0; i &lt; aLen; ++i) {
-    if (a[i] != b[i]) {
-      return NO;
-    }
-  }
-  return YES;
-}
-</code></pre>
-
-<p>If the lengths are different, then they&rsquo;re not equal. Otherwise compare each element. If you find a mismatch, they&rsquo;re not equal. If at the end of the search, there were no mismatches, then they&rsquo;re equal. That&rsquo;s a fine comparison function. The same basic idea will work for for an <code>NSArray</code> or a <code>std::vector</code> or an <code>NSString</code>. The <code>std::equal</code> algorithm is basically the same (except for checking length equality).</p>
-
-<p>Basic stuff. Very efficient. Also the source of a common security mistake: the timing attack. It looks like this:</p>
-
-<pre><code>- (BOOL)isAuthorizedWithKey:(NSData *)providedKey {
-  return [providedKey isEqual:kSecretKeyData];
-}
-</code></pre>
-
-<p>So simple. Who could imagine it&rsquo;s a problem? And in many cases (especially on iOS), it may not be exploitable. But let&rsquo;s see how an attacker can use this:</p>
-
-<ul>
-<li>Send the key 0x00 many times and keep track of how long it takes to fail.</li>
-<li>Send the key 0x00 0x00 many times and keep track of how long it takes to fail.</li>
-<li>Keep expanding the key by one byte.</li>
-<li>If the test function checks lengths, then the failure time will be slightly longer when your guess matches the length of the actual key. Now you know the length.</li>
-<li>Send the key (of the known length) containing just 0x00. Again, try it many times and track how long it takes to fail.</li>
-<li>Change the first byte to 0x01 and repeat.</li>
-<li>Continue changing the first byte until the failure takes slightly longer. Now you know the first byte.</li>
-<li>Repeat for the rest of the bytes.</li>
-</ul>
-
-
-<p>While this requires a lot of tests, it will still be a tiny fraction of the number of tests required to brute force the whole keyspace. For example, even if you need 1,000,000 tests per guess to work out the average, the worst-case  will be:</p>
-
-<p>$$1,000,000 \times 256 \times length \ll 256^{length} \quad (length > 4)$$</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/pinning-your-ssl-certs">Pinning Your SSL Certs</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-01T15:10:08-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
-
-<p>If your app uses SSL to communicate with your server (and it should), you generally don&rsquo;t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there&rsquo;s certainly no reason to trust the over 200 certificates in iOS 7&rsquo;s root store.</p>
-
-<p>The practice of trusting only your own certificate is called &ldquo;pinning,&rdquo; and I&rsquo;ve discussed it several times at conferences. I then say something like, &ldquo;It&rsquo;s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:&rdquo;</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/pinning-your-ssl-certs">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-truncating-passwords">RNCryptor: Truncating Passwords</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-12-30T21:30:11-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to RNCryptor 2.2 when it comes out this week.</strong></p>
-
-<p>I hate it when I do stupid things. But then you all get to learn something, so luckily some good can come of my shame. Please learn something so this isn&rsquo;t all for naught.</p>
-
-<p><a href="https://github.com/rnapier/RNCryptor/issues/77">Issue #77</a> in RNCryptor is one of those classic bugs. Here it is, as gently pointed out to me by <a href="https://github.com/arthurwalasek">Arthur Walasek</a>:</p>
-
-<pre><code class="objc">int result = CCKeyDerivationPBKDF(keySettings.PBKDFAlgorithm,      // algorithm
-                   password.UTF8String, // password
-                   password.length, // passwordLength
-                   ...
-</code></pre>
-
-<p>I have had this bug since I first wrote this code for iOS 5 PTL, and it&rsquo;s horrible. The problem, if you haven&rsquo;t seen it yet, is that <code>-length</code> returns the number of characters in <code>password</code>, not the number of bytes. In many languages you can get away with that, but not in multi-byte languages like Chinese.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-truncating-passwords">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/brute-forcing-passwords">Brute Forcing Passwords</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-12-27T15:15:30-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-
-<p>I got an <a href="https://github.com/rnapier/RNCryptor/issues/92">interesting question</a>
-recently:</p>
-
-<blockquote><p>Assuming a password is not in a dictionary, what length is required to make a
-brute force attack infeasible?</p></blockquote>
-
-<p>That&rsquo;s a pretty good question, and we should be able to answer it fairly easily
-given a few assumptions.</p>
-
-<p>The short answer is, using <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> and
-some reasonable security assumptions, it would be very difficult to brute-force
-an 8 character password randomly taken from all the easily typable characters on
-an English keyboard. The rest of this article will discuss my assumptions, and
-how you would calculate good lengths for other assumptions.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/brute-forcing-passwords">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/new-blog-site">New Blog Site</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-12-24T14:56:29-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After several years of WordPress, I finally decided to make a change. The main change was getting rid of comments. There were several useful comments over the years, but the vast majority of the comments that came in were spam. The spam filters got most of them, but over the last year, more and more have been getting through. They’ve become more subtle over the years, and so more of a headache to deal with on my side. The handful of useful comments weren’t worth it. Most of the time, people comment in order to ask me a question. They can still easily do that through email, and I can post any interesting threads as another blog post.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/new-blog-site">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/forum-rncryptor">New Forum for RNCryptor</a></h1>
     
     
@@ -562,6 +86,368 @@ how you would calculate good lengths for other assumptions.</p>
   <div class="entry-content"><p>If you&rsquo;re using RNCryptor, you may want to join the forum I&rsquo;ve finally setup: <a href="https://groups.google.com/forum/#!forum/rncryptor">https://groups.google.com/forum/#!forum/rncryptor</a></p>
 </div>
   
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/rncryptor-vulnerability-fix">Update on RNCryptor Vulnerability Fix</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-01-17T17:12:12-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve built a candidate fix for the RNCryptor <a href="http://robnapier.net/blog/rncryptor-hmac-vulnerability-827">HMAC vulnerability</a>. It&rsquo;s on a branch (<a href="https://github.com/rnapier/RNCryptor/tree/issue44">issue44</a>) currently, but I&rsquo;ll merge it to master next week if no one sees problems, and update the docs. By default it is incompatible with v1 files. If you need to be able to decrypt v1 files, you can define RNCRYPTOR_ALLOW_V1_BAD_HMAC when building.</p>
+
+<p>Please let me know if anyone encounters issues.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/rncryptor-hmac-vulnerability">RNCryptor HMAC Vulnerability (My Security Blunder)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-01-14T13:52:38-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thank you to Allen Mann for discovering the following significant security vulnerability in RNCryptor.</p>
+
+<h3>The Vulnerability</h3>
+
+
+<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> computes the HMAC over the ciphertext only. It does not compute an HMAC over the header, particularly the IV. This allows an attacker to modify the IV and thus manipulate the first block (16-bytes) of decrypted plaintext. This is a major issue, and is exactly the kind of problem that RNCryptor is designed to avoid.</p>
+
+<p>I will be modifying RNCryptor shortly to fix this. This will rev the file version to 2. I will provide a backward-compatibly option to read v1 files (default off). I strongly recommend that developers move to the v2 format.</p>
+
+<p>I will try to get this out as quickly as I can, hopefully this week.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/rncryptor-hmac-vulnerability">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/animating-arbitrary-keypaths">Animating Arbitrary KeyPaths</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-12-17T21:44:41-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</a>, I discussed my PinchView from <a href="http://robnapier.net/blog/laying-out-text-with-coretext-547">Laying out text with Core Text</a>. It&rsquo;s a text view that squeezes the glyphs towards your finger when you touch it. I built it to demonstrate per-glyph layout in Core Text. While demonstrating it, I was pretty unsatisfied with how it looked when you touched it or let go. When you drag your finger on the view, the glyphs move around like water. It&rsquo;s quite pretty. But when you initially touch the screen, the glyphs suddenly jump to their new locations, and then they jump back when you release the screen. Well, that&rsquo;s no good. So I wanted to add animations.</p>
+
+<p>But here&rsquo;s the thing: what do you animate? While you do want to animate the glyph positions, you&rsquo;re not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer&rsquo;s list of animatable properties confirmed that there&rsquo;s nothing like that. But no problem, I added a custom property called <code>touchPointScale</code> and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/animating-arbitrary-keypaths">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cocoaconf">CocoaConf</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-11-29T22:50:04-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here are some useful links you&rsquo;re probably looking for.</p>
+
+<p><a href="https://github.com/rnapier/richtext-coretext/blob/master/Rich%20Text%2C%20Core%20Text.pdf">Rich Text, Core Text</a> Presentation</p>
+
+<p><a href="http://www.linotype.com/2762/zapfinoextra.html">Zapfino Extra Pro</a></p>
+
+<p><a href="http://www.iamcal.com/understanding-bidirectional-text/">Understanding Bidirectional (BIDI) Text in Unicode</a> by Cal Henderson</p>
+
+<p><a href="http://www.unicode.org/reports/tr9">Unicode Standard Annex #9</a> Unicode Bidirectional Algorithm</p>
+
+<p><a href="https://github.com/rnapier/richtext-coretext">GitHub for Rich Text, Core Text</a></p>
+
+<p><a href="https://github.com/rnapier/practical-security/blob/master/Practical%20Security.pdf">Practical Security</a> Presentation</p>
+
+<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor GitHub</a></p>
+
+<p><a href="https://github.com/rnapier/security-blunders">GitHub for Security Blunders</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pbkdf2-sha1">PBKDF2 and SHA-1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-09-18T11:01:11-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve posted a new errata on the iosptl site about <a href="http://iosptl.com/posts/new-prf-functions-for-pbkdf2/">PBKDF2 and SHA-1 versus SHA-2</a>. If you&rsquo;re using CommonCryptor (and particularly CommonKeyDerivation), you may be interested.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/rncryptor-titanium">RNCryptor and My Titanium Experiment</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-08-21T10:13:18-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Several months ago, I received a request to port my <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> module to <a href="http://www.appcelerator.com">Titanium</a>. I&rsquo;ve never been a fan of the JavaScript wrappers for iOS and Android. My belief and experience is that they&rsquo;re far more trouble than their worth. But the goal of RNCryptor was always to help people use AES correctly, and that&rsquo;s as important in JavaScript as it is in Objective-C. So I wrapped up RNCyptor into a Titanium module and stuck it on the <a href="https://marketplace.appcelerator.com">Appcelerator Marketplace</a>. Though RNCryptor is free, the pain of wrapping it into JavaScript led me to charge $10 for the Titanium version.</p>
+
+<p>The pain of maintaining this thing has gotten to be too much, though. I&rsquo;m releasing it today on <a href="https://github.com/rnapier/Cryptor-titanium">GitHub</a> in its current form, which is based on the older, synchronous form of RNCryptor. I may not have updated all the license text yet; if I miss any, it is under the MIT license. Thanks to those who purchased Cryptor-Titanium during its commercial life. Anyone who is interested in continuing development, please contact me (or submit a pull request).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/rncryptor-titanium">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/updated-rncryptor">Updated RNCryptor</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-07-13T16:06:30-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have brought the <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> async branch to master. This is a major change in API, but I believe much more flexible. I&rsquo;ve stripped the API down quite a lot, so please let me know if there are missing features. I&rsquo;m particularly interested in anyone who needs better support for reading and writing files. I haven&rsquo;t added any methods for that until I see how people are really using it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/phone-screen">Phone-screening Cocoa Developers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-06-26T11:15:12-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There was an <a href="http://stackoverflow.com/questions/1019636/phone-screen-questions-for-mac-os-x-developer-positions/1019759#1019759">interesting question</a> on StackOverflow that was unfortunately closed as off topic. It was off topic, but it&rsquo;s still a useful question. When phone screening potential Cocoa developers, what kinds of questions should you ask? I&rsquo;ve helped several clients screen potential candidates over the years, and so I have several questions I use to help with that.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/phone-screen">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/rncryptor-async">RNCryptor Async</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I&rsquo;ll be documenting this more formally within a few weeks, but here are the high points:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/rncryptor-async">Read on &rarr;</a>
+    </footer>
   
 
 

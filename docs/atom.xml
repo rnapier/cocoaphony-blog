@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Cocoaphony]]></title>
-  <link href="http://localhost:4000/atom.xml" rel="self"/>
-  <link href="http://localhost:4000/"/>
-  <updated>2019-04-22T22:48:54-04:00</updated>
-  <id>http://localhost:4000/</id>
+  <link href="https://robnapier.net/atom.xml" rel="self"/>
+  <link href="https://robnapier.net/"/>
+  <updated>2019-04-22T22:54:48-04:00</updated>
+  <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
     <email><![CDATA[rob@neverwood.org]]></email>
@@ -14,173 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[You're Not Alone]]></title>
-    <link href="http://localhost:4000/you're-not-alone"/>
-    <updated>2019-04-22T12:04:22-04:00</updated>
-    <id>http://localhost:4000/you're not alone</id>
-    <content type="html"><![CDATA[<h2>You&rsquo;re not alone. Swift protocols confuse us all.</h2>
-
-<p>This is going to be a fairly long series, in words if not in number of posts. I tend to ramble a bit about philosophy, and there will be quite a lot of code. Usually I&rsquo;d let the important points reveal themselves along the path. But Swift protocols are too important to let the most critical points be buried in mountains of text, so I&rsquo;m going to
-reveal all the important points here before I get started. If I forget something, I may come back and update this section. Also, if the statements in this list are either obvious to you, or not interesting, this series probably isn&rsquo;t for you.</p>
-
-<ul>
-<li>Write concrete code first. Then work out the generics.</li>
-<li>Do not create &ldquo;genericness&rdquo; for its own sake. Discover it in your concrete use case.</li>
-<li>Abstractions are choices. They cut you off from other abstractions. &ldquo;As generic as possible&rdquo; doesn&rsquo;t mean anything.</li>
-<li>The point of a PAT is to apply generic algorithms to a type. It is never to create a heterogeneous collection.</li>
-<li>Simple (non-PAT) protocols are commonly used to create a heterogeneous collection</li>
-<li>Before you add an associated type, ask: &ldquo;Would it be sensible to put this type in an array?&rdquo; If the answer is yes, do not add an associated type. Redesign.</li>
-<li>You probably don&rsquo;t need a type-eraser. If you&rsquo;re trying to put a PAT in an array, you <em>definitely</em> don&rsquo;t need a type-eraser. Redesign.</li>
-<li>Generalized existentials probably will not solve your problem. Redesign.</li>
-<li>Protocols are not abstract classes. Swift doesn&rsquo;t have abstract classes. If your protocol inheritance would make perfect sense as an abstract class hierarchy, you&rsquo;re probably on the wrong road.</li>
-<li>Protocols (almost) never conform to protocols. When you need &ldquo;a type that conforms to P,&rdquo; P is not that type.</li>
-<li>A protocol cannot <em>be</em> Equatable. It can only <em>require</em> Equatable.</li>
-<li>Aspire to more than &ldquo;mocks&rdquo; from your protocols.</li>
-<li>Protocols are not bags of syntax. They have have semantics (meanings) and exist to facilitate interesting algorithms.</li>
-</ul>
-
-
-<p>That&rsquo;s a lot to talk about, and this will be a dense and meandering series. It&rsquo;s time to dive into it. This article will just set the stage. I&rsquo;ve been wrestling with protocols since the the first day of Swift. I&rsquo;ve used them incorrectly and had to redesign so many times I&rsquo;ve lost count. I&rsquo;ve crashed the compiler so many times that it&rsquo;s lost count. You are not alone.</p>
-
-<hr />
-
-<h2>Revisiting Crusty</h2>
-
-<p>About half the Crusty talk revolves around one long example, a “diagramming app where you can drag and drop shapes on a drawing surface and interact with them.” It’s a very classic object-oriented problem, and in an OOP language I&rsquo;d probably focus on laying out the model classes first. Maybe something like this:</p>
-
-<pre><code>class Shape {
-    var center: CGPoint
-    init(center: CGPoint) {
-        self.center = center
-    }
-}
-
-class Circle : Shape {
-    var radius: CGFloat
-    init(center: CGPoint, radius: CGFloat) {
-        self.radius = radius
-        super.init(center: center)
-    }
-}
-</code></pre>
-
-<p>That feels ok at first glance, but it actually has some pretty major problems already. Yes, there&rsquo;s the reference/value type arguments about unintentional sharing and mutable state, but that&rsquo;s not really my focus here. We could make these types immutable and make those problems go away (creating other problems, but still&hellip;.) The real problem in my opinion is the <code>center</code> property. What happens when I try to implement Polygon?</p>
-
-<pre><code>class Polygon : Shape {
-    var corners: [CGPoint]
-    init(corners: [CGPoint]) {
-        self.corners = corners
-        super.init(center: ???) // What is the center?
-    }
-}
-</code></pre>
-
-<p>Is the center the <a href="https://en.wikipedia.org/wiki/Centroid">centroid</a>, or the center of the bounding box? It&rsquo;s implemented as a property in Shape, so every subclass must maintain it as a property and keep it in sync with any changes to other properties. Is it even used by anything? Do we need to make these decisions yet?</p>
-
-<p>The problem with class inheritance is that it pushes you to make all these choices early, before you&rsquo;ve worked out your use cases. The power of protocol-oriented programming is that it lets you make these decisions late. In Swift, I&rsquo;ve learned to implement Circle and Polygon this way:</p>
-
-<pre><code>struct Circle {
-    var center: CGPoint
-    var radius: CGFloat
-}
-
-struct Polygon {
-    var corners: [CGPoint]
-}
-</code></pre>
-
-<p>That&rsquo;s it. No protocols. No inheritance. Nothing. It&rsquo;s data, stored in whatever is convenient for that data. But I probably wouldn&rsquo;t create these at all, yet. I don&rsquo;t know what I&rsquo;m going to do with this data. Instead of starting with models, start with the caller.</p>
-
-<p>My goal is to draw &ldquo;things&rdquo; of some kind in a CGContext:</p>
-
-<pre><code>for thing in things {
-    thing.draw(in: context)
-}
-</code></pre>
-
-<p>What should I call these Things? Shapes? Kind of, but that&rsquo;s not really what defines them here. They&rsquo;re just &ldquo;something that can draw itself into a context.&rdquo; And they need exactly one method, <code>draw</code>, so Drawable is a good name.</p>
-
-<pre><code>protocol Drawable {
-    func draw(in context: CGContext)
-}
-</code></pre>
-
-<p>Some of you have seen Crusty&rsquo;s talk and you might be shouting &ldquo;no, no, not CGContext. You want Renderer.&rdquo; But I don&rsquo;t, at least not yet. That isn&rsquo;t my use case. I just need to draw &ldquo;drawable things&rdquo; in a CGContext. Build simply. Then find your protocols. I&rsquo;m hoping this is going to work out, but to be sure, I should make a few of these Drawables and see if this idea makes sense.</p>
-
-<p>The simplest thing to draw is a circle, so I&rsquo;m hoping this is easy to draw:</p>
-
-<pre><code>extension Circle : Drawable {
-    func draw(in context: CGContext) {
-        context.addArc(center: center, radius: radius,
-                       startAngle: 0, endAngle: .pi*2,
-                       clockwise: true)
-    }
-}
-</code></pre>
-
-<p>Looks good. That&rsquo;s exactly the kind of to-the-point method I expect in order to implement Drawable.</p>
-
-<pre><code>extension Polygon : Drawable {
-    func draw(in context: CGContext) {
-      context.move(to: corners.last!)
-      for p in corners { context.addLine(to: p) }
-    }
-}
-</code></pre>
-
-<p>And again, looking very good and to-the-point. We should try something a little different, like a container for other Drawables:</p>
-
-<pre><code>struct Diagram {
-    mutating func add(_ other: Drawable) {
-        elements.append(other)
-    }
-
-    var elements: [Drawable] = []
-}
-
-extension Diagram: Drawable {
-    func draw(in context: CGContext) {
-        for f in elements { f.draw(in: context) }
-    }
-}
-</code></pre>
-
-<p>Again, this looks very straight forward. It&rsquo;s important to try to conform several kinds of types early in the process. You want to find where your protocol might run into trouble. If all you implement are the trivial types, then there may be major problems lurking in your design. For example, here&rsquo;s a Drawable that Crusty didn&rsquo;t consider:</p>
-
-<pre><code>struct Text {
-    var position: CGPoint
-    var attributedString: NSAttributedString
-}
-
-extension Text: Drawable {
-    func draw(in context: CGContext) {
-
-        // Configure the context
-        context.textMatrix = .identity
-        context.textPosition = position
-
-        // Draw the text
-        let line = CTLineCreateWithAttributedString(attributedString)
-        CTLineDraw(line, context)
-    }
-}
-</code></pre>
-
-<p>That&rsquo;s actually a bit complicated. It&rsquo;s only four lines, but it already makes me a little nervous. I know I want to swap out CGContext at some point, but this requires Core Text functions that aren&rsquo;t part of CGContext. That tells me it&rsquo;s time to start thinking about abstracting CGContext before this gets out of hand.</p>
-
-<hr />
-
-<blockquote><blockquote><p>Another case is where the instances of the abstraction are just &ldquo;sinks.&rdquo; Like, our Renderers, for example. So, we&rsquo;re just pumping, we&rsquo;re just pumping information into that thing, into that Renderer, right?
-<a href="https://developer.apple.com/videos/play/wwdc2015/408/?time=2643">https://developer.apple.com/videos/play/wwdc2015/408/?time=2643</a>
-Dave Abrahams (Crusty)</p></blockquote></blockquote>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Protocols I: Start With a Protocol]]></title>
-    <link href="http://localhost:4000/start-with-a-protocol"/>
+    <link href="https://robnapier.net/start-with-a-protocol"/>
     <updated>2019-04-22T00:00:00-04:00</updated>
-    <id>http://localhost:4000/start-with-a-protocol</id>
+    <id>https://robnapier.net/start-with-a-protocol</id>
     <content type="html"><![CDATA[<h2>In the beginning, Crusty</h2>
 
 <p>In 2015, at WWDC, <a href="https://twitter.com/DaveAbrahams">Dave Abrahams</a> gave what I believe is still the greatest Swift talk ever given, and certainly the most influential. <a href="https://developer.apple.com/videos/play/wwdc2015/408/">”Protocol-Oriented Programming in Swift,”</a> or as it is more affectionately known, “The Crusty Talk.”</p>
@@ -249,19 +86,10 @@ protocol Request {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Platitudes and Manifestos]]></title>
-    <link href="http://localhost:4000/agile"/>
-    <updated>2018-02-25T00:00:00-05:00</updated>
-    <id>http://localhost:4000/agile</id>
-    <content type="html"><![CDATA[<p>I had a brief <a href="https://twitter.com/cocoaphony/status/967801456962297856">Twitter discussion</a> about Agile and it got me thinking about what&rsquo;s worked and hasn&rsquo;t worked in my teams. I&rsquo;ve been a professional developer for about 30 years now. I&rsquo;ve worked on a few dozen products with about 20 different teams.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[A Conditional Breakpoint]]></title>
-    <link href="http://localhost:4000/conditional-breakpoint"/>
+    <link href="https://robnapier.net/conditional-breakpoint"/>
     <updated>2017-04-23T11:59:20-04:00</updated>
-    <id>http://localhost:4000/conditional-breakpoint</id>
+    <id>https://robnapier.net/conditional-breakpoint</id>
     <content type="html"><![CDATA[<p><a href="https://twitter.com/jamesdempsey/status/855979622655291392">I&rsquo;m now a Conditional Breakpoint.</a> It&rsquo;s been a dream of mine for long time, and it finally happened at <a href="http://cocoaconf.com/chicago-2017/sessions/breakpoint-jam">CocoaConf Chicago</a>. There are folks who have played extensively with <a href="http://jamesdempsey.net/2013/03/02/introducing-the-breakpoint-jam-at-cocoaconf-chicago/">James Dempsey</a>, and those are the Breakpoints. If you&rsquo;ve only played occasionally (even once), you&rsquo;re a Conditional Breakpoint.</p>
 
 <!--more-->
@@ -269,7 +97,7 @@ protocol Request {
 
 <p>Originally, I wasn&rsquo;t comfortable being a full &ldquo;Conditional.&rdquo; I&rsquo;m not much of a guitarist. I can play along reasonably if there&rsquo;s someone to cover my mistakes, and a group probably sounds slightly better with me than without. But listening to me play alone is an act of love and friendship, not something you&rsquo;d do on purpose. So I kind of wanted to be called a &ldquo;Provisional Breakpoint&rdquo; instead. But that was wrong. Someone who&rsquo;s played at a Breakpoint Jam is a Conditional Breakpoint. That&rsquo;s what it means. If you&rsquo;ve done it, you&rsquo;ve earned it.</p>
 
-<p>Everyone who played guitar that night was a Conditional, but <a href="https://twitter.com/designatednerd">Ellen Shapiro</a> was clearly our leader. She plays with an energy and style that I want to emulate. She&rsquo;s much better than I am, but what I&rsquo;ve played in years, she&rsquo;s played in decades, so maybe that&rsquo;s natural. <a href="http://localhost:4000/copying">Choosing the right people to copy is a worthwhile skill in itself.</a> There&rsquo;s nothing wrong with being a beginner. There&rsquo;s nothing wrong with learning and flailing and trying again. There&rsquo;s nothing wrong with letting someone mentor you. And there are a lot of ways to mentor. You might not even know when you&rsquo;re doing it.</p>
+<p>Everyone who played guitar that night was a Conditional, but <a href="https://twitter.com/designatednerd">Ellen Shapiro</a> was clearly our leader. She plays with an energy and style that I want to emulate. She&rsquo;s much better than I am, but what I&rsquo;ve played in years, she&rsquo;s played in decades, so maybe that&rsquo;s natural. <a href="https://robnapier.net/copying">Choosing the right people to copy is a worthwhile skill in itself.</a> There&rsquo;s nothing wrong with being a beginner. There&rsquo;s nothing wrong with learning and flailing and trying again. There&rsquo;s nothing wrong with letting someone mentor you. And there are a lot of ways to mentor. You might not even know when you&rsquo;re doing it.</p>
 
 <p>When I first asked to play with the Breakpoints a few weeks ago, James said yes, and I immediately panicked a little on the inside, and I asked for the whole setlist so I could practice. And he said sure and sent them. But then he said, you know, it’s fine to just play some of the songs, or even drop out of parts if you’re not up for it. It’s better to have a few songs you’re good at than a bunch you stumble through. And I said yeah, yeah, yeah, I know that. I’m cool. And I did kind of know. But not really. I’d been planning to practice them all and just beat myself up a lot everywhere I stumbled. I needed someone who knows more than me to give me permission to be a beginner, but still let me play. Sometimes you&rsquo;ll never know the impact of a small kindness.</p>
 
@@ -287,9 +115,9 @@ protocol Request {
   
   <entry>
     <title type="html"><![CDATA[Refactoring Slow and Steady]]></title>
-    <link href="http://localhost:4000/refactoring"/>
+    <link href="https://robnapier.net/refactoring"/>
     <updated>2017-02-13T12:21:55-05:00</updated>
-    <id>http://localhost:4000/refactoring</id>
+    <id>https://robnapier.net/refactoring</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been talking with folks on a Slack about refactoring today, and I thought I&rsquo;d put some of my thoughts here. Maybe a little less polished than I&rsquo;d like, but I wanted to get them out of my head and down on &ldquo;paper.&rdquo;</p>
 
 <!--more-->
@@ -336,196 +164,10 @@ Testing is great. Testing is critical. Testing is necessary. But unit testing is
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[La Trahison Du Temps]]></title>
-    <link href="http://localhost:4000/dates"/>
-    <updated>2016-12-17T14:01:59-05:00</updated>
-    <id>http://localhost:4000/dates</id>
-    <content type="html"><![CDATA[<p style="text-align:center;"><img src="http://localhost:4000/images/trahison.png" alt="La Trahison du Temps" /></p>
-
-<!-- more -->
-
-
-<p>If you&rsquo;ve ever said &ldquo;this <code>Date</code> is in local time, but that <code>Date</code> is in UTC,&rdquo; you don&rsquo;t understand <code>Date</code>, and this post is written for you. I may ramble a little about philosophy, but stick with me. What we&rsquo;re going to talk about today is very practical, and when you understand it, you&rsquo;ll avoid one of the most common mistakes in Cocoa.</p>
-
-<p>We discovered time, but we invented dates. That&rsquo;s why date programming is hard. Dates are all about people, and people are weird, so dates are weird. Time is simple, at least to a first approximation, at least on the scale that humans experience it. So when programmers confuse dates and times, they over-simplify one and over-complicate the other.</p>
-
-<h2>What is time?</h2>
-
-<p>So what is time if it&rsquo;s so simple? For our purposes, it&rsquo;s just when things happen. I want you to put away any fancy Relativistic notions you think you know from skimming Wikipedia. Those don&rsquo;t matter here. I want you to forget about clock skew and leap seconds. For today, we all have a stopwatch, and if we reset our stopwatch together (which we can do because we say we can), we will always agree on how much time has passed since then. Writing software is math, and math says you can make up any rules you like, and those are our rules. Time is simple because we say it&rsquo;s simple.</p>
-
-<p>So if we all agree on how much time has passed, how do we represent that? With a <code>TimeInterval</code>, which is a vector in time. Time is one-dimensional, so we can represent our vector with one signed number scaled to some unit (seconds). And that&rsquo;s what we do. In Cocoa, <code>TimeInterval</code> is just a typealias for <code>Double</code>.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
-
-<p>So, when our <code>TimeInterval</code> says 120 seconds, what is it in Greenwich? <em>Umm… 120 seconds.</em> And what is it in San Francisco? <em>Umm… 120 seconds.</em> And what is it on the Moon or on Mars? <em>Umm… why do you keep asking stupid questions? It&rsquo;s always going to be 120 seconds for everyone!</em></p>
-
-<p>Exactly. Hold that thought.</p>
-
-<h2>What is a date?</h2>
-
-<p>How many seconds are there between now and 2:00 PM? Well, that depends, doesn&rsquo;t it? Where are we? If you look at your clock and it says 1:00 PM, then you might say 3600, but would someone 1000 miles to the east or west agree? What if you were traveling and crossing time zones? What does &ldquo;how long until 2:00 PM&rdquo; mean in that case? If you cross back and forth over a time zone line, you could avoid 2:00 PM indefinitely. What would someone on Mars say? Does 2:00 PM make sense if you&rsquo;re not on the Earth? Clearly &ldquo;now until 2:00 PM&rdquo; isn&rsquo;t an unambiguous time interval. It requires a lot of context and might not even be a meaningful question.</p>
-
-<p>But maybe the problem is that the question includes &ldquo;now.&rdquo; Let&rsquo;s try something simpler. I want to sleep eight hours, and it is now 10:00 PM. When time should I wake up? There are at least three answers, depending on what day it is and what the local DST rules are. What about on Mars?</p>
-
-<p>I like throwing Mars in there because it forces you to think about context. If a calculation works the same on Mars as it does in New York, then we are just talking about time. But if we need more context, then we probably need a date.</p>
-
-<h2>What is a <code>Date</code>?</h2>
-
-<p>So what does that tell us about <code>Date</code>? It tells us that <code>Date</code> is actually a time. In fact, it&rsquo;s an <em>absolute point</em> in time. That means if I have a <code>Date</code> and you have a <code>Date</code>, we&rsquo;ll always agree which one occurs first. That&rsquo;s what it means to be an <em>absolute</em> point in time. It&rsquo;s not relative to anything. If I create a <code>Date</code> using <code>Date(timeIntervalSince1970:)</code> and you create a <code>Date</code> using <code>Date(timeIntervalSinceReferenceDate:)</code>, we <em>still</em> will agree which one comes first. From the public interface, all <code>Date</code> objects are directly comparable. I can always subtract two <code>Date</code> objects, with no other information, and get a <code>TimeInterval</code> that&rsquo;s meaningful.</p>
-
-<p>Compare this to <code>CGPoint</code>, which is not a point. It&rsquo;s an offset (vector) applied to some unknown origin. If I give you two <code>CGPoint</code> objects, you can&rsquo;t tell me which one is &ldquo;to the left&rdquo; of the other unless I tell you separately what coordinate spaces they come from (and how those coordinate spaces relate to each other, if at all).<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
-
-<p>So here&rsquo;s the takeaway. <strong>If you think a <code>Date</code> is &ldquo;in&rdquo; some timezone, you misunderstand <code>Date</code>.</strong> A <code>Date</code> does not care what city or planet you&rsquo;re on, what day it is, or what calendar you use. Everyone can agree on when a <code>Date</code> occurs. It neither requires, nor is influenced by, context.</p>
-
-<h2>Stop throwing away the context</h2>
-
-<p>OK, so I&rsquo;ve ranted on about this for quite a while. Why do we care?</p>
-
-<p>Because developers <em>often</em> throw away necessary context by switching from a date to a time when they shouldn&rsquo;t. Let&rsquo;s say you&rsquo;re writing a calendaring app and a user creates an appointment for <a href="http://cocoaconf.com/yosemite">9:00 AM on March 21, 2017 in Yosemite National Park</a>. So you store a <code>Date</code> in your database:</p>
-
-<pre><code>let formatter = DateFormatter()
-formatter.dateStyle = .medium
-formatter.timeStyle = .long
-let date = formatter.date(from: "Mar 21, 2017, 9:00:00 AM PST")
-</code></pre>
-
-<p><strong>This is almost certainly wrong.</strong></p>
-
-<p>According to current US law, on March 12, 2017, Yosmite will switch from PST to PDT, and that&rsquo;s the assumption you&rsquo;ve stored in <code>date</code>. But what if the law changes? &ldquo;Oh, that would never happen.&rdquo; <a href="https://kb.iu.edu/d/atrm">Tell that to Microsoft.</a> In 2006, Indiana started observing DST, and Exchange calendars messed up their meeting times because they stored everything in UTC. In 2007, the whole United States changed the dates of DST observance and Exchange calendars broke again. Canada and Australia also changed their rules in 2007, Australia changed them again in 2009. Chile abolished DST in 2015, but re-introduced it in 2016 (but not everywhere). Egypt, Haiti, and Uruguay abolished it in 2015. Tongo will started observing it in 2016. Until 2013, Israel <a href="https://en.wikipedia.org/wiki/Israel_Summer_Time#2005.E2.80.932012">changed the rules unpredictably every year</a>. Morocco switches four times a year rather than twice. The list goes on and on. Many countries (including the United States) continually debate whether to do away with DST entirely, so future changes should not be a surprise. Hungary will abolish it in 2017. If you&rsquo;re storing future dates as &ldquo;seconds since the epoch&rdquo; or &ldquo;UTC,&rdquo; you&rsquo;re gambling that nothing is going to change in a field where things change all the time.</p>
-
-<p>The problem is that &ldquo;Mar 21, 2017, 9:00:00 AM PST&rdquo; is not a time. It&rsquo;s the <em>name</em> of a time. And it&rsquo;s possible that it refers to multiple times or to no time at all.</p>
-
-<h2>Names are ambiguous</h2>
-
-<p>Some names are ambiguous. <a href="https://en.wikipedia.org/wiki/Adoption_of_the_Gregorian_calendar">December 10, 1582</a> never happened in France. During a DST change, there might be two points in time called &ldquo;1:30 AM&rdquo; or there might be no points in time with that name. Things change. You don&rsquo;t know what the future rules will be.</p>
-
-<p>Not all names even mean a specific moment. New Year&rsquo;s Day occurs on January 1 <em>wherever you are</em>. If you put &ldquo;New Year&rsquo;s Day&rdquo; on your calendar and then move to another time zone, you don&rsquo;t expect New Year&rsquo;s to now be 9 PM on Dec 31 till 9 PM on Jan 1. If I want to get up at 6 AM every day, please don&rsquo;t wake me up at 3 AM or 11 AM when I travel. Converting &ldquo;January 1&rdquo; or &ldquo;6 AM&rdquo; into a <code>Date</code> object is going to fail in very annoying ways.</p>
-
-<p>So how do we deal with all this?</p>
-
-<h2>Calendars and components</h2>
-
-<p>When you have a time to deal with, you need to ask yourself whether this really refers to a specific moment in time, or if it is just the name of a moment. If you mean &ldquo;X seconds from now, no matter what name that time has,&rdquo; then yes, please use a <code>Date</code>. (Hint: if this is longer than a few hours, you probably don&rsquo;t mean this.) But if you mean &ldquo;when a time with this name occurs, no matter how many seconds that takes,&rdquo; then the tools you want are <code>Calendar</code> and <code>DateComponents</code>.</p>
-
-<p><code>DateComponents</code> are incredibly powerful because most of the components are optional. You can talk about &ldquo;March 21, 2017&rdquo; without having to add &ldquo;at midnight&rdquo; or any other &ldquo;magic time.&rdquo; When you want to convert that description of a time into an actual time, you use a <code>Calendar</code>.</p>
-
-<pre><code>let dateComps = DateComponents(calendar: Calendar(identifier: .gregorian),
-                               timeZone: TimeZone(identifier: "America/Los_Angeles"),
-                               year: 2017, month: 3, day: 21, hour: 9)
-</code></pre>
-
-<p>(Do not use <code>Calendar.current</code> unless you really mean &ldquo;the current calendar, even if it&rsquo;s not Gregorian.&rdquo;)</p>
-
-<p><code>DateComponents</code> doesn&rsquo;t solve all time problems. DST rules will only update when the OS upgrades. iOS doesn&rsquo;t provide any way to deal with <a href="https://www.federalregister.gov/documents/2010/09/29/2010-24376/relocation-of-standard-time-zone-boundary-in-the-state-of-north-dakota-mercer-county">changes in time zone boundaries</a>. And sometimes (especially with user-provided dates) it&rsquo;s not clear whether the user meant a nominal or absolute time. But by storing all the information the user gave you, you have the tools to make decisions and build UIs that can help the user through time rule changes. If you throw away most of the information, when things change you&rsquo;re going to be stuck.</p>
-
-<h2>86,400 seconds isn&rsquo;t what you think it is</h2>
-
-<p>I see this line of code a lot, and time problems often follow:</p>
-
-<pre><code>let oneDay = 60 * 60 * 24
-</code></pre>
-
-<p>This line, though, is usually fine:</p>
-
-<pre><code>let approximatelyOneDay = 60 * 60 * 24
-</code></pre>
-
-<p>It is completely normal for a day to be 23, 24, or 25 hours due to DST changes. If the user gets on an airplane, then a &ldquo;day&rdquo; could be just about any length. If that&rsquo;s fine, if you just mean &ldquo;about once a day or whatever 24 hours turns out to be,&rdquo; then this is fine. But if you&rsquo;re using this to make something happen at the same time every day, this is going to fail twice a year in many places.</p>
-
-<p>If you mean &ldquo;tomorrow at the same time,&rdquo; you need at least to use a <code>Calendar</code>:</p>
-
-<pre><code>Calendar.current.date(byAdding: DateComponents(day: 1), to: Date())
-</code></pre>
-
-<p>(<code>Calendar.current</code> is correct here. We mean &ldquo;tomorrow, according to the user&rsquo;s calendar.&rdquo; But in practice, this doesn&rsquo;t matter, at least until they add a Martian calendar. All supported calendars have the same day length.)</p>
-<div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>I wish it weren&rsquo;t a typealias because then we could put extensions on it without extending <code>Double</code>, but that&rsquo;s how it is.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-<li id="fn:2">
-<p>Thanks to <a href="https://twitter.com/gte/status/809541556097130496">Guy English</a> for pointing this out.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
-</ol>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[La Trahison Du Temps]]></title>
-    <link href="http://localhost:4000/dates-orig"/>
-    <updated>2016-12-17T14:01:59-05:00</updated>
-    <id>http://localhost:4000/dates-orig</id>
-    <content type="html"><![CDATA[<p style="text-align:center;"><img src="http://localhost:4000/images/trahison.png" alt="La Trahison du Temps" /></p>
-
-<!-- more -->
-
-
-<p>If you&rsquo;ve ever said &ldquo;this <code>Date</code> is in local time, but that <code>Date</code> is in UTC,&rdquo; you don&rsquo;t understand <code>Date</code>, and this post is written for you. I may ramble a little about philosophy, but stick with me. What we&rsquo;re going to talk about today is very practical, and when you understand it, you&rsquo;ll avoid one of the most common mistakes in Cocoa.</p>
-
-<p>We discovered time, but we invented dates. That&rsquo;s why date programming is hard. Dates are all about people, and people are weird, so dates are weird. Time is simple, at least to a first approximation, at least on the scale that humans experience it. So when programmers confuse dates and times, they over-simplify one and over-complicate the other.</p>
-
-<h2>What is time?</h2>
-
-<p>So what is time if it&rsquo;s so simple? For our purposes, it&rsquo;s just when things happen. I want you to put away any fancy Relativistic notions you think you know from skimming Wikipedia. Those don&rsquo;t matter here. I want you to forget about clock skew and leap seconds. For today, we all have a stopwatch, and if we reset our stopwatch together (which we can do because we say we can), we will always agree on how much time has passed since then. Writing software is math, and math says you can make up any rules you like, and those are our rules. Time is simple because we say it&rsquo;s simple.</p>
-
-<p>So if we all agree on how much time has passed, how do we represent that? With a <code>TimeInterval</code>, which is a vector in time. Time is one-dimensional, so we can represent our vector with one signed number scaled to some unit (seconds). And that&rsquo;s what we do. In Cocoa, <code>TimeInterval</code> is just a typealias for <code>Double</code>.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
-
-<p>So, when our <code>TimeInterval</code> says 120 seconds, what is it in Greenwich? <em>Umm… 120 seconds.</em> And what is it in San Francisco? <em>Umm… 120 seconds.</em> And what is it on the Moon or on Mars? <em>Umm… why do you keep asking stupid questions? It&rsquo;s always going to be 120 seconds for everyone!</em></p>
-
-<p>Exactly. Hold that thought.</p>
-
-<h2>What is a date?</h2>
-
-<p>How many seconds is it between now and 2:00 PM? Well, that depends, doesn&rsquo;t it? Where are we? If you look at your clock and it says 1:00 PM, then you might say 3600, but would someone 1000 miles to the east or west agree? What if you were traveling and crossing time zones? What does &ldquo;how long until 2:00 PM&rdquo; mean in that case? If you cross back and forth over a time zone line, you could avoid 2:00 PM indefinitely. What would someone on the Moon or Mars say? Does 2:00 PM make sense if you&rsquo;re not on the Earth? Clearly &ldquo;now until 2:00 PM&rdquo; isn&rsquo;t an unambiguous time interval. It requires a lot of context and might not even be a meaningful question.</p>
-
-<p>But maybe the problem is that the question includes &ldquo;now.&rdquo; Let&rsquo;s try something simpler. I want to sleep eight hours, and it is now 10:00 PM. When time should I wake up? There are at least three answers, depending on what day it is and what the local DST rules are. But if we are on the Moon, it might be something completely different.</p>
-
-<p>I like throwing the Moon in as a test because it forces you to think about context. If a calculation works the same on the Moon as it does in New York, then we are just talking about time. But if we need more context, then we probably need a date.</p>
-
-<h2>What is a <code>Date</code>?</h2>
-
-<p>So what does that tell us about <code>Date</code>? It tells us that <code>Date</code> is actually a time. In fact, it&rsquo;s an <em>absolute point</em> in time. That means if I have a <code>Date</code> and you have a <code>Date</code>, we will always agree which one occurs first. And this really is an <em>absolute</em> point in time. It&rsquo;s not relative to anything. If I create a <code>Date</code> using <code>Date(timeIntervalSince1970:)</code> and you create a <code>Date</code> using <code>Date(timeIntervalSinceReferenceDate:)</code>, we <em>still</em> will agree which one comes first. From the public interface, all <code>Date</code> objects are directly comparable. I can always subtract two <code>Date</code> objects, with no other information, and get a <code>TimeInterval</code> that everyone will agree on..</p>
-
-<p>Compare this to <code>CGPoint</code>, which is not a point. It&rsquo;s an offset (vector) applied to some unknown origin. If I give you two <code>CGPoint</code> objects, you can&rsquo;t tell me which one is &ldquo;to the left&rdquo; of the other unless I tell you separately what coordinate spaces they come from (and how those coordinate spaces relate to each other, if at all).<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
-
-<p>So here&rsquo;s the takeaway. <strong>If you think a <code>Date</code> is &ldquo;in&rdquo; some timezone, you misunderstand <code>Date</code>.</strong> A <code>Date</code> does not care what city or planet you&rsquo;re on, what day it is, or what calendar you use. Everyone can agree on when a <code>Date</code> occurs. It neither requires, nor is influenced by, any external factor.</p>
-
-<h2>Stop throwing away the context</h2>
-
-<p>OK, so I&rsquo;ve ranted on about this for quite a while. Why do we care?</p>
-
-<p>Because developers <em>often</em> throw away necessary context by switching from a date to a time when they shouldn&rsquo;t. Let&rsquo;s say you&rsquo;re writing a calendaring app and a user creates an appointment for <a href="http://cocoaconf.com/yosemite">9:00 AM on March 21, 2017 in Yosemite National Park</a>. You want to store your data correctly, so you convert it to a &ldquo;UTC <code>Date</code>&rdquo; and store it.<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
-
-<pre><code>let formatter = DateFormatter()
-formatter.dateStyle = .medium
-formatter.timeStyle = .long
-let date = formatter.date(from: "Mar 21, 2017, 9:00:00 AM PST")
-</code></pre>
-
-<p><strong>This is almost certainly wrong.</strong></p>
-
-<p>According to current law, on March 12, 2017, Yosmite will go from PST to PDT, and that&rsquo;s the assumption you&rsquo;ve stored in <code>date</code>. But what if the law changes? &ldquo;Oh, that would never happen.&rdquo; <a href="https://kb.iu.edu/d/atrm">Tell that to Microsoft.</a> In 2006, Indiana started observing DST, and Exchange calendars messed up their meeting times because they stored everything in UTC. In 2007, the whole United States changed the dates of DST observance and Exchange calendars broke again. Canada and Australia also changed their rules in 2007, Australia changed them again in 2009. Chile abolished it in 2015, but re-introduced it in 2016 (but not everywhere). Egypt, Haiti, and Uruguay abolished it in 2015. Tongo will started observing it in 2016. Until 2013, Israel <a href="https://en.wikipedia.org/wiki/Israel_Summer_Time#2005.E2.80.932012">changed the rules unpredictably every year</a>. Morocco changes four times a year rather than twice. The list goes on and on. Many countries (including the United States) continually debate whether to do away with DST, so future changes should not be a surprise (Hungary will abolish it in 2017). If you&rsquo;re storing future dates as &ldquo;seconds since the epoch&rdquo; or &ldquo;UTC,&rdquo; you&rsquo;re gambling that nothing is going to change in a field where things change all the time.</p>
-
-<p>The problem is that &ldquo;Mar 21, 2017, 9:00:00 AM PST&rdquo; is not a time. It is the <em>name</em> of a time. And it&rsquo;s possible that it refers to multiple times or to no time at all.</p>
-<div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>I wish it weren&rsquo;t a typealias because then we could put extensions on it without extending <code>Double</code>, but that&rsquo;s how it is.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-<li id="fn:2">
-<p>Thanks to <a href="https://twitter.com/gte/status/809541556097130496">Guy English</a> for pointing this out.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
-<li id="fn:3">
-<p>As we discussed, there&rsquo;s no such things as a &ldquo;UTC <code>Date</code>,&rdquo; but I hear people say this all the time.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
-</ol>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Talking and Teaching]]></title>
-    <link href="http://localhost:4000/talking"/>
+    <link href="https://robnapier.net/talking"/>
     <updated>2016-11-29T10:35:09-05:00</updated>
-    <id>http://localhost:4000/talking</id>
+    <id>https://robnapier.net/talking</id>
     <content type="html"><![CDATA[<p><a href="https://twitter.com/pepibumur">Pedro Piñera</a> makes some important points in his article <a href="http://ppinera.es/2016/11/16/in-a-world.html">In a world&hellip;</a>. There are a number of things in there, and you should go read it, but I want to focus on one part, which is the observation that the core &ldquo;iOS speaker circle&rdquo; is a fairly small group of people. Pedro notes:</p>
 
 <blockquote><p>There’s a huge difference when you compare a talk from someone that has been working a lot on the topic and from someone that studied the topic for giving a talk. Why do people do it then? Talks with a lot of value usually come from unknown people. From these people that from the anonymity worked on a topic and they achieved something that they were willing to share. &hellip; People don’t care about the company that person had worked for, or the newsletter that the person had written, but instead, what that person wants to share.</p></blockquote>
@@ -578,31 +220,10 @@ Yes! I totally agree with most of this, except that this is <em>positive</em>. I
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[New Developer Advice]]></title>
-    <link href="http://localhost:4000/new-developer-advice"/>
-    <updated>2016-10-18T11:27:04-04:00</updated>
-    <id>http://localhost:4000/new-developer-advice</id>
-    <content type="html"><![CDATA[<p>D.J. wrote to ask a question, and I figured others might have the same one, so I&rsquo;d write it once here.</p>
-
-<blockquote><p>I was wondering if you would be so kind as to offer some advice to a fledgling iOS developer! I am hoping to get my first job in iOS development soon.</p></blockquote>
-
-<p>Welcome to the community! I love that we are a community, and I think becoming a part of it is an important piece in becoming a great developer. iOS changes so fast and so often, that no one can really be an expert in all of it. We rely on each other to teach us the parts we don&rsquo;t know yet. And there so many new parts that even newcomers can become the expert in this or that piece. Every new &ldquo;Kit&rdquo; (GameKit, SpriteKit, CarKit, whatever) is a new world no one has explored yet. Every new platform (watches, TVs, who knows what&rsquo;s next) is another opportunity.</p>
-
-<p>I keep seeing people bring new ideas. Functional and reactive programming. Server-side Swift. Just this year I&rsquo;ve met people building ray tracers and neural nets. You can even work on the Swift language itself. The team marks &ldquo;bugs for beginners&rdquo; <a href="https://bugs.swift.org/browse/SR-2961?jql=labels%20%3D%20StarterBug">StarterBug</a> so you can find them easily.  There are so many things that no one has built yet, and every time Swift changes we have to figure out again &ldquo;what is good Swift?&rdquo; So we&rsquo;re all learning (and stumbling, and re-learning) all the time. It&rsquo;s a great time to jump in.</p>
-
-<p>We are a community. I&rsquo;m probably biased because I hang out on <a href="https://twitter.com/cocoaphony">Twitter</a>, but I think we hang out on Twitter. We hang out in <a href="http://cocoaheads.org">CocoaHeads</a> meetings. <a href="http://cocoaconf.com">We</a> <a href="http://www.dotswift.io">hang</a> <a href="http://www.tryswiftnyc.com">out</a> <a href="http://do-ios.com">in</a> <a href="https://www.playgroundscon.com">lots</a> <a href="http://nsscotland.com">and</a> <a href="http://pragmamark.org">lots</a> <a href="http://360idev.com">of</a> <a href="http://nsspain.com">conferences</a>. <a href="https://swiftconf.com">Oh</a>, <a href="http://nsnorth.ca">so</a> <a href="https://swiftsummit.com">many</a> <a href="http://www.uikonf.com">conferences</a>. Go to the places we hang out. Talking to other iOS developers will make you a better developer. Ask questions. We&rsquo;re mostly kind, though not always as kind as we should be. Be kind, and remind us when we forget.</p>
-
-<p>I learned the most about Cocoa by answering Stack Overflow questions. It wasn&rsquo;t that I knew a lot so I answered questions. It&rsquo;s that I answered questions so I learned a lot. I picked questions that seemed interesting and I researched the answer. It doesn&rsquo;t matter whether you get reputation or not. The worst thing that happens is someone else answers the question sooner or better than you do, and you learn something new anyway.</p>
-
-<p>Learn to read ObjC. You do not need to learn how to write it. It is our Latin. So much Cocoa knowledge, from blog posts to documentation to Stack Overflow, is written in ObjC. Don&rsquo;t just wait for someone to translate it for you.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Copying]]></title>
-    <link href="http://localhost:4000/copying"/>
+    <link href="https://robnapier.net/copying"/>
     <updated>2016-09-03T13:56:14-04:00</updated>
-    <id>http://localhost:4000/copying</id>
+    <id>https://robnapier.net/copying</id>
     <content type="html"><![CDATA[<p>I&rsquo;m on my way back from <a href="http://tryswiftnyc.com">try! Swift</a>, which was fantastic. Of course it had those obvious things I&rsquo;d hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.</p>
 
 <p>I travel pretty well, but sometimes I make mistakes, and this was one of those times. The deodorant I thought I&rsquo;d packed turned out to be body wash. Now there are a dozen reason that this shouldn&rsquo;t really matter, and wouldn&rsquo;t really matter given the A/C and the weather, etc., but I&rsquo;m a product of my culture, and it was a bit stressful. I tried to find a drug store on the way to the conference, but I was afraid of being late and finally resigned myself to accepting things as they are and moving on.</p>
@@ -672,9 +293,9 @@ Yes! I totally agree with most of this, except that this is <em>positive</em>. I
   
   <entry>
     <title type="html"><![CDATA[Inspiration]]></title>
-    <link href="http://localhost:4000/inspiration"/>
+    <link href="https://robnapier.net/inspiration"/>
     <updated>2016-08-26T15:46:27-04:00</updated>
-    <id>http://localhost:4000/inspiration</id>
+    <id>https://robnapier.net/inspiration</id>
     <content type="html"><![CDATA[<p>As a speaker, writer, and member of our community, <a href="http://dimsumthinking.com">Daniel Steinberg</a> is my inspiration. That&rsquo;s not a secret. If you and I have spent much time talking after a conference, I&rsquo;ve probably mentioned it. It&rsquo;s not the sort of thing you usually say to someone, and I don&rsquo;t think I ever have, but I&rsquo;ve learned a lot from his speaking style, and I constantly try to live up to his standard of kindness. I&rsquo;m not by nature very kind, so if you see me behaving that way, I&rsquo;m likely trying to do what I think Daniel might.</p>
 
 <p>This isn&rsquo;t to say we&rsquo;re close. We see each other at conferences. We email and tweet. We&rsquo;re members of a community. So of course I have some idealized picture of him in my mind, without all the this and that of a real person. Even so, he inspires me. When my wife, Janet, and I talk about what&rsquo;s ahead for our future, we always talk about Daniel and his wife, Kim. I&rsquo;ve seen them at conferences, traveling together, independent but a team, and I think, hey, we could pull that off when the kids go to school. And Janet and I talk about how to make that work. And we know we only have the shallowest understanding of their real lives, but they inspire us.</p>
@@ -686,19 +307,10 @@ Yes! I totally agree with most of this, except that this is <em>positive</em>. I
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Welcome]]></title>
-    <link href="http://localhost:4000/welcome"/>
-    <updated>2016-05-08T00:00:00-04:00</updated>
-    <id>http://localhost:4000/welcome</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve been learning the guitar for a little less than a year now. My hope some day is to be a mediocre guitar player. With practice, I think I can get there, but I&rsquo;m not there yet. Even so, I went to a guitar jam last week. It was my first time ever playing with other people. One of the guys loaned me a capo since I&rsquo;d forgotten mine. They showed me chords I didn&rsquo;t know. They pushed me to lead a song, and they made a great effort to follow my ever-changing tempo and shaking voice. By the end of the three hours, I could barely even strum, but I&rsquo;d had a fantastic time. The group encouraged me to come back.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[NSData, My Old Friend]]></title>
-    <link href="http://localhost:4000/nsdata"/>
+    <link href="https://robnapier.net/nsdata"/>
     <updated>2015-10-07T20:27:00-04:00</updated>
-    <id>http://localhost:4000/nsdata</id>
+    <id>https://robnapier.net/nsdata</id>
     <content type="html"><![CDATA[<h2>Or&hellip; &ldquo;How I learned to stop worrying, and love Foundation.&rdquo;</h2>
 
 <blockquote><p>Forgive me, NSData. I was running around with that flashy [UInt8], acting like you didn&rsquo;t have everything I need. I&rsquo;ve learned my lesson.</p>
@@ -847,9 +459,9 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   
   <entry>
     <title type="html"><![CDATA[Type-erasure in Stdlib]]></title>
-    <link href="http://localhost:4000/type-erasure-in-stdlib"/>
+    <link href="https://robnapier.net/type-erasure-in-stdlib"/>
     <updated>2015-10-06T19:05:13-04:00</updated>
-    <id>http://localhost:4000/type-erasure-in-stdlib</id>
+    <id>https://robnapier.net/type-erasure-in-stdlib</id>
     <content type="html"><![CDATA[<p>When <a href="http://robnapier.net/erasure">last we talked about type erasure</a>, I described an easy way to build type erasures using closures. And I mentioned:</p>
 
 <blockquote><p>(While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p></blockquote>
@@ -867,9 +479,9 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   
   <entry>
     <title type="html"><![CDATA[RNCryptor V4]]></title>
-    <link href="http://localhost:4000/rncryptor-v4"/>
+    <link href="https://robnapier.net/rncryptor-v4"/>
     <updated>2015-10-04T12:38:36-04:00</updated>
-    <id>http://localhost:4000/rncryptor-v4</id>
+    <id>https://robnapier.net/rncryptor-v4</id>
     <content type="html"><![CDATA[<p>After months of writing and rewriting, I am happy to finally announce <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">RNCryptor 4 beta 1</a> in Swift.</p>
 
 <p>RNCryptor 4 is a complete rewrite of RNCryptor for Swift 2 with full bridging support to Objective-C. It has a streamlined API, simpler installation, and improved internals. It continues to use the <a href="https://github.com/RNCryptor/RNCryptor-Spec/blob/master/RNCryptor-Spec-v3.md">v3 data format</a> and is fully interoperable with <a href="https://github.com/RNCryptor">other RNCryptor implementations</a>.</p>
@@ -894,9 +506,9 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   
   <entry>
     <title type="html"><![CDATA[A Little Respect for AnySequence]]></title>
-    <link href="http://localhost:4000/erasure"/>
+    <link href="https://robnapier.net/erasure"/>
     <updated>2015-08-04T15:42:00-04:00</updated>
-    <id>http://localhost:4000/erasure</id>
+    <id>https://robnapier.net/erasure</id>
     <content type="html"><![CDATA[<p>Once upon a time, when Swift was young, there were a couple of types called <code>SequenceOf</code> and <code>GeneratorOf</code>, and they could type erase stuff. &ldquo;Type erase?&rdquo; you may ask. &ldquo;I thought we <em>loved</em> types.&rdquo; We do. Don&rsquo;t worry. Our types aren&rsquo;t going anywhere. But sometimes we want them to be a little less&hellip;precise.</p>
 
 <p>In Swift 2, our little type erasers got a rename and some friends. Now they&rsquo;re all named &ldquo;Any&rdquo;-something. So <code>SequenceOf</code> became <code>AnySequence</code> and <code>GeneratorOf</code> became <code>AnyGenerator</code> and there are a gaggle of indexes and collections from <code>AnyForwardIndex</code> to <code>AnyRandomAccessCollection</code>.</p>
@@ -1040,9 +652,9 @@ struct Bird: Animal {
   
   <entry>
     <title type="html"><![CDATA[Product or Process?]]></title>
-    <link href="http://localhost:4000/product-or-process"/>
+    <link href="https://robnapier.net/product-or-process"/>
     <updated>2015-07-20T11:20:17-04:00</updated>
-    <id>http://localhost:4000/product-or-process</id>
+    <id>https://robnapier.net/product-or-process</id>
     <content type="html"><![CDATA[<p>Forgive a slight divergence. I&rsquo;ll bring it back to software development before the end.</p>
 
 <p>A friend of mine is an arborist. He takes care of a large forest, trimming and culling trees. He&rsquo;s quite good at it and enjoys it, but he&rsquo;s worried about job security. He thinks cabinet making would be a good career move. He likes to work with wood, and high-end cabinets are very expensive so there&rsquo;s clearly a lot of money there. I&rsquo;m a hobbyist woodworker, so we were talking about it.<!-- more --></p>
@@ -1105,9 +717,9 @@ struct Bird: Animal {
   
   <entry>
     <title type="html"><![CDATA[Throw Money at It]]></title>
-    <link href="http://localhost:4000/throw-money"/>
+    <link href="https://robnapier.net/throw-money"/>
     <updated>2015-06-22T14:41:00-04:00</updated>
-    <id>http://localhost:4000/throw-money</id>
+    <id>https://robnapier.net/throw-money</id>
     <content type="html"><![CDATA[<p>My dad has always been an engineer, but by the end of his career he had three-letter titles starting with &ldquo;C&rdquo;. And all my life he&rsquo;s taught me lessons, but the most important ones to me professionally were never about technical matters; they were always the talks about how large companies work. Watching some of the reactions from devs to the recent <a href="http://taylorswift.tumblr.com/post/122071902085/to-apple-love-taylor">Taylor Swift</a>/<a href="https://twitter.com/cue/status/612824775220555776">Apple</a> back-and-forth, I realized that one of my dad&rsquo;s lessons might be helpful to others.<!-- more --></p>
 
 <p>&ldquo;Can we solve this by throwing money at it?&rdquo; Problems come in two major forms: money problems and not-money problems. Money problems are the easy ones. If you can write a check and the whole problem goes away, that&rsquo;s the kind of problem you want. Lots of problems aren&rsquo;t like that. Sometimes it&rsquo;s because the check would have to be too big, but many times it&rsquo;s because no amount of money would fix the problem alone. It&rsquo;s not a &ldquo;throwing money&rdquo; problem. In fact, <em>most</em> problems are not-money problems when you dig into them.</p>
@@ -1134,10 +746,10 @@ struct Bird: Animal {
   
   <entry>
     <title type="html"><![CDATA[Re...throws?]]></title>
-    <link href="http://localhost:4000/re-throws"/>
+    <link href="https://robnapier.net/re-throws"/>
     <updated>2015-06-18T11:12:00-04:00</updated>
-    <id>http://localhost:4000/re-throws</id>
-    <content type="html"><![CDATA[<p><a href="http://localhost:4000/throw-what-dont-throw">Last time</a> we talked about how a function that can
+    <id>https://robnapier.net/re-throws</id>
+    <content type="html"><![CDATA[<p><a href="https://robnapier.net/throw-what-dont-throw">Last time</a> we talked about how a function that can
 throw errors is a different type in Swift than a function that cannot throw
 errors. And then I briefly mentioned this other thing, &ldquo;rethrows.&rdquo; Let&rsquo;s talk
 about that, and along the way explore closure types a little more and their
@@ -1387,9 +999,9 @@ can promise it&rsquo;ll only return X.</p>
   
   <entry>
     <title type="html"><![CDATA[Throw What Don't Throw]]></title>
-    <link href="http://localhost:4000/throw-what-dont-throw"/>
+    <link href="https://robnapier.net/throw-what-dont-throw"/>
     <updated>2015-06-16T20:58:00-04:00</updated>
-    <id>http://localhost:4000/throw-what-dont-throw</id>
+    <id>https://robnapier.net/throw-what-dont-throw</id>
     <content type="html"><![CDATA[<p>So say you are trying out all this interesting new <code>throw</code> stuff in Swift 2. And
 say you&rsquo;re running an early Beta in which many stdlib functions don&rsquo;t handle
 throw closures yet. Or maybe you&rsquo;re in the future and dealing with some other
@@ -1576,6 +1188,1709 @@ works can give some insight into Swift&rsquo;s new error handling system. Result
 dead; it still has interesting use cases like this one. But I expect those use
 cases to shrink, and I highly recommend exploring the new error handling and
 discover how to build great things with it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[I, for One, Welcome Our New Haskell Overlords]]></title>
+    <link href="https://robnapier.net/haskell-overlords"/>
+    <updated>2014-09-29T10:57:00-04:00</updated>
+    <id>https://robnapier.net/haskell-overlords</id>
+    <content type="html"><![CDATA[<p><a href="https://twitter.com/TacticalGrace/status/506079987565613056">Manuel Chakravarty</a> made a comment a few weeks ago:</p>
+
+<blockquote><p>By not using standard FP terminology in emerging languages like Swift, we deny learners access to a lot of existing literature.</p></blockquote>
+
+<p>I certainly agree. But there&rsquo;s a lot more to it, and I hope the functional programming community will get involved in new ways. We&rsquo;ll get there. First, a little history for the rest of us. FP folks, I&rsquo;ll get back to you in a couple of sections.</p>
+
+<!-- more -->
+
+
+<h2>Objective History</h2>
+
+<p>I remember when OOP became a thing in the 90s. I&rsquo;d been a professional developer for about a decade at that point, shipping products in QuickBASIC, FoxPro, dBase, C, and SL-1 (a phone switching language so obscure it doesn&rsquo;t even have a Wikipedia page). I&rsquo;d done hobby work in Pascal, various kinds of assembler, and even Lisp. But the closest I came to OOP were some toy projects in Borland&rsquo;s Object Windows Library for Turbo Pascal.</p>
+
+<p>This isn&rsquo;t to brag about my old-school hipsterness. If you know me, you know I don&rsquo;t have much of that. My point is that it wasn&rsquo;t so long ago that you could do a lot of professional work and never talk about objects, classes, properties, methods, or any other OOPishnesses.</p>
+
+<p>Then suddenly, Java, and good grief, how could you possibly be a real programmer if you couldn&rsquo;t abstract factory your instance interface? Java didn&rsquo;t invent OOP. Far from it. But suddenly OOP seriously mattered.</p>
+
+<blockquote><p>First they ignore you, then they laugh at you, then they fight you, then you win. &ndash; Mahatma Gandhi</p></blockquote>
+
+<p>I remember vividly people laughing at OOP. It was too academic. Too abstract. Too bloated. Too slow. Too confusing. But here we are, maybe 15 years later, and OOP is just how most programming is done.</p>
+
+<p>Don&rsquo;t get me wrong. Most developers do OOP terribly. Really, really terribly. They keep making horrible design mistakes that we&rsquo;ve known for decades are horrible design mistakes. But OOP is how you do things. It&rsquo;s the paradigm in which terrible choices are made today. And good choices too. It&rsquo;s just how things are done. It wasn&rsquo;t always that way.</p>
+
+<h2>Rise of the Lambdas</h2>
+
+<p><span class='pullquote-right' data-pullquote='A paradigm is sneaking in when you aren&#8217;t paying attention. Pay attention.'></p>
+
+<p>When I look around at FP today, I see OOP in the 90s. FP keeps creeping into languages. Python, Ruby, JavaScript, C#, Java. They didn&rsquo;t start out intentionally functional, but they keep picking up functional features. New languages like Swift and Rust self-consciously flirt with functional programming, even if they won&rsquo;t quite commit to it. Microsoft is pushing F#. Twitter is working in Scala. FP is becoming part of the landscape. Words like <em>closure</em> and <em>comprehension</em> are invading the vocabulary of professional developers. This has all happened before. This will all happen again. A paradigm is sneaking in when you aren&rsquo;t paying attention. Pay attention. There&rsquo;s a chance here to influence development practice for decades, for good or ill.</p>
+
+<p></span></p>
+
+<h2>Please Don&rsquo;t Applicative Functor the Semi-Group</h2>
+
+<p><strong>What&rsquo;s a biscuit joiner?</strong> It&rsquo;s a machine for generating half of a negative ovaloid prism.</p>
+
+<p><strong>What&rsquo;s a monad?</strong> It&rsquo;s an endofunctor with two natural transformations satisfying associativity and identity.</p>
+
+<p>Let&rsquo;s try that again&hellip;.</p>
+
+<p><strong> What&rsquo;s a biscuit joiner?</strong> It&rsquo;s a tool for cutting slots in the edges of boards. You put a little piece of wood in there that sticks out as a tab (called a &ldquo;biscuit&rdquo;) so you can glue panels together, like for a tabletop or door.</p>
+
+<p><strong>What&rsquo;s a monad?</strong> It&rsquo;s a result in a box. You can use them to chain together operations that might fail, or might happen in the future, or otherwise have some &ldquo;context&rdquo; around them that you want to pass along with the result itself. A Swift optional is one kind of monad, where the &ldquo;context&rdquo; is whether it actually has a value or not.</p>
+
+<p>None of the definitions above are complete or fully correct. But the last two are <em>useful</em> for people likely to be asking. After reading the second definition of a biscuit joiner, I wouldn&rsquo;t expect you to be able to even recognize one, let alone use it safely, but you&rsquo;d at least know when you might want to find out more about it.</p>
+
+<p><span class='pullquote-right' data-pullquote='We don&#8217;t need to be afraid of metaphor, even slightly strained metaphor.'></p>
+
+<p>The same is true for how we introduce FP concepts. We don&rsquo;t need to be afraid of metaphor, even slightly strained metaphor. I&rsquo;m looking to people more expert than I am for better metaphors, better starting points. Maybe my monad intro could be improved. I&rsquo;m aware that it doesn&rsquo;t perfectly explain why lists are also monads. But starting the discussion with monoids and the monadic laws closes the conversation. It says this is something unrelated to shipping products. It shouldn&rsquo;t be in the first paragraph, let alone the first sentence. It&rsquo;s better to start a bit wrong and build on that, than to start more correct (but still a little wrong) and make an important tool seem irrelevant.</p>
+
+<p></span></p>
+
+<p>I&rsquo;m not saying we shouldn&rsquo;t use FP terms, even opaque terms of art from category theory. I agree with what Manuel was saying at the start of this. We should call a monad a monad. We should even probably call a functor a functor (though I have a fondness for &ldquo;mappable&rdquo;). I&rsquo;m just saying we should introduce them in ways that engage the goal, which is great shipping software, not proofs for their own sake.</p>
+
+<p>There is so much we can use well without fully understanding. Carpenters do not have to learn plant biology, let alone the subatomic nature of matter, before they can learn to work with and against the grain. I&rsquo;d rather a great carpenter build my house than a great materials scientist. To ship great products, I want a programmer, not a mathematician.</p>
+
+<p>I want more people turning FP concepts into JSON parsers tied to REST clients with local databases and UI animations built on popular frameworks. We need FP experts engaging with the existing platforms, not trying to replace them with Haskell. <a href="http://robots.thoughtbot.com/ship-you-a-haskell">Ship you a Haskell</a> is a great article, but most of us work on platforms for which shipping is assumed, not news. &ldquo;Employs total referential transparency&rdquo; isn&rsquo;t particularly useful for my AppStore blurb if the program is late and the animations are glitchy. FP is a means to an end for most projects, not the end itself.</p>
+
+<p>To those of you who don&rsquo;t know Haskell, I&rsquo;m still telling you to go learn it. It&rsquo;s worth it. I just noticed that Apple&rsquo;s job descriptions for the Foundation team include &ldquo;Knowledge of Haskell, Rust, F#, or similar languages will be useful.&rdquo; But things that make sense in Haskell don&rsquo;t make sense everywhere. Haskell is just a language. Ubiquitous laziness and currying were choices of one language, not the one true functional way. They introduce tradeoffs.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> Languages that chose other tradeoffs need their own functional idioms. We shouldn&rsquo;t write JavaScript in Swift (seriously, stop it), or Haskell in Swift, or ML in Swift, or even Objective-C in Swift. We must find our way to write great Swift on its own terms. We should learn from our ancestors, not just relive their lives.</p>
+
+<h2>Swift is a Special Flower</h2>
+
+<p>Every so often there are special opportunities. Swift represents a real chance to advance the state of common practice in our industry. <a href="https://robnapier.net/swift-is-not-functional">Swift isn&rsquo;t functional</a>, but it has a lot of very interesting pieces available. And Swift will be extremely popular, by luck of birth as much as anything. I don&rsquo;t mean to disparage the Swift dev team. They&rsquo;ve done an admirable job. But if Swift weren&rsquo;t the language of iOS development, it would likely be a pretty minor thing. But since it&rsquo;s the favored language of an incredibly popular platform, and since it <em>does</em> have functional leanings, and frankly it&rsquo;s a pretty nice language to work in, it represents an incredible opportunity to positively impact a whole discipline.</p>
+
+<p>To make the most of that opportunity takes live code in non-trivial apps, not just playing around with data structures and algorithms. Many of my code examples come out of a small <a href="https://github.com/rnapier/WikipediaSearcher">Wikipedia front-end</a> I play with to see how these things might work in practice. I try to solve problems in a real (if small) iOS app and see where it takes me.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> This is the approach I recommend for any would-be FP evangelist. Build a real program with a real UI before forming too strong an opinion of what FP should look like in Swift. Engage with stdlib and Cocoa (and GCD, and Core Animation, and&hellip;), don&rsquo;t try to replace them. Don&rsquo;t assume stdlib is the way it is out of ignorance. Yes, it&rsquo;s backwards from Haskell. Yes, that makes certain kinds of composition really annoying. Maybe that just means those kinds of composition aren&rsquo;t going to be good Swift.</p>
+
+<p><span class='pullquote-right' data-pullquote='good functional approaches may look different from language to language'></p>
+
+<p>This doesn&rsquo;t stop Swift from enjoying great value from functional approaches. But it does mean that good functional approaches may look different from language to language, just like good OOP looks different from language to language. Haskell doesn&rsquo;t look like Lisp. Why should we expect Swift to look like Haskell?</p>
+
+<p></span></p>
+
+<p>Swift is like Scala. It consciously straddles two worlds. I think this should be celebrated. It means compromise, but I think it also means more users will get better software than if there were only &ldquo;good languages&rdquo; and &ldquo;shipping languages.&rdquo; We really can have languages that give the benefits of tomorrow without losing all the working components of today. I think Swift can be one of those languages.</p>
+
+<h2>The ties that >>=</h2>
+
+<p>I&rsquo;m looking for help. I&rsquo;m looking for FP veterans to bring what they&rsquo;ve learned elsewhere, mix it with the experience of long-time Cocoa devs, and build a great foundation for Swift, maybe even nudge Apple in the process.</p>
+
+<p>Much of that, I believe, is education. I have an <a href="https://robnapier.net/categories/functional">ongoing series here</a>. I&rsquo;d love to learn to teach it more effectively.</p>
+
+<p>It&rsquo;s also about good tools. The tools we use shape our thinking. I want it to be as easy as possible to write great code, and Swift has a few glaring omissions. To that end, I started a project called <a href="https://github.com/llamakit/llamakit">LlamaKit</a>, aimed at providing a small set of important tools that are easy to integrate into existing projects and should be nearly universally useful. There are much more full-lambda projects out there, particularly <a href="https://github.com/typelift">TypeLift</a>. LlamaKit isn&rsquo;t trying to fill that whole need, just provide the bare minimum to make functional programming approachable in Swift for common Cocoa problems, provide a foundation for more powerful frameworks, and help those frameworks interoperate more easily than they can today. I welcome input on the <a href="https://groups.google.com/forum/#!forum/llamakit">mailing list</a>. It&rsquo;s still early days for LlamaKit, but I think it will stabilize into something useful very soon.</p>
+
+<h2>A slight nervousness around eagles</h2>
+
+<p>Occasionally, in my more self-aggrandizing moments, I fear I am Prometheus, stealing referential transparency from the gods to bring back to poor mortals trapped in their mutating loops. And I remember what came of Prometheus.</p>
+
+<p>Then I remember I&rsquo;m just a code monkey deep down, and it&rsquo;s all just code after all. I notice the paradigm is shifting. Seems a pretty nice time to light a fire.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Swift&rsquo;s initial attempt at making things lazy by default was a disaster IMO. I&rsquo;m glad they abandoned that. It just didn&rsquo;t work with the rest of Cocoa.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>I also apply some of these things to larger, more production apps, but I have to be more careful and don&rsquo;t have the time or risk tolerance to experiment as much. That&rsquo;s why I like having a non-trivial toy app.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Go Is a Shop-built Jig]]></title>
+    <link href="https://robnapier.net/go-is-a-shop-built-jig"/>
+    <updated>2014-09-17T15:50:00-04:00</updated>
+    <id>https://robnapier.net/go-is-a-shop-built-jig</id>
+    <content type="html"><![CDATA[<p><a href="https://al3x.net/about.html">Alex Payne</a> wrote an excellent essay called <a href="https://al3x.net/2014/09/16/thoughts-on-five-years-of-emerging-languages.html">Thoughts on Five Years of Emerging Languages</a>. It called to mind something I wrote a while ago for a limited audience that I never got around to turning into a public form. Thanks to <a href="https://twitter.com/TacticalGrace">Manuel Chakravarty</a> for the link and the inspiration.</p>
+
+<p>For those who read my blog for Cocoa (and recently Swift) discussion, you may be surprised that most of my professional work right now is in Go, C, and C++ (in that order). So I thought I might take a moment to discuss Go.</p>
+
+<p>First, it&rsquo;s important to say that I really like Go. I didn&rsquo;t think I would. I&rsquo;m a language snob at heart. Before Swift, I&rsquo;d been spending a lot of time on the <a href="http://learnyouahaskell.com">functional</a> side of the <a href="http://www.scala-lang.org">street</a> with a brief dallience with <a href="http://akka.io">actors</a>. I was just about to do deeper <a href="http://clojure.org">into the parens</a>, when I wound up taking a side trip into Google-land and Go. I&rsquo;d dipped my toe into the water once before and been turned off by what seemed to be the sloppiness of the language. How variables are declared bugged me (turns out it <a href="http://gophercon.sourcegraph.com/post/83845316771/panel-discussion-with-go-team-members">bugs the lead language designer</a>, too). The multiple return types of <code>range</code> bugged me. <a href="http://blog.golang.org/strings">Strings switching between code points and bytes</a> bugged me. The fact that Go can&rsquo;t implement its own <code>append()</code> harkened back to funky Perl magic. Go just seemed sloppy and under-considered.</p>
+
+<!-- more --> 
+
+
+<p>But a coworker made a joke about rewriting an important service in Go, and after laughing about it, I thought I&rsquo;d at least take another look. It turned out to be a great fit. Go&rsquo;s bread-and-butter is concurrent network services, which is what we wanted to solve. So I dug a bit more.</p>
+
+<ul>
+<li>Very cross-platform out of the box.
+
+<ul>
+<li>Not &ldquo;sort-of cross-platform as long as it&rsquo;s unix&rdquo; like C/C++. Real-world Windows support is pretty good. No wchar/tchar/char madness.</li>
+</ul>
+</li>
+<li>Built-in cross-platform networking support that integrates with the native stack.</li>
+<li>Native binaries. No need to ship a separate interpreter, runtime, or VM.</li>
+<li>Handles concurrency very well.</li>
+<li>Pretty easy to pick up for C programmers</li>
+</ul>
+
+
+<p>It was a good fit. I went ahead and reworked the system in Go. I&rsquo;ve been very happy with the results so far.</p>
+
+<p><span class='pullquote-right' data-pullquote='Go feels under-engineered because it only solves real problems.'></p>
+
+<p>So what have I learned by actually building something? Go feels under-engineered because it only solves real problems. If you&rsquo;ve ever worked in a wood shop, you&rsquo;ve probably made a jig at some point. They&rsquo;re little pieces of wood that help you hold plywood while you cut it, or spacers that tell you where to put the guide bar for a specific tool, or hold-downs that keep a board in place while you&rsquo;re working on it. They&rsquo;re not always pretty. They often solve hyper-specific problems and work only with your specific tools. And when you look at ones that have been used a lot, they sometimes seem a little weird. There might be a random cutout in the middle. Or some little piece that sticks off at an angle. Or the corner might be missing a piece. And when you compare them to &ldquo;real&rdquo; tools, &ldquo;general&rdquo; tools like you&rsquo;d buy from a catalog, they&rsquo;re pretty homey or homely depending on how you&rsquo;re thinking about it.</p>
+
+<p></span></p>
+
+<p>But when you use one of them in your shop, you learn that the random cutout is because you store it against the wall and it would block the light switch otherwise. And if you put your hand on that little extra piece that sticks out, then the board won&rsquo;t fall at the end of the cut. And the corner… well the corner is where you messed up when you were first making it and it&rsquo;s kind of ugly, but it never actually matters when you use it. And that&rsquo;s Go. Not a single thing I mentioned in the first paragraph has actually come up as a problem. Its really good at solving the problems that it solves, which happen to be very common problems for people who need to ship software, especially networking software.</p>
+
+<p>Probably the biggest complaint people have with Go is the lack of generics. And I did run into that in just the first couple of weeks of work on my project, and I wound up with a bunch of duplicated code to work around it. And then, when it was all working, I refactored out the duplicated code. And I refactored again. And in the end, the whole thing was simpler and shorter than what I would have done with generics. So again, in the end, Go turned out to be a language for solving real problems rather than a language filled with beautiful tools, and so you build real solutions rather than finding excuses to use your beautiful tools. Don&rsquo;t try to make Go what it isn&rsquo;t. If you&rsquo;re trying to solve abstract CS problems in their most generalized forms, then you may find it frustrating. But if you&rsquo;re trying to solve specific, practical problems in the forms professional developers typically encounter, Go is quite nice.</p>
+
+<p>I recently wrote some Go code that looked basically like this:</p>
+
+<pre><code>func (f *Frobulator) frobulate() error {
+  if f.thingsToFrobulate &gt; 0 {
+    var err error
+
+    if err = logit(FrobulatingMessage); err != nil {
+      return err
+    }
+
+    if err = f.cleanupOldest(); err != nil {
+      return err
+    }
+
+    var youngest Frobable
+    if youngest, err = f.processOld(); err != nil {
+      return err
+    }
+
+    if err = f.doNewThing(youngest); err != nil {
+      return err
+    }
+  }
+
+  return f.cleanup()
+}
+</code></pre>
+
+<p>There&rsquo;s a lot of boilerplate duplication there with some &ldquo;almost the same, but kinda different&rdquo; stuff in the middle that feels awkward.</p>
+
+<p>If I were writing this in Swift with my <a href="https://github.com/LlamaKit/LlamaKit">LlamaKit</a> bells-and-functional-whistles, I might write it as:</p>
+
+<pre><code>func frobulate() -&gt; Result&lt;Void&gt; {
+  var result = success(())
+  if self.thingsToFrobulate &gt; 0 {
+    result = logit(FrobulatingMessage)
+      &gt;&gt;== self.cleanupOldest
+      &gt;&gt;== self.processOld
+      &gt;&gt;== self.doNewThing
+  }
+  return result &gt;&gt;== self.cleanup
+}
+</code></pre>
+
+<p>The Swift+LlamaKit version is half as long, and almost every line is focused on the task at hand. It feels much more elegant. There is far less duplication. But there&rsquo;s a pretty big story in how these two functions were written.</p>
+
+<p>When writing the Swift function, I found myself spending a lot of time thinking about how to write it. Should I use <code>&gt;&gt;==</code> or <code>.flatMap()</code>? Should I use my custom <code>Result</code> here at all, or should I stick to standard Swift and return <code>NSError?</code>, or maybe <code>Bool</code> with an <code>NSErrorPtr</code>? This was my first time using <code>Result&lt;Void&gt;</code>, and I started asking myself if I should create a typealias for that and maybe a helper function for the slightly strange looking <code>success(())</code>. The <code>var</code> bothered me. It always feels like a hack in FP, like you&rsquo;re not smart enough to do it right. I wrote a different version that didn&rsquo;t have a <code>var</code>. That duplicated <code>self.cleanup</code> in two places. So I started working on a new function that would let me include the conditional in the functional composition. I made and re-made a lot of choices. <sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<p><span class='pullquote-right' data-pullquote='When writing the Go function, I started at the top and typed until I got to the bottom.'></p>
+
+<p>When writing the Go function, I started at the top and typed until I got to the bottom. And that was it. There aren&rsquo;t very many ways to write this function in Go. I expect that most Go programmers, given the same set of helper functions, would have written it almost identically. Because of gofmt, I don&rsquo;t even make formatting decisions.</p>
+
+<p></span></p>
+
+<p>I could probably spend another hour polishing my dozen-line Swift function and building generic tools to make it easier in the future for people (at least those who use my toolkits) to write this kind of code beautifully.</p>
+
+<p>Or I could write it in Go in about 2 minutes and move onto fixing the next bug in the backlog.</p>
+
+<p>I admit, I would rather spend my time writing generic, elegant functions that help developers think deeply and correctly about their programs. Like Alex, falling back on for-loops and mutable state makes me feel like a bad programmer. But there is a certain tension between all that and shipping things today.</p>
+
+<p>Did I mention Go compiles <em>really fast</em>?</p>
+
+<p>But late at night, when it&rsquo;s my own time for my own projects, it&rsquo;s Swift I&rsquo;d rather work in.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>The underlying issue here isn&rsquo;t that I chose to use special operators out of LlamaKit. I could have written the Swift code in <a href="https://gist.github.com/rnapier/27ba98c827c9d7798879">the same style as the Go code</a> or in <a href="https://gist.github.com/rnapier/4a48b24024ff969f2e94">traditional ObjC style</a>. The point is that there are lots of ways you could do it, and lots of ways different Swift developers will <em>choose</em> to do it because the language is very flexible and there is no obvious &ldquo;Swift way.&rdquo;<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Reduction in Force]]></title>
+    <link href="https://robnapier.net/reduction-in-force"/>
+    <updated>2014-09-14T20:14:00-04:00</updated>
+    <id>https://robnapier.net/reduction-in-force</id>
+    <content type="html"><![CDATA[<p>Our last <a href="https://robnapier.net/flatmap">talk about >>==</a> was full of twists and turns, some
+philosophy, surprising connections, and a radical new operator. It was a lot to
+absorb, and you may have to play with it some in your own code before you really
+know what it&rsquo;s about. That&rsquo;s ok.</p>
+
+<p>Let&rsquo;s take a little break and talk about a handy functional tool built into
+Swift stdlib. I promise no big reveals, no new operators, no fancy types; just
+hands-on, practical discussion of the Swiss Army knife of transform functions:
+<code>reduce</code>.</p>
+
+<!-- more -->
+
+
+<p>Reducing is almost easier to show than to explain. Let&rsquo;s start with a trivial
+example. You have an array of numbers and you want to know the sum. We might say
+you want to &ldquo;reduce&rdquo; a <code>[Int]</code> to a single <code>Int</code>. <code>reduce</code> takes a sequence, an
+intial value, and a &ldquo;combining&rdquo; function like this:</p>
+
+<pre><code>let xs = [1,2,3,4,5]
+let sum = reduce(xs, 0) { accumulator, value in accumulator + value }
+// ==&gt; 15
+</code></pre>
+
+<p>The most interesting part is the combining function. It is passed a &ldquo;value so
+far&rdquo; and a &ldquo;next value from the list&rdquo; and it needs to return the result of
+combining them. Its signature looks like this:</p>
+
+<pre><code>(U, T) -&gt; U
+</code></pre>
+
+<p>So it doesn&rsquo;t have to return the same kind of thing as is in the list, but it
+often does. In our example, since we want the sum, we just add the two values.
+We could just as easily reduce the list to its product:</p>
+
+<pre><code>let product = reduce(xs, 1) { accumulator, value in accumulator * value }
+// ==&gt; 120
+</code></pre>
+
+<p>I&rsquo;m spelling out parameters to make it clear exactly what is being passed to
+the combining function, but we can of course use Swift shortcuts for this:</p>
+
+<pre><code>let sum = reduce(xs, 0) { $0 + $1 }
+</code></pre>
+
+<p>Or we can go futher, and shorten it to:</p>
+
+<pre><code>let sum = reduce(xs, 0, +)
+</code></pre>
+
+<p>What&rsquo;s up with that? <a href="https://robnapier.net/flatmap">I told you before</a>, <code>+</code> is just a function:</p>
+
+<pre><code>func +(lhs: Float, rhs: Float) -&gt; Float
+</code></pre>
+
+<p>And it&rsquo;s in the form <code>(T, T) -&gt; T</code>, which is just a special case of <code>(U, T) -&gt;
+U</code>. So that&rsquo;s fine, and we can pass it as the combining function.</p>
+
+<p>There&rsquo;s also a method form that can be convenient:</p>
+
+<pre><code>let sum = xs.reduce(0, combine: +)
+</code></pre>
+
+<p>We can think of that as &ldquo;take the list of x values, and add them, starting with
+zero.&rdquo;</p>
+
+<h3>A note on origami and names</h3>
+
+<p>Another common name for this function is &ldquo;fold.&rdquo; Sometimes, in other languages,
+you&rsquo;ll see &ldquo;fold left&rdquo; or &ldquo;fold right.&rdquo; Swift&rsquo;s &ldquo;reduce&rdquo; is the same as &ldquo;fold
+left.&rdquo; <strike>(A right fold starts at the end of the list and goes
+backwards.</strike><sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>) You may also see it called &ldquo;aggregate&rdquo; or
+&ldquo;accumulate&rdquo; or &ldquo;inject.&rdquo; They&rsquo;re all pretty much the same function.</p>
+
+<h2>Finding a starting point</h2>
+
+<p>OK, so we can add and multiply stuff. What else you got? We can get minimums and
+maximums. Let&rsquo;s implement stdlib&rsquo;s <code>minElement</code> for arrays with
+<code>reduce</code>.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p>Reducing requires an initial value. So, what should it be? For types that have a
+known minimum (like <code>Int.min</code>), you might be tempted to use it. But that&rsquo;s not
+very flexible, and some orderable types don&rsquo;t have an obvious minimum. For
+example, what if we implemened a <code>BigNum</code> type that supported arbitrarily large
+or small values?</p>
+
+<p>A common solution is to treat the first element as the initial value, and then
+reduce the rest:</p>
+
+<pre><code>func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
+  return dropFirst(xs).reduce(xs[0], combine: min)
+}
+</code></pre>
+
+<p>That&rsquo;s a reusable pattern, so we could, if we wanted to, extract it:</p>
+
+<pre><code>extension Array {
+  func reduce1(combine: (T, T) -&gt; T) -&gt; T {
+    return dropFirst(self).reduce(self[0], combine: combine)
+  }
+}
+
+func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
+  return xs.reduce1(min)
+}
+</code></pre>
+
+<p>Notice that <code>reduce1</code> requires a combining function that takes and returns the
+same type. It&rsquo;s worth taking a moment and thinking about why that has to be
+true.</p>
+
+<p>Of course, <code>reduce1</code> crashes if the array is empty. What if we wanted to get
+back an <code>Int?</code> to guard against that? Here&rsquo;s one way we could do it:</p>
+
+<pre><code>func safeMinElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T? {
+  return xs.reduce(nil) { m, x in min(m ?? x, x) }
+}
+</code></pre>
+
+<p>So we start with <code>nil</code>, and for each element if the current minimum is <code>nil</code>, we
+take whatever was passed in, and otherwise we take the minimum. Notice how we
+rely on Swift&rsquo;s habit of promiting anything into an optional when required.
+Let&rsquo;s us be pretty <strike>sloppy</strike> expressive.</p>
+
+<h2>Beyond math</h2>
+
+<p>The combining function <code>(U, T) -&gt; U</code> says nothing about numbers. We can reduce
+anything we can imagine. We could join strings just as easily.</p>
+
+<pre><code>func join(elements: [String]) -&gt; String {
+  return elements.reduce("", +)
+}
+</code></pre>
+
+<p>Or, <a href="https://robnapier.net/flatmap#fn:1">as promised</a>, here&rsquo;s <code>flatten</code>, which takes a nested array
+and removes one level of structure:</p>
+
+<pre><code>func flatten&lt;T&gt;(xs: [[T]]) -&gt; [T] {
+  return xs.reduce([], +)
+}
+</code></pre>
+
+<p>Told you it was simple. Notice how summing numbers, joining strings, and
+flattening arrays all have the same implementation, differing only in their
+initial value? That&rsquo;s another thing worth thinking about for a while, but it&rsquo;s
+too much theory for this post. (If you want to research it, the magic search
+term you want is <em>monoid</em>.)</p>
+
+<p>Mapping an array is just a special case of reducing:<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+
+<pre><code>func map&lt;T, U&gt;(xs: [T], f: T -&gt; U) -&gt; [U] {
+  return xs.reduce([]) { $0 + [f($1)] }
+}
+</code></pre>
+
+<p>So is filtering:</p>
+
+<pre><code>func filter&lt;T&gt;(xs: [T], includeElement: T -&gt; Bool) -&gt; [T] {
+  return xs.reduce([]) { filtered, x in includeElement(x) ? filtered + [x] : filtered }
+}
+</code></pre>
+
+<p>FlatMap:</p>
+
+<pre><code>func flatMap&lt;T, U&gt;(xs: [T], f: T -&gt; [U]) -&gt; [U] {
+  return xs.reduce([]) { $0 + f($1) }
+}
+</code></pre>
+
+<p>Reverse:</p>
+
+<pre><code>func reverse&lt;T&gt;(xs: [T]) -&gt; [T] {
+  return reduce(xs, []) { [$1] + $0 }
+}
+</code></pre>
+
+<p>Even counting!</p>
+
+<pre><code>func countElements&lt;T&gt;(xs: [T]) -&gt; Int {
+  return reduce(xs, 0) { c, _ in c + 1 }
+}
+</code></pre>
+
+<p>You can do a lot of stuff this way. It&rsquo;s particularly useful when you find
+yourself declaring a <code>var</code> just so you can initialize it with a loop. Any time
+you find yourself using <code>var</code> inside a function, consider whether this is better
+done with something else (<code>map</code>, <code>filter</code>, <code>reduce</code>, etc). Usually the answer is
+yes.</p>
+
+<h2>From whence would you return?</h2>
+
+<p>How about <code>contains</code>?</p>
+
+<pre><code>func contains&lt;T: Equatable&gt;(xs: [T], find: T) -&gt; Bool {
+  return xs.reduce(false) { found, x in found || find == x }
+}
+</code></pre>
+
+<p>Hmmm&hellip;. It works, but it&rsquo;s a poor choice in my opinion. <code>reduce</code> computes over
+the full list, so this is wasting a lot of effort checking values that aren&rsquo;t
+needed. A good way to think about it is how you would expect this function to
+behave if the sequence were infinite. If you would never expect the function to
+return (like for <code>sum</code>), then <code>reduce</code> is proably a good fit. If you might
+expect it to return anyway (like for <code>contains</code>), then <code>reduce</code> is probably the
+wrong tool.</p>
+
+<p>Another good way to think about it is whether you would include a <code>return</code> or
+<code>break</code> in your for-loop (or just use a while-loop). If so, your problem
+probably doesn&rsquo;t match <code>reduce</code> well.</p>
+
+<p>To make it more clear, let&rsquo;s see how <code>reduce</code> can be implemented:</p>
+
+<pre><code>func reduce&lt;T, U&gt;(xs: [T], initial: U, combine: (U, T) -&gt; U) -&gt; U {
+  var result = initial
+  for x in xs {
+    result = combine(result, x)
+  }
+  return result
+}
+</code></pre>
+
+<p>If your problem can be &ldquo;reduced&rdquo; to this, then <code>reduce</code> may be a good choice. If
+you need to stop the for-in loop, then you&rsquo;ll probably want another tool like
+<code>find</code>.</p>
+
+<h2>So doctor, should I reduce?</h2>
+
+<p>I&rsquo;ve given a bunch of examples here to show how powerful and flexible <code>reduce</code>
+is. I want to get your imagination going a little bit and give you some ideas on
+how to use this function to solve a wide range of problem. But just because you
+<em>can</em> write <code>map</code> in terms of <code>reduce</code> doesn&rsquo;t mean you <em>should</em>.</p>
+
+<p>Most of the time if your result is an array, mapping and filtering are the right
+tools. If you&rsquo;re taking an array and deriving a single value, then <code>reduce</code> (or
+<code>find</code>) is often the best tool. But if you have a complex combination of mapping
+and filtering, then a single <code>reduce</code> may simplify that and also speed it up.</p>
+
+<p>Reducing is a quite popular operation in functional languages. In fact, a lot of
+people (including your humble author) spend a lot of time trying to solve
+complicated problems with a single, elegant reduce. When I started this blog
+post, I got about half-way through implementing sorting that way when I realized
+I needed to stop. Reduce is the kind of function that makes people try to be
+clever, much like regular expressions. Resist the temptation, at least in your
+production code. Use the tools that make your code clear, not the tools that
+make you look smart.</p>
+
+<p>But with that in mind, reduce your problems away!</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>UPDATE: After some <a href="https://twitter.com/cocoaphony/status/511339551915511808">helpful discussion</a> with @TacticalGrace and @pyrtsa, I&rsquo;ve decided this description of fold right is too misleading. I usually favor simple-but-slightly-wrong explanations over more-correct-but-requires-lots-of-background-to-understand-and-is-still-slightly-wrong, but in this case, &ldquo;goes backwards&rdquo; really confuses how foldr is commonly used. We don&rsquo;t have foldr in Swift, so I&rsquo;m not going to dig into it here in a footnote; I&rsquo;ll leave it to your <a href="https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29">exploration</a>.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>In this post, and in many of my posts, I will focus on Array implementations rather than the more general Sequence. That&rsquo;s because Sequence (and Collection) can introduce a lot of complexity and obscure the key points being discussed. Some of their complexity is due to the nature of type constraints, and some is due to quirks about Swift that will likely improve. I&rsquo;ve chosen to dodge all of that and focus on the most common and simplest case: Arrays.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p>If you&rsquo;re familiar with Haskell, you may know that <code>map</code> is usually implemented as a <code>foldr</code>, while this is a <code>foldl</code>. That&rsquo;s just for performance. In Haskell, list prepending (<code>:</code>) is much faster than appending (<code>++</code>). In Swift, array appending is the faster operation. So <code>foldr</code> is common in Haskell, but isn&rsquo;t even in Swift stdlib. Keep this in mind when translating Haskell algorithms to Swift. Haskell often walks lists backwards for performance reasons. It&rsquo;s more natural in Swift to walk them forward.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Flattenin' Your Mappenin']]></title>
+    <link href="https://robnapier.net/flatmap"/>
+    <updated>2014-09-07T09:13:15-04:00</updated>
+    <id>https://robnapier.net/flatmap</id>
+    <content type="html"><![CDATA[<blockquote><p>In which our heroes create for themselves a convenience and discover a
+surprising thing.</p></blockquote>
+
+<p><a href="https://robnapier.net/maps">Last time</a> we looked at the incredible little <code>map</code> function, and saw
+how it could be used to simplify a lot of tedious for-loops while making our
+code more clear and less error-prone. This time, we&rsquo;re going to see if we can
+solve a common problem that happens with mapping, nesting.</p>
+
+<!-- more -->
+
+
+<h2>When we left our heroes</h2>
+
+<p>First, a very quick recap on mapping. We can use <code>map</code> to transform an array of
+elements into an new array of different elements. For example, we can transform
+an array of strings into an array of string lengths in a variety of syntaxes:</p>
+
+<pre><code>let domains = ["apple.com", "google.com", "robnapier.net"]
+let lengths = domains.map { countElements($0) }
+let lengths = map(domains) { countElements($0) }
+let lengths = domains.map(countElements)
+let lengths = map(domains, countElements)
+</code></pre>
+
+<p>Or we could transform an array of strings into an array of URLs:</p>
+
+<pre><code>let urls = domains.map { NSURL(scheme: "http", host: $0, path: "/") }
+</code></pre>
+
+<p>We learned that we can map optionals and our custom
+<a href="https://gist.github.com/rnapier/42ef28d52ac92744730f">result</a> type.
+In both cases, successful values (<code>Some</code>, <code>Success</code>) are transformed with the
+function, while failing values (<code>None</code>, <code>nil</code>, <code>Failure</code>) are simply returned.
+In this way, mapping is very similar to optional chaining (<code>?.</code>).</p>
+
+<p>We discovered that the different <code>map</code> functions all have the same &ldquo;shape&rdquo;:</p>
+
+<pre><code>map(Array&lt;T&gt;, T -&gt; U) -&gt; Array&lt;U&gt;
+map(Optional&lt;T&gt;, T -&gt; U) -&gt; Optional&lt;U&gt;
+map(Result&lt;T&gt;, T -&gt; U) -&gt; Result&lt;U&gt;
+// or more generally:
+map(F&lt;T&gt;, T -&gt; U) -&gt; F&lt;U&gt;
+</code></pre>
+
+<p>Learning to see these shapes helps us find patterns we can reuse and combine.</p>
+
+<p>For more introduction, see
+<a href="https://robnapier.net/functional-wish-fulfillment">Functional Wish Fulfillment</a> and
+<a href="https://robnapier.net/maps">Maps&hellip;Wait, They Don&rsquo;t Love You Like I Love You</a>.</p>
+
+<h2>Boxes in boxes</h2>
+
+<p>Let&rsquo;s take a
+<a href="https://gist.github.com/rnapier/e0d91580d613fb21a52b">simple example</a> to get
+ourselves started on a new problem. We have customers with some properties:</p>
+
+<pre><code>struct Customer {
+  let name: String
+  let emails: [String]
+}
+
+let customers = [
+  Customer(name: "Alice", emails: ["alice@example.com"]),
+  Customer(name: "Bob", emails: ["bob@example.org", "bobby@home.example"])
+]
+</code></pre>
+
+<p>Now we&rsquo;d like a list of all our customer names for our upcoming report. Easy!</p>
+
+<pre><code>let names = customers.map { $0.name }
+// ["Alice", "Bob"]
+</code></pre>
+
+<p>Perfect. Just what we want. Now, we also have had a major security issue and
+need to alert all of our users at all of their email addresses. Let&rsquo;s grab
+those:</p>
+
+<pre><code>let emails = customers.map { $0.emails }
+// [["alice@example.com"], ["bob@example.org", "bobby@home.example"]]
+</code></pre>
+
+<p>Wait. That&rsquo;s not quite what we meant. We wanted a list of email addresses, not a
+list-of-lists of email addresses. What are we going to do now? I wouldn&rsquo;t be
+surprised if you&rsquo;ve encountered this before and fixed it with some kind of
+&ldquo;flatten&rdquo; function that removes one layer of structure. It&rsquo;s slightly surprising
+that Swift doesn&rsquo;t have one of these built in, but it&rsquo;s easy enough to
+make.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<pre><code>func flatten&lt;T&gt;(array: [[T]]) -&gt; [T] {
+  var result = [T]()
+  for subarray in array {
+    result.extend(subarray)
+  }
+  return result
+}
+</code></pre>
+
+<p>With that, let&rsquo;s try again:</p>
+
+<pre><code>let flatEmails = flatten(customers.map { $0.emails })
+// ["alice@example.com", "bob@example.org", "bobby@home.example"]
+</code></pre>
+
+<p>Great. Well, pretty great. There are a few small annoyances. Throwing
+<code>flatten()</code> on the start is kind of tedious, especially if this is part of a
+chain of maps and filters. Consider if we wanted these to be URLs. We&rsquo;d want to
+do this:</p>
+
+<pre><code>let emails =
+  customers.map { $0.emails }
+  .flatten      // &lt;== this isn't possible
+  .map { NSURL(string:"mailto:\($0)") }
+</code></pre>
+
+<p>But that&rsquo;s not really possible in Swift. You can&rsquo;t easily add an Array extension
+for <code>flatten</code> because it only applies to arrays of arrays. Swift can&rsquo;t apply
+extensions only to certain kinds of arrays. So we&rsquo;re forced to do this:</p>
+
+<pre><code>let emails =
+  flatten(customers.map { $0.emails })
+  .map { NSURL(string:"mailto:\($0)") }
+</code></pre>
+
+<p>That&rsquo;s kind of ugly, and gets worse if the chain is long and has multiple points
+where flattening is needed.</p>
+
+<p>Like I said, this &ldquo;map plus flatten&rdquo; is pretty common, so maybe it&rsquo;s worth
+making a little convenience method for it that we could stick on Array. Let&rsquo;s
+call it <code>flatMap</code>:</p>
+
+<pre><code>extension Array {
+  func flatMap&lt;U&gt;(transform: T -&gt; [U]) -&gt; [U] {
+    return flatten(self.map(transform))
+  }
+}
+</code></pre>
+
+<p>Just like it says on the tin. Apply the map. Flatten. Ta-da! And now we can
+call:</p>
+
+<pre><code>let flatMapEmails = customers.flatMap { $0.emails }
+// ["alice@example.com", "bob@example.org", "bobby@home.example"]
+</code></pre>
+
+<p>Just like we wanted.</p>
+
+<h2>Flat all the things</h2>
+
+<p>Since we can map optionals and <code>Result</code>, can we flatten them too? Let&rsquo;s look at
+the shape of <code>flatten</code> and how it might apply:</p>
+
+<pre><code>flatten(Array&lt;Array&lt;T&gt;&gt;) -&gt; Array&lt;T&gt;
+flatten(Optional&lt;Optional&lt;T&gt;&gt;) -&gt; Optional&lt;T&gt;
+flatten(Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt;
+</code></pre>
+
+<p>So we could flatten a <code>T??</code> to <code>T?</code> or a <code>Result&lt;Result&lt;T&gt;&gt;</code> to <code>Result&lt;T&gt;</code>.
+That makes sense and sounds useful.</p>
+
+<pre><code>func flatten&lt;T&gt;(result: Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt; {
+  switch result {
+  case .Success(let box):
+    switch box.unbox {
+    case .Success(let nestedBox): return .Success(nestedBox)
+    case .Failure(let err):       return .Failure(err)
+    }
+  case .Failure(let err): return .Failure(err)
+  }
+}
+</code></pre>
+
+<p>And if we can map and flatten, then of course we can write <code>flatMap</code>:</p>
+
+<pre><code>extension Result {
+  func flatMap&lt;U&gt;(transform: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+    return flatten(self.map(transform))
+  }
+}
+</code></pre>
+
+<h2>What <em>is</em> this flatMap?</h2>
+
+<p>That was easy enough to do, but who cares? Why would you ever want to do that?</p>
+
+<p>Let&rsquo;s go back to the shape of this function. It&rsquo;s a method, so we put the type
+of <code>self</code> as the first parameter to get a function form. That makes it easier
+to compare shapes:</p>
+
+<pre><code>flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+</code></pre>
+
+<p>That looks very familiar. Back in
+<a href="https://robnapier.net/functional-wish-fulfillment">Functional Wish Fulfillment</a> we developed a
+function called <code>continueWith</code> that let us chain together functions so that we&rsquo;d
+get a success if they all succeeded, and a failure if any of them failed. Here&rsquo;s
+what it looked like:</p>
+
+<pre><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+  switch x {
+  case .Success(let box): return f(box.unbox)
+  case .Failure(let err): return .Failure(err)
+  }
+}
+</code></pre>
+
+<p>Using that, we were able to turn our big, complicated JSON parser, full of
+conditional logic, into this:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result&lt;[Page]&gt;
+}
+</code></pre>
+
+<p>Let&rsquo;s compare the shapes of these functions:</p>
+
+<pre><code>     flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+continueWith(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+</code></pre>
+
+<p>Look familiar?</p>
+
+<p>In functional programming, when two generic functions have the same shape, you
+should have a strong suspicion that they are at least related. There may be
+some more basic function that they both derive from, or they may turn out to be
+the same thing.</p>
+
+<p>I&rsquo;m not going to bore you with the fairly trivial (if slightly tedious) proof
+that <code>continueWith</code> and <code>flatMap</code> are in fact the same function. You can work it
+out on your own if you&rsquo;re interested, or see
+<a href="https://gist.github.com/rnapier/b383d2542c9fabe913c9">my version in this gist</a>.
+But I will call out two facts: (1) they are the same function, and (2) it&rsquo;s
+possible to <em>prove</em> it.</p>
+
+<h2>Proving the program</h2>
+
+<p>I am not going to wander into the &ldquo;programming is math&rdquo; debate. It&rsquo;s a silly
+argument. What is important, and should be incontrovertible, is that functional
+programming makes it easier to use well-established tools that are common among
+mathematicians. One of those tools is the proof. We use proofs all the time, we
+just don&rsquo;t call them that. Every correct automatic refactoring is based on a
+proof that the code before the refactor is identical to the code after the
+refactor.</p>
+
+<p><span class='pullquote-right' data-pullquote='An optimizing compiler in a strongly typed language is essentially a giant
+proof engine.'></p>
+
+<p>An optimizing compiler in a strongly typed language is essentially a giant
+proof engine. When you get errors like
+<a href="http://stackoverflow.com/a/25645689/97337">&ldquo;C is not convertible to Self,&rdquo;</a>
+it means you asserted something that the compiler couldn&rsquo;t prove. It may mean
+that you asserted something that isn&rsquo;t true, or it may mean that the proof
+engine isn&rsquo;t powerful enough to prove it, or it may even mean that the language
+isn&rsquo;t powerful enough to express what you are trying to assert.</p>
+
+<p></span></p>
+
+<p>Functional programming makes it is easier to apply proofs. In other words, it
+makes your code easier to refactor mechanically and easier to optimize
+performance. A key reason is the lack of mutable state. The more mutable state
+is tied up in something, the harder it is to prove that a dramatically different
+implementation behaves identically.</p>
+
+<p>Test cases are not the same thing as a proof. I can&rsquo;t create enough test cases
+to be certain that every number divisible by 6 is also divisible by 2 and 3.
+It&rsquo;d take an infinite number of test cases. But if I prove it, I don&rsquo;t need any
+tests at all. The key to making that easy is ensuring that <code>isDivisibleBySix(n:
+Int) -&gt; Bool</code> relies on nothing but <code>n</code>. If there is no mutable state, if there
+are no side effects, if it&rsquo;s just a function that takes a value and returns a
+value, then I can much more easily replace it with a different implementation
+and be confident it will behave the same.</p>
+
+<p>I don&rsquo;t want to wander down this road too far. I&rsquo;m not arguing that we don&rsquo;t
+need tests, and I&rsquo;m not arguing for proof-of-correctness as a general practice.
+I&rsquo;m saying that if you understand the difference between test and proof, and
+write your code in a way to favors proofs, you will get better code, fewer
+tests, simpler refactoring, and safer performance optimizations. And step one
+of that is the elimination of mutable state.</p>
+
+<h2>A method to our functional madness</h2>
+
+<p>OK, back to more hands-on, practical concerns.</p>
+
+<p>We implemented <code>continueWith</code> as a function, but we implemented <code>flatMap</code> as an
+extension method on <code>Result</code>. Does that change anything? Here&rsquo;s our
+function-based syntax:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result&lt;[Page]&gt;
+}
+</code></pre>
+
+<p>Using a method approach, here&rsquo;s what we get:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return asJSON(data)
+    .flatMap(asJSONArray)
+    .flatMap(secondElement)
+    .flatMap(asStringList)
+    .flatMap(asPages)
+}
+</code></pre>
+
+<p>Yeah, that&rsquo;s definitely easier to read, understand, and modify. Swift syntax
+tends to favor chaining methods over chaining functions. That&rsquo;s somewhat
+unfortunate. Functions are easier to reason about (prove) because they don&rsquo;t
+contain an implicit <code>self</code> that might hide state. Functions in Swift are also
+much more flexible in how they can be made generic (type-parameterized). As we
+saw before, it&rsquo;s not possible to write <code>flatten</code> as a method on a generic type.
+Overuse of methods can get us into really frustrating situations if we want to
+write really reusable code.</p>
+
+<p>But the syntax favors methods&hellip; mostly.</p>
+
+<p>Swift offers a very powerful way to chain together functions: operators.
+Operators are just functions that allow some syntax benefits:</p>
+
+<ul>
+<li>They don&rsquo;t require parentheses</li>
+<li>They can be prefix (<code>!x</code>), infix (<code>x + y</code>) or postfix (<code>x++</code>)</li>
+</ul>
+
+
+<p>So what if we defined an operator for <code>flatMap</code>? We&rsquo;ll call it <code>&gt;&gt;==</code> for
+reasons I&rsquo;ll explain later.</p>
+
+<pre><code>infix operator &gt;&gt;== {}
+func &gt;&gt;== &lt;T,U&gt;(x: Result&lt;T&gt;, f:T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+  return x.flatMap(f)
+}
+</code></pre>
+
+<p>With that, here&rsquo;s
+<a href="https://gist.github.com/rnapier/067156ac404cc42f17b6">our new parser</a>:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return asJSON(data)
+    &gt;&gt;== asJSONArray
+    &gt;&gt;== secondElement
+    &gt;&gt;== asStringList
+    &gt;&gt;== asPages
+}
+</code></pre>
+
+<p>I think this reads very nicely, even nicer than the method version (though we
+can still improve it). Each line says &ldquo;as long as it hasn&rsquo;t failed, transform
+with&hellip;.&rdquo;</p>
+
+<p>Using operators like this can be dangerous. It&rsquo;s easy to wind up with obscure
+symbol soup. The key is finding a small number of highly reusable operators that
+are used consistently. There&rsquo;s a cost to forcing people to learn and memorize
+your operator; make sure it&rsquo;s going to be used often enough to be worth it.</p>
+
+<p>That said, we all use operators every day, and they&rsquo;re an important part of
+programming. There is no difference between <code>+</code> and <code>&gt;&gt;==</code> other than you
+learned one when you were a child. <code>+</code> is nothing more than an infix function:</p>
+
+<pre><code>infix operator + { associativity left precedence 140 }
+func +(lhs: Float, rhs: Float) -&gt; Float
+func +(lhs: Int, rhs: Int) -&gt; Int
+...
+</code></pre>
+
+<p>We could just as well use a function called <code>add()</code> to do the same thing, but
+instead everyone memorizes this arbitrary symbol because it&rsquo;s easier to use.
+That&rsquo;s important. There is nothing more <em>meaningful</em> about <code>+</code>, <code>-</code>, and <code>*</code>
+versus <code>&gt;&gt;==</code>. They&rsquo;re just symbols you&rsquo;ve memorized. I&rsquo;m suggesting you should
+memorize one more. Well, several. But you&rsquo;ll learn them over time just as you
+learned <code>√</code>, <code>∫</code>, <code>∑</code>, and <code>∞</code> later than you learned <code>+</code> and <code>-</code>.</p>
+
+<p>That doesn&rsquo;t mean you should go crazy with operators. In fact, I generally
+suggest you avoid creating new ones until you&rsquo;ve thought quite a lot about it
+and looked into how other languages solve similar problems. But as we go along,
+I&rsquo;m going to introduce several general-purpose operators that will make your
+code clearer and easier to write when used appropriately.</p>
+
+<h2>A rose by any other name would be confusing</h2>
+
+<p>You might ask now what this function should be called. We started by calling it
+<code>continueWith</code>, but then it changed to <code>flatMap</code>, and then to <code>&gt;&gt;==</code>. I didn&rsquo;t
+mention it here, but it&rsquo;s also called <code>Bind</code> and <code>&gt;&gt;=</code>. Other Swift developers
+have called it
+<a href="http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics">>>></a>
+and <a href="http://nomothetis.svbtle.com/the-culmination-i">>>=-</a>. Its math name is a
+monadic bind. But what should we call it?</p>
+
+<p>I believe Swift programmers should call the function <code>flatMap</code> (as in Scala) and
+should use <code>&gt;&gt;==</code> as the operator (derived from Haskell). The operator should be
+pronounced &ldquo;bind&rdquo; or colloquially &ldquo;and then.&rdquo; <code>bind()</code> and <code>&gt;&gt;=</code> are existing
+functions in Swift, and it&rsquo;s dangerous to overload things with completely
+different meanings (I&rsquo;m looking at you, C++ <code>&lt;&lt;</code>). I think the operator should
+preserve as much of the &ldquo;shape&rdquo; as possible from Haskell&rsquo;s, and I think <code>&gt;&gt;==</code>
+does that best.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p><span class='pullquote-right' data-pullquote='spend time looking at how other
+languages and other Swift developers have approached the same problem.'></p>
+
+<p>That&rsquo;s not really important, though. It&rsquo;s just my suggestion, and others might
+reasonably disagree. The point is that before foisting a new operator on the
+world (or even your team), you should spend time looking at how other
+languages and other Swift developers have approached the same problem.
+Otherwise you cut yourself off from a lot of insight and you make it hard for
+others coming to your code. Maybe they won&rsquo;t know Haskell or F# or Scala, but
+maybe they will. They definitely won&rsquo;t know the operator you made up over lunch.
+Make sure it&rsquo;s valuable enough to be worth teaching them.</p>
+
+<p></span></p>
+
+<h2>Maps flat, maybe brains too</h2>
+
+<p>If you&rsquo;ve gotten this far, you&rsquo;ve come a long way. It&rsquo;s a lot to take in. Let me
+sum up where we are in our parser:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return asJSON(data)
+    &gt;&gt;== asJSONArray
+    &gt;&gt;== secondElement
+    &gt;&gt;== asStringList
+    &gt;&gt;== asPages
+}
+</code></pre>
+
+<blockquote><p>Given some data, convert it to JSON and then to a JSON array and then take the
+second element and then convert that to a string list and then convert those to
+a list of pages and return the result.</p></blockquote>
+
+<p>I think that captures our algorithm about as clearly as we can. Compare it to
+the <a href="https://gist.github.com/rnapier/9e8f92a1ce6be5c3d295">original version</a>. It
+handles errors without littering our code with error handling or requiring
+exceptions. It&rsquo;s compact, but not dense. It&rsquo;s easy to modify or extend. And each
+of the individual functions is about as simple as it could be and easy to unit
+test (or so simple that it literally can&rsquo;t be wrong). There&rsquo;s still more work to
+make it generic. Things like <code>secondElement</code> obviously don&rsquo;t scale, and we&rsquo;ll
+work on that in future posts. But the basic structure is quite nice I think.</p>
+
+<p>Until then, here are some take-aways:</p>
+
+<ul>
+<li>Swift makes it easier to chain together methods than functions</li>
+<li>&hellip;but methods are harder to reason about because of <code>self</code></li>
+<li>Generic operators like <code>&gt;&gt;==</code> make it easy to chain together functions that peal away a small part of the problem while maintaining structure like error handling</li>
+<li>&hellip;but new operators should be created with caution, founded in the lessons of history</li>
+</ul>
+
+
+<p>That&rsquo;s enough for this time. This was a major turning point, but there are still
+a lot of things to cover. Until then, stop mutating. Evolve.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>In a later post we&rsquo;ll discuss how <code>flatten</code> is insanely simple to implement with <code>reduce</code>. The fact that its so simple is probably the reason they didn&rsquo;t bother to add <code>flatten</code> to stdlib. But I&rsquo;m guessing.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>I also have found it easy to type. I tried <code>&gt;&gt;=-</code> for a while and kept getting <code>&gt;&gt;=0-</code> when I was typing fast.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Maps... Wait, They Don't Love You Like I Love You]]></title>
+    <link href="https://robnapier.net/maps"/>
+    <updated>2014-08-28T08:20:25-04:00</updated>
+    <id>https://robnapier.net/maps</id>
+    <content type="html"><![CDATA[<p>I had a bit of a throw-away line in
+<a href="https://robnapier.net/functional-wish-fulfillment">Functional Wish Fulfillment</a>:</p>
+
+<blockquote><p>Kind of like map, but kind of different.</p></blockquote>
+
+<p>And I tossed a call to <code>map</code>, unexplained, in the middle of the parsing code. I
+got a little ahead of myself there. Sorry about that. Cocoa has no <code>map</code>. Maybe
+not everyone coming to Swift has a long history with this amazing little
+function. In a field where monads get all the press, it&rsquo;s time to step back and
+talk about the humble map.</p>
+
+<!-- more -->
+
+
+<p>After years of begging for a <code>map</code> function in Cocoa, here comes Swift with
+three different versions built-in:</p>
+
+<pre><code>/// Haskell's fmap for Optionals.
+func map&lt;T, U&gt;(x: T?, f: (T) -&gt; U) -&gt; U?
+
+/// Return an `Array` containing the results of mapping `transform` over `source`.
+func map&lt;C : CollectionType, T&gt;(source: C, transform: (C.Generator.Element) -&gt; T) -&gt; [T]
+
+/// Return an `Array` containing the results of mapping `transform` over `source`.
+func map&lt;S : SequenceType, T&gt;(source: S, transform: (S.Generator.Element) -&gt; T) -&gt; [T]
+</code></pre>
+
+<p>Plus it has <code>map</code> methods on <code>Array</code>, <code>Dictionary</code>, <code>Optional</code>, <code>Range</code>,
+<code>Slice</code>, and a bunch of other classes.</p>
+
+<p>Now I know that the very first comment in the Swift header mentions both
+&ldquo;Haskell&rdquo; and a non-word &ldquo;fmap,&rdquo; but trust me, most uses of <code>map</code> aren&rsquo;t complex
+at all. Most of the time, it&rsquo;s just the world&rsquo;s simplest for-loop.</p>
+
+<p>Let&rsquo;s take a really common pattern you&rsquo;ve probably written dozens of times (if
+not in Swift, than in every language you&rsquo;ve ever worked in):</p>
+
+<pre><code>let domains = ["apple.com", "google.com", "robnapier.net"]
+
+var urls = [NSURL]()
+for domain in domains {
+  urls.append(NSURL(scheme: "http", host: domain, path: "/"))
+}
+// urls =&gt; [http://apple.com/, http://google.com/, http://robnapier.net/]
+</code></pre>
+
+<p>In a generic language like Swift, &ldquo;pattern&rdquo; means there&rsquo;s a probably a function
+hiding in there, so let&rsquo;s pull out the part that doesn&rsquo;t change and call it
+<code>map</code>:</p>
+
+<pre><code>// Let's replace String with T and NSURL with U
+// and let's pull out the NSURL(...) and call it transform()
+func map&lt;T, U&gt;(source: [T], transform: T -&gt; U) -&gt; [U] {
+  var result = [U]()
+  for element in source {
+    result.append(transform(element))
+  }
+  return result
+}
+
+// And here's our loop:
+let urls = map(domains, { NSURL(scheme: "http", host: $0, path: "/") })
+
+// Or we can use Array's method (implementation not shown)
+let urls = domains.map{ NSURL(scheme: "http", host: $0, path: "/") }
+
+// urls =&gt; [http://apple.com/, http://google.com/, http://robnapier.net/]
+</code></pre>
+
+<p>So <code>map</code> replaces the for-loop when you have data in one form and want it in
+some other form.</p>
+
+<h2>Keeping what you want</h2>
+
+<p>Let&rsquo;s think about another really common for-loop. You have a bunch of items, but
+you only want some of them. For example, maybe you want to filter out
+<code>NSNotFound</code>.</p>
+
+<pre><code>let values = [1, 1, 2, NSNotFound, 3]
+
+var found = [Int]()
+for value in values {
+  if value != NSNotFound {
+    found.append(value)
+  }
+}
+// found =&gt; [1, 1, 2, 3]
+</code></pre>
+
+<p>Again, we wind up with this really generic for-loop. Let&rsquo;s factor out the common
+part.</p>
+
+<pre><code>// Replace Int with T, and instead of hard-coding the test, pass a function
+// that takes an element and returns whether to include it.
+func filter&lt;T&gt;(source: [T], includeElement: T -&gt; Bool) -&gt; [T] {
+  var found = [T]()
+  for value in source {
+    if includeElement(value) {
+      found.append(value)
+    }
+  }
+  return found
+}
+
+// Filter it with a function
+let found = filter(values, { $0 != NSNotFound })
+
+// or with Array's method (implementation not shown)
+let found = values.filter{ $0 != NSNotFound }
+
+// found =&gt; [1, 1, 2, 3]
+</code></pre>
+
+<p>And again we replace our cut-and-paste for-loop with a reusable function that
+captures the goal. We save some code, but it&rsquo;s more than that. We can compose
+filters and maps to create more interesting things in highly readable ways.
+For example, to extract simple http URLs from text:</p>
+
+<pre><code>func embeddedURLs(text: String) -&gt; [NSURL] {
+  return text
+    .componentsSeparatedByString(" ")
+    .filter{ $0.hasPrefix("http://") }
+    .map{ NSURL(string: $0) }
+}
+
+embeddedURLs("This text contains a link to http://www.apple.com and other stuff.")
+// =&gt; ["http://www.apple.com"]
+</code></pre>
+
+<p>Or see this <a href="http://stackoverflow.com/a/25486591/97337">downcasting example</a>
+from StackOverflow.</p>
+
+<p>The goal of using <code>map</code> and <code>filter</code> this way is to make your code easier to
+read, understand, and debug. It gets the boilerplate out of the way and leaves
+you with the key parts of what you&rsquo;re trying to do.</p>
+
+<h2>Map is what for does</h2>
+
+<p>Even though I&rsquo;ve discussed <code>map</code> in terms of <code>for</code>, they&rsquo;re quite different.
+<code>map</code> <em>is</em>. <code>for</code> <em>does</em>. Remember the first example:</p>
+
+<pre><code>var urls = [NSURL]()
+for domain in domains {
+  urls.append(NSURL(scheme: "http", host: domain, path: "/"))
+}
+</code></pre>
+
+<p>In this code, <code>urls</code> is mutated by a series of <code>append</code> calls until it contains
+the values we want. This code says how to construct <code>urls</code>. On the other hand:</p>
+
+<pre><code>let urls = domains.map{ NSURL(scheme: "http", host: $0, path: "/") }
+</code></pre>
+
+<p>In this code, <code>urls</code> <em>is</em> the mapping of <code>domains</code> to <code>NSURL</code> constructors. This
+code doesn&rsquo;t require any specific implementation of <code>map</code>. In principle, <code>urls</code>
+could be constructed lazily the first time it&rsquo;s read, or each element could be
+lazily constructed when requested. The mapping could be performed in parallel or
+in reverse order. It could be performed once and cached, or recomputed every
+time it&rsquo;s accessed. In principle, we don&rsquo;t care. As long as the mapping only
+depends on its inputs, and as long as there are no side effects, we will always
+get the same result. This is the heart of good functional programming. We
+<em>define</em> <code>urls</code> and let the system worry about how to <em>compute</em> it.</p>
+
+<p>In practice, life is seldom quite that simple, and the implementation does
+matter for performance. Still, a functional approach makes it much easier to
+change our mind about the implementation. For example, in Swift today, we can
+switch from immediate mapping to lazy mapping by just adding <code>lazy()</code> like this:</p>
+
+<pre><code>let urls = lazy(domains).map{ NSURL(scheme: "http", host: $0, path: "/") })
+</code></pre>
+
+<p>Compare that to the changes you&rsquo;d have to make to your <code>for</code> code to make this a
+lazy computation. One can easily imagine the implementation of a <code>parallel()</code>
+modifier. By focusing our code on what things are, rather than how we construct
+them, swapping out one implementation for another is much simpler.</p>
+
+<h2>It&rsquo;s all about the types</h2>
+
+<p>In Wish Driven Development, our wish generally takes the form of a function
+signature. So it&rsquo;s very important that you learn to read and think about
+function signatures, especially signatures that include functions as parameters.
+Let&rsquo;s look at <code>map</code> again:</p>
+
+<pre><code>func map&lt;T, U&gt;(source: [T], transform: T -&gt; U) -&gt; [U]
+</code></pre>
+
+<p>Let&rsquo;s strip away some syntax noise to get to the heart of what&rsquo;s going on:</p>
+
+<pre><code>map([T], T -&gt; U) -&gt; [U]
+</code></pre>
+
+<p>Or maybe you&rsquo;d rather read it this way:</p>
+
+<pre><code>map([From], From -&gt; To) -&gt; [To]
+</code></pre>
+
+<p>This takes an array of &ldquo;something,&rdquo; and a function that can convert one
+&ldquo;something&rdquo; into a &ldquo;something else,&rdquo; and returns an array of &ldquo;something else.&rdquo;
+So you should use this function when you have an array of some type, and you
+want an equal-sized array of some other type, and you know how to convert a
+single element of the first type into the second type.</p>
+
+<p>Let&rsquo;s look at <code>filter</code> in the same way:</p>
+
+<pre><code>filter([T], T -&gt; Bool) -&gt; [T]
+</code></pre>
+
+<p>So this takes an array of something, and a function that returns true or false
+based on one of them, and returns an array of the same kind of things.</p>
+
+<p>Even if I took away the names <code>map</code> and <code>filter</code>, you should have some guess
+what these functions do, just based on what they take and what they return.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<p>Let&rsquo;s go back to the Swift header for moment. By this time, the  <code>map&lt;C:
+CollectionType, T&gt;</code> function and the <code>map&lt;S: SequenceType, T&gt;</code> function should
+make some sense. They&rsquo;re just more generic versions of our array-only <code>map</code>. But
+there&rsquo;s one more version that seems different than the others:</p>
+
+<pre><code>func map&lt;T, U&gt;(x: T?, f: (T) -&gt; U) -&gt; U?
+</code></pre>
+
+<p>What does that mean? It takes an optional of something, and a function that can
+convert &ldquo;something&rdquo; into &ldquo;something else&rdquo; and returns an optional of &ldquo;something
+else.&rdquo; That sounds a lot like our array version of map, if you just replace the
+word &ldquo;array&rdquo; with &ldquo;optional.&rdquo; Can we do that? Does that even make sense?</p>
+
+<p>Let&rsquo;s strip away some extra syntax and sugar so we can get a clearer view of
+these signatures:</p>
+
+<pre><code>map(Array&lt;T&gt;,    T -&gt; U) -&gt; Array&lt;U&gt;
+map(Optional&lt;T&gt;, T -&gt; U) -&gt; Optional&lt;U&gt;
+</code></pre>
+
+<p>That&rsquo;s really, really interesting (at least to me), but if we go any deeper down
+this rabbit hole, I&rsquo;m going to have to start using mathy words.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> You
+came here to learn practical applications. So let&rsquo;s crawl back up a step.</p>
+
+<p>So what does it mean to &ldquo;map&rdquo; over an optional? Well, mapping over an array
+meant generating one element for every element in the array. Why not the same
+for optionals? If there&rsquo;s something inside (<code>Some</code>), map it, if not, return
+<code>None</code>. Let&rsquo;s write that:</p>
+
+<pre><code>func map&lt;T, U&gt;(x: T?, f: T -&gt; U) -&gt; U? {
+  switch x {
+  case .Some(let value): return .Some(f(value))
+  case .None: return .None
+  }
+}
+</code></pre>
+
+<p>If that sounds a little like optional-chaining (<code>?.</code>), then you&rsquo;re getting it.
+Optional-chaining is just a more method-friendly version of <code>map</code>.</p>
+
+<p>So if we can map over an array, and we can map over an optional, can we map over
+anything else? How about the <code>Result</code> type we built in
+<a href="https://robnapier.net/functional-wish-fulfillment">Functional Wish Fulfillment</a>?<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+
+<pre><code>func map&lt;T, U&gt;(x: Result&lt;T&gt;, f: T -&gt; U) -&gt; Result&lt;U&gt; {
+  switch x {
+  case .Success(let box): return .Success(Box(f(box.unbox)))
+  case .Failure(let err): return .Failure(err)
+  }
+}
+</code></pre>
+
+<p>Again, focus on learning to read the types:</p>
+
+<pre><code>map(Result&lt;T&gt;, T -&gt; U) -&gt; Result&lt;U&gt;
+</code></pre>
+
+<p>Given a <code>Result</code> of one type (<code>T</code>), and function that can convert that type into
+another type (<code>U</code>), I can get a <code>Result</code> of that second type.</p>
+
+<p>Given an <code>F&lt;&gt;</code> that contains <code>T</code> and a function that maps a <code>T</code> to a <code>U</code>, I can
+use <code>map</code> to convert <code>F&lt;T&gt;</code> into <code>F&lt;U&gt;</code>.</p>
+
+<p>That&rsquo;s starting to sound like math, so maybe we&rsquo;ll leave it there before we go
+too far.</p>
+
+<h2>Thoughts till next time</h2>
+
+<p>We dug pretty deep in <code>map</code> here, breezed through <code>filter</code>, and started to think
+about the power of functions to separate intent from implementation. We touched
+on the importance of types in understanding functions. And then we stumbled
+across some interesting similarities in <code>Array</code> and <code>Optional</code> and <code>Result</code> that
+expanded our mappable world.</p>
+
+<p>If you&rsquo;re like I was the first time I walked down this road, your head is
+spinning just a little bit right now, but maybe a few things are starting to
+make sense. It&rsquo;s worth playing with these things in a playground. Look in your
+code for some for-loops and see if you could convert them to <code>map</code> or <code>filter</code>
+instead. Don&rsquo;t force it. The goal isn&rsquo;t to use fancy library functions, and the
+goal isn&rsquo;t to make your code short. The goal is to make your code clear. Play
+with formatting and see what makes your point most obvious. Try creating helper
+functions. Refactor. Try again.</p>
+
+<p>Soon we&rsquo;ll explore some more of these transforming functions and see what they
+can do for us. Until then, stop mutating. Evolve.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>In Haskell, which has a pretty consistent syntax, you can actually search the documentation for functions that transform the types you want. That turns out to be harder in Swift because of parameter names and syntactic sugar, but the idea of reading types is just as important.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>That word is &ldquo;functor&rdquo; if you&rsquo;re curious. A <a href="https://en.wikibooks.org/wiki/Haskell/The_Functor_class">functor</a> is a structure you can map over. It&rsquo;d probably be clearer if we called it &ldquo;mappable.&rdquo;<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p>Remember that &ldquo;box&rdquo; and &ldquo;unbox&rdquo; are just because of a compiler limitation in Beta6.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Functional Wish Fulfillment]]></title>
+    <link href="https://robnapier.net/functional-wish-fulfillment"/>
+    <updated>2014-08-18T22:00:00-04:00</updated>
+    <id>https://robnapier.net/functional-wish-fulfillment</id>
+    <content type="html"><![CDATA[<p>Yes, this is another of those &ldquo;how to parse JSON in Swift&rdquo; blog posts that seem
+to be required of every Swift blogger. And yes, several of the techniques we&rsquo;ll
+work through come from the functional programming world. And, <em>yes</em>,
+Swift+Functional+JSON is itself a well-worn trail. But still, I hope you find
+this exploration helpful. Don&rsquo;t think of it as functional programming. Think of
+it as the path of &ldquo;I wish there were a function that&hellip;.&rdquo;</p>
+
+<!-- more -->
+
+
+<p>Let&rsquo;s start with the setup. We want to build a nice Wikipedia front end, so step
+one is to allow the user to type in some search term, and return a list of
+pages. Our input is a piece of JSON like this from the Wikipedia API (after
+searching for &ldquo;a&rdquo;):</p>
+
+<pre><code>["a",["Animal","Association football","Arthropod","Australia","AllMusic",...]]
+</code></pre>
+
+<p>Our output should be a list of pages or an error. &ldquo;A list of pages or an error.&rdquo;
+That&rsquo;s kind of a funny thing. What type would that be? If you&rsquo;re an old ObjC dev
+like me, then you&rsquo;d probably think (in Swift):</p>
+
+<pre><code>struct Page { let title: String }
+func pagesFromData(data: NSData, error: NSErrorPointer) -&gt; [Page]?
+</code></pre>
+
+<p>But that&rsquo;s kind of a pain to use. We have to create an <code>NSError</code> variable and
+pass it with <code>&amp;error</code> and then check whether there was a result. Bleh. Gotta be
+a better way in this new Swift world.</p>
+
+<p>Let&rsquo;s say it again. &ldquo;A list of pages or an error.&rdquo; That means it&rsquo;s something
+that could be one of a couple of types. That&rsquo;s just an enum. Let&rsquo;s make it:</p>
+
+<pre><code>enum PageListResult {
+  case Success([Page])
+  case Failure(NSError)
+}
+</code></pre>
+
+<p><em>I&rsquo;m going to assume that you&rsquo;ve already seen enums with associated values and
+you understand the above type. If you don&rsquo;t, stop here and go read the
+&ldquo;Associated Values&rdquo; section of &ldquo;Enumerations&rdquo; from
+<a href="https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html">The Swift Programming Language</a>.
+This is a really important concept in Swift. Seriously, go read it. It&rsquo;s like
+two pages long and we&rsquo;re going to use it a lot. Don&rsquo;t worry. We&rsquo;ll wait for
+you.</em></p>
+
+<p>So that gives us a much better function signature:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; PageListResult
+</code></pre>
+
+<p>I&rsquo;m amazed how often just figuring out the type I want and the function
+signature really simplifies everything else. You may be familiar with this
+approach from TDD, but to me, it&rsquo;s WDD: Wish Driven Development. &ldquo;I wish there
+were a function that would take data and return me a list of pages or an error.&rdquo;</p>
+
+<p>A very interesting thing happened when we phrased the wish this way. The &ldquo;happy
+path&rdquo; and the &ldquo;error path&rdquo; are now the same path. For every possible input,
+there is a result. It might be an error, but an error is just a kind of result.
+That seems kind of nice.</p>
+
+<p>Anyway, back to our wish fulfillment. We wished that there were this function,
+so let&rsquo;s get to work writing it. (In software, we are our own genies.) To parse
+this data, we need to do several things, any of which could fail:</p>
+
+<ol>
+<li>Parse the <code>NSData</code> into a JSON object</li>
+<li>Make sure the JSON object is an array</li>
+<li>Get the second element</li>
+<li>Make sure the second element is a list of strings</li>
+<li>Convert those strings into pages</li>
+</ol>
+
+
+<p>If we write this in a straightforward style, we get the following
+(<a href="https://gist.github.com/rnapier/9e8f92a1ce6be5c3d295">complete gist</a>):</p>
+
+<pre><code>typealias JSON = AnyObject
+typealias JSONArray = [JSON]
+struct Page { let title: String }
+
+func pagesFromData(data: NSData) -&gt; PageListResult {
+
+  // 1. Parse the NSData into a JSON object
+  var error: NSError?
+  let json: JSON? = NSJSONSerialization.JSONObjectWithData(data,
+                      options: NSJSONReadingOptions(0), error: &amp;error)
+
+  if let json: JSON = json {
+
+    // 2. Make sure the JSON object is an array
+    if let array = json as? JSONArray {
+
+      // 3. Get the second element
+      if array.count &lt; 2 {
+        // Failure leg for 3
+        return .Failure(NSError(localizedDescription: "Could not get second element. Got: \(array.count)"))
+      }
+      let element: JSON = array[1]
+
+      // 4. Make sure the second element is a list of strings
+      if let titles = element as? [String] {
+
+        // 5. Convert those strings into pages
+        return .Success(titles.map { Page(title: $0) })
+      }
+      else {
+        // Failure leg for 4
+        return .Failure(NSError(localizedDescription: "Expected string list. Got: \(array[1])"))
+      }
+    }
+    else {
+      // Failure leg for 2
+      return .Failure(NSError(localizedDescription: "Expected array. Got: \(json)"))
+    }
+  }
+  else if let error = error {
+    // Failure leg for 1
+    return .Failure(error)
+  }
+  else {
+    fatalError("Received neither JSON nor an error")
+    return .Failure(NSError())
+  }
+}
+</code></pre>
+
+<p>That&rsquo;s a lot of code, and frankly, it&rsquo;s hard to tell what&rsquo;s going on in there,
+even with the comments. Some of it is because of how <code>if let</code> works, so the
+errors wind up being in distant <code>else</code> clauses. But even if you rearranged it, I
+think most approaches would look something like this. Lots of if&rsquo;s and returns
+to deal with all the possible error conditions. (Or maybe you just skip the
+error legs because they&rsquo;re too hard, but then you pay for it later when you&rsquo;re
+trying to debug crazy problems in the field. You know I&rsquo;m talking to you. Don&rsquo;t
+deny it.)</p>
+
+<p>I&rsquo;m going to skip way ahead now and show you where we&rsquo;re going. You&rsquo;re not meant
+to understand this code quite yet, but I just want you to compare readability.
+This function does <em>exactly</em> the same thing as the above function. It has the
+same error checks, same success and failure results, passes the same unit tests,
+returns the same <code>NSError</code> values. Even with no idea what <code>&gt;==</code> means, even if
+you just call it &ldquo;the thing you put at the beginning of each step,&rdquo; I&rsquo;d say this
+function is a lot easier to understand and maintain.</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return data
+    &gt;== asJSON
+    &gt;== asJSONArray
+    &gt;== atIndex(1)
+    &gt;== asStringList
+    &gt;== asPages
+}
+</code></pre>
+
+<p>This isn&rsquo;t about fancy operators or clever tricks. We&rsquo;re not going to discuss
+category theory, monads, functors, or combinators (at least not for a
+while). We&rsquo;re just going to follow a sequence of &ldquo;as a real-world developer who
+needs to get code out the door, I wish there were a function that&hellip;&rdquo; and see
+where it takes us. This is about making code easier to read, understand, write,
+and debug. And there are several stops along the way where you can jump off and
+still have better code for your trouble.</p>
+
+<p>So, what&rsquo;s the first thing we wish for? Well, a lot of our confusing code is
+tied up in different ways of managing success versus failure. It would be nice
+if each step dealt with success or failure in the same way. For example, I wish
+there were a function that took an <code>NSData</code> and returned parsed JSON or an
+error. Then it&rsquo;d look just like the <code>pagesFromData</code> function. How about:</p>
+
+<pre><code>enum JSONResult {
+  case Success(JSON)
+  case Failure(NSError)
+}
+func asJSON(data: NSData) -&gt; JSONResult
+</code></pre>
+
+<p>That&rsquo;s OK, but now we have this <code>PageListResult</code> and <code>JSONResult</code> that are
+almost identical, and obviously that&rsquo;s going to keep repeating. This feels like
+a generic problem that we should solve in a generic way:</p>
+
+<pre><code>enum Result&lt;A&gt; {
+  case Success(A)
+  case Failure(NSError)
+}
+</code></pre>
+
+<p>And that would be great, except that Beta6 can&rsquo;t quite handle it (known bug,
+will hopefully be fixed soon). So in the meantime, to get this we need a <code>Box</code>
+for our <code>Success</code> case:</p>
+
+<pre><code>enum Result&lt;A&gt; {
+  case Success(Box&lt;A&gt;)
+  case Failure(NSError)
+}
+
+final class Box&lt;T&gt; {
+  let unbox: T
+  init(_ value: T) { self.unbox = value }
+}
+</code></pre>
+
+<p>So back to our wished-for function, using our awesome new <code>Result</code>:</p>
+
+<pre><code>func asJSON(data: NSData) -&gt; Result&lt;JSON&gt; {
+  var error: NSError?
+  let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &amp;error)
+
+  switch (json, error) {
+  case (_, .Some(let error)): return .Failure(error)
+  case (.Some(let json), _):  return .Success(Box(json))
+  default:
+    fatalError("Received neither JSON nor an error")
+    return .Failure(NSError())
+  }
+}
+</code></pre>
+
+<p>(If the <code>.Some</code> cases are unfamiliar to you, read
+<a href="http://natashatherobot.com/swift-unwrap-multiple-optionals/">Unwrapping Multiple Optionals</a>
+from Natasha the Robot.)</p>
+
+<p>Let&rsquo;s see what happens if we do that for all our functions (you can find all the
+helper functions in
+<a href="https://gist.github.com/rnapier/2c2bccc40b24fb9d54fc">this gist</a>):</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+
+  // 1. Parse the NSData into a JSON object
+  switch asJSON(data) {
+  case .Success(let boxJson):
+
+    // 2. Make sure the JSON object is an array
+    switch asJSONArray(boxJson.unbox) {
+    case .Success(let boxArray):
+
+      // 3. Get the second element
+      switch secondElement(boxArray.unbox) {
+      case .Success(let elementBox):
+
+        // 4. Make sure the second element is a list of strings
+        switch asStringList(elementBox.unbox) {
+        case .Success(let titlesBox):
+
+          // 5. Convert those strings into pages
+          return asPages(titlesBox.unbox)
+
+        case .Failure(let error):
+          return .Failure(error)
+        }
+      case .Failure(let error):
+        return .Failure(error)
+      }
+    case .Failure(let error):
+      return .Failure(error)
+    }
+  case .Failure(let error):
+    return .Failure(error)
+  }
+}
+</code></pre>
+
+<p>We haven&rsquo;t saved any code here. This function, plus the helper functions, is
+actually a bit longer than the original. But short code wasn&rsquo;t the goal. Don&rsquo;t
+focus on typing. Focus on consistency and clarity. Conciseness will often follow
+on its own.</p>
+
+<p>Our function is now incredibly consistent. At each step down the tree we call
+a function that takes <code>something</code> and returns a <code>Result&lt;something-else&gt;</code>. And
+if any of those results are <code>.Failure</code>, we return the error. I wish&hellip;</p>
+
+<p>Hmmm&hellip;. what do I wish? There&rsquo;s clearly a pattern here, and where there are
+patterns there are opportunities for functions. Let&rsquo;s think harder about this
+pattern.</p>
+
+<pre><code>  switch asJSON(data) {
+  case .Success(let boxJson):
+    switch asJSONArray(boxJson.unbox) {
+    case .Success(let boxArray):
+      switch secondElement(boxArray.unbox) {
+    ...
+              return asPages(titlesBox.unbox)
+    ...
+    case .Failure(let error):
+      return .Failure(error)
+    }
+  case .Failure(let error):
+    return .Failure(error)
+  }
+</code></pre>
+
+<p>Let&rsquo;s write it a bit more generally:</p>
+
+<pre><code>  switch f1(x0) {                // Pass x0 to some function
+  case .Success(let x1box):      // If successful,  
+    switch f2(x1box.unbox) {        // continue to another function   
+    case .Success(let x2box):    // If successful,
+      switch f3(x2box.unbox) {      // continue to another function
+    ...
+              return fn(xn.unbox)     // Return the result of the last function
+    ...
+    case .Failure(let error):   // If anyone fails, return failure
+      return .Failure(error)
+    }
+  case .Failure(let error):
+    return .Failure(error)
+  }
+</code></pre>
+
+<p>So I wish I had a function that took &ldquo;the <code>Result</code> so far&rdquo; and &ldquo;the next step&rdquo;
+and returned a <code>Result</code>. If passed a <code>.Success</code>, then it should pass the
+contents to the next step. If passed a <code>.Failure</code>, then it should stop and
+return that. Let&rsquo;s call it <code>continueWith</code> for the time being.</p>
+
+<pre><code>func continueWith&lt;T,U&gt;(a: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+</code></pre>
+
+<p>Stop. I know you just skimmed over that signature. Go read it again. Make sure
+you know what it says. Say it out loud. It takes a result, and a function that
+takes something and returns a result, and returns a result. That probably still
+didn&rsquo;t make any sense. Go back and think about it until it does. This function
+is important. Think about where it says <code>A</code> and where it says <code>B</code>. It should
+start to click in your head pretty quickly once you stop and think about it for
+a second and stop speed-reading.</p>
+
+<p>&hellip;</p>
+
+<p>Really, don&rsquo;t go on until it makes 90% sense to you. You might be thinking
+something like &ldquo;hey, this kind of converts A into B, but inside a Result.&rdquo; Yeah,
+that kind of makes sense. Kind of like <code>map</code>, but kind of different. Hold onto
+that thought, or whatever thought made it make sense to you (we&rsquo;re all
+different). Maybe what you&rsquo;re thinking will be useful later.</p>
+
+<p>&hellip;</p>
+
+<p>OK, now that we&rsquo;re on the same page, if we had a function like that, we could
+write:</p>
+
+<pre><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+  return continueWith(asJSON(data)) {     // data is NSData
+    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
+      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
+        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
+          asPages($0)                     // $0 is [String]
+        } } } }                           // We return Result&lt;[Page]&gt;
+}
+</code></pre>
+
+<p>That&rsquo;s starting to look kind of nice. I like this <code>continueWith</code> function. I
+wonder how we&rsquo;d write it. Well, if it&rsquo;s passed a <code>.Success</code>, it unboxes it and
+calls the next function.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> If it&rsquo;s passed a <code>.Failure</code>, it returns a
+<code>.Failure</code>. That doesn&rsquo;t seem too hard:</p>
+
+<pre><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+  switch x {
+  case .Success(let box): return f(box.unbox)
+  case .Failure(let err): return .Failure(err)
+  }
+}
+</code></pre>
+
+<p>That was actually pretty simple. Don&rsquo;t get too used to the name <code>continueWith</code>.
+We&rsquo;ll be discussing other names for this function later. It&rsquo;s more powerful than
+it looks.</p>
+
+<p>You can look at the <a href="https://gist.github.com/rnapier/0f5611d0bf89a9645713">full gist</a> if you like.</p>
+
+<p>Go back and ponder that last version of <code>pagesFromData</code> for a moment. What do
+you like about it? What still bothers you?</p>
+
+<hr />
+
+<p>I told you there were several jumping off points in this discussion, and we&rsquo;ve
+reached one of them. The nested version of this function using <code>continueWith</code> is
+already a lot easier to reason about than the original version. The techniques
+are pretty vanilla for Swift: an enum with associated data, and a function that
+takes function. All you need to do is structure your code so each failable step
+takes a value and returns a <code>Result</code>. You can continue this pattern
+indefinitely, keeping the code easy to understand, while still getting good
+error messages.</p>
+
+<p>So let&rsquo;s leave it there for this post. Soon we&rsquo;ll push this further, make it
+easier to read and more generic. We might even talk more about this interesting
+<code>continueWith</code> function.</p>
+
+<p>In the meantime, you may be interested in some other explorations of these
+topics. They all have spoilers of where we&rsquo;re going, but there&rsquo;s no harm in
+that. We each learn in our own way, so maybe one of these approaches will click
+best with you.</p>
+
+<ul>
+<li>Alexandros Salazar&rsquo;s
+<a href="http://nomothetis.svbtle.com/error-handling-in-swift">Error Handling in Swift</a>.
+A must-read series in my opinion. My use of the <code>Result</code> type is based directly
+on his.</li>
+<li>Tony DiPasquale&rsquo;s
+<a href="http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics">Efficient JSON in Swift with Functional Concepts and Generics</a>, which is a
+direct influence on this work, but may be a bit fast-paced for many readers.</li>
+<li>Chris Eidhof&rsquo;s
+<a href="http://chris.eidhof.nl/posts/json-parsing-in-swift.html">Parsing JSON in Swift</a>
+which is quite nice if you already understand where this is going, but jumps
+into the deep end very quickly.</li>
+</ul>
+
+
+<p>If Tony or Chris&rsquo;s posts make perfect sense to you, maybe you don&rsquo;t need my
+series. If you leave them a little befuddled, then this series will get to the
+same place, just a bit more gently.</p>
+
+<p>Until then, stop mutating. Evolve.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Remember that the &ldquo;unbox&rdquo; step is just because of a Beta6 compiler limitation.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
 ]]></content>
   </entry>
   

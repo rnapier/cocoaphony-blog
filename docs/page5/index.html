@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I&rsquo;ve built a candidate fix for the RNCryptor HMAC vulnerability. It&rsquo;s on a branch (issue44) currently, but I&rsquo;ll merge it to master &hellip;">
+  <meta name="description" content="After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I&rsquo;ve decided to make a change &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://localhost:4000/page5">
+  <link rel="canonical" href="https://robnapier.net/page5">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
@@ -61,368 +61,6 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/rncryptor-vulnerability-fix">Update on RNCryptor Vulnerability Fix</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-01-17T17:12:12-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve built a candidate fix for the RNCryptor <a href="http://robnapier.net/blog/rncryptor-hmac-vulnerability-827">HMAC vulnerability</a>. It&rsquo;s on a branch (<a href="https://github.com/rnapier/RNCryptor/tree/issue44">issue44</a>) currently, but I&rsquo;ll merge it to master next week if no one sees problems, and update the docs. By default it is incompatible with v1 files. If you need to be able to decrypt v1 files, you can define RNCRYPTOR_ALLOW_V1_BAD_HMAC when building.</p>
-
-<p>Please let me know if anyone encounters issues.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-hmac-vulnerability">RNCryptor HMAC Vulnerability (My Security Blunder)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-01-14T13:52:38-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Thank you to Allen Mann for discovering the following significant security vulnerability in RNCryptor.</p>
-
-<h3>The Vulnerability</h3>
-
-
-<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> computes the HMAC over the ciphertext only. It does not compute an HMAC over the header, particularly the IV. This allows an attacker to modify the IV and thus manipulate the first block (16-bytes) of decrypted plaintext. This is a major issue, and is exactly the kind of problem that RNCryptor is designed to avoid.</p>
-
-<p>I will be modifying RNCryptor shortly to fix this. This will rev the file version to 2. I will provide a backward-compatibly option to read v1 files (default off). I strongly recommend that developers move to the v2 format.</p>
-
-<p>I will try to get this out as quickly as I can, hopefully this week.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-hmac-vulnerability">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/animating-arbitrary-keypaths">Animating Arbitrary KeyPaths</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-12-17T21:44:41-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</a>, I discussed my PinchView from <a href="http://robnapier.net/blog/laying-out-text-with-coretext-547">Laying out text with Core Text</a>. It&rsquo;s a text view that squeezes the glyphs towards your finger when you touch it. I built it to demonstrate per-glyph layout in Core Text. While demonstrating it, I was pretty unsatisfied with how it looked when you touched it or let go. When you drag your finger on the view, the glyphs move around like water. It&rsquo;s quite pretty. But when you initially touch the screen, the glyphs suddenly jump to their new locations, and then they jump back when you release the screen. Well, that&rsquo;s no good. So I wanted to add animations.</p>
-
-<p>But here&rsquo;s the thing: what do you animate? While you do want to animate the glyph positions, you&rsquo;re not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer&rsquo;s list of animatable properties confirmed that there&rsquo;s nothing like that. But no problem, I added a custom property called <code>touchPointScale</code> and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/animating-arbitrary-keypaths">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/cocoaconf">CocoaConf</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-11-29T22:50:04-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Here are some useful links you&rsquo;re probably looking for.</p>
-
-<p><a href="https://github.com/rnapier/richtext-coretext/blob/master/Rich%20Text%2C%20Core%20Text.pdf">Rich Text, Core Text</a> Presentation</p>
-
-<p><a href="http://www.linotype.com/2762/zapfinoextra.html">Zapfino Extra Pro</a></p>
-
-<p><a href="http://www.iamcal.com/understanding-bidirectional-text/">Understanding Bidirectional (BIDI) Text in Unicode</a> by Cal Henderson</p>
-
-<p><a href="http://www.unicode.org/reports/tr9">Unicode Standard Annex #9</a> Unicode Bidirectional Algorithm</p>
-
-<p><a href="https://github.com/rnapier/richtext-coretext">GitHub for Rich Text, Core Text</a></p>
-
-<p><a href="https://github.com/rnapier/practical-security/blob/master/Practical%20Security.pdf">Practical Security</a> Presentation</p>
-
-<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor GitHub</a></p>
-
-<p><a href="https://github.com/rnapier/security-blunders">GitHub for Security Blunders</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/pbkdf2-sha1">PBKDF2 and SHA-1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-09-18T11:01:11-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve posted a new errata on the iosptl site about <a href="http://iosptl.com/posts/new-prf-functions-for-pbkdf2/">PBKDF2 and SHA-1 versus SHA-2</a>. If you&rsquo;re using CommonCryptor (and particularly CommonKeyDerivation), you may be interested.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-titanium">RNCryptor and My Titanium Experiment</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-08-21T10:13:18-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Several months ago, I received a request to port my <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> module to <a href="http://www.appcelerator.com">Titanium</a>. I&rsquo;ve never been a fan of the JavaScript wrappers for iOS and Android. My belief and experience is that they&rsquo;re far more trouble than their worth. But the goal of RNCryptor was always to help people use AES correctly, and that&rsquo;s as important in JavaScript as it is in Objective-C. So I wrapped up RNCyptor into a Titanium module and stuck it on the <a href="https://marketplace.appcelerator.com">Appcelerator Marketplace</a>. Though RNCryptor is free, the pain of wrapping it into JavaScript led me to charge $10 for the Titanium version.</p>
-
-<p>The pain of maintaining this thing has gotten to be too much, though. I&rsquo;m releasing it today on <a href="https://github.com/rnapier/Cryptor-titanium">GitHub</a> in its current form, which is based on the older, synchronous form of RNCryptor. I may not have updated all the license text yet; if I miss any, it is under the MIT license. Thanks to those who purchased Cryptor-Titanium during its commercial life. Anyone who is interested in continuing development, please contact me (or submit a pull request).</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-titanium">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/updated-rncryptor">Updated RNCryptor</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-07-13T16:06:30-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have brought the <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> async branch to master. This is a major change in API, but I believe much more flexible. I&rsquo;ve stripped the API down quite a lot, so please let me know if there are missing features. I&rsquo;m particularly interested in anyone who needs better support for reading and writing files. I haven&rsquo;t added any methods for that until I see how people are really using it.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/phone-screen">Phone-screening Cocoa Developers</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-06-26T11:15:12-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There was an <a href="http://stackoverflow.com/questions/1019636/phone-screen-questions-for-mac-os-x-developer-positions/1019759#1019759">interesting question</a> on StackOverflow that was unfortunately closed as off topic. It was off topic, but it&rsquo;s still a useful question. When phone screening potential Cocoa developers, what kinds of questions should you ask? I&rsquo;ve helped several clients screen potential candidates over the years, and so I have several questions I use to help with that.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/phone-screen">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-async">RNCryptor Async</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I&rsquo;ll be documenting this more formally within a few weeks, but here are the high points:</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-async">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/mode-rncryptor">Mode Changes for RNCryptor</a></h1>
     
     
@@ -459,6 +97,397 @@
 <p>If you update, note that this is incompatible with your existing encrypted files. I doubt there is enough field usage out there that this is an issue, but if it is, let me know and I can discuss with you how to convert.</p>
 </div>
   
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/simple-gcd-timer-rntimer">Simple GCD Timer (RNTimer)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-05-29T21:37:25-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn&rsquo;t find it anywhere and I was sick of writing it over and over again&hellip;. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot&rsquo;s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash&rsquo;s</a>, but they solve different problems.</i></p>
+
+<p>Have you ever noticed how hard it is to write a repeating <code>NSTimer</code> that doesn&rsquo;t create a retain loop? Almost always you wind up with something like this:</p>
+
+<pre><code>[NSTimer scheduledTimerWithTimeInterval:1
+                                 target:self
+                               selector:@selector(something)
+                               userInfo:nil 
+                                repeats:YES];
+</code></pre>
+
+<p>Seems easy enough, except it&rsquo;s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you&rsquo;d think this would be easy. And it should be, so I fixed it. I just still can&rsquo;t quite believe I&rsquo;m the first to do so.</p>
+
+<p>Anyway, for your consideration I present a very simple class called <code>RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn&rsquo;t address.</p>
+
+<p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/wrapping-cppfinal-edition">Wrapping C++ Final Edition</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a &ldquo;language.&rdquo; It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code>.mm</code> is a blight on your code. Never let it spread.</p>
+
+<p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple&rsquo;s frameworks are implemented in C++.</p>
+
+<p>So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your &ldquo;middleware&rdquo; in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/wrapping-cppfinal-edition">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/github-pricing">Github and Its Pricing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-30T22:48:49-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It&rsquo;s a good interface. It works. I could use a few more features in the Issues module, but it&rsquo;s nice that they keep it simple. I&rsquo;ve tried BitBucket and Assembla, and looked at several others. I&rsquo;ve managed my own servers. In every test, github wins.</p>
+
+<p>Except for price. github is often the most expensive. Especially if you need what I need, which is several small repositories, each with a small number of collaborators (often just one or two). But just a few of those can push you into the Medium plan, or even into the Bronze plan.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/github-pricing">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/contribution-vs-compensation">Some Math Behind "Contribution != Compensation"</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-24T18:16:32-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thanks to @codinghorror, I recently read a blog post from Steve McConnell called <a href="http://blogs.construx.com/blogs/stevemcc/archive/2011/01/22/10x-productivity-myths-where-s-the-10x-difference-in-compensation.aspx">10x Productivity Myths: Where’s the 10x Difference in Compensation?</a> Steve quotes a question from Pete McBreen:</p>
+
+<blockquote>"One point in his article that McConnell did not address--<strong>programmer compensation does not vary accordingly.</strong> This is a telling point--if the difference is productivity can be 10X, why is it that salaries rarely fall outside the 2X range for experienced developers?" [emphasis in original]</blockquote>
+
+
+<p>He then provides some fairly satisfying answers. &ldquo;The other guy is actually overpaid.&rdquo; &ldquo;You&rsquo;re confusing coding with actual business value.&rdquo; &ldquo;Companies pay the least they can get away with.&rdquo; etc. All his answers make good, intuitive sense. Unfortunately, despite being a longtime fan of Steve McConnell&rsquo;s work, I believe most are irrelevant or incorrect.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/contribution-vs-compensation">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/triangle-cocoaheads-march">Triangle CocoaHeads (and Building a (Core) Foundation)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-23T21:48:30-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Last night&rsquo;s <a href="http://meetup.trianglecocoa.com/events/49569052/">CocoaHeads</a> was a blast. <a href="http://www.dtsquaredsoftware.com/">Alondo</a>, you have to come give an intermediate/advanced talk on Storyboards. Thanks a lot to @scottpenrose for his lightning and thunder, and @flightblog for his inspiration (METAR gave me a lot of headaches, too). And of course, thanks especially to <a href="http://log.jsh.in/">Josh</a> for organizing everything. And a new place for NSCoder? You rock.</p>
+
+<p>For those who didn&rsquo;t scribble notes fast enough, my Core Foundation presentation is attached (including the fix for my memory leak; was it Jay who found that?) I&rsquo;ll make sure to fix the code in the book for the next edition.</p>
+
+<p><a href="/assets/Building-a-Core-Foundation.pdf">Building a Core Foundation Presentation</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/faster-bezier">Even Faster Bezier</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-06T12:53:40-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When <a href="/fast-bezier-intro">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That&rsquo;s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code>-Os</code> optimized function. But we&rsquo;re just getting warmed up. We haven&rsquo;t yet gotten half of the performance available.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/faster-bezier">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/fast-bezier-intro">Introduction to Fast Bezier (and Trying the Accelerate.framework)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-02-24T14:22:46-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[If you want the answer to last time&rsquo;s homework, skip to the end.]</p>
+
+<p>So you want to hand-calculate Bézier curves. Good for you. It comes up more often then you&rsquo;d think on iOS, even though <code>UIBezierPath</code> is supposed to do it all for you. The truth is, sometimes you need the numbers yourself. For instance if you want to calculate intersections, or you want to draw text along the curve (like in <a href="https://github.com/rnapier/ios5ptl/tree/master/ch18/CurvyText">CurvyText</a> from <a href="http://iosptl.com">iOS:PTL</a> chapter 18).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/fast-bezier-intro">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/equations-matrices-accelerate">Converting Algebra to Matrices for Accelerate Framework</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-02-06T11:19:28-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+<p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I&rsquo;ll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
+
+<p>In this post, I&rsquo;m targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it&rsquo;s hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you&rsquo;re like me, and once upon a time you actually took linear algebra, but today you wouldn&rsquo;t know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn&rsquo;t been released…) My goal isn&rsquo;t to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/equations-matrices-accelerate">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/offline-uiwebview-nsurlprotocol">Drop-in Offline Caching for UIWebView (and NSURLProtocol)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-01-29T14:56:11-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>The most up-to-date source for this is now available at <a href="https://github.com/rnapier/RNCachingURLProtocol">github</a>.</em></p>
+
+<p>Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://iosptl.com">our book</a> is devoted to the ins-and-outs of this subject.</p>
+
+<p>But sometimes you just have a simple <code>UIWebView</code>, and you want to cache the last version of the page. You&rsquo;d think that <code>NSURLCache</code> would handle this for you, but it&rsquo;s much more complicated than that. <code>NSURLCache</code> doesn&rsquo;t cache everything you&rsquo;d think it would. Sometimes this is because of Apple&rsquo;s decisions in order to save space. Just as often, however, it&rsquo;s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
+
+<p>What I wanted was a simple mechanism for the following case:</p>
+
+<ul>
+<li>You have a UIWebView that points to a website with embedded images</li>
+<li>When you&rsquo;re online, you want the normal caching algorithms (nothing fancy)</li>
+<li>When you&rsquo;re offline, you want to show the last version of the page</li>
+</ul>
+
+
+<p>My test case was simple: a webview that loads cnn.com (a nice complicated webpage with lots of images). Run it once. Quit. Turn off the network. Run it again. CNN should display.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/offline-uiwebview-nsurlprotocol">Read on &rarr;</a>
+    </footer>
   
 
 
