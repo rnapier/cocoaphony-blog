@@ -245,7 +245,7 @@ extension Document: Fetchable {
 }
 ```
 
-These tiny extensions represent one of the most powerful, and easiest to overlook, aspects of protocol-oriented programming: retroactive modeling. It is quite non-obvious that I can take a type like User that wasn’t designed to be Fetchable, and make it Fetchable in an extension. And that extension doesn’t even have to be in the same module. That's not something you can typically do with class inheritance. You need to choose a superclass when you define a type. By
+These tiny extensions represent one of the most powerful, and easiest to overlook, aspects of protocol-oriented programming: retroactive modeling. It is quite non-obvious that I can take a type like User that wasn’t designed to be Fetchable, and make it Fetchable in an extension. And that extension doesn’t even have to be in the same module. That's not something you can typically do with class inheritance. You need to choose a superclass when you define a type.
 
 I can take any type I want and conform it to my own protocols to use it in new and more powerful ways that the original type creator may never have thought of. There’s no need to tie User to this one use case and this one API. That's why this protocol is called Fetchable rather than something like Model. It *isn't* a "model." It's "something that can be fetched" and it only provides the methods and properties that allow that. I'm not suggesting that you should create a protocol for every use case, just the opposite. Really good protocols are usable by many algorithms. But you want most uses of the protocol to need most of the requirements. If the protocol is just a copy of the type's entire API, it's not doing its job. I'll talk about that more in later articles.
 
