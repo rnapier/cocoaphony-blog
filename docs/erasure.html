@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Once upon a time, when Swift was young, there were a couple of types called SequenceOf and GeneratorOf, and they could type erase stuff. &ldquo;Type &hellip;">
+  <meta name="description" content="Once upon a time, when Swift was young, there were a couple of types called SequenceOf and GeneratorOf, and they could type erase stuff. “Type erase &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,59 +77,59 @@
   </header>
 
 
-<div class="entry-content"><p>Once upon a time, when Swift was young, there were a couple of types called <code>SequenceOf</code> and <code>GeneratorOf</code>, and they could type erase stuff. &ldquo;Type erase?&rdquo; you may ask. &ldquo;I thought we <em>loved</em> types.&rdquo; We do. Don&rsquo;t worry. Our types aren&rsquo;t going anywhere. But sometimes we want them to be a little less&hellip;precise.</p>
+<div class="entry-content"><p>Once upon a time, when Swift was young, there were a couple of types called <code class="highlighter-rouge">SequenceOf</code> and <code class="highlighter-rouge">GeneratorOf</code>, and they could type erase stuff. “Type erase?” you may ask. “I thought we <em>loved</em> types.” We do. Don’t worry. Our types aren’t going anywhere. But sometimes we want them to be a little less…precise.</p>
 
-<p>In Swift 2, our little type erasers got a rename and some friends. Now they&rsquo;re all named &ldquo;Any&rdquo;-something. So <code>SequenceOf</code> became <code>AnySequence</code> and <code>GeneratorOf</code> became <code>AnyGenerator</code> and there are a gaggle of indexes and collections from <code>AnyForwardIndex</code> to <code>AnyRandomAccessCollection</code>.</p>
+<p>In Swift 2, our little type erasers got a rename and some friends. Now they’re all named “Any”-something. So <code class="highlighter-rouge">SequenceOf</code> became <code class="highlighter-rouge">AnySequence</code> and <code class="highlighter-rouge">GeneratorOf</code> became <code class="highlighter-rouge">AnyGenerator</code> and there are a gaggle of indexes and collections from <code class="highlighter-rouge">AnyForwardIndex</code> to <code class="highlighter-rouge">AnyRandomAccessCollection</code>.</p>
 
-<p>So what are these type erasers? Let&rsquo;s start with how to use one and we&rsquo;ll work backwards to why.<!-- more --></p>
+<p>So what are these type erasers? Let’s start with how to use one and we’ll work backwards to why.<!-- more --></p>
 
-<pre><code>let seq = AnySequence([1,2,3])
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let seq = AnySequence([1,2,3])
+</code></pre></div></div>
 
-<p>This creates an <code>AnySequence&lt;Int&gt;</code>. It&rsquo;s just a sequence of Ints that we can iterate over. Isn&rsquo;t <code>[1,2,3]</code> also a sequence of Ints we can iterate over? Well, yeah. But it&rsquo;s also explicitly an Array. And sometimes you don&rsquo;t want to have to deal with that kind of implementation detail.</p>
+<p>This creates an <code class="highlighter-rouge">AnySequence&lt;Int&gt;</code>. It’s just a sequence of Ints that we can iterate over. Isn’t <code class="highlighter-rouge">[1,2,3]</code> also a sequence of Ints we can iterate over? Well, yeah. But it’s also explicitly an Array. And sometimes you don’t want to have to deal with that kind of implementation detail.</p>
 
-<h2>Who Needs Types Like That?</h2>
+<h2 id="who-needs-types-like-that">Who Needs Types Like That?</h2>
 
-<p> Let&rsquo;s consider a little more complicated case:</p>
+<p>Let’s consider a little more complicated case:</p>
 
-<pre><code>let xs = [1,2,3]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let xs = [1,2,3]
 let ys = ["A","B","C"]
 let zs = zip(xs.reverse(), ys.reverse())
 // Zip2Sequence&lt;ReverseRandomAccessCollection&lt;Array&lt;Int&gt;&gt;, ReverseRandomAccessCollection&lt;Array&lt;String&gt;&gt;&gt;
-</code></pre>
+</code></pre></div></div>
 
-<p>That&rsquo;s quite a type. Imagine it as the return type of a function:</p>
+<p>That’s quite a type. Imagine it as the return type of a function:</p>
 
-<pre><code>func reverseZip&lt;T,U&gt;(xs: [T], _ ys: [U]) -&gt; Zip2Sequence&lt;ReverseRandomAccessCollection&lt;[T]&gt;, ReverseRandomAccessCollection&lt;[U]&gt;&gt; {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverseZip&lt;T,U&gt;(xs: [T], _ ys: [U]) -&gt; Zip2Sequence&lt;ReverseRandomAccessCollection&lt;[T]&gt;, ReverseRandomAccessCollection&lt;[U]&gt;&gt; {
   return zip(xs.reverse(), ys.reverse())
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>That&rsquo;s insane. Let&rsquo;s not do that. Not only is the type overwhelming, but it ties us to this particular implementation. We might want to refactor the code like this:</p>
+<p>That’s insane. Let’s not do that. Not only is the type overwhelming, but it ties us to this particular implementation. We might want to refactor the code like this:</p>
 
-<pre><code>  return zip(xs, ys).reverse()
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  return zip(xs, ys).reverse()
+</code></pre></div></div>
 
-<p>Then the return type would change to <code>[(T,U)]</code> and all the callers would have to be updated. Clearly we&rsquo;re leaking too much information about our implementation. What&rsquo;s the point of <code>reverseZip</code>? Is it to return a <code>Zip2Sequence&lt;...&gt;</code>? No. It&rsquo;s to return a sequence of tuples. We want a type that means &ldquo;a sequence of tuples.&rdquo; Often we use <code>Array</code> for that, but there&rsquo;s an even less restrictive way that doesn&rsquo;t require making an extra copy: <code>AnySequence</code>.</p>
+<p>Then the return type would change to <code class="highlighter-rouge">[(T,U)]</code> and all the callers would have to be updated. Clearly we’re leaking too much information about our implementation. What’s the point of <code class="highlighter-rouge">reverseZip</code>? Is it to return a <code class="highlighter-rouge">Zip2Sequence&lt;...&gt;</code>? No. It’s to return a sequence of tuples. We want a type that means “a sequence of tuples.” Often we use <code class="highlighter-rouge">Array</code> for that, but there’s an even less restrictive way that doesn’t require making an extra copy: <code class="highlighter-rouge">AnySequence</code>.</p>
 
-<pre><code>func reverseZip&lt;T,U&gt;(xs: [T], _ ys: [U]) -&gt; AnySequence&lt;(T,U)&gt; {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverseZip&lt;T,U&gt;(xs: [T], _ ys: [U]) -&gt; AnySequence&lt;(T,U)&gt; {
     return AnySequence(zip(xs, ys).reverse())
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>Now we can keep our implementation details private. If we have some internal sequence type, we don&rsquo;t have to share it with our callers. We just give them what they need and no more.</p>
+<p>Now we can keep our implementation details private. If we have some internal sequence type, we don’t have to share it with our callers. We just give them what they need and no more.</p>
 
-<p>Notice that <code>AnySequence</code> is not a protocol. It&rsquo;s a generic <code>struct</code> that wraps another sequence. You can&rsquo;t use an <code>[Int]</code> in a place that expects an <code>AnySequence&lt;Int&gt;</code>. You still want to use <code>SequenceType</code> for parameters in most cases.</p>
+<p>Notice that <code class="highlighter-rouge">AnySequence</code> is not a protocol. It’s a generic <code class="highlighter-rouge">struct</code> that wraps another sequence. You can’t use an <code class="highlighter-rouge">[Int]</code> in a place that expects an <code class="highlighter-rouge">AnySequence&lt;Int&gt;</code>. You still want to use <code class="highlighter-rouge">SequenceType</code> for parameters in most cases.</p>
 
-<p>These &ldquo;Any&rdquo; type erasers also aren&rsquo;t like <code>Any</code> and <code>AnyObject</code>, which are protocols that just &ldquo;hide&rdquo; the type. You can still <code>as!</code> an <code>AnyObject</code> back to its original type. <code>AnySequence</code> and its kin completely encapsulate the underlying data. You can&rsquo;t get the original back. This creates a very strong abstraction layer and strengthens type safety by making <code>as!</code> casting impossible.</p>
+<p>These “Any” type erasers also aren’t like <code class="highlighter-rouge">Any</code> and <code class="highlighter-rouge">AnyObject</code>, which are protocols that just “hide” the type. You can still <code class="highlighter-rouge">as!</code> an <code class="highlighter-rouge">AnyObject</code> back to its original type. <code class="highlighter-rouge">AnySequence</code> and its kin completely encapsulate the underlying data. You can’t get the original back. This creates a very strong abstraction layer and strengthens type safety by making <code class="highlighter-rouge">as!</code> casting impossible.</p>
 
-<p><a href="http://www.openradar.me/radar?id=5528602095386624">The new names worry me a little</a> because they make it look like <code>AnyObject</code> and <code>AnySequence</code> are the same kind of thing when they&rsquo;re not. But the new naming convention is definitely more flexible. You couldn&rsquo;t have named the <code>AnyIndex</code> types using the old <code>...Of</code> convention. So, I&rsquo;m getting used to the new names.</p>
+<p><a href="http://www.openradar.me/radar?id=5528602095386624">The new names worry me a little</a> because they make it look like <code class="highlighter-rouge">AnyObject</code> and <code class="highlighter-rouge">AnySequence</code> are the same kind of thing when they’re not. But the new naming convention is definitely more flexible. You couldn’t have named the <code class="highlighter-rouge">AnyIndex</code> types using the old <code class="highlighter-rouge">...Of</code> convention. So, I’m getting used to the new names.</p>
 
-<h2>Chains of Association</h2>
+<h2 id="chains-of-association">Chains of Association</h2>
 
-<p>Hopefully by now you&rsquo;re sold on why you&rsquo;d want to use a type eraser. But would you ever want to build one? Let&rsquo;s look at an example that comes up pretty often around associated types in protocols.</p>
+<p>Hopefully by now you’re sold on why you’d want to use a type eraser. But would you ever want to build one? Let’s look at an example that comes up pretty often around associated types in protocols.</p>
 
-<pre><code>// An Animal can eat
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// An Animal can eat
 protocol Animal {
     typealias Food
     func feed(food: Food)
@@ -151,79 +150,79 @@ struct Goat: Animal {
 struct Bird: Animal {
     func feed(food: Worm) { print("chirp") }
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>So now let&rsquo;s say we have a bunch of grass available and we&rsquo;d like to feed it to some grass eaters. Seems easy:</p>
+<p>So now let’s say we have a bunch of grass available and we’d like to feed it to some grass eaters. Seems easy:</p>
 
-<pre><code>for animal in grassEaters {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for animal in grassEaters {
     animal.feed(Grass())
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>Now we just have to create this array of grass eaters. Should be simple, right? Hmmm&hellip;</p>
+<p>Now we just have to create this array of grass eaters. Should be simple, right? Hmmm…</p>
 
-<pre><code>let grassEaters = [Cow(), Goat()] // error: '_' is not convertible to 'Goat'
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters = [Cow(), Goat()] // error: '_' is not convertible to 'Goat'
+</code></pre></div></div>
 
-<p>That&rsquo;s a weird error. We probably just need to be explicit about the the type.</p>
+<p>That’s a weird error. We probably just need to be explicit about the the type.</p>
 
-<pre><code>let grassEaters: [Animal] = [Cow(), Goat()]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters: [Animal] = [Cow(), Goat()]
 // error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements
-</code></pre>
+</code></pre></div></div>
 
-<p>We all know that error, don&rsquo;t we? OK, let&rsquo;s try generics.</p>
+<p>We all know that error, don’t we? OK, let’s try generics.</p>
 
-<pre><code>let grassEaters: [Animal&lt;Grass&gt;] = [Cow(), Goat()]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters: [Animal&lt;Grass&gt;] = [Cow(), Goat()]
 // error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements
-</code></pre>
+</code></pre></div></div>
 
-<p>Still? Oh right. You can&rsquo;t specialize an associated type using generic syntax. That&rsquo;s fine, we&rsquo;ll just make the protocol generic.</p>
+<p>Still? Oh right. You can’t specialize an associated type using generic syntax. That’s fine, we’ll just make the protocol generic.</p>
 
-<pre><code>protocol Animal&lt;Food&gt; {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protocol Animal&lt;Food&gt; {
     func feed(food: Food)
 }
 // error: Statement cannot begin with a closure expression
-</code></pre>
+</code></pre></div></div>
 
-<p>Right, protocols can&rsquo;t be generic. Type-safety is for chumps. Let&rsquo;s go back to Objective-C.</p>
+<p>Right, protocols can’t be generic. Type-safety is for chumps. Let’s go back to Objective-C.</p>
 
-<p>&hellip;Or maybe type erasure is what we need. Let&rsquo;s build <code>AnyAnimal</code>. There are several ways to do this, but the easiest in my opinion is with closures.</p>
+<p>…Or maybe type erasure is what we need. Let’s build <code class="highlighter-rouge">AnyAnimal</code>. There are several ways to do this, but the easiest in my opinion is with closures.</p>
 
-<pre><code>struct AnyAnimal&lt;Food&gt;: Animal {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct AnyAnimal&lt;Food&gt;: Animal {
     private let _feed: (Food) -&gt; Void
     init&lt;Base: Animal where Food == Base.Food&gt;(_ base: Base) {
         _feed = base.feed
     }
     func feed(food: Food) { _feed(food) }
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>(While this works exactly like <code>AnySequence</code>, this isn&rsquo;t how <code>AnySequence</code> is implemented. In my next post I&rsquo;ll discuss why and how to implement type erasers like stdlib does.)</p>
+<p>(While this works exactly like <code class="highlighter-rouge">AnySequence</code>, this isn’t how <code class="highlighter-rouge">AnySequence</code> is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p>
 
-<p>Now we can make <code>grassEaters</code>:</p>
+<p>Now we can make <code class="highlighter-rouge">grassEaters</code>:</p>
 
-<pre><code>let grassEaters = [AnyAnimal(Cow()), AnyAnimal(Goat())] // Type is [AnyAnimal&lt;Grass&gt;]
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters = [AnyAnimal(Cow()), AnyAnimal(Goat())] // Type is [AnyAnimal&lt;Grass&gt;]
+</code></pre></div></div>
 
 <p>But we still get type safety if we try to incorrectly mix our animals:</p>
 
-<pre><code>let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())]
 // error: type of expression is ambiguous without more context
-</code></pre>
+</code></pre></div></div>
 
-<p>This kind of type eraser lets us convert a protocol with associated types into a generic type. That means we can put it in properties and return values and other places that we can&rsquo;t use protocols directly. As you use more protocols in your Swift (and <a href="https://developer.apple.com/videos/wwdc/2015/?id=408">you should be</a>), I think this will become an important tool in your toolbelt.</p>
+<p>This kind of type eraser lets us convert a protocol with associated types into a generic type. That means we can put it in properties and return values and other places that we can’t use protocols directly. As you use more protocols in your Swift (and <a href="https://developer.apple.com/videos/wwdc/2015/?id=408">you should be</a>), I think this will become an important tool in your toolbelt.</p>
 
 <p>So get out there and erase some over-specific types. Focus on the protocol, hide the implementation.</p>
 
-<p><a href="https://gist.github.com/rnapier/03674b399e3bc517b9cd">And here&rsquo;s the code for your amusement.</a></p>
+<p><a href="https://gist.github.com/rnapier/03674b399e3bc517b9cd">And here’s the code for your amusement.</a></p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -284,21 +283,7 @@ struct Bird: Animal {
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

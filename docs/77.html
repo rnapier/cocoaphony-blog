@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="More hacking on station lists tonight. So far it&rsquo;s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through &hellip;">
+  <meta name="description" content="More hacking on station lists tonight. So far it’s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,17 +77,17 @@
   </header>
 
 
-<div class="entry-content"><p>More hacking on station lists tonight. So far it&rsquo;s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through NSURLProtocols). The station list comes back as an XML document, and I can copy that off into an easy array for later use. The only thing I need to work more on is QuickMix management, since those are magically pulled out of the main channel list, and I should probably do the same to avoid confusion.</p>
+<div class="entry-content"><p>More hacking on station lists tonight. So far it’s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through NSURLProtocols). The station list comes back as an XML document, and I can copy that off into an easy array for later use. The only thing I need to work more on is QuickMix management, since those are magically pulled out of the main channel list, and I should probably do the same to avoid confusion.</p>
 
-<p>I&rsquo;ve talked often with folks about XML and how there are so many good ways to compress it quite effectively and it&rsquo;s strange that XML developers have chosen not to do that. Rather, real XML winds up being insanely verbose and bloated on the wire. I hereby take back my earlier complaints. The fact that I can read XML by sniffing the traffic without having to apply any decoding (not even gunzip), and can recognize XML easily when I come across it, is one of the biggest boons to reverse engineering I&rsquo;ve ever encountered. Long live human readable data formats!</p>
+<p>I’ve talked often with folks about XML and how there are so many good ways to compress it quite effectively and it’s strange that XML developers have chosen not to do that. Rather, real XML winds up being insanely verbose and bloated on the wire. I hereby take back my earlier complaints. The fact that I can read XML by sniffing the traffic without having to apply any decoding (not even gunzip), and can recognize XML easily when I come across it, is one of the biggest boons to reverse engineering I’ve ever encountered. Long live human readable data formats!</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -155,21 +154,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

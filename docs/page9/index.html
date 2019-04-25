@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For the last couple of nights I&rsquo;ve finally gotten back to PandoraBoy work. The backlog of issues has gotten a bit out of hand as I&rsquo;ve &hellip;">
+  <meta name="description" content="For the last couple of nights I’ve finally gotten back to PandoraBoy work. The backlog of issues has gotten a bit out of hand as I’ve focused on &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -81,11 +80,11 @@
   </header>
 
 
-  <div class="entry-content"><p>For the last couple of nights I&rsquo;ve finally gotten back to PandoraBoy work. The backlog of issues has gotten a bit out of hand as I&rsquo;ve focused on other projects. One thing that has hung me up for a while has been the Hotkey preferences pane, which uses ShortcutRecorder. SR had an IB Pallet that only worked with IB2.5, not IB3, which made working on that panel very difficult. I&rsquo;ve finally upgraded SR to the latest version, which required a lot of recoding since PB relied SR&rsquo;s now-deprecated autosave functionality.</p>
+  <div class="entry-content"><p>For the last couple of nights I’ve finally gotten back to PandoraBoy work. The backlog of issues has gotten a bit out of hand as I’ve focused on other projects. One thing that has hung me up for a while has been the Hotkey preferences pane, which uses ShortcutRecorder. SR had an IB Pallet that only worked with IB2.5, not IB3, which made working on that panel very difficult. I’ve finally upgraded SR to the latest version, which required a lot of recoding since PB relied SR’s now-deprecated autosave functionality.</p>
 
-<p>The side effect of all of that is that the latest SR requires Leopard, and so now PB requires Leopard. I had planned to wait for SnowLeopard&rsquo;s release to drop Tiger support, but this accelerates that a bit. It does make my coding a work a bit easier, since 10.5 has many nice developer features.</p>
+<p>The side effect of all of that is that the latest SR requires Leopard, and so now PB requires Leopard. I had planned to wait for SnowLeopard’s release to drop Tiger support, but this accelerates that a bit. It does make my coding a work a bit easier, since 10.5 has many nice developer features.</p>
 
-<p>Drop me a note if you&rsquo;re still running PB on Tiger. Every other major user of ShortcutRecorder had already gone Leopard-only, which is why they made the move. Tigers are getting pretty rare out there.</p>
+<p>Drop me a note if you’re still running PB on Tiger. Every other major user of ShortcutRecorder had already gone Leopard-only, which is why they made the move. Tigers are getting pretty rare out there.</p>
 </div>
   
   
@@ -155,10 +154,10 @@
 
   <div class="entry-content"><p>I keep coming across <a href="http://dotnetaddict.dotnetdevelopersjournal.com/leopard_nscollectionview.htm">code</a> like this:</p>
 
-<pre><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
+</code></pre></div></div>
 
-<p>It&rsquo;s time to say stop it already with the extra <code>+stringWithString:</code>. I haven&rsquo;t worked out yet where this anti-pattern comes from. Maybe it&rsquo;s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it&rsquo;s a Java/.NET thing? I&rsquo;m not sure. But I see it so often from so many places that it&rsquo;s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
+<p>It’s time to say stop it already with the extra <code class="highlighter-rouge">+stringWithString:</code>. I haven’t worked out yet where this anti-pattern comes from. Maybe it’s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it’s a Java/.NET thing? I’m not sure. But I see it so often from so many places that it’s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
 
 </div>
   
@@ -197,10 +196,9 @@
   </header>
 
 
-  <div class="entry-content"><p>Observing NSNotifications in a view control is a good thing. But remember, just because you&rsquo;re not onscreen doesn&rsquo;t mean that you&rsquo;re not still observing. This is particularly noteworthy on iPhone, where your view can get dropped any time memory is tight and you&rsquo;re offscreen, but it can bite you anywhere.</p>
+  <div class="entry-content"><p>Observing NSNotifications in a view control is a good thing. But remember, just because you’re not onscreen doesn’t mean that you’re not still observing. This is particularly noteworthy on iPhone, where your view can get dropped any time memory is tight and you’re offscreen, but it can bite you anywhere.</p>
 
-<p>ViewControllers, WindowControllers and other UI controllers are often better off registering and uregistering for notifications when they are put on and off the screen rather than when they are allocated and deallocated. This often means that they will need to update their state when put on screen. For example, an icon indicating &ldquo;connected&rdquo; might be part of a StatusViewController. When StatusView comes on screen, StatusViewController should update the connected status and then begin observing changes on it. When StatusView goes off screen, StatusViewController should stop observing.</p>
-
+<p>ViewControllers, WindowControllers and other UI controllers are often better off registering and uregistering for notifications when they are put on and off the screen rather than when they are allocated and deallocated. This often means that they will need to update their state when put on screen. For example, an icon indicating “connected” might be part of a StatusViewController. When StatusView comes on screen, StatusViewController should update the connected status and then begin observing changes on it. When StatusView goes off screen, StatusViewController should stop observing.
 </div>
   
   
@@ -240,8 +238,7 @@
 
   <div class="entry-content"><p><i>Based on a <a href="http://stackoverflow.com/questions/874690/is-objective-c-only-used-for-development-on-mac-os-iphone/874837">post</a> at StackOverflow. The question was whether Objective-C is only used for development on Mac OS/iPhone and why.</i></p>
 
-<p>I think ObjC has been isolated to the Apple world through a quirk of history and the nature of proprietary systems.</p>
-
+<p>I think ObjC has been isolated to the Apple world through a quirk of history and the nature of proprietary systems.
 </div>
   
   
@@ -279,8 +276,7 @@
   </header>
 
 
-  <div class="entry-content"><p>It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is &ldquo;what does system_profiler actually do?&rdquo;  But it&rsquo;s a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It&rsquo;s a whirlwind tour of how you begin to attack programs using pretty standard tools. I&rsquo;m not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you&rsquo;re going to hide how your program works, make sure you research those first. You&rsquo;ll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.</p>
-
+  <div class="entry-content"><p>It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is “what does system_profiler actually do?”  But it’s a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It’s a whirlwind tour of how you begin to attack programs using pretty standard tools. I’m not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you’re going to hide how your program works, make sure you research those first. You’ll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.
 </div>
   
   
@@ -320,10 +316,9 @@
 
   <div class="entry-content"><p><i>We recently had a discussion on cocoa-students (the excellent list for Big Nerd Ranch alumni; yet another reason to go to BNR classes) about protecting Cocoa programs from reverse engineering, mostly around some anti-copying code. I had some thoughts on the subject since I happen to have a background in anti-counterfeiting.</i></p>
 
-<p>Cocoa is a reverse-engineer&rsquo;s dream. Spend some time at <a href="http://www.culater.net/wiki/moin.cgi/CocoaReverseEngineering">culater</a> before dreaming you can really protect a Cocoa program. Objective-C is meant to be highly readable both in source and at run time. Obfuscation is not in its nature. This only points out Objective-C&rsquo;s particular difficulties in this area; it is not to suggest C or C++ will save you. They&rsquo;re just not quite as trivial as Objective-C.</p>
+<p>Cocoa is a reverse-engineer’s dream. Spend some time at <a href="http://www.culater.net/wiki/moin.cgi/CocoaReverseEngineering">culater</a> before dreaming you can really protect a Cocoa program. Objective-C is meant to be highly readable both in source and at run time. Obfuscation is not in its nature. This only points out Objective-C’s particular difficulties in this area; it is not to suggest C or C++ will save you. They’re just not quite as trivial as Objective-C.</p>
 
-<p>That said, the world of obfuscation falls into three big camps: you can try to deal with 70% of your problem, 75% of your problem or 90% of your problem.</p>
-
+<p>That said, the world of obfuscation falls into three big camps: you can try to deal with 70% of your problem, 75% of your problem or 90% of your problem.
 </div>
   
   
@@ -361,9 +356,9 @@
   </header>
 
 
-  <div class="entry-content"><p>It&rsquo;s been quiet here for a while. I&rsquo;ve been spending most of my time working on <a href="http://xmppframework.googlecode.com">XMPPFramework</a>, an opensource framework that makes it easier to build XMPP clients for Mac and iPhone. I&rsquo;ve been working on this nonstop for several weeks now in preparation for a demo based on this, so there hasn&rsquo;t been a lot of time to post here. My code for that demo is done now, and I&rsquo;m headed off on vacation for two weeks. So you should see more traffic here in July. I have quite a backlog of topics I just haven&rsquo;t had time to really capture.</p>
+  <div class="entry-content"><p>It’s been quiet here for a while. I’ve been spending most of my time working on <a href="http://xmppframework.googlecode.com">XMPPFramework</a>, an opensource framework that makes it easier to build XMPP clients for Mac and iPhone. I’ve been working on this nonstop for several weeks now in preparation for a demo based on this, so there hasn’t been a lot of time to post here. My code for that demo is done now, and I’m headed off on vacation for two weeks. So you should see more traffic here in July. I have quite a backlog of topics I just haven’t had time to really capture.</p>
 
-<p>If you&rsquo;re interested in a less edited form of my Cocoa musings, I still answer questions at <a href="http://stackoverflow.com">Stack Overflow</a> (<a href="feed://stackoverflow.com/feeds/user/97337">feed</a>), and I&rsquo;ve started experimenting with <a href="https://twitter.com/cocoaphony">Twitter</a>, though I&rsquo;m not sure yet how much I like tweeting.</p>
+<p>If you’re interested in a less edited form of my Cocoa musings, I still answer questions at <a href="http://stackoverflow.com">Stack Overflow</a> (<a href="feed://stackoverflow.com/feeds/user/97337">feed</a>), and I’ve started experimenting with <a href="https://twitter.com/cocoaphony">Twitter</a>, though I’m not sure yet how much I like tweeting.</p>
 
 <p>See you all in July!</p>
 </div>
@@ -399,7 +394,7 @@
   </header>
 
 
-  <div class="entry-content"><p>I can&rsquo;t take credit for finding this myself. Gilad Gurantz forwarded it to me. From the Quartz Event Services documentation:</p>
+  <div class="entry-content"><p>I can’t take credit for finding this myself. Gilad Gurantz forwarded it to me. From the Quartz Event Services documentation:</p>
 
 <blockquote><p><b>CGEventTimestamp</b></p>
 Defines the elapsed time in nanoseconds since startup that a Quartz event occurred.
@@ -409,8 +404,7 @@ Defines the elapsed time in nanoseconds since startup that a Quartz event occurr
 <b>Discussion</b>
 An event timestamp is a big, unsigned, 64-bit number. That's big, really big. You just won't believe how vastly, hugely, mind-bogglingly big it is. You may think your application has been running for a long time, but that's just peanuts to an event timestamp.</blockquote>
 
-
-<p>So if my math is right, &ldquo;a long time&rdquo; translates into over 2850 years. And it&rsquo;s counted since the last reboot. I think we&rsquo;ll avoid the Y2K problem on this one.</p>
+<p>So if my math is right, “a long time” translates into over 2850 years. And it’s counted since the last reboot. I think we’ll avoid the Y2K problem on this one.</p>
 </div>
   
   
@@ -444,7 +438,7 @@ An event timestamp is a big, unsigned, 64-bit number. That's big, really big. Yo
   </header>
 
 
-  <div class="entry-content"><p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn&rsquo;t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it&rsquo;s easier than ever. Let&rsquo;s make one.</p>
+  <div class="entry-content"><p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn’t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it’s easier than ever. Let’s make one.</p>
 
 </div>
   
@@ -490,21 +484,7 @@ An event timestamp is a big, unsigned, 64-bit number. That's big, really big. Yo
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

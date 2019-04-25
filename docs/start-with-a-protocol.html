@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Protocols I: Start With a Protocol - Cocoaphony</title>
+  <title>Protocols I: "Start With a Protocol," He Said - Cocoaphony</title>
   <meta name="author" content="Rob Napier">
 
   
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -57,7 +56,7 @@
   
   <header>
     
-      <h1 class="entry-title">Protocols I: Start With a Protocol</h1>
+      <h1 class="entry-title">Protocols I: "Start With a Protocol," He Said</h1>
     
     
       <p class="meta">
@@ -78,78 +77,264 @@
   </header>
 
 
-<div class="entry-content"><h2>In the beginning, Crusty</h2>
+<div class="entry-content"><h2 id="in-the-beginning-crusty">In the beginning, Crusty</h2>
 
 <p>In 2015, at WWDC, <a href="https://twitter.com/DaveAbrahams">Dave Abrahams</a> gave what I believe is still the greatest Swift talk ever given, and certainly the most influential. <a href="https://developer.apple.com/videos/play/wwdc2015/408/">”Protocol-Oriented Programming in Swift,”</a> or as it is more affectionately known, “The Crusty Talk.”</p>
 
 <p>This is the talk that introduced the phrase “protocol oriented programming.” The first time I watched it, I took away just one key phrase:</p>
 
-<blockquote><p>Start with a protocol.</p></blockquote>
+<blockquote>
+  <p>Start with a protocol.</p>
+</blockquote>
 
 <p>And so, dutifully, I started with a protocol. I made a UserProtocol and a DocumentProtocol and a ShapeProtocol and on and on, and then started implementing all those protocols with generic subclasses and eventually I found myself in a corner.</p>
 
-<pre><code>Protocol 'P' can only be used as a generic constraint because it has Self or associated type requirements
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Protocol 'P' can only be used as a generic constraint because it has Self or associated type requirements
+</code></pre></div></div>
 
-<p>And then I started throwing things.</p>
+<p>And then I started throwing things.
+<!--more--></p>
 
-<!--more-->
+<p>For a couple of years, I was rather annoyed at the phrase “protocol-oriented programming.” If by “protocol” you just mean “interface,” then Go is much more “protocol oriented” than Swift. But the more I’ve wrestled with this new paradigm, the more I realized that protocols are more than just interfaces, and POP isn’t deeply about the protocols anyway. It’s about the extensions. But “extension-oriented programming” would be an even worse name. And more than extensions, it’s really, deeply, about generic algorithms. And “algorithm-oriented programming,” well, aren’t we all?</p>
 
+<p>Naming a paradigm is always fraught with trouble. Most modern “object-oriented” languages aren’t object-oriented at all. They’re class-oriented (vs Smalltalk and JavaScript). And most “functional programming” languages are mostly value-oriented (vs FP and point-free). But the point of the names is shorthand for concepts bigger than a word, so let’s not get too caught up on the “protocol” in protocol-oriented programming. The Holy Roman Empire was in no way holy, nor Roman, nor an empire. Discuss.</p>
 
-<p>For several years, I was rather annoyed at the phrase &ldquo;protocol-oriented programming.&rdquo; If by &ldquo;protocol&rdquo; you just mean &ldquo;interface,&rdquo; then Go is much more &ldquo;protocol oriented&rdquo; than Swift. But the more I&rsquo;ve wrestled with this new paradigm, the more I realized that POP isn&rsquo;t really about the protocols. It&rsquo;s about the extensions. But &ldquo;extension-oriented programming&rdquo; would be an even worse name. And more than just extensions, it&rsquo;s really, deeply, about generic algorithms. And &ldquo;algorithm-oriented programming,&rdquo; well, aren&rsquo;t we all?</p>
+<h2 id="beware-quotes-traveling-sans-context">Beware quotes traveling sans context</h2>
 
-<p>Naming a paradigm is always fraught with trouble. Most modern &ldquo;object-oriented&rdquo; languages aren&rsquo;t object-oriented at all. They&rsquo;re class-oriented (vs Smalltalk and JavaScript). And most &ldquo;functional programming&rdquo; languages are mostly value-oriented (vs FP and point-free). But the point of the names is shorthand for concepts bigger than a word, so let&rsquo;s not get too caught up on the &ldquo;protocol&rdquo; in protocol-oriented programming. The Holy Roman Empire was in no way holy, nor Roman, nor an empire. Discuss.</p>
+<p>The famous “start with a protocol” quote is actually the end of a longer paragraph:</p>
 
-<h2>Beware quotes traveling sans context</h2>
-
-<p>The famous &ldquo;start with a protocol&rdquo; quote is actually the end of a longer paragraph:</p>
-
-<blockquote><p>For example, if you want to write a generalized sort or binary search…Don&rsquo;t start with a class. Start with a protocol.</p></blockquote>
+<blockquote>
+  <p>For example, if you want to write a generalized sort or binary search…Don’t start with a class. Start with a protocol.</p>
+</blockquote>
 
 <p>Or as Dave <a href="https://twitter.com/cocoaphony/status/1104114233288151043">clarified on Twitter</a>:</p>
 
-<blockquote><p>Use value types, then if you need polymorphism, make them conform to protocols.  Avoid classes.</p></blockquote>
+<blockquote>
+  <p>Use value types, then if you need polymorphism, make them conform to protocols.  Avoid classes.</p>
+</blockquote>
 
-<p><em>If</em> you&rsquo;re reaching for class inheritance, try a protocol and value type instead. That&rsquo;s very different from &ldquo;start with a protocol for every problem.&rdquo; <a href="https://twitter.com/AirspeedSwift">Ben Cohen</a> covered this in much more detail in the WWDC 2018 talk <a href="https://developer.apple.com/videos/play/wwdc2018/406/">Swift Generics (Expanded)</a>.</p>
+<p><em>If</em> you’re reaching for class inheritance, try a protocol and value type instead. That’s very different from “start with a protocol for every problem.” <a href="https://twitter.com/AirspeedSwift">Ben Cohen</a> covered this in much more detail in the WWDC 2018 talk <a href="https://developer.apple.com/videos/play/wwdc2018/406/">Swift Generics (Expanded)</a>.</p>
 
-<blockquote><p>So notice that we considered a varied number of concrete types first. And now, we&rsquo;re thinking about a kind of protocol that could join them all together. And, it&rsquo;s important to think of things as this way around. To start with some concrete types, and then try and unify them with a protocol.</p></blockquote>
+<blockquote>
+  <p>So notice that we considered a varied number of concrete types first. And now, we’re thinking about a kind of protocol that could join them all together. And, it’s important to think of things as this way around. To start with some concrete types, and then try and unify them with a protocol.</p>
+</blockquote>
 
-<p><span class='pullquote-right' data-pullquote='Write concrete code first. Then work out the generics.'>
-If you take away one thing from this series, I want it to be this: <em>Write concrete code first. Then work out the generics.</em> Start with concrete types and clear use cases, and find the places that duplication happens. Then find abstractions to fix those problems. The power of protocol-oriented programming is that you don’t have to decide when you make a type exactly how that type will be used. When you work with inheritance, you have to design your class hierarchy from the start. But with protocols, you can wait until later.
+<p><span class="pullquote-right" data-pullquote="Write concrete code first. Then work out the generics.">
+If you take away just one thing from this series, I want it to be this: <em>Write concrete code first. Then work out the generics.</em> Start with concrete types and clear use cases, and find the places that duplication happens. Then find abstractions. The power of protocol-oriented programming is that you don’t have to decide when you create a type exactly how it will be used. When you use class inheritance, you have to design your class hierarchy very early. But with protocols, you can wait until later.
 </span></p>
 
-<p>When I most get into trouble with protocols is when I try to write code &ldquo;as generically as possible.&rdquo; That doesn&rsquo;t really mean anything. Abstractions are choices, and when you make a choice to be flexible in one direction, you generally make it harder to be flexible in other directions. Without some clear use cases, you don&rsquo;t know what abstractions make sense.</p>
+<p>When I most get into trouble with protocols is when I try to write code “as generically as possible.” That doesn’t really mean anything. Abstractions are choices, and when you make a choice to be flexible in one direction, you generally make it harder to be flexible in other directions. Without some clear use cases, you don’t know what abstractions make sense.</p>
 
 <p>So today, I want to come to protocol-oriented programming fresh, with a focus on very every-day problems we face when developing iOS apps in Swift.</p>
 
-<h2>Setting the stage</h2>
+<h2 id="setting-the-stage">Setting the stage</h2>
 
-<p>In the next several articles, I&rsquo;ll be developing a very common system, a general-purpose networking stack that can fetch data asynchronously and decode arbitrary types. You may have built a system like this yourself in Swift. You may have used a framework that does it. The point of this exercise isn&rsquo;t really the end result (though I think it&rsquo;s quite useful code), but the process. What questions should you ask, and when, and how do you know what good answers look like? And most importantly, how does this &ldquo;protocol oriented programming&rdquo; thing guide us? How is it different than other approaches?</p>
+<p>Over the next several articles I’ll be developing a very common system, a general-purpose networking stack that can fetch data asynchronously and decode arbitrary types. You may have built a system like this yourself in Swift. You may have used a framework that does it. The point of this exercise isn’t really the end result (though I think it’s quite useful code), but the process. What questions should you ask, and when, and how do you know what good answers look like? And most importantly, how does this “protocol-oriented” thing guide us? How is it different than other approaches?</p>
 
-<p>So to get started, I want to show a common starting point that never goes well for me. I&rsquo;ve tried to build it this way several times myself, and I always find myself in a corner eventually. I see a lot of other people make this same mistake.</p>
+<p>I expect that you’re somewhat familiar with Swift, and particularly that you understand the syntax of generic functions and types, and have at least seen an <code class="highlighter-rouge">associatedtype</code> before. If you’re just getting started in Swift, maybe bookmark this series for later.</p>
 
-<pre><code>// This will not go well.
-// Trying to model a Request as something that can fetch and parse a Response.
-protocol Request {
-    associatedtype Response
-    func parse(data: Data) throws -&gt; Response
-    var urlRequest: URLRequest { get }
+<p>So to get started, I want to show a common starting point that never goes well for me. I’ve made this mistake many times, and I always find myself in a corner eventually. I see a lot of other people make this mistake, too.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A network Request knows the URLRequest to fetch some data, and then can parse it.</span>
+<span class="c1">// This will not go well.</span>
+<span class="kd">protocol</span> <span class="kt">Request</span> <span class="p">{</span>
+    <span class="kd">associatedtype</span> <span class="kt">Response</span>
+    <span class="kd">func</span> <span class="nf">parse</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Response</span>
+    <span class="k">var</span> <span class="nv">urlRequest</span><span class="p">:</span> <span class="kt">URLRequest</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><span class="pullquote-right" data-pullquote="will I ever want to put this in an Array?">
+How do I know this won’t go well? I’ll discuss it much more in depth later, but Request is a protocol with associated type (PAT). Any time you create a PAT, you should ask yourself “will I ever want to put this in an Array?” If the answer is yes, you don’t want a PAT. Requests are certainly something you’d want to put in an Array. Lists of pending requests, lists of requests that need to be retried, request priority queues. There are lots of reasons to put a Request in an Array.
+</span></p>
+
+<p>You might be tempted to look for a work-around, but don’t. Type-eraser? No. Generalized Existential?!?! …no… Even if you find some “work-around” to the problem at hand you’ll run into other walls very quickly (and I’ve seen that again and again). That “can only be used as a generic constraint” is telling you something important. This isn’t a problem with Swift. This just isn’t what PATs are for. There are other tools for this problem. In later articles I’ll explain why you don’t want these work-arounds, but the basic problem is starting with a protocol before we even know what algorithm we want to write.</p>
+
+<p>So what does “know the algorithm” look like in practice?</p>
+
+<h2 id="start-concrete">Start concrete</h2>
+
+<p>A good way to find a generic algorithm is to start with several concrete algorithms, and then make a parameter out of what varies. In this case, I want to fetch several model types from an API and decode them. In order to start concretely, I’ll make some actual types.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="kt">Document</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This may not be our final implementations, but they’re good enough to get started. They’re pretty similar, but not identical, and that’s good for the first concrete types. I’ll want to push the envelope a bit more later, but this is good enough for now.</p>
+
+<p>I also want a client to manage my connection to the server. I’m marking classes “final” to remind you that there’s no class inheritance here. I’m not suggesting you need to include “final” on all your class definitions. It’s not usually necessary. I’m making it a reference type because the client might eventually have some shared state. For example, if a login step were required, I’d want all references to the client to be logged in together.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">baseURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span>
+    <span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span>
+
+    <span class="c1">// ... methods to come ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And now I want the code to fetch and decode a User, as a method on APIClient.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">fetchUser</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+               <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">User</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">let</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">baseURL</span>
+        <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"user"</span><span class="p">)</span>
+        <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">session</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">urlRequest</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span> <span class="nf">completion</span><span class="p">(</span><span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="p">))</span> <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span>
+            <span class="nf">completion</span><span class="p">(</span><span class="kt">Result</span> <span class="p">{</span>
+                <span class="k">try</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">User</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+            <span class="p">})</span>
+        <span class="p">}</span>
+        <span class="p">}</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>I’m sure many of you have written code kind of like this many times. Construct an URLRequest. Fetch it. Parse it. Pass it to the completion handler. Now, what does the code for <code class="highlighter-rouge">fetchDocument</code> look like?</p>
+
+<style>
+    .chl { color: yellow; } /* code highlight */
+    .cer { color: red; } /* code error */
+</style>
+
+<pre>
+func fetch<span class="chl">Document</span>(id: Int,
+               completion: @escaping (Result&lt;<span class="chl">Document</span>, Error&gt;) -&gt; Void)
+{
+    let urlRequest = URLRequest(url: baseURL
+        .appendingPathComponent(<span class="chl">"document"</span>)
+        .appendingPathComponent("\(id)")
+    )
+
+    session.dataTask(with: urlRequest) { (data, _, error) in
+        if let error = error { completion(.failure(error)) }
+        else if let data = data {
+            completion(Result {
+                try JSONDecoder().decode(<span class="chl">Document</span>.self, from: data)
+            })
+        }
+        }.resume()
 }
-</code></pre>
+</pre>
 
-<p>How do I know this won&rsquo;t go well? I&rsquo;ll discuss it much more in depth later, but Request is a protocol with associated type (PAT). Any time you create a PAT, you should ask yourself &ldquo;will I ever want to put this in an Array?&rdquo; If the answer is yes, you don&rsquo;t want a PAT. Requests are certainly something you&rsquo;d want to put in an Array. Lists of pending requests, lists of requests that need to be retried, request priority queues. There are lots of reasons to put a Request in an Array.</p>
+<p>Unsurprisingly, <code class="highlighter-rouge">fetchDocument</code> is almost identical except for four changes: the function name, the type to pass to the closure, the URL path, and the type to decode. It’s so similar because I copied and pasted it. And when you find yourself copying and pasting, that’s where I know there’s probably some reusable code. So I extract that into a generic function:</p>
 
-<p>You might be tempted to look for a work-around, but don&rsquo;t. Type-eraser? No. Generalized Existential?!?! &hellip;no&hellip; Even if you find some &ldquo;work-around&rdquo; to the problem at hand you&rsquo;ll run into other walls very quickly (and I&rsquo;ve seen that again and again). That <code>can only be used as a generic constraint</code> is actually telling you something important. This isn&rsquo;t a problem with Swift. This just isn&rsquo;t what PATs are for. We&rsquo;ll get to what they&rsquo;re for soon, but the basic problem here is starting with a protocol before we even know what algorithm we want to write.</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Decodable</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">_</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+                             <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p>So what does &ldquo;know the algorithm&rdquo; look like in practice? Glad you asked. Stay tuned for part two.</p>
+<h2 id="where-should-type-parameters-go">Where should type parameters go?</h2>
+
+<p>Before going on, it’s worth exploring the signature. Notice that I pass the type of Model as a parameter. It doesn’t even need a name, because the value won’t be used. It’s just there to nail down the type parameter in the function’s parameters rather than in completion handler’s parameters. Doing it that way makes type inference a lot nicer. Consider JSONDecoder’s <code class="highlighter-rouge">decode</code> method. It’s called this way:</p>
+
+<pre>
+let value = try JSONDecoder().decode(<span class="chl">Int.self</span>, from: data)
+</pre>
+
+<p>It could have been designed this way instead:</p>
+
+<pre>
+let value<span class="chl">: Int</span> = try JSONDecoder().decode(data)
+</pre>
+
+<p>It would have even been a little shorter that way. But it doesn’t scale as well. It creates a lot of headaches when things get more complicated, and it makes the compiler errors much harder to understand. So make sure that every type parameter shows up in a function parameter, rather than just the type of the return value or something in a closure.</p>
+
+<p>Implementing <code class="highlighter-rouge">fetch</code> is pretty straightforward, except for one small <span class="cer">problem</span>:</p>
+
+<pre>
+func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
+                  id: Int,
+                  completion: @escaping (Result&lt;<span class="chl">Model</span>, Error&gt;) -&gt; Void)
+{
+    let urlRequest = URLRequest(url: baseURL
+        .appendingPathComponent(<span class="cer">"??? user | document ???"</span>)
+        .appendingPathComponent("\(id)")
+    )
+
+    session.dataTask(with: urlRequest) { (data, _, error) in
+        if let error = error { completion(.failure(error)) }
+        else if let data = data {
+            completion(Result {
+                try JSONDecoder().decode(<span class="chl">Model</span>.self, from: data)
+            })
+        }
+        }.resume()
+}
+</pre>
+
+<p>There’s this string that’s either “user” or “document”. That’s something that this algorithm requires, but isn’t part of Decodable. So Decodable isn’t powerful enough to implement this. I need a new protocol.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="highlighter-rouge">apiBase</code>. <!-- (See [Protocols do not conform]() for more on the difference between "*requires* Decodable" and "*is* Decodable.") --> With that, I can finish writing <code class="highlighter-rouge">fetch</code>:</p>
+
+<pre>
+func fetch&lt;Model&gt;(_ model: Model.Type,
+                  id: Int,
+                  completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
+{
+    let urlRequest = URLRequest(url: baseURL
+        .appendingPathComponent(<span class="chl">Model.apiPath</span>)
+        .appendingPathComponent("\(id)")
+    )
+
+    session.dataTask(with: urlRequest) { (data, _, error) in
+        if let error = error { completion(.failure(error)) }
+        else if let data = data {
+            completion(Result {
+                try JSONDecoder().decode(Model.self, from: data)
+            })
+        }
+        }.resume()
+}
+</pre>
+
+<h2 id="retroactive-modeling">Retroactive modeling</h2>
+
+<p>Now to use it, I need to make User and Document conform to Fetchable.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">Fetchable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"user"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">Document</span><span class="p">:</span> <span class="kt">Fetchable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"document"</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>These tiny extensions represent one of the most powerful, and easiest to overlook, aspects of protocol-oriented programming: retroactive modeling. It is quite non-obvious that I can take a type like User that wasn’t designed to be Fetchable, and make it Fetchable in an extension. And that extension doesn’t even have to be in the same module. That’s not something you can typically do with class inheritance. You need to choose a superclass when you define a type. By</p>
+
+<p>I can take any type I want and conform it to my own protocols to use it in new and more powerful ways that the original type creator may never have thought of. There’s no need to tie User to this one use case and this one API. That’s why this protocol is called Fetchable rather than something like Model. It <em>isn’t</em> a “model.” It’s “something that can be fetched” and it only provides the methods and properties that allow that. I’m not suggesting that you should create a protocol for every use case, just the opposite. Really good protocols are usable by many algorithms. But you want most uses of the protocol to need most of the requirements. If the protocol is just a copy of the type’s entire API, it’s not doing its job. I’ll talk about that more in later articles.</p>
+
+<h2 id="first-checkpoint">First checkpoint</h2>
+
+<p>I know this has been basic so far. I know many of you “know all this.” This article is a warm-up, and the point of the exercise is not <em>what</em> was built, but <em>how</em> it was built. I started with simple, concrete code, and extracted first a generic function, and then a simple (no associated type) protocol. This is exactly the opposite of starting with a Request PAT. This was just the first step. This system is nowhere near as flexible and powerful as it could be, but already it’s meeting the goal I set at the beginning: “fetch a several model types from an API and decode them.” Keep the goal in mind and don’t let the protocols get out in front of you.</p>
+
+<p>Next time, I’ll push this example further, and start seeing what protocol oriented programming can really accomplish.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -208,21 +393,7 @@ protocol Request {
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

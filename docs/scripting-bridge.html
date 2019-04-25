@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,7 +77,7 @@
   </header>
 
 
-<div class="entry-content"><p>Say you want to talk to another app through Applescript. With 10.5, you can much more easily get there from Cocoa without complex forays into CoreServices, Carbon and AppleEvents. The docs on how to do it are a little thin at times (as all Applescript docs are), so let&rsquo;s walk through it. The relevant docs you&rsquo;ll want to read are these:</p>
+<div class="entry-content"><p>Say you want to talk to another app through Applescript. With 10.5, you can much more easily get there from Cocoa without complex forays into CoreServices, Carbon and AppleEvents. The docs on how to do it are a little thin at times (as all Applescript docs are), so let’s walk through it. The relevant docs you’ll want to read are these:</p>
 
 <p><a href="http://www.apple.com/applescript/learn.html">Learning Applescript</a></p>
 
@@ -88,220 +87,203 @@
 
 <p>And most importantly (and most hidden):</p>
 
-<p><a href="https://developer.apple.com/library/mac/#samplecode/SBSystemPrefs/Listings/ReadMe_txt.html">SBSystemPref&rsquo;s Magical README</a></p>
+<p><a href="https://developer.apple.com/library/mac/#samplecode/SBSystemPrefs/Listings/ReadMe_txt.html">SBSystemPref’s Magical README</a></p>
 
-<p>And now for a step-by-step example. We&rsquo;re going to send some mail with an attachment through Mail.app.</p>
-
+<p>And now for a step-by-step example. We’re going to send some mail with an attachment through Mail.app.
 <!-- more -->
+I’m going to assume you know enough Applescript to have written this:</p>
 
+<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">tell</span><span class="w"> </span><span class="nb">application</span><span class="w"> </span><span class="s2">"Mail"</span><span class="w">
+    </span><span class="k">set</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nb">make</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="nv">outgoing</span><span class="w"> </span><span class="nv">message</span><span class="w"> </span><span class="nv">with</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="se">¬
+</span><span class="w">        </span><span class="p">{</span><span class="nv">subject</span><span class="p">:</span><span class="s2">"Test outgoing"</span><span class="p">,</span><span class="w"> </span><span class="na">content</span><span class="p">:</span><span class="s2">"Test body"</span><span class="p">}</span><span class="w">
+    </span><span class="k">tell</span><span class="w"> </span><span class="nv">theMessage</span><span class="w">
+        </span><span class="nb">make</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">recipient</span><span class="w"> </span><span class="nb">at</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">recipients</span><span class="w"> </span><span class="nv">with</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="se">¬
+</span><span class="w">            </span><span class="p">{</span><span class="na">name</span><span class="p">:</span><span class="s2">"Rob Napier"</span><span class="p">,</span><span class="w"> </span><span class="nv">address</span><span class="p">:</span><span class="s2">"sb@robnapier.net"</span><span class="p">}</span><span class="w">
+        </span><span class="k">tell</span><span class="w"> </span><span class="na">content</span><span class="w">
+            </span><span class="nb">make</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="nb">attachment</span><span class="w"> </span><span class="nv">with</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="p">{</span><span class="nv">filename</span><span class="p">:</span><span class="s2">"/etc/hosts"</span><span class="p">}</span><span class="w"> </span><span class="se">¬
+</span><span class="w">                </span><span class="nb">at</span><span class="w"> </span><span class="nb">after</span><span class="w"> </span><span class="nb">last</span><span class="w"> </span><span class="nb">paragraph</span><span class="w">
+            </span><span class="k">set</span><span class="w"> </span><span class="na">visible</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">true</span><span class="w">
+        </span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
+    </span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
+    </span><span class="nb">activate</span><span class="w">
+</span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
+</span></code></pre></div></div>
 
-<p>I&rsquo;m going to assume you know enough Applescript to have written this:</p>
+<p>Let’s convert it to Scripting Bridge.</p>
 
-<pre><code class="applescript">tell application "Mail"
-    set theMessage to make new outgoing message with properties ¬
-        {subject:"Test outgoing", content:"Test body"}
-    tell theMessage
-        make new to recipient at end of to recipients with properties ¬
-            {name:"Rob Napier", address:"sb@robnapier.net"}
-        tell content
-            make new attachment with properties {filename:"/etc/hosts"} ¬
-                at after last paragraph
-            set visible of theMessage to true
-        end tell
-    end tell
-    activate
-end tell
-</code></pre>
-
-<p>Let&rsquo;s convert it to Scripting Bridge.</p>
-
-<h3>Setting up your project</h3>
+<h3 id="setting-up-your-project">Setting up your project</h3>
 
 <ul>
-<li><p>Add ScriptingBridge.Framework to your project:</p>
-
-<ul>
-<li>Open Targets</li>
-<li>Double-click the Target</li>
-<li>Select the General Tab</li>
-<li>Click &ldquo;+&rdquo; for Linked Libraries</li>
-<li>Add ScriptingBridge.framework</li>
-</ul>
-</li>
-<li><p>Add a rule for creating .h files for scriptable Applications (this should be built into XCode, but isn&rsquo;t). You could also do this by hand one time, and just add the resulting .h to your project.</p>
-
-<ul>
-<li>Select the Rules tab</li>
-<li>Click &ldquo;+&rdquo;</li>
-<li>Process: Source files with name matching: *.app</li>
-<li>Using: Custom Script: (the following needs to be one long line):
-<div><code>sdef &ldquo;$INPUT_FILE_PATH&rdquo; | sdp -fh -o &ldquo;$DERIVED_FILES_DIR&rdquo; &ndash;basename &ldquo;$INPUT_FILE_BASE&rdquo; &ndash;bundleid `defaults read &ldquo;$INPUT_FILE_PATH/Contents/Info&rdquo; CFBundleIdentifier</code></div></li>
-<li>Click the &ldquo;+&rdquo; under &ldquo;with output files:&rdquo;
+  <li>Add ScriptingBridge.Framework to your project:
+    <ul>
+      <li>Open Targets</li>
+      <li>Double-click the Target</li>
+      <li>Select the General Tab</li>
+      <li>Click “+” for Linked Libraries</li>
+      <li>Add ScriptingBridge.framework</li>
+    </ul>
+  </li>
+  <li>Add a rule for creating .h files for scriptable Applications (this should be built into XCode, but isn’t). You could also do this by hand one time, and just add the resulting .h to your project.
+    <ul>
+      <li>Select the Rules tab</li>
+      <li>Click “+”</li>
+      <li>Process: Source files with name matching: *.app</li>
+      <li>Using: Custom Script: (the following needs to be one long line):</li>
+    </ul>
+    <div><code>sdef "$INPUT_FILE_PATH" | sdp -fh -o "$DERIVED_FILES_DIR" --basename "$INPUT_FILE_BASE" --bundleid `defaults read "$INPUT_FILE_PATH/Contents/Info" CFBundleIdentifier</code></div>
+    <ul>
+      <li>Click the “+” under “with output files:”
   <span><code>$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h</code></span></li>
-<li>Close the Target window. We&rsquo;re done with the really crazy part.</li>
-</ul>
-</li>
-<li><p>Add the application as one of your sources.</p>
-
-<ul>
-<li>Drag the desired application (Mail.app) into your Groups &amp; Files tree. You can put it in a group if you like</li>
-<li>Unselect &ldquo;Copy items into destination group&rsquo;s folder&rdquo; (if it is selected)</li>
-<li>Drag the application into your &ldquo;Compile Sources&rdquo; step in your Target (it should be first, so the .h gets created before it&rsquo;s needed). Yes, we are &ldquo;compiling&rdquo; an application into a header.</li>
-</ul>
-</li>
-<li><p>Include the new header file in your program</p>
-
-<ul>
-<li>In your .m file:
-``` objc
-
-<h1>import &lt;ScriptingBridge/SBApplication.h></h1>
-
-<h1>import &ldquo;Mail.h&rdquo;</h1>
-
-<p>```</p></li>
-</ul>
-</li>
-<li><p>Build</p>
-
-<ul>
-<li>Now is a good time to build. That will get your .h created, making everything easier later. It&rsquo;s created in your <code>DerivedSources</code> directory. The easiest way to open it is with Cmd-Shift-D (Open Quickly). Just hit Cmd-Shift-D, and then type &ldquo;mail.h&rdquo;.  Once you&rsquo;ve found it, you can drag it into your Groups &amp; Files list if you like. It will be deleted when you Build Clean, so don&rsquo;t be surprised by that. Aren&rsquo;t you glad you learned about Open Quickly? It&rsquo;s my favorite way to move between files.</li>
-</ul>
-</li>
+      <li>Close the Target window. We’re done with the really crazy part.</li>
+    </ul>
+  </li>
+  <li>Add the application as one of your sources.
+    <ul>
+      <li>Drag the desired application (Mail.app) into your Groups &amp; Files tree. You can put it in a group if you like</li>
+      <li>Unselect “Copy items into destination group’s folder” (if it is selected)</li>
+      <li>Drag the application into your “Compile Sources” step in your Target (it should be first, so the .h gets created before it’s needed). Yes, we are “compiling” an application into a header.</li>
+    </ul>
+  </li>
+  <li>Include the new header file in your program
+    <ul>
+      <li>In your .m file:
+        <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#import &lt;ScriptingBridge/SBApplication.h&gt;
+#import "Mail.h"
+</span></code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Build
+    <ul>
+      <li>Now is a good time to build. That will get your .h created, making everything easier later. It’s created in your <code>DerivedSources</code> directory. The easiest way to open it is with Cmd-Shift-D (Open Quickly). Just hit Cmd-Shift-D, and then type “mail.h”.  Once you’ve found it, you can drag it into your Groups &amp; Files list if you like. It will be deleted when you Build Clean, so don’t be surprised by that. Aren’t you glad you learned about Open Quickly? It’s my favorite way to move between files.</li>
+    </ul>
+  </li>
 </ul>
 
+<h3 id="writing-the-code">Writing the code</h3>
+<p>OK, we now have everything in place to write some code. The process of converting from Applescript to SB is fairly mechanical, but like all Applescript things there are some things you just need to know. We’re going to take this one line at a time.</p>
 
-<h3>Writing the code</h3>
-
-<p>OK, we now have everything in place to write some code. The process of converting from Applescript to SB is fairly mechanical, but like all Applescript things there are some things you just need to know. We&rsquo;re going to take this one line at a time.</p>
-
-<pre><code class="applescript">tell application "Mail"
-</code></pre>
+<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">tell</span><span class="w"> </span><span class="nb">application</span><span class="w"> </span><span class="s2">"Mail"</span><span class="w">
+</span></code></pre></div></div>
 
 <p>We need an SBApplication object to <code>tell</code> things to. So we make one:</p>
 
-<pre><code class="objc">MailApplication *mail = 
-    [SBApplication applicationWithBundleIdentifier:@"com.apple.mail"];
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MailApplication</span> <span class="o">*</span><span class="n">mail</span> <span class="o">=</span> 
+    <span class="p">[</span><span class="n">SBApplication</span> <span class="nf">applicationWithBundleIdentifier</span><span class="p">:</span><span class="s">@"com.apple.mail"</span><span class="p">];</span>
+</code></pre></div></div>
 
-<p>Notice that you can&rsquo;t call <code>[[MailApplication alloc] init]</code>. This is more a limitation of the sdp tool we used to create the .h than of ScriptingBridge. There is no Mail.m file to actually implement the MailApplication class, so you can&rsquo;t directly allocate the class. You&rsquo;ll see more of this limitation later.</p>
+<p>Notice that you can’t call <code>[[MailApplication alloc] init]</code>. This is more a limitation of the sdp tool we used to create the .h than of ScriptingBridge. There is no Mail.m file to actually implement the MailApplication class, so you can’t directly allocate the class. You’ll see more of this limitation later.</p>
 
-<pre><code class="applescript">set theMessage to make new outgoing message with properties ¬
-    {subject:"Test outgoing", content:"Test body"}
-</code></pre>
+<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">set</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nb">make</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="nv">outgoing</span><span class="w"> </span><span class="nv">message</span><span class="w"> </span><span class="nv">with</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="se">¬
+</span><span class="w">    </span><span class="p">{</span><span class="nv">subject</span><span class="p">:</span><span class="s2">"Test outgoing"</span><span class="p">,</span><span class="w"> </span><span class="na">content</span><span class="p">:</span><span class="s2">"Test body"</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<p>We&rsquo;re creating a new outgoing message. This includes a special step that you can partially guess, and somewhat just have to know. Every scripting object you talk to has to chain back to the SBApplication. You can&rsquo;t deal with stand-alone SBObjects. In this case, the Applescript has an implicit step that we need to make explicit. The Applescript above is implicitly adding <code>theMessage</code> to <code>outgoing messages</code>. When you get used to it, it&rsquo;s kind of obvious, and if you look in Mail.app, you&rsquo;ll see that MailApplication has an <code>-outgoingMessages</code> property. But it can be a little surprising when you&rsquo;re getting stared. So let&rsquo;s rewrite the Applescript to be more explicit:</p>
+<p>We’re creating a new outgoing message. This includes a special step that you can partially guess, and somewhat just have to know. Every scripting object you talk to has to chain back to the SBApplication. You can’t deal with stand-alone SBObjects. In this case, the Applescript has an implicit step that we need to make explicit. The Applescript above is implicitly adding <code>theMessage</code> to <code>outgoing messages</code>. When you get used to it, it’s kind of obvious, and if you look in Mail.app, you’ll see that MailApplication has an <code>-outgoingMessages</code> property. But it can be a little surprising when you’re getting stared. So let’s rewrite the Applescript to be more explicit:</p>
 
-<pre><code class="applescript">set theMessage to make new outgoing message at end of outgoing messages ¬
-    with properties {subject:"Test outgoing", content:"Test body"}
-</code></pre>
+<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">set</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nb">make</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="nv">outgoing</span><span class="w"> </span><span class="nv">message</span><span class="w"> </span><span class="nb">at</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">outgoing</span><span class="w"> </span><span class="nv">messages</span><span class="w"> </span><span class="se">¬
+</span><span class="w">    </span><span class="nv">with</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="p">{</span><span class="nv">subject</span><span class="p">:</span><span class="s2">"Test outgoing"</span><span class="p">,</span><span class="w"> </span><span class="na">content</span><span class="p">:</span><span class="s2">"Test body"</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<p>And so here&rsquo;s the code:</p>
+<p>And so here’s the code:</p>
 
-<pre><code class="objc">MailOutgoingMessage *mailMessage =
-    [[[[mail classForScriptingClass:@"outgoing message"] alloc]
-        initWithProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-            @"Test outgoing", @"subject",
-            @"Test body\n\n", @"content",
-            nil]] autorelease];
-[[mail outgoingMessages] addObject:mailMessage];
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MailOutgoingMessage</span> <span class="o">*</span><span class="n">mailMessage</span> <span class="o">=</span>
+    <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"outgoing message"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
+        <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+            <span class="s">@"Test outgoing"</span><span class="p">,</span> <span class="s">@"subject"</span><span class="p">,</span>
+            <span class="s">@"Test body</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="s">@"content"</span><span class="p">,</span>
+            <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
+<span class="p">[[</span><span class="n">mail</span> <span class="nf">outgoingMessages</span><span class="p">]</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">mailMessage</span><span class="p">];</span>
+</code></pre></div></div>
 
-<p>This is a very common pattern, so it&rsquo;s worth studying. First, note that we can&rsquo;t directly <code>+alloc</code> the MailOutgoingMessage. We have to ask for it through the SBApplication object. This is more of the limitation discussed above. And we need to pass the Applescript class &ldquo;outgoing message.&rdquo; This is obvious from the MailOutgoingMessage name once you see how <code>sdp</code> creates the .h file. The properties we pass SB are identical to the ones we pass Applescript. And once we create it, we add it into the object tree with <code>-addObject:</code>, which adds &ldquo;at end of&rdquo; the list just like we need (just like an NSArray). OK, now go back and read this paragraph again and make sure you&rsquo;ve got it. We&rsquo;re going to use this several times.</p>
+<p>This is a very common pattern, so it’s worth studying. First, note that we can’t directly <code>+alloc</code> the MailOutgoingMessage. We have to ask for it through the SBApplication object. This is more of the limitation discussed above. And we need to pass the Applescript class “outgoing message.” This is obvious from the MailOutgoingMessage name once you see how <code>sdp</code> creates the .h file. The properties we pass SB are identical to the ones we pass Applescript. And once we create it, we add it into the object tree with <code>-addObject:</code>, which adds “at end of” the list just like we need (just like an NSArray). OK, now go back and read this paragraph again and make sure you’ve got it. We’re going to use this several times.</p>
 
-<pre><code class="applescript">tell theMessage
-    make new to recipient at end of to recipients with properties ¬
-        {name:"Rob Napier", address:"sb@robnapier.net"}
-</code></pre>
+<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">tell</span><span class="w"> </span><span class="nv">theMessage</span><span class="w">
+    </span><span class="nb">make</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">recipient</span><span class="w"> </span><span class="nb">at</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">recipients</span><span class="w"> </span><span class="nv">with</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="se">¬
+</span><span class="w">        </span><span class="p">{</span><span class="na">name</span><span class="p">:</span><span class="s2">"Rob Napier"</span><span class="p">,</span><span class="w"> </span><span class="nv">address</span><span class="p">:</span><span class="s2">"sb@robnapier.net"</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>You should be able to guess the code for this one:</p>
 
-<pre><code class="objc">MailToRecipient *recipient = [[[[mail classForScriptingClass:@"to recipient"] alloc] 
-    initWithProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-                    @"Rob Napier", @"name",
-                    @"sb@robnapier.net", @"address",
-                    nil]] autorelease];
-[[mailMessage toRecipients] addObject:recipient];
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MailToRecipient</span> <span class="o">*</span><span class="n">recipient</span> <span class="o">=</span> <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"to recipient"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span> 
+    <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+                    <span class="s">@"Rob Napier"</span><span class="p">,</span> <span class="s">@"name"</span><span class="p">,</span>
+                    <span class="s">@"sb@robnapier.net"</span><span class="p">,</span> <span class="s">@"address"</span><span class="p">,</span>
+                    <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
+<span class="p">[[</span><span class="n">mailMessage</span> <span class="nf">toRecipients</span><span class="p">]</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">recipient</span><span class="p">];</span>
+</code></pre></div></div>
 
 <p>And once more for fun:</p>
 
-<pre><code class="applescript">tell content
-    make new attachment with properties {filename:"/etc/hosts"} ¬
-        at after last paragraph
-</code></pre>
+<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">tell</span><span class="w"> </span><span class="na">content</span><span class="w">
+    </span><span class="nb">make</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="nb">attachment</span><span class="w"> </span><span class="nv">with</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="p">{</span><span class="nv">filename</span><span class="p">:</span><span class="s2">"/etc/hosts"</span><span class="p">}</span><span class="w"> </span><span class="se">¬
+</span><span class="w">        </span><span class="nb">at</span><span class="w"> </span><span class="nb">after</span><span class="w"> </span><span class="nb">last</span><span class="w"> </span><span class="nb">paragraph</span><span class="w">
+</span></code></pre></div></div>
+<p>==&gt;</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MailAttachment</span> <span class="o">*</span><span class="n">attachment</span> <span class="o">=</span> <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"attachment"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
+    <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+        <span class="s">@"/etc/hosts"</span><span class="p">,</span> <span class="s">@"filename"</span><span class="p">,</span>
+        <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
+<span class="p">[[[</span><span class="n">mailMessage</span> <span class="nf">content</span><span class="p">]</span> <span class="nf">paragraphs</span><span class="p">]</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">attachment</span><span class="p">];</span>
+</code></pre></div></div>
 
-<p>==>
-<code>objc
-MailAttachment *attachment = [[[[mail classForScriptingClass:@"attachment"] alloc]
-    initWithProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-        @"/etc/hosts", @"filename",
-        nil]] autorelease];
-[[[mailMessage content] paragraphs] addObject:attachment];
-</code></p>
+<p>Those really are the complicated ones (and they aren’t bad at all once you see how to read them). After that, everything should be obvious:</p>
 
-<p>Those really are the complicated ones (and they aren&rsquo;t bad at all once you see how to read them). After that, everything should be obvious:</p>
-
-<pre><code class="applescript">        set visible of theMessage to true
-    end tell
-end tell
-activate
-</code></pre>
+<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">        </span><span class="k">set</span><span class="w"> </span><span class="na">visible</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">true</span><span class="w">
+    </span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
+</span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
+</span><span class="nb">activate</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Becomes:</p>
 
-<pre><code class="objc">[mailMessage setVisible:YES];
-[mail activate];
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">mailMessage</span> <span class="nf">setVisible</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">[</span><span class="n">mail</span> <span class="nf">activate</span><span class="p">];</span>
+</code></pre></div></div>
 
 <h3>The Finished Code</h3>
+<p>So let’s look at the full code now, including a @try/@catch, since Applescript can generate exceptions (more about this below):</p>
 
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@try</span>
+<span class="p">{</span>
+    <span class="n">MailApplication</span> <span class="o">*</span><span class="n">mail</span> <span class="o">=</span> 
+        <span class="p">[</span><span class="n">SBApplication</span> <span class="nf">applicationWithBundleIdentifier</span><span class="p">:</span><span class="s">@"com.apple.mail"</span><span class="p">];</span>
+    <span class="n">MailOutgoingMessage</span> <span class="o">*</span><span class="n">mailMessage</span> <span class="o">=</span>
+        <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"outgoing message"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
+            <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+                    <span class="s">@"Test outgoing"</span><span class="p">,</span> <span class="s">@"subject"</span><span class="p">,</span>
+                    <span class="s">@"Test body</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="s">@"content"</span><span class="p">,</span>
+                    <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">mail</span> <span class="nf">outgoingMessages</span><span class="p">]</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">mailMessage</span><span class="p">];</span>
 
-<p>So let&rsquo;s look at the full code now, including a @try/@catch, since Applescript can generate exceptions (more about this below):</p>
+    <span class="n">MailToRecipient</span> <span class="o">*</span><span class="n">recipient</span> <span class="o">=</span>
+        <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"to recipient"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
+            <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+                    <span class="s">@"Rob Napier"</span><span class="p">,</span> <span class="s">@"name"</span><span class="p">,</span>
+                    <span class="s">@"sb@robnapier.net"</span><span class="p">,</span> <span class="s">@"address"</span><span class="p">,</span>
+                    <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">mailMessage</span> <span class="nf">toRecipients</span><span class="p">]</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">recipient</span><span class="p">];</span>
 
-<pre><code class="objc">@try
-{
-    MailApplication *mail = 
-        [SBApplication applicationWithBundleIdentifier:@"com.apple.mail"];
-    MailOutgoingMessage *mailMessage =
-        [[[[mail classForScriptingClass:@"outgoing message"] alloc]
-            initWithProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-                    @"Test outgoing", @"subject",
-                    @"Test body\n\n", @"content",
-                    nil]] autorelease];
-    [[mail outgoingMessages] addObject:mailMessage];
-
-    MailToRecipient *recipient =
-        [[[[mail classForScriptingClass:@"to recipient"] alloc]
-            initWithProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-                    @"Rob Napier", @"name",
-                    @"sb@robnapier.net", @"address",
-                    nil]] autorelease];
-    [[mailMessage toRecipients] addObject:recipient];
-
-    MailAttachment *attachment =
-        [[[[mail classForScriptingClass:@"attachment"] alloc]
-            initWithProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-                    @"/etc/hosts", @"filename",
-                    nil]] autorelease];
-    [[[mailMessage content] paragraphs] addObject:attachment];
-
-    [mailMessage setVisible:YES];
-    [mail activate];
-}
-@catch (NSException *e)
-{
-    NSLog(@"Exception:%@");
-}
-</code></pre>
+    <span class="n">MailAttachment</span> <span class="o">*</span><span class="n">attachment</span> <span class="o">=</span>
+        <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"attachment"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
+            <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+                    <span class="s">@"/etc/hosts"</span><span class="p">,</span> <span class="s">@"filename"</span><span class="p">,</span>
+                    <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
+    <span class="p">[[[</span><span class="n">mailMessage</span> <span class="nf">content</span><span class="p">]</span> <span class="nf">paragraphs</span><span class="p">]</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">attachment</span><span class="p">];</span>
+        
+    <span class="p">[</span><span class="n">mailMessage</span> <span class="nf">setVisible</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">mail</span> <span class="nf">activate</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">@catch</span> <span class="p">(</span><span class="n">NSException</span> <span class="o">*</span><span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Exception:%@"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h3>Error Handling</h3>
 
-
-<p>I like @try/@catch better than SBApplicationDelegate because the delegate can&rsquo;t easily interrupt the script if there&rsquo;s an error. If you let it raise an exception and then @catch it, the entire block aborts, which is what I generally want. This also exactly matches the normal AppleScript error handling pattern.</p>
+<p>I like @try/@catch better than SBApplicationDelegate because the delegate can’t easily interrupt the script if there’s an error. If you let it raise an exception and then @catch it, the entire block aborts, which is what I generally want. This also exactly matches the normal AppleScript error handling pattern.</p>
 
 <h3>Summary</h3>
-
 
 <p>Apple has created an incredible new framework with Scripting Bridge, making it easier than ever to tie your application into the system and interact with other programs. Unfortunately, they buried much of the documentation, and left much to the imagination of the reader (like most Applescript documentation). Hopefully this article will help improve that situation and make Applescript a bigger part of your programs.</p>
 </div>
@@ -309,9 +291,9 @@ activate
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -378,21 +360,7 @@ activate
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

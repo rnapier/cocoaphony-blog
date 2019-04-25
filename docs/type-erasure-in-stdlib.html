@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -80,24 +79,24 @@
 
 <div class="entry-content"><p>When <a href="http://robnapier.net/erasure">last we talked about type erasure</a>, I described an easy way to build type erasures using closures. And I mentioned:</p>
 
-<blockquote><p>(While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p></blockquote>
+<blockquote>
+  <p>(While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p>
+</blockquote>
 
-<p>At the time I thought I&rsquo;d pretty well nailed it down, but every time I dug into it I found another little thing I&rsquo;d missed, and it never seemed to end. And with stdlib open sourcing soon, you&rsquo;ll all just be able to read this yourselves, so why embarrass myself getting it all wrong? Over time I kind of hoped you all had forgotten that comment and planned to move on to other things. But then I was <a href="https://twitter.com/My_kl/status/650796108789219328">busted by Michael Welch</a>, and so I had to finish the spelunking and here you go.</p>
+<p>At the time I thought I’d pretty well nailed it down, but every time I dug into it I found another little thing I’d missed, and it never seemed to end. And with stdlib open sourcing soon, you’ll all just be able to read this yourselves, so why embarrass myself getting it all wrong? Over time I kind of hoped you all had forgotten that comment and planned to move on to other things. But then I was <a href="https://twitter.com/My_kl/status/650796108789219328">busted by Michael Welch</a>, and so I had to finish the spelunking and here you go.
+<!-- more --></p>
 
-<!-- more -->
+<p>So, <a href="https://github.com/rnapier/MyAnySequence">here</a> is my annotated implementation of <code class="highlighter-rouge">AnyGenerator</code> and <code class="highlighter-rouge">AnySequence</code> that I believe pretty closely matches Apple’s implementation in stdlib (minus some low-level optimizations in <code class="highlighter-rouge">AnySequence</code> that I’ll call out when we get there). I’ve named my versions of public symbols with a trailing underscore to differentiate from the Swift version. For private symbols (with leading underscore), I’ve used the same name Swift does.</p>
 
-
-<p>So, <a href="https://github.com/rnapier/MyAnySequence">here</a> is my annotated implementation of <code>AnyGenerator</code> and <code>AnySequence</code> that I believe pretty closely matches Apple&rsquo;s implementation in stdlib (minus some low-level optimizations in <code>AnySequence</code> that I&rsquo;ll call out when we get there). I&rsquo;ve named my versions of public symbols with a trailing underscore to differentiate from the Swift version. For private symbols (with leading underscore), I&rsquo;ve used the same name Swift does.</p>
-
-<p>All type information was determined using <code>:type lookup</code> in the Swift REPL. In a few places I checked the implementation with Hopper, but in most cases, once you have the types, the implementation is obvious. (There&rsquo;s a deep lesson in there if you pay attention.)</p>
+<p>All type information was determined using <code class="highlighter-rouge">:type lookup</code> in the Swift REPL. In a few places I checked the implementation with Hopper, but in most cases, once you have the types, the implementation is obvious. (There’s a deep lesson in there if you pay attention.)</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -158,21 +157,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

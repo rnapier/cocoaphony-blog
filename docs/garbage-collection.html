@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Two posts in a day&hellip; but this was a completely different topic. I&rsquo;m beginning work on my first Leopard-only application, and so I&rsquo;m &hellip;">
+  <meta name="description" content="Two posts in a day… but this was a completely different topic. I’m beginning work on my first Leopard-only application, and so I’m trying out garbage &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,38 +77,32 @@
   </header>
 
 
-<div class="entry-content"><p>Two posts in a day&hellip; but this was a completely different topic.</p>
+<div class="entry-content"><p>Two posts in a day… but this was a completely different topic.</p>
 
-<p>I&rsquo;m beginning work on my first Leopard-only application, and so I&rsquo;m trying out garbage collection. Sure, I&rsquo;m excited about garbage collection. Sure, I have no great love of keeping track of my retain counts and autorelease pools. But&hellip;.</p>
+<p>I’m beginning work on my first Leopard-only application, and so I’m trying out garbage collection. Sure, I’m excited about garbage collection. Sure, I have no great love of keeping track of my retain counts and autorelease pools. But….</p>
 
 <p>It feels really, really weird to not release my variables. I tend to rely on autorelease a lot. I know there are some disadvantages, but I like the fact that it notes your intention when you allocate the memory. <!-- more --> Consider this:</p>
-
 <pre lang="objc">NSMenuItem *mi = [[[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""] autorelease];
 [menu addItem:mi];</pre>
-
-
 <p>versus</p>
-
 <pre lang="objc">NSMenuItem *mi = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
 [menu addItem:mi];
 [mi release];</pre>
+<p>It’s not the extra line of code that bothers me. It’s the fact that the release is separated, such that if you move the assignment of mi into another method, you have to remember to move the release as well (and and that point, you’d <em>have</em> to switch to autorelease). Remember that there can be a lot more code between the alloc and the addItem. This makes the Extract Method refactor more complicated. autorelease makes this easy, and at very small cost. Beyond that, it emphasizes at the init that I won’t be holding onto this memory myself. Of course that’s also implied by the use of a temporary variable, but the point remains. It also helps me find memory leaks more easily. Since I always do it this way, I know that if I’ve used alloc on a local variable with no autorelease, I’ve almost certainly got a bug.</p>
 
+<p>Of course the point of this posting is that my long-developed opinions on this matter are now irrelevant. You just assign mi any old way you like and it’ll get garbage collected when appropriate. Great. Easy. Who could not love that?</p>
 
-<p>It&rsquo;s not the extra line of code that bothers me. It&rsquo;s the fact that the release is separated, such that if you move the assignment of mi into another method, you have to remember to move the release as well (and and that point, you&rsquo;d <em>have</em> to switch to autorelease). Remember that there can be a lot more code between the alloc and the addItem. This makes the Extract Method refactor more complicated. autorelease makes this easy, and at very small cost. Beyond that, it emphasizes at the init that I won&rsquo;t be holding onto this memory myself. Of course that&rsquo;s also implied by the use of a temporary variable, but the point remains. It also helps me find memory leaks more easily. Since I always do it this way, I know that if I&rsquo;ve used alloc on a local variable with no autorelease, I&rsquo;ve almost certainly got a bug.</p>
+<p>But I am having a very hard time getting used to not having an autorelease at the end of that initialization. There’s an alloc on a local variable with no autorelease. Bug! It’s hard for me even to type it; I always lead with three open brackets….</p>
 
-<p>Of course the point of this posting is that my long-developed opinions on this matter are now irrelevant. You just assign mi any old way you like and it&rsquo;ll get garbage collected when appropriate. Great. Easy. Who could not love that?</p>
-
-<p>But I am having a very hard time getting used to not having an autorelease at the end of that initialization. There&rsquo;s an alloc on a local variable with no autorelease. Bug! It&rsquo;s hard for me even to type it; I always lead with three open brackets&hellip;.</p>
-
-<p>I&rsquo;ll get over it.</p>
+<p>I’ll get over it.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -176,21 +169,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

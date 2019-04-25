@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="It&rsquo;s been quite a while since I&rsquo;ve updated the Rob Report, but I have some things to chat about on the technical front. Most of my work &hellip;">
+  <meta name="description" content="It’s been quite a while since I’ve updated the Rob Report, but I have some things to chat about on the technical front. Most of my work these days is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,19 +77,19 @@
   </header>
 
 
-<div class="entry-content"><p>It&rsquo;s been quite a while since I&rsquo;ve updated the Rob Report, but I have some things to chat about on the technical front. Most of my work these days is on the Mac, and my main hobby project is <a href="http://pandoraboy.googlecode.com/">PandoraBoy</a>, which will probably dominate these blog posts for a while. It&rsquo;s been a great project for teaching me how to deal with some interesting parts of Cocoa, while being small enough to keep my brain around.</p>
+<div class="entry-content"><p>It’s been quite a while since I’ve updated the Rob Report, but I have some things to chat about on the technical front. Most of my work these days is on the Mac, and my main hobby project is <a href="http://pandoraboy.googlecode.com/">PandoraBoy</a>, which will probably dominate these blog posts for a while. It’s been a great project for teaching me how to deal with some interesting parts of Cocoa, while being small enough to keep my brain around.</p>
 
-<p>My current project for PandoraBoy is getting control of station changing. I now have a set of proxy NSURLProtocols that I can use to eavesdrop on the Pandora traffic (rather than having to post requests like listStations twice). That&rsquo;s how I grab album art. I&rsquo;m using it to learn much more about how Pandora talks to its server, allowing me to provide more Mac-friendly ways to send those messages. I&rsquo;ve demonstrated now that I can send launchStationFromId messages from Cocoa, so now I just need to collect the results of listStations so I have the IDs to send. Shouldn&rsquo;t be hard now.</p>
+<p>My current project for PandoraBoy is getting control of station changing. I now have a set of proxy NSURLProtocols that I can use to eavesdrop on the Pandora traffic (rather than having to post requests like listStations twice). That’s how I grab album art. I’m using it to learn much more about how Pandora talks to its server, allowing me to provide more Mac-friendly ways to send those messages. I’ve demonstrated now that I can send launchStationFromId messages from Cocoa, so now I just need to collect the results of listStations so I have the IDs to send. Shouldn’t be hard now.</p>
 
-<p>In the process, I discovered <a href="http://www.getfirebug.com/">FireBug</a>, which is just incredible. Using it, I understand Pandora&rsquo;s code much better and am now mulling about what I could do with all this information. But my next project will probably be talking to Airport Express (after I fix a couple of new bugs in the 0.4 line). I&rsquo;m pretty close to calling this thing 1.0&hellip;.</p>
+<p>In the process, I discovered <a href="http://www.getfirebug.com/">FireBug</a>, which is just incredible. Using it, I understand Pandora’s code much better and am now mulling about what I could do with all this information. But my next project will probably be talking to Airport Express (after I fix a couple of new bugs in the 0.4 line). I’m pretty close to calling this thing 1.0….</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -155,21 +154,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

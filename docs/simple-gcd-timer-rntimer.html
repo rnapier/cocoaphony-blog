@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I know this exists out there somewhere already, but I couldn&rsquo;t find it anywhere and I was sick of writing it over and over again&hellip;. If &hellip;">
+  <meta name="description" content="I know this exists out there somewhere already, but I couldn’t find it anywhere and I was sick of writing it over and over again…. If someone knows &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,20 +77,20 @@
   </header>
 
 
-<div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn&rsquo;t find it anywhere and I was sick of writing it over and over again&hellip;. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot&rsquo;s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash&rsquo;s</a>, but they solve different problems.</i></p>
+<div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn’t find it anywhere and I was sick of writing it over and over again…. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot’s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash’s</a>, but they solve different problems.</i></p>
 
-<p>Have you ever noticed how hard it is to write a repeating <code>NSTimer</code> that doesn&rsquo;t create a retain loop? Almost always you wind up with something like this:</p>
+<p>Have you ever noticed how hard it is to write a repeating <code class="highlighter-rouge">NSTimer</code> that doesn’t create a retain loop? Almost always you wind up with something like this:</p>
 
-<pre><code>[NSTimer scheduledTimerWithTimeInterval:1
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSTimer scheduledTimerWithTimeInterval:1
                                  target:self
                                selector:@selector(something)
                                userInfo:nil 
                                 repeats:YES];
-</code></pre>
+</code></pre></div></div>
 
-<p>Seems easy enough, except it&rsquo;s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you&rsquo;d think this would be easy. And it should be, so I fixed it. I just still can&rsquo;t quite believe I&rsquo;m the first to do so.</p>
+<p>Seems easy enough, except it’s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you’d think this would be easy. And it should be, so I fixed it. I just still can’t quite believe I’m the first to do so.</p>
 
-<p>Anyway, for your consideration I present a very simple class called <code>RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn&rsquo;t address.</p>
+<p>Anyway, for your consideration I present a very simple class called <code class="highlighter-rouge">RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn’t address.</p>
 
 <p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
 </div>
@@ -99,9 +98,9 @@
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -168,21 +167,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

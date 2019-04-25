@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Huge changes in PandoraBoy on the way. I&rsquo;m working on full-screen mode, so you can run PandoraBoy from across the room and still see what&rsquo &hellip;">
+  <meta name="description" content="Huge changes in PandoraBoy on the way. I’m working on full-screen mode, so you can run PandoraBoy from across the room and still see what’s currently &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,21 +77,21 @@
   </header>
 
 
-<div class="entry-content"><p>Huge changes in PandoraBoy on the way. I&rsquo;m working on full-screen mode, so you can run PandoraBoy from across the room and still see what&rsquo;s currently playing. Building a smooth transition from window to full-screen without interrupting playback has taken my a couple of days, but I think it&rsquo;s a pleasing effect. Right now it doesn&rsquo;t do a lot more than be a full-screen Pandora window (which isn&rsquo;t very exciting in itself, though much harder than it sounds), but next I&rsquo;ll work on a plug-in architecture to let you put various information on the bottom portion of the screen. Then it&rsquo;ll actually be useful.</p>
+<div class="entry-content"><p>Huge changes in PandoraBoy on the way. I’m working on full-screen mode, so you can run PandoraBoy from across the room and still see what’s currently playing. Building a smooth transition from window to full-screen without interrupting playback has taken my a couple of days, but I think it’s a pleasing effect. Right now it doesn’t do a lot more than be a full-screen Pandora window (which isn’t very exciting in itself, though much harder than it sounds), but next I’ll work on a plug-in architecture to let you put various information on the bottom portion of the screen. Then it’ll actually be useful.</p>
 
-<p>Why is it so hard to go full-screen you may ask? Afterall, it&rsquo;s just a webpage. But the mini-player is a web page that assumes the window is a specific size. Getting the background gradient to look right at any size is the main problem, since there is no direct way to scale a background in CSS2. repeat-x handles left-to-right scaling, but the pandora background isn&rsquo;t tileable vertically. My final solution was to build an NSImageView which holds a flipped version of the Pandora background, and then placed it immediately underneath the pandora webview. It handles all vertical stretching and gives a nice darker area at the bottom rather than just fading to white.</p>
+<p>Why is it so hard to go full-screen you may ask? Afterall, it’s just a webpage. But the mini-player is a web page that assumes the window is a specific size. Getting the background gradient to look right at any size is the main problem, since there is no direct way to scale a background in CSS2. repeat-x handles left-to-right scaling, but the pandora background isn’t tileable vertically. My final solution was to build an NSImageView which holds a flipped version of the Pandora background, and then placed it immediately underneath the pandora webview. It handles all vertical stretching and gives a nice darker area at the bottom rather than just fading to white.</p>
 
-<p>I&rsquo;ll also investigate a black-screen mode with the pandora player standing with no background. I had that working at one point, but it&rsquo;s been hard to recreate it in a way to zooms cleanly. CSS2 and Javascript just aren&rsquo;t nearly as powerful as Cocoa&hellip;.</p>
+<p>I’ll also investigate a black-screen mode with the pandora player standing with no background. I had that working at one point, but it’s been hard to recreate it in a way to zooms cleanly. CSS2 and Javascript just aren’t nearly as powerful as Cocoa….</p>
 
-<p>If you&rsquo;re feeling insanely adventurous, it&rsquo;s all checked in on truck in subversion&hellip;.</p>
+<p>If you’re feeling insanely adventurous, it’s all checked in on truck in subversion….</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -159,21 +158,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

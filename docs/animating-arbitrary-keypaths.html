@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="During CocoaConf-2012-Raleigh, I discussed my PinchView from Laying out text with Core Text. It&rsquo;s a text view that squeezes the glyphs towards &hellip;">
+  <meta name="description" content="During CocoaConf-2012-Raleigh, I discussed my PinchView from Laying out text with Core Text. It’s a text view that squeezes the glyphs towards your &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,108 +77,105 @@
   </header>
 
 
-<div class="entry-content"><p>During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</a>, I discussed my PinchView from <a href="http://robnapier.net/blog/laying-out-text-with-coretext-547">Laying out text with Core Text</a>. It&rsquo;s a text view that squeezes the glyphs towards your finger when you touch it. I built it to demonstrate per-glyph layout in Core Text. While demonstrating it, I was pretty unsatisfied with how it looked when you touched it or let go. When you drag your finger on the view, the glyphs move around like water. It&rsquo;s quite pretty. But when you initially touch the screen, the glyphs suddenly jump to their new locations, and then they jump back when you release the screen. Well, that&rsquo;s no good. So I wanted to add animations.</p>
+<div class="entry-content"><p>During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</a>, I discussed my PinchView from <a href="http://robnapier.net/blog/laying-out-text-with-coretext-547">Laying out text with Core Text</a>. It’s a text view that squeezes the glyphs towards your finger when you touch it. I built it to demonstrate per-glyph layout in Core Text. While demonstrating it, I was pretty unsatisfied with how it looked when you touched it or let go. When you drag your finger on the view, the glyphs move around like water. It’s quite pretty. But when you initially touch the screen, the glyphs suddenly jump to their new locations, and then they jump back when you release the screen. Well, that’s no good. So I wanted to add animations.</p>
 
-<p>But here&rsquo;s the thing: what do you animate? While you do want to animate the glyph positions, you&rsquo;re not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer&rsquo;s list of animatable properties confirmed that there&rsquo;s nothing like that. But no problem, I added a custom property called <code>touchPointScale</code> and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)</p>
-
+<p>But here’s the thing: what do you animate? While you do want to animate the glyph positions, you’re not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer’s list of animatable properties confirmed that there’s nothing like that. But no problem, I added a custom property called <code class="highlighter-rouge">touchPointScale</code> and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)
 <!-- more -->
-
-
-<p>OK, so great. But one comment I got at CocoaConf was that it should handle multitouch. So I started playing with that, but now I had a problem. I could have lots of touches, so my single <code>touchPointScale</code> doesn&rsquo;t&hellip;er&hellip;scale. What I want to do is take a collection of <code>TouchPoint</code> objects that the layer owns, animate each of their scales independently, and have the layer do its animation thing. But how do we animate based on changes in properties of things in a layer&rsquo;s collection?</p>
+OK, so great. But one comment I got at CocoaConf was that it should handle multitouch. So I started playing with that, but now I had a problem. I could have lots of touches, so my single <code class="highlighter-rouge">touchPointScale</code> doesn’t…er…scale. What I want to do is take a collection of <code class="highlighter-rouge">TouchPoint</code> objects that the layer owns, animate each of their scales independently, and have the layer do its animation thing. But how do we animate based on changes in properties of things in a layer’s collection?</p>
 
 <p><em>The sample code is available on <a href="https://github.com/rnapier/richtext-coretext/tree/master/PinchText">github</a>.</em></p>
 
-<p>First, we have <code>TouchPoint</code> objects. These are just trivial data objects. The <code>identifier</code> here happens to be the address of the object, but it could be any unique string.</p>
+<p>First, we have <code class="highlighter-rouge">TouchPoint</code> objects. These are just trivial data objects. The <code class="highlighter-rouge">identifier</code> here happens to be the address of the object, but it could be any unique string.</p>
 
-<pre><code class="objc">@interface TouchPoint : NSObject
-@property (nonatomic, readwrite, strong) UITouch *touch;
-@property (nonatomic, readwrite, assign) CGPoint point;
-@property (nonatomic, readwrite, assign) CGFloat scale;
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">TouchPoint</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UITouch</span> <span class="o">*</span><span class="n">touch</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGPoint</span> <span class="n">point</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">scale</span><span class="p">;</span>
 
-+ (TouchPoint *)touchPointForTouch:(UITouch *)touch inView:(UIView *)view scale:(CGFloat)scale;
-- (NSString *)identifier;
-@end
-</code></pre>
+<span class="k">+</span> <span class="p">(</span><span class="n">TouchPoint</span> <span class="o">*</span><span class="p">)</span><span class="nf">touchPointForTouch</span><span class="p">:(</span><span class="n">UITouch</span> <span class="o">*</span><span class="p">)</span><span class="nv">touch</span> <span class="nf">inView</span><span class="p">:(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span> <span class="nf">scale</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">scale</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">identifier</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div></div>
 
-<p>Then we have <code>PinchTextLayer</code>, which has a collection of <code>TouchPoint</code> objects:</p>
+<p>Then we have <code class="highlighter-rouge">PinchTextLayer</code>, which has a collection of <code class="highlighter-rouge">TouchPoint</code> objects:</p>
 
-<pre><code class="objc">@property (nonatomic, readwrite, strong) NSMutableDictionary *touchPointsForIdentifier;
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">touchPointsForIdentifier</span><span class="p">;</span>
+</code></pre></div></div>
 
-<p>The thing we want to animate is &ldquo;the <code>scale</code> of the touch point with a given identifier.&rdquo; In order to animate something, it needs to be something you can call <code>setValue:forKeyPath:</code> on. And that brings us to the power of KVC and dictionaries.</p>
+<p>The thing we want to animate is “the <code class="highlighter-rouge">scale</code> of the touch point with a given identifier.” In order to animate something, it needs to be something you can call <code class="highlighter-rouge">setValue:forKeyPath:</code> on. And that brings us to the power of KVC and dictionaries.</p>
 
 <p>Say you have this code:</p>
 
-<pre><code class="objc">self.dict[@"somekey"] = @"somevalue";
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">self</span><span class="p">.</span><span class="n">dict</span><span class="p">[</span><span class="s">@"somekey"</span><span class="p">]</span> <span class="o">=</span> <span class="s">@"somevalue"</span><span class="p">;</span>
+</code></pre></div></div>
 
 <p>You can also write that this way:</p>
 
-<pre><code class="objc">[self setValue:@"somevalue" forKeyPath:@"dict.somekey"];
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">self</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"somevalue"</span> <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"dict.somekey"</span><span class="p">];</span>
+</code></pre></div></div>
 
 <p>And if you have this code:</p>
 
-<pre><code class="objc">self.dict[@"somekey"].prop = @"someValue";
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">self</span><span class="p">.</span><span class="n">dict</span><span class="p">[</span><span class="s">@"somekey"</span><span class="p">].</span><span class="n">prop</span> <span class="o">=</span> <span class="s">@"someValue"</span><span class="p">;</span>
+</code></pre></div></div>
 
 <p>You can write that this way:</p>
 
-<pre><code class="objc">[self setValue:@"somevalue" forKeyPath:@"dict.somekey.prop"];
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">self</span> <span class="nf">setValue</span><span class="p">:</span><span class="s">@"somevalue"</span> <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"dict.somekey.prop"</span><span class="p">];</span>
+</code></pre></div></div>
 
-<p>And that means that things held in dictionaries can be animated pretty easily because they can be accessed via <code>setValue:forKeyPath:</code>. First, you need to tell the layer that changes on your dictionary impact drawing:</p>
+<p>And that means that things held in dictionaries can be animated pretty easily because they can be accessed via <code class="highlighter-rouge">setValue:forKeyPath:</code>. First, you need to tell the layer that changes on your dictionary impact drawing:</p>
 
-<pre><code class="objc">+ (BOOL)needsDisplayForKey:(NSString *)key {
-  if ([key isEqualToString:@"touchPointForIdentifier"]) {
-    return YES;
-  }
-  else {
-    return [super needsDisplayForKey:key];
-  }
-}
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">needsDisplayForKey</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">([</span><span class="n">key</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"touchPointForIdentifier"</span><span class="p">])</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">super</span> <span class="nf">needsDisplayForKey</span><span class="p">:</span><span class="n">key</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p>This applies to all key paths that start with <code>touchPointForIdentifier</code>. And because we&rsquo;re not animating <code>touchPointForIdentifier</code> itself, we don&rsquo;t have to make it <code>@dynamic</code>. We do need to copy it in <code>initWithLayer:</code> of course:</p>
+<p>This applies to all key paths that start with <code class="highlighter-rouge">touchPointForIdentifier</code>. And because we’re not animating <code class="highlighter-rouge">touchPointForIdentifier</code> itself, we don’t have to make it <code class="highlighter-rouge">@dynamic</code>. We do need to copy it in <code class="highlighter-rouge">initWithLayer:</code> of course:</p>
 
-<pre><code class="objc">- (id)initWithLayer:(id)layer {
-  self = [super initWithLayer:layer];
-  ...
-  [self setTouchPointForIdentifier:[[layer touchPointForIdentifier] copy]];
-  return self;
-}
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">initWithLayer</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">layer</span> <span class="p">{</span>
+  <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">initWithLayer</span><span class="p">:</span><span class="n">layer</span><span class="p">];</span>
+  <span class="p">...</span>
+  <span class="p">[</span><span class="n">self</span> <span class="nf">setTouchPointForIdentifier</span><span class="p">:[[</span><span class="n">layer</span> <span class="nf">touchPointForIdentifier</span><span class="p">]</span> <span class="nf">copy</span><span class="p">]];</span>
+  <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p>And that&rsquo;s just about it. We can now treat the key path &ldquo;touchPointForIdentifier.&lt;identifier&gt;.scale&rdquo; as an animatable property just like <code>position</code> or <code>opacity</code>.</p>
+<p>And that’s just about it. We can now treat the key path “touchPointForIdentifier.&lt;identifier&gt;.scale” as an animatable property just like <code class="highlighter-rouge">position</code> or <code class="highlighter-rouge">opacity</code>.</p>
 
-<pre><code class="objc">- (void)addTouches:(NSSet *)touches inView:(UIView *)view scale:(CGFloat)scale {
-  for (UITouch *touch in touches) {
-    TouchPoint *touchPoint = [TouchPoint touchPointForTouch:touch inView:view scale:scale];
-    NSString *keyPath = [self touchPointScaleKeyPathForTouchPoint:touchPoint];
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addTouches</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nv">touches</span> <span class="nf">inView</span><span class="p">:(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span> <span class="nf">scale</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">scale</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">UITouch</span> <span class="o">*</span><span class="n">touch</span> <span class="k">in</span> <span class="n">touches</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">TouchPoint</span> <span class="o">*</span><span class="n">touchPoint</span> <span class="o">=</span> <span class="p">[</span><span class="n">TouchPoint</span> <span class="nf">touchPointForTouch</span><span class="p">:</span><span class="n">touch</span> <span class="nf">inView</span><span class="p">:</span><span class="n">view</span> <span class="n">scale</span><span class="o">:</span><span class="n">scale</span><span class="p">];</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">keyPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">touchPointScaleKeyPathForTouchPoint</span><span class="p">:</span><span class="n">touchPoint</span><span class="p">];</span>
 
-    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:keyPath];
-    anim.fromValue = @0;
-    anim.toValue = @(touchPoint.scale);
-    [self addAnimation:anim forKey:keyPath];
+    <span class="n">CABasicAnimation</span> <span class="o">*</span><span class="n">anim</span> <span class="o">=</span> <span class="p">[</span><span class="n">CABasicAnimation</span> <span class="nf">animationWithKeyPath</span><span class="p">:</span><span class="n">keyPath</span><span class="p">];</span>
+    <span class="n">anim</span><span class="p">.</span><span class="n">fromValue</span> <span class="o">=</span> <span class="mi">@0</span><span class="p">;</span>
+    <span class="n">anim</span><span class="p">.</span><span class="n">toValue</span> <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="n">touchPoint</span><span class="p">.</span><span class="n">scale</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">addAnimation</span><span class="p">:</span><span class="n">anim</span> <span class="nf">forKey</span><span class="p">:</span><span class="n">keyPath</span><span class="p">];</span>
 
-    [self.touchPointForIdentifier setObject:touchPoint forKey:touchPoint.identifier];
-  }
-}
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">touchPointForIdentifier</span> <span class="nf">setObject</span><span class="p">:</span><span class="n">touchPoint</span> <span class="nf">forKey</span><span class="p">:</span><span class="n">touchPoint</span><span class="p">.</span><span class="n">identifier</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-- (NSString *)touchPointScaleKeyPathForTouchPoint:(TouchPoint *)touchPoint {
-  return [NSString stringWithFormat:@"touchPointForIdentifier.%@.scale", touchPoint.identifier];
-}
-</code></pre>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">touchPointScaleKeyPathForTouchPoint</span><span class="p">:(</span><span class="n">TouchPoint</span> <span class="o">*</span><span class="p">)</span><span class="nv">touchPoint</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"touchPointForIdentifier.%@.scale"</span><span class="p">,</span> <span class="n">touchPoint</span><span class="p">.</span><span class="n">identifier</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p>Side note: Along the way, I also developed a technique for animating custom properties (without any storage behind them, implemented by custom methods) by overriding <code>setValue:forKeyPath:</code>. If you think that might be useful, you can see it in <a href="https://github.com/rnapier/richtext-coretext/tree/4eb482dcfe2340f09d553c707a5b3b2a4116ff63">github</a>, but so far I haven&rsquo;t thought of any cases where it&rsquo;s better than using the dictionary.</p>
+<p>Side note: Along the way, I also developed a technique for animating custom properties (without any storage behind them, implemented by custom methods) by overriding <code class="highlighter-rouge">setValue:forKeyPath:</code>. If you think that might be useful, you can see it in <a href="https://github.com/rnapier/richtext-coretext/tree/4eb482dcfe2340f09d553c707a5b3b2a4116ff63">github</a>, but so far I haven’t thought of any cases where it’s better than using the dictionary.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -246,21 +242,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

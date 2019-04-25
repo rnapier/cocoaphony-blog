@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I have completed the major work for RNCryptor asynchronous operations on the async branch. This changes the API and the file format. I&rsquo;ll be &hellip;">
+  <meta name="description" content="I have completed the major work for RNCryptor asynchronous operations on the async branch. This changes the API and the file format. I’ll be &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,45 +77,43 @@
   </header>
 
 
-<div class="entry-content"><p>I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I&rsquo;ll be documenting this more formally within a few weeks, but here are the high points:</p>
-
-<!-- more -->
-
+<div class="entry-content"><p>I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I’ll be documenting this more formally within a few weeks, but here are the high points:
+<!-- more --></p>
 
 <p>There are now separate RNCryptor and RNDecryptor objects (as well as RNOpenSSLEncryptor and RNOpenSSLDecryptor).</p>
 
 <p>Aync usage looks like this:</p>
 
-<pre><code>RNEncryptor *encryptor = [[RNEncryptor alloc] initWithSettings:kRNCryptorAES256Settings
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RNEncryptor *encryptor = [[RNEncryptor alloc] initWithSettings:kRNCryptorAES256Settings
                                                       password:password
                                                        handler:^(RNCryptor *cryptor, NSData *data) {
                                                           ...
                                                        }];
-</code></pre>
+</code></pre></div></div>
 
-<p>You add data using <code>addData:</code>. <code>handler</code> may or may not be called once for every call to <code>addData:</code>. When you are done, you must call <code>finish</code>, at which point, <code>handler</code> will be called one last time. You can check this condition using <code>cryptor.isFinished</code>.</p>
+<p>You add data using <code class="highlighter-rouge">addData:</code>. <code class="highlighter-rouge">handler</code> may or may not be called once for every call to <code class="highlighter-rouge">addData:</code>. When you are done, you must call <code class="highlighter-rouge">finish</code>, at which point, <code class="highlighter-rouge">handler</code> will be called one last time. You can check this condition using <code class="highlighter-rouge">cryptor.isFinished</code>.</p>
 
 <p>There is still synchronous access such as:</p>
 
-<pre><code>NSData *encryptedData = [RNEncryptor encryptData:data
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSData *encryptedData = [RNEncryptor encryptData:data
                                     withSettings:kRNCryptorAES256Settings
                                         password:password
                                            error:&amp;error];
-</code></pre>
+</code></pre></div></div>
 
-<p>I have dropped all the URL, file and stream APIs. Please let me know if you have a general use case where you would like them. I don&rsquo;t mind creating some convenience methods, but the convenience methods in the original interface were becoming too numerous and that complicates testing. Input on this is welcome. I found that many people were either doing very small things where synchronous NSData is good, or they were using <code>NSURLConnection</code>, where you need all the callbacks (to handle redirects, authentication, etc.), so I&rsquo;ve supported those two cases the most.</p>
+<p>I have dropped all the URL, file and stream APIs. Please let me know if you have a general use case where you would like them. I don’t mind creating some convenience methods, but the convenience methods in the original interface were becoming too numerous and that complicates testing. Input on this is welcome. I found that many people were either doing very small things where synchronous NSData is good, or they were using <code class="highlighter-rouge">NSURLConnection</code>, where you need all the callbacks (to handle redirects, authentication, etc.), so I’ve supported those two cases the most.</p>
 
-<p>By default, <code>handler</code> is called on the GCD queue that the cryptor was created on. You can modify this by setting <code>responseQueue</code>.</p>
+<p>By default, <code class="highlighter-rouge">handler</code> is called on the GCD queue that the cryptor was created on. You can modify this by setting <code class="highlighter-rouge">responseQueue</code>.</p>
 
-<p>Input on the API is welcome. I&rsquo;m leaving it on the async branch until people have time to play with a little bit and I have time to document it fully.</p>
+<p>Input on the API is welcome. I’m leaving it on the async branch until people have time to play with a little bit and I have time to document it fully.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -183,21 +180,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

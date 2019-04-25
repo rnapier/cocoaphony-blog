@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,39 +77,38 @@
   </header>
 
 
-<div class="entry-content"><p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn&rsquo;t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it&rsquo;s easier than ever. Let&rsquo;s make one.</p>
+<div class="entry-content"><p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn’t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it’s easier than ever. Let’s make one.</p>
 
 <!-- more -->
 
+<p><code class="highlighter-rouge">/Developer/Library/Xcode</code> - Mac
+<code class="highlighter-rouge">/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode</code> - iPhone</p>
 
-<p><code>/Developer/Library/Xcode</code> - Mac
-<code>/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode</code> - iPhone</p>
+<p>As with much of the move in Xcode to <code class="highlighter-rouge">/Developer/Platforms</code>, the existing Mac files have been inconsistently transfered, and some are still found in <code class="highlighter-rouge">/Developer/Library</code>. Hopefully Apple will get more consistent around this over time.</p>
 
-<p>As with much of the move in Xcode to <code>/Developer/Platforms</code>, the existing Mac files have been inconsistently transfered, and some are still found in <code>/Developer/Library</code>. Hopefully Apple will get more consistent around this over time.</p>
+<p>In these directories, you’ll see several templates that should look familiar under File Templates, Project Templates and Target Templates. Let’s take a look at the iPhone - Application - Window-Based Application template. You should see the following structure:</p>
 
-<p>In these directories, you&rsquo;ll see several templates that should look familiar under File Templates, Project Templates and Target Templates. Let&rsquo;s take a look at the iPhone - Application - Window-Based Application template. You should see the following structure:</p>
-
-<pre><code>___PROJECTNAME___.xcodeproj
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>___PROJECTNAME___.xcodeproj
 ___PROJECTNAMEASIDENTIFIER____Prefix.pch
 Classes/
-    ___PROJECTNAMEASIDENTIFIER___AppDelegate.h
-    ___PROJECTNAMEASIDENTIFIER___AppDelegate.m
+	___PROJECTNAMEASIDENTIFIER___AppDelegate.h
+	___PROJECTNAMEASIDENTIFIER___AppDelegate.m
 Info.plist
 main.m
 MainWindow.xib
-</code></pre>
+</code></pre></div></div>
 
-<p>Basically, it looks very similar to an empty project called <code>___PROJECTNAME___</code> because that&rsquo;s what it is. You could open this project in Xcode, build it and run it. Be a little mindful of doing this; it will create a <code>build</code> directory that you&rsquo;ll want to delete later, but this is basically how we&rsquo;re going to modify our templates.</p>
+<p>Basically, it looks very similar to an empty project called <code class="highlighter-rouge">___PROJECTNAME___</code> because that’s what it is. You could open this project in Xcode, build it and run it. Be a little mindful of doing this; it will create a <code class="highlighter-rouge">build</code> directory that you’ll want to delete later, but this is basically how we’re going to modify our templates.</p>
 
-<p>The one thing special about the template is a little bit of meta-data stored inside the xcodeproj. Open this in Finder (Ctrl-Click and select Show Package Contents). You&rsquo;ll see the standard project.pbxproj, but you&rsquo;ll also see TemplateIcon.icns and TemplateInfo.plist. The first is the icon shown in Xcode, and the latter includes the description of the project (again for the Xcode template chooser screen).</p>
+<p>The one thing special about the template is a little bit of meta-data stored inside the xcodeproj. Open this in Finder (Ctrl-Click and select Show Package Contents). You’ll see the standard project.pbxproj, but you’ll also see TemplateIcon.icns and TemplateInfo.plist. The first is the icon shown in Xcode, and the latter includes the description of the project (again for the Xcode template chooser screen).</p>
 
-<p>You&rsquo;ll note the use of <code>___PROJECTNAME___</code> versus <code>___PROJECTNAMEASIDENTIFIER___</code>. For the majority of projects these are the same. But if your project has characters that would be illegal in an Objective-C identifier but legal in a file name (spaces, numbers, symbols), then those will be removed in the identifier version. This is important in making class names for instance. So if your project name is &ldquo;My Application&rdquo;, the xcodeproj will be &ldquo;My Application.xcodeproj&rdquo;, but the AppDelegate class header will be &ldquo;MyApplication_AppDelegate.h&rdquo;.</p>
+<p>You’ll note the use of <code class="highlighter-rouge">___PROJECTNAME___</code> versus <code class="highlighter-rouge">___PROJECTNAMEASIDENTIFIER___</code>. For the majority of projects these are the same. But if your project has characters that would be illegal in an Objective-C identifier but legal in a file name (spaces, numbers, symbols), then those will be removed in the identifier version. This is important in making class names for instance. So if your project name is “My Application”, the xcodeproj will be “My Application.xcodeproj”, but the AppDelegate class header will be “MyApplication_AppDelegate.h”.</p>
 
-<p>These macros (<code>___PROJECTNAME___</code> and <code>___PROJECTNAMEASIDENTIFIER___</code>) will be substituted anywhere they are found in a filename or within the files. That includes inside of XIB files. So in the MainMenu.xib for a Cocoa project, you can fix the main menu to read &ldquo;About <strong><em>PROJECTNAME</em></strong>&rdquo; and it&rsquo;ll be substituted for you. With NIBs, you couldn&rsquo;t do this, which is why &ldquo;NewApplication&rdquo; is found all over the place in the Mac MainMenu.xib. It&rsquo;s unfortunate that Apple didn&rsquo;t fix this when they converted the Cocoa templates to XIBs.</p>
+<p>These macros (<code class="highlighter-rouge">___PROJECTNAME___</code> and <code class="highlighter-rouge">___PROJECTNAMEASIDENTIFIER___</code>) will be substituted anywhere they are found in a filename or within the files. That includes inside of XIB files. So in the MainMenu.xib for a Cocoa project, you can fix the main menu to read “About <strong><em>PROJECTNAME</em></strong>” and it’ll be substituted for you. With NIBs, you couldn’t do this, which is why “NewApplication” is found all over the place in the Mac MainMenu.xib. It’s unfortunate that Apple didn’t fix this when they converted the Cocoa templates to XIBs.</p>
 
-<p>There are several other macros available in project templates. These are not documented as far as I know. I&rsquo;ve worked them out by looking at the strings in the Xcode framework that provides them, and then testing which ones actually work in project templates (file templates and target templates have slightly different ones).</p>
+<p>There are several other macros available in project templates. These are not documented as far as I know. I’ve worked them out by looking at the strings in the Xcode framework that provides them, and then testing which ones actually work in project templates (file templates and target templates have slightly different ones).</p>
 
-<pre><code>___UUIDASIDENTIFIER___
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>___UUIDASIDENTIFIER___
 ___UUID___
 ___YEAR___
 ___ORGANIZATIONNAME___
@@ -121,39 +119,38 @@ ___DATE___
 ___PROJECTNAMEASXML___
 ___PROJECTNAMEASIDENTIFIER___
 ___PROJECTNAME___
-</code></pre>
+</code></pre></div></div>
 
-<p>Note that while there are <code>DATE</code> and <code>YEAR</code> macros, there are no <code>DAY</code> or <code>MONTH</code> macros. <code>ORGANIZATIONNAME</code> is set by default to <code>__MyCompanyName__</code>. You can fix this by setting it in defaults:</p>
+<p>Note that while there are <code class="highlighter-rouge">DATE</code> and <code class="highlighter-rouge">YEAR</code> macros, there are no <code class="highlighter-rouge">DAY</code> or <code class="highlighter-rouge">MONTH</code> macros. <code class="highlighter-rouge">ORGANIZATIONNAME</code> is set by default to <code class="highlighter-rouge">__MyCompanyName__</code>. You can fix this by setting it in defaults:</p>
 
-<pre><code class="bash">defaults write com.apple.Xcode PBXCustomTemplateMacroDefinitions '{ORGANIZATIONNAME = "My Company"; }'
-</code></pre>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>defaults write com.apple.Xcode PBXCustomTemplateMacroDefinitions <span class="s1">'{ORGANIZATIONNAME = "My Company"; }'</span>
+</code></pre></div></div>
 
-<h3>Walking through it all</h3>
+<h3 id="walking-through-it-all">Walking through it all</h3>
 
-<p>Now that we&rsquo;ve talked it to death, let&rsquo;s walk through actually doing it based on our work <a href="/blog/build-system-1-build-panel">last time</a>.</p>
+<p>Now that we’ve talked it to death, let’s walk through actually doing it based on our work <a href="/blog/build-system-1-build-panel">last time</a>.</p>
 
 <ul>
-<li>Open <code>~/Library/Application Support/Developer/Shared/Xcode</code> in Finder and make a directory called <code>Project Templates</code></li>
-<li>Under <code>Project Templates</code>, make a directory called <code>iPhone OS</code>.</li>
-<li>Open <code>/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode/Project Templates/Application</code> in Finder.</li>
-<li>Copy (don&rsquo;t move), <code>Window-Based Application</code> from the <code>/Developer</code> window to <code>~/Library</code> window.</li>
-<li>Open the <code>Window-Based Application</code> folder and open <code>___PROJECTNAME___.xcodeproj</code> in Xcode.</li>
-<li>Go back to <a href="/blog/build-system-*-build-panel">&ldquo;Abandoning the Build Panel&rdquo;</a> and apply the changes there. Or apply whatever changes you want to be in every project. In your <code>Application.xcconfig</code>, you&rsquo;ll want this:
-<code>
-PRODUCT_NAME = ___PROJECTNAME___
+  <li>Open <code class="highlighter-rouge">~/Library/Application Support/Developer/Shared/Xcode</code> in Finder and make a directory called <code class="highlighter-rouge">Project Templates</code></li>
+  <li>Under <code class="highlighter-rouge">Project Templates</code>, make a directory called <code class="highlighter-rouge">iPhone OS</code>.</li>
+  <li>Open <code class="highlighter-rouge">/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode/Project Templates/Application</code> in Finder.</li>
+  <li>Copy (don’t move), <code class="highlighter-rouge">Window-Based Application</code> from the <code class="highlighter-rouge">/Developer</code> window to <code class="highlighter-rouge">~/Library</code> window.</li>
+  <li>Open the <code class="highlighter-rouge">Window-Based Application</code> folder and open <code class="highlighter-rouge">___PROJECTNAME___.xcodeproj</code> in Xcode.</li>
+  <li>Go back to <a href="/blog/build-system-*-build-panel">“Abandoning the Build Panel”</a> and apply the changes there. Or apply whatever changes you want to be in every project. In your <code class="highlighter-rouge">Application.xcconfig</code>, you’ll want this:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PRODUCT_NAME = ___PROJECTNAME___
 GCC_PREFIX_HEADER = ___PROJECTNAMEASIDENTIFIER____Prefix.pch
-</code></li>
-<li>Quit Xcode</li>
-<li>Delete the build/ directory if one was created</li>
-<li>Right-click the xcodeproj and select &ldquo;Show Package Contents&rdquo;</li>
-<li>Delete any .mode1v3 and .pbxuser files that may have been created</li>
-<li>Open TemplateInfo.plist in Property Editor and set the description as you like</li>
-<li>If you like, replace TemplateIcon.icns with an icon file you like</li>
-<li>You can now launch XCode, select File>New Project, and you should see a &ldquo;User Templates&rdquo; section with your template.</li>
+</code></pre></div>    </div>
+  </li>
+  <li>Quit Xcode</li>
+  <li>Delete the build/ directory if one was created</li>
+  <li>Right-click the xcodeproj and select “Show Package Contents”</li>
+  <li>Delete any .mode1v3 and .pbxuser files that may have been created</li>
+  <li>Open TemplateInfo.plist in Property Editor and set the description as you like</li>
+  <li>If you like, replace TemplateIcon.icns with an icon file you like</li>
+  <li>You can now launch XCode, select File&gt;New Project, and you should see a “User Templates” section with your template.</li>
 </ul>
 
-
-<p>If you&rsquo;d like an example of the project template I use, along with all my xcconfig settings, I&rsquo;ve attached it. We&rsquo;ll be discussing some of these settings in the future.</p>
+<p>If you’d like an example of the project template I use, along with all my xcconfig settings, I’ve attached it. We’ll be discussing some of these settings in the future.</p>
 
 <p><a href="https://github.com/rnapier/cocoaphony/tree/master/Project%20Templates">Project Templates at Github</a></p>
 </div>
@@ -161,9 +158,9 @@ GCC_PREFIX_HEADER = ___PROJECTNAMEASIDENTIFIER____Prefix.pch
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -230,21 +227,7 @@ GCC_PREFIX_HEADER = ___PROJECTNAMEASIDENTIFIER____Prefix.pch
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

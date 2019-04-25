@@ -9,8 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="The first public beta of Swift has been out for a week. I&rsquo;ve been there since
-the beginning. I&rsquo;ve read almost the entire book and have &hellip;">
+  <meta name="description" content="The first public beta of Swift has been out for a week. I’ve been there since
+the beginning. I’ve read almost the entire book and have written many &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,10 +27,9 @@ the beginning. I&rsquo;ve read almost the entire book and have &hellip;">
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -79,42 +78,41 @@ the beginning. I&rsquo;ve read almost the entire book and have &hellip;">
   </header>
 
 
-<div class="entry-content"><p>The first public beta of Swift has been out for a week. I&rsquo;ve been there since
-the beginning. I&rsquo;ve read almost the entire book and have  written many
-<em>dozens</em> of lines of Swift code. So as an expert in the field, I&rsquo;m finally in
-a position to write the definitive review of the language. That&rsquo;s a joke, son.
-But I&rsquo;m going to dive in anyway, since that&rsquo;s what you do once you hit your
+<div class="entry-content"><p>The first public beta of Swift has been out for a week. I’ve been there since
+the beginning. I’ve read almost the entire book and have  written many
+<em>dozens</em> of lines of Swift code. So as an expert in the field, I’m finally in
+a position to write the definitive review of the language. That’s a joke, son.
+But I’m going to dive in anyway, since that’s what you do once you hit your
 140 character limit.</p>
 
 <p>First, a spoiler. I basically like Swift. Given its goals and its constraints,
-I think it&rsquo;s a move in the right direction. Many of those complaining most
+I think it’s a move in the right direction. Many of those complaining most
 about Swift seem to misunderstand one or the other.</p>
 
 <!-- more -->
 
-
-<p>So what&rsquo;s the goal of Swift? Apple&rsquo;s been very clear about that. Swift is a
-language for building apps for Apple platforms. Period. It isn&rsquo;t meant to be a
-general-purpose language. It isn&rsquo;t meant to be a server language. Any
+<p>So what’s the goal of Swift? Apple’s been very clear about that. Swift is a
+language for building apps for Apple platforms. Period. It isn’t meant to be a
+general-purpose language. It isn’t meant to be a server language. Any
 evaluation of Swift starts and ends with how well it lets developers build
-really fantastic iOS and Mac apps. Note that I didn&rsquo;t say &ldquo;build iOS apps
-quickly&rdquo; and I didn&rsquo;t say &ldquo;build cross-platform mobile apps.&rdquo; I said
-&ldquo;<em>fantastic</em> iOS and Mac apps.&rdquo;</p>
+really fantastic iOS and Mac apps. Note that I didn’t say “build iOS apps
+quickly” and I didn’t say “build cross-platform mobile apps.” I said
+“<em>fantastic</em> iOS and Mac apps.”</p>
 
 <p>This means, among other things, no garbage collected languages need apply. As
 our Android friends have learned, when you need great performance in memory
-constrained environments,
+constrained environments, 
 <a href="http://sealedabstract.com/rants/why-mobile-web-apps-are-slow/">garbage collection is your enemy</a>.
 I was a Mac developer when they added GC and I was at WWDC when they announced
 GC was being removed. We all applauded. GC languages were never going to be
 considered, and I think that was a great decision. ARC is much better on
-mobile (I think it&rsquo;s better in most cases, but it&rsquo;s unquestionably better on
+mobile (I think it’s better in most cases, but it’s unquestionably better on
 mobile).</p>
 
 <p>In pursuing that goal, Apple also had some constraints. They decided not to
 throw away their existing code base (good move), so they needed something that
 could work well with Cocoa. A lot of things about Swift would probably be
-different if it weren&rsquo;t designed to inter-operate so closely with ObjC. I
+different if it weren’t designed to inter-operate so closely with ObjC. I
 expect ObjC to be around for many years, if not indefinitely, as a bridging
 language to C. What will be interesting is if ObjC picks up any new features
 to better inter-operate with Swift (a typed-collection for instance). If it
@@ -126,95 +124,104 @@ really fantastic apps that integrate tightly with Apple devices and provide
 great performance and user-visible features? And would you suggestion make it
 easier or harder to work with the existing Cocoa frameworks?</p>
 
-<h3>What I don&rsquo;t like about Swift</h3>
+<h3 id="what-i-dont-like-about-swift">What I don’t like about Swift</h3>
 
 <p>Developers often condemn a language before they understand the language.
 Everyone should think carefully about <a href="http://www.paulgraham.com/avg.html">the Blub Paradox</a>
 before forming too many opinions. Some things that seem problematic in theory
 seldom show up in practice (this is a common situation with first impressions
-of Go). And Apple is notorious for doing everything in secret, so it&rsquo;s hard to
-know what they&rsquo;re already changing. Even so, there are some things that
+of Go). And Apple is notorious for doing everything in secret, so it’s hard to
+know what they’re already changing. Even so, there are some things that
 currently concern me.</p>
 
-<h4>Array mutability and copying rules</h4>
+<h4 id="array-mutability-and-copying-rules">Array mutability and copying rules</h4>
 
-<p>If there is one thing in Swift that just seems crazy, it&rsquo;s the rules around
-Array mutability and copying. Swift doesn&rsquo;t have an immutable array at all. It
+<p>If there is one thing in Swift that just seems crazy, it’s the rules around
+Array mutability and copying. Swift doesn’t have an immutable array at all. It
 has a constant pointer to an array. So you can modify it all you like as long
-as you don&rsquo;t change its length. That is a useless kind of immutability. And
-even that immutability isn&rsquo;t really intentional. It&rsquo;s just a side effect of
-how <code>let</code> works on the pointer to the array. This is one of those cases where
-Apple really needs to admit that it&rsquo;s a problem, they didn&rsquo;t have time to
-address it for the first beta, and they&rsquo;re working on it. The silent treatment
+as you don’t change its length. That is a useless kind of immutability. And
+even that immutability isn’t really intentional. It’s just a side effect of
+how <code class="highlighter-rouge">let</code> works on the pointer to the array. This is one of those cases where
+Apple really needs to admit that it’s a problem, they didn’t have time to
+address it for the first beta, and they’re working on it. The silent treatment
 makes them look clueless.</p>
 
-<p>You can argue that immutable arrays aren&rsquo;t that critical and could be fixed
-someday. The way <code>NSArray</code> returns an <code>id</code> is arguably more dangerous than
-mutable arrays and we&rsquo;ve dealt with it for many years. But then you get to
-array copying rules, and those are just crazy. I pass you an array. It&rsquo;s
-implicitly a reference to my array and if you modify it, I&rsquo;ll see the changes
-UNTIL you modify the length, at which point you&rsquo;ll make a copy and I won&rsquo;t see
+<p>You can argue that immutable arrays aren’t that critical and could be fixed
+someday. The way <code class="highlighter-rouge">NSArray</code> returns an <code class="highlighter-rouge">id</code> is arguably more dangerous than
+mutable arrays and we’ve dealt with it for many years. But then you get to
+array copying rules, and those are just crazy. I pass you an array. It’s
+implicitly a reference to my array and if you modify it, I’ll see the changes
+UNTIL you modify the length, at which point you’ll make a copy and I won’t see
 the changes anymore. Again, I see how the implementation leads to this, but
-it&rsquo;s beyond the pale that Apple would ship that without an apology and a
+it’s beyond the pale that Apple would ship that without an apology and a
 promise to fix it.</p>
 
-<h4>That&rsquo;s it?</h4>
+<h4 id="thats-it">That’s it?</h4>
 
 <p>So far, most everything else I really dislike in Swift is probably transitory
-or I&rsquo;m reserving judgment until I try it for awhile. A few examples:</p>
+or I’m reserving judgment until I try it for awhile. A few examples:</p>
 
 <ul>
-<li><p>Arrays are pretty light on their available methods. Shockingly, there&rsquo;s no
-<code>head</code> or <code>tail</code>. (The most obvious evidence that we&rsquo;re not dealing with a
+  <li>
+    <p>Arrays are pretty light on their available methods. Shockingly, there’s no
+<code class="highlighter-rouge">head</code> or <code class="highlighter-rouge">tail</code>. (The most obvious evidence that we’re not dealing with a
 functional language here.) While it did take us a surprising number of years
-to get <code>firstObject</code> on <code>NSArray</code>, I expect that Swift will certainly add more
-methods here, so it&rsquo;s not a concern.</p></li>
-<li><p>Swift strings are very light on available methods without bridging over to
-NSString. You can&rsquo;t even subscript them to get characters. But again, that&rsquo;s
-an obvious enhancement that will almost certainly come quickly.</p></li>
-<li><p>The compiler spits out almost useless errors. That&rsquo;s pretty common when you
-have overloads and generics. From what I&rsquo;ve seen of the compiler team, I&rsquo;m
-quite confident that will steadily improve.</p></li>
-<li><p>The distinction between Arrays and Slices is tricky and will likely cause
-confusion, and the whole collections type hierarchy (and it&rsquo;s a big one) is a
-bit messy in my first estimation (but maybe I just don&rsquo;t get it yet, and it&rsquo;s
-not well documented). There&rsquo;s no equivalent of a Scala
-<a href="http://www.scala-lang.org/api/current/#scala.collection.Seq"><code>Seq</code></a> that I can
-find. I&rsquo;m really surprised that there doesn&rsquo;t seem to be a type for &ldquo;thing you
-can subscript and has a length.&rdquo;<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> This is one of my bigger concerns because
-it may grow harder to fix later, but I&rsquo;m hoping for a lot of churn in this
-hierarchy when they fix the immutable array problem.</p></li>
-<li><p><code>@</code> seems to be used randomly. It&rsquo;s <code>@lazy</code> but just <code>convenience</code>. Maybe I
-just haven&rsquo;t learned the pattern yet.</p></li>
+to get <code class="highlighter-rouge">firstObject</code> on <code class="highlighter-rouge">NSArray</code>, I expect that Swift will certainly add more
+methods here, so it’s not a concern.</p>
+  </li>
+  <li>
+    <p>Swift strings are very light on available methods without bridging over to
+NSString. You can’t even subscript them to get characters. But again, that’s
+an obvious enhancement that will almost certainly come quickly.</p>
+  </li>
+  <li>
+    <p>The compiler spits out almost useless errors. That’s pretty common when you
+have overloads and generics. From what I’ve seen of the compiler team, I’m
+quite confident that will steadily improve.</p>
+  </li>
+  <li>
+    <p>The distinction between Arrays and Slices is tricky and will likely cause
+confusion, and the whole collections type hierarchy (and it’s a big one) is a
+bit messy in my first estimation (but maybe I just don’t get it yet, and it’s
+not well documented). There’s no equivalent of a Scala 
+<a href="http://www.scala-lang.org/api/current/#scala.collection.Seq"><code class="highlighter-rouge">Seq</code></a> that I can
+find. I’m really surprised that there doesn’t seem to be a type for “thing you
+can subscript and has a length.”<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> This is one of my bigger concerns because
+it may grow harder to fix later, but I’m hoping for a lot of churn in this
+hierarchy when they fix the immutable array problem.</p>
+  </li>
 </ul>
 
+<ul>
+  <li><code class="highlighter-rouge">@</code> seems to be used randomly. It’s <code class="highlighter-rouge">@lazy</code> but just <code class="highlighter-rouge">convenience</code>. Maybe I
+just haven’t learned the pattern yet.</li>
+</ul>
 
-<p>Etc. It&rsquo;s minutiae and it&rsquo;s all stuff that will either work out or it won&rsquo;t.
-I&rsquo;ll complain louder when I&rsquo;ve had some time to see how it goes.</p>
+<p>Etc. It’s minutiae and it’s all stuff that will either work out or it won’t.
+I’ll complain louder when I’ve had some time to see how it goes.</p>
 
-<p>And that&rsquo;s the real take away: We&rsquo;re looking at Swift v0.5 or something. This
-is its first trip out in public. It hasn&rsquo;t even been used in major projects
-inside Apple (because otherwise it wouldn&rsquo;t have stayed secret). We won&rsquo;t know
-if it&rsquo;s going to be any good or not until we start working out how to use it.</p>
+<p>And that’s the real take away: We’re looking at Swift v0.5 or something. This
+is its first trip out in public. It hasn’t even been used in major projects
+inside Apple (because otherwise it wouldn’t have stayed secret). We won’t know
+if it’s going to be any good or not until we start working out how to use it.</p>
 
-<p>I&rsquo;ll have some more thoughts on Swift soon, but that&rsquo;s my first thoughts.
-Given a little time, I think it&rsquo;ll be better than what we had before.</p>
+<p>I’ll have some more thoughts on Swift soon, but that’s my first thoughts.
+Given a little time, I think it’ll be better than what we had before.</p>
 <div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>EDIT: I had said that there was no type for &ldquo;thing you can enumerate over,&rdquo; but @bddckr made me think about this more, and Sequence does fit that bill.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-</ol>
+  <ol>
+    <li id="fn:1">
+      <p>EDIT: I had said that there was no type for “thing you can enumerate over,” but @bddckr made me think about this more, and Sequence does fit that bill. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
 </div>
-
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -281,21 +288,7 @@ Given a little time, I think it&rsquo;ll be better than what we had before.</p>
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

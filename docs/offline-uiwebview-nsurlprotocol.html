@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -82,75 +81,75 @@
 
 <p>Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://iosptl.com">our book</a> is devoted to the ins-and-outs of this subject.</p>
 
-<p>But sometimes you just have a simple <code>UIWebView</code>, and you want to cache the last version of the page. You&rsquo;d think that <code>NSURLCache</code> would handle this for you, but it&rsquo;s much more complicated than that. <code>NSURLCache</code> doesn&rsquo;t cache everything you&rsquo;d think it would. Sometimes this is because of Apple&rsquo;s decisions in order to save space. Just as often, however, it&rsquo;s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
+<p>But sometimes you just have a simple <code class="highlighter-rouge">UIWebView</code>, and you want to cache the last version of the page. You’d think that <code class="highlighter-rouge">NSURLCache</code> would handle this for you, but it’s much more complicated than that. <code class="highlighter-rouge">NSURLCache</code> doesn’t cache everything you’d think it would. Sometimes this is because of Apple’s decisions in order to save space. Just as often, however, it’s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
 
 <p>What I wanted was a simple mechanism for the following case:</p>
 
 <ul>
-<li>You have a UIWebView that points to a website with embedded images</li>
-<li>When you&rsquo;re online, you want the normal caching algorithms (nothing fancy)</li>
-<li>When you&rsquo;re offline, you want to show the last version of the page</li>
+  <li>You have a UIWebView that points to a website with embedded images</li>
+  <li>When you’re online, you want the normal caching algorithms (nothing fancy)</li>
+  <li>When you’re offline, you want to show the last version of the page</li>
 </ul>
-
 
 <p>My test case was simple: a webview that loads cnn.com (a nice complicated webpage with lots of images). Run it once. Quit. Turn off the network. Run it again. CNN should display.</p>
 
 <!-- more -->
+<h3 id="exisiting-solutions">Exisiting solutions</h3>
 
+<p>The ever-brilliant Matt Gallagher has <a href="http://cocoawithlove.com/2010/09/substituting-local-data-for-remote.html">some interesting thoughts</a> on how to subclass <code class="highlighter-rouge">NSURLCache</code> to handle this, but I find his solution fragile and unreliable, especially on iOS 5. The HTTP caching rules are complicated, and in many cases you need to connect to the server to re-validate your cache before you’re allowed to use your local copy. Unless everything works out perfectly, his solution may not work when you’re offline, or may force you to turn off cache validation (which could make your pages go stale).</p>
 
-<h3>Exisiting solutions</h3>
+<p><a href="https://github.com/artifacts/AFCache">AFCache</a> is also promising, using essentially the same approach. I haven’t found the offline support to work very well, at least in my tests, for the same reasons as Matt’s solution. It’s designed to be an advanced HTTP-caching solution. The docs are limited and I couldn’t get it to pass my CNN test.</p>
 
-<p>The ever-brilliant Matt Gallagher has <a href="http://cocoawithlove.com/2010/09/substituting-local-data-for-remote.html">some interesting thoughts</a> on how to subclass <code>NSURLCache</code> to handle this, but I find his solution fragile and unreliable, especially on iOS 5. The HTTP caching rules are complicated, and in many cases you need to connect to the server to re-validate your cache before you&rsquo;re allowed to use your local copy. Unless everything works out perfectly, his solution may not work when you&rsquo;re offline, or may force you to turn off cache validation (which could make your pages go stale).</p>
+<h3 id="rncachingurlprotocol">RNCachingURLProtocol</h3>
 
-<p><a href="https://github.com/artifacts/AFCache">AFCache</a> is also promising, using essentially the same approach. I haven&rsquo;t found the offline support to work very well, at least in my tests, for the same reasons as Matt&rsquo;s solution. It&rsquo;s designed to be an advanced HTTP-caching solution. The docs are limited and I couldn&rsquo;t get it to pass my CNN test.</p>
-
-<h3>RNCachingURLProtocol</h3>
-
-<p>So, I present <code>RNCachingURLProtocol</code>. It isn&rsquo;t a replacement for <code>NSURLCache</code>. It&rsquo;s a simple shim for the HTTP protocol (that&rsquo;s not nearly as scary as it sounds). Anytime a URL is download, the response is cached to disk. Anytime a URL is requested, if we&rsquo;re online then things proceed normally. If we&rsquo;re offline, then we retrieve the cached version. The current implementation is extremely simple. In particular, it doesn&rsquo;t worry about cleaning up the cache. The assumption is that you&rsquo;re caching just a few simple things, like your &ldquo;Latest News&rdquo; page (which was the problem I was solving). It caches all HTTP traffic, so without some modifications, it&rsquo;s not appropriate for an app that has a lot of HTTP connections (see <code>MKNetworkKit</code> for that). But if you need to cache some URLs and not others, that is easy to implement.</p>
+<p>So, I present <code class="highlighter-rouge">RNCachingURLProtocol</code>. It isn’t a replacement for <code class="highlighter-rouge">NSURLCache</code>. It’s a simple shim for the HTTP protocol (that’s not nearly as scary as it sounds). Anytime a URL is download, the response is cached to disk. Anytime a URL is requested, if we’re online then things proceed normally. If we’re offline, then we retrieve the cached version. The current implementation is extremely simple. In particular, it doesn’t worry about cleaning up the cache. The assumption is that you’re caching just a few simple things, like your “Latest News” page (which was the problem I was solving). It caches all HTTP traffic, so without some modifications, it’s not appropriate for an app that has a lot of HTTP connections (see <code class="highlighter-rouge">MKNetworkKit</code> for that). But if you need to cache some URLs and not others, that is easy to implement.</p>
 
 <p>First, a quick rundown of how to use it:</p>
 
 <ol>
-<li><p>At some point early in the program (<code>application:didFinishLaunchingWithOptions:</code>), call the following:</p>
+  <li>
+    <p>At some point early in the program (<code class="highlighter-rouge">application:didFinishLaunchingWithOptions:</code>), call the following:</p>
 
-<p>   <code>[NSURLProtocol registerClass:[RNCachingURLProtocol class]];</code></p></li>
-<li><p>There is no step 2.</p></li>
+    <p><code class="highlighter-rouge">[NSURLProtocol registerClass:[RNCachingURLProtocol class]];</code></p>
+  </li>
+  <li>
+    <p>There is no step 2.</p>
+  </li>
 </ol>
 
+<p>Since <code class="highlighter-rouge">RNCachingURLProtocol</code> doesn’t mess with the existing caching solution, it is compatible with other caches, like <code class="highlighter-rouge">AFCache</code>. In fact, the technique used by <code class="highlighter-rouge">RNCachingURLProtocol</code> could probably be integrated into <code class="highlighter-rouge">AFCache</code> pretty easily.</p>
 
-<p>Since <code>RNCachingURLProtocol</code> doesn&rsquo;t mess with the existing caching solution, it is compatible with other caches, like <code>AFCache</code>. In fact, the technique used by <code>RNCachingURLProtocol</code> could probably be integrated into <code>AFCache</code> pretty easily.</p>
+<p>The cache itself is stored in the <code class="highlighter-rouge">Library/Caches</code> directory. In iOS 5, this directory can be purged whenever space is tight. Keep that in mind. You may want to store your caches elsewhere if offline access is critical.</p>
 
-<p>The cache itself is stored in the <code>Library/Caches</code> directory. In iOS 5, this directory can be purged whenever space is tight. Keep that in mind. You may want to store your caches elsewhere if offline access is critical.</p>
+<h3 id="understanding-nsurlprotocol">Understanding NSURLProtocol</h3>
 
-<h3>Understanding NSURLProtocol</h3>
+<p>An <code class="highlighter-rouge">NSURLProtocol</code> is a handler for <code class="highlighter-rouge">NSURLConnection</code>. Each time a request is made, <code class="highlighter-rouge">NSURLConnection</code> walks through all the protocols and asks “Can you handle this request (<code class="highlighter-rouge">canInitWithRequest:</code>)?” The first protocol to return <code class="highlighter-rouge">YES</code> is used to handle the connection. Protocols are queried in the reverse order of their registration, so your custom handlers will get a crack at requests before the system handlers do.</p>
 
-<p>An <code>NSURLProtocol</code> is a handler for <code>NSURLConnection</code>. Each time a request is made, <code>NSURLConnection</code> walks through all the protocols and asks &ldquo;Can you handle this request (<code>canInitWithRequest:</code>)?&rdquo; The first protocol to return <code>YES</code> is used to handle the connection. Protocols are queried in the reverse order of their registration, so your custom handlers will get a crack at requests before the system handlers do.</p>
+<p>Once your handler is selected, the connection will call <code class="highlighter-rouge">initWithRequest:cachedResponse:client:</code> and then <code class="highlighter-rouge">startLoading</code>. It is then your responsibility to call the connection back with <code class="highlighter-rouge">URLProtocol:didReceiveResponse:cacheStoragePolicy:</code>, some number of calls to <code class="highlighter-rouge">URLProtocol:didLoadData:</code>, and finally <code class="highlighter-rouge">URLProtocolDidFinishLoading:</code>. If these sound similar to the <code class="highlighter-rouge">NSURLConnection</code> delegate methods, that’s no accident.</p>
 
-<p>Once your handler is selected, the connection will call <code>initWithRequest:cachedResponse:client:</code> and then <code>startLoading</code>. It is then your responsibility to call the connection back with <code>URLProtocol:didReceiveResponse:cacheStoragePolicy:</code>, some number of calls to <code>URLProtocol:didLoadData:</code>, and finally <code>URLProtocolDidFinishLoading:</code>. If these sound similar to the <code>NSURLConnection</code> delegate methods, that&rsquo;s no accident.</p>
+<p>While online, <code class="highlighter-rouge">RNCachingURLProtocol</code> just forwards requests to a new <code class="highlighter-rouge">NSURLConnection</code>, making copies of the results, and passing them along to the original connection. When offline, <code class="highlighter-rouge">RNCachingURLProtocol</code> loads the previous result from disk, and plays it back to the requesting connection. The whole thing is less than 200 lines of pretty simple code (not counting <code class="highlighter-rouge">Reachability</code>, which I include from Apple’s sample code to determine if we’re online).</p>
 
-<p>While online, <code>RNCachingURLProtocol</code> just forwards requests to a new <code>NSURLConnection</code>, making copies of the results, and passing them along to the original connection. When offline, <code>RNCachingURLProtocol</code> loads the previous result from disk, and plays it back to the requesting connection. The whole thing is less than 200 lines of pretty simple code (not counting <code>Reachability</code>, which I include from Apple&rsquo;s sample code to determine if we&rsquo;re online).</p>
+<p>There’s a subtle problem with the above solution. When <code class="highlighter-rouge">RNCachingURLProtocol</code> creates a new <code class="highlighter-rouge">NSURLConnection</code>, that new connection has to find a handler. If <code class="highlighter-rouge">RNCachingURLProtocol</code> says it can handle it, then you’ll have an infinite loop. So how do I know not to handle the second request? By adding a custom header (<code class="highlighter-rouge">X-RNCache</code>) to the HTTP request. If it’s there, then we’ve already seen this one, and the handler returns <code class="highlighter-rouge">NO</code>.</p>
 
-<p>There&rsquo;s a subtle problem with the above solution. When <code>RNCachingURLProtocol</code> creates a new <code>NSURLConnection</code>, that new connection has to find a handler. If <code>RNCachingURLProtocol</code> says it can handle it, then you&rsquo;ll have an infinite loop. So how do I know not to handle the second request? By adding a custom header (<code>X-RNCache</code>) to the HTTP request. If it&rsquo;s there, then we&rsquo;ve already seen this one, and the handler returns <code>NO</code>.</p>
+<p>Again, this intercepts <em>all</em> HTTP traffic. That could intercept pages you don’t want. If so, you can modify <code class="highlighter-rouge">canInitWithRequest:</code> to select just things you want to cache (for instance, you could turn off caching for URLs that include parameters or POST requests).</p>
 
-<p>Again, this intercepts <em>all</em> HTTP traffic. That could intercept pages you don&rsquo;t want. If so, you can modify <code>canInitWithRequest:</code> to select just things you want to cache (for instance, you could turn off caching for URLs that include parameters or POST requests).</p>
+<h3 id="wrap-up">Wrap-up</h3>
 
-<h3>Wrap-up</h3>
+<p>This technique isn’t a replacement for a full caching engine like <code class="highlighter-rouge">AFCache</code> or an offline REST engine like <code class="highlighter-rouge">MKNetworkKit</code>. It’s intended to solve a single, simple problem (though it can be extended to solve much more complicated problems). <code class="highlighter-rouge">NSURLProtocol</code> is extremely powerful, and I’ve used it extensively when I need to eavesdrop on network traffic (such as in PandoraBoy’s several <a href="https://github.com/PandoraBoy/PandoraBoy/blob/master/ProxyURLProtocol.h">ProxyURLProtocol</a> classes). It’s well-worth adding to your toolkit.</p>
 
-<p>This technique isn&rsquo;t a replacement for a full caching engine like <code>AFCache</code> or an offline REST engine like <code>MKNetworkKit</code>. It&rsquo;s intended to solve a single, simple problem (though it can be extended to solve much more complicated problems). <code>NSURLProtocol</code> is extremely powerful, and I&rsquo;ve used it extensively when I need to eavesdrop on network traffic (such as in PandoraBoy&rsquo;s several <a href="https://github.com/PandoraBoy/PandoraBoy/blob/master/ProxyURLProtocol.h">ProxyURLProtocol</a> classes). It&rsquo;s well-worth adding to your toolkit.</p>
+<p>The code is in the attached project. Look in <code class="highlighter-rouge">RNCachingURLProtocol.m</code>.</p>
 
-<p>The code is in the attached project. Look in <code>RNCachingURLProtocol.m</code>.</p>
+<p><strong>EDIT: Be sure to see Nick Dowell’s modification in the comments to handle HTTP redirect.</strong></p>
 
-<p><strong>EDIT: Be sure to see Nick Dowell&rsquo;s modification in the comments to handle HTTP redirect.</strong></p>
-
-<p><strong>EDIT2: In <code>cachePathForRequest:</code>, I use <code>hash</code> to uniquely identify the URLs. For long, similar URLs, this collides a lot (See <a href="http://opensource.apple.com/source/CF/CF-476.17/CFString.c">CFString.c</a> for comments on how the hash function is implemented.) The better thing to use is MD5 or SHA1 or something, but those aren&rsquo;t built-in on iOS prior to iOS5, so you&rsquo;d have to implement your own (and I don&rsquo;t need it that badly for my current projects). This is something you&rsquo;d want to fix before using this seriously.</strong></p>
+<p><strong>EDIT2: In <code class="highlighter-rouge">cachePathForRequest:</code>, I use <code class="highlighter-rouge">hash</code> to uniquely identify the URLs. For long, similar URLs, this collides a lot (See <a href="http://opensource.apple.com/source/CF/CF-476.17/CFString.c">CFString.c</a> for comments on how the hash function is implemented.) The better thing to use is MD5 or SHA1 or something, but those aren’t built-in on iOS prior to iOS5, so you’d have to implement your own (and I don’t need it that badly for my current projects). This is something you’d want to fix before using this seriously.</strong></p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -217,21 +216,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

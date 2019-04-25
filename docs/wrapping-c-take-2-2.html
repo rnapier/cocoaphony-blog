@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,116 +77,115 @@
   </header>
 
 
-<div class="entry-content"><p>In the <a href="/wrapping-c-take-2-1">last post</a>, we discussed how to wrap simple C++ objects in Objective-C. But how about more complex objects, particularly with <code>shared_ptr</code>?<!-- more --></p>
+<div class="entry-content"><p>In the <a href="/wrapping-c-take-2-1">last post</a>, we discussed how to wrap simple C++ objects in Objective-C. But how about more complex objects, particularly with <code class="highlighter-rouge">shared_ptr</code>?<!-- more --></p>
 
 <p>Many of the objects I deal with include these, and there are a few special concerns:</p>
 
 <ul>
-<li>You can&rsquo;t take a <code>shared_ptr</code> to an object during its constructor.</li>
-<li>You can&rsquo;t easily store a <code>shared_ptr</code> directly in an ivar using the opaque object previously discussed (it relies on a raw pointer to a struct).</li>
+  <li>You can’t take a <code class="highlighter-rouge">shared_ptr</code> to an object during its constructor.</li>
+  <li>You can’t easily store a <code class="highlighter-rouge">shared_ptr</code> directly in an ivar using the opaque object previously discussed (it relies on a raw pointer to a struct).</li>
 </ul>
 
+<p>Consider the following object (slightly abbreviated; a <code class="highlighter-rouge">WrapPtr</code> is a <code class="highlighter-rouge">shared_ptr&lt;Wrap&gt;</code>):</p>
 
-<p>Consider the following object (slightly abbreviated; a <code>WrapPtr</code> is a <code>shared_ptr&lt;Wrap&gt;</code>):</p>
-
-<pre><code>class WrapListener {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class WrapListener {
 public:
-    virtual void onStringDidChange(WrapPtr wrap) = 0;
+	virtual void onStringDidChange(WrapPtr wrap) = 0;
 };
 
 class Wrap : public enable_shared_from_this&lt;Wrap&gt; {
 public:
-    Wrap(string str) : m_string(str), m_listeners() {};
-    string getString() { return m_string; };
-    void setString(string str);
-    void addListener(WrapListenerPtr listener) { m_listeners.insert(listener); };
-    void removeListener(WrapListenerPtr listener) { m_listeners.erase(listener); };
+	Wrap(string str) : m_string(str), m_listeners() {};
+	string getString() { return m_string; };
+	void setString(string str);
+	void addListener(WrapListenerPtr listener) { m_listeners.insert(listener); };
+	void removeListener(WrapListenerPtr listener) { m_listeners.erase(listener); };
 private:
-    string m_string;
-    WrapListenerWeakSet m_listeners;
+	string m_string;
+	WrapListenerWeakSet m_listeners;
 };
-</code></pre>
+</code></pre></div></div>
 
-<p>This is a very common pattern in the code I work with, but it has a problem for wrapping. If we make the opaque object the listener, there&rsquo;s no easy way to call <code>addListener()</code> during the constructor. For example we might be tempted to do this:</p>
+<p>This is a very common pattern in the code I work with, but it has a problem for wrapping. If we make the opaque object the listener, there’s no easy way to call <code class="highlighter-rouge">addListener()</code> during the constructor. For example we might be tempted to do this:</p>
 
-<pre><code>struct RNWrapOpaque : public RN::WrapListener,
-    public enable_shared_from_this&lt;RNWrapOpaque&gt; {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct RNWrapOpaque : public RN::WrapListener,
+	public enable_shared_from_this&lt;RNWrapOpaque&gt; {
 public:
-    RNWrapOpaque(RNWrap *owner, string aStr) : 
-    m_owner(owner), wrap(new RN::Wrap(aStr)) {
-        wrap-&gt;addListener(shared_from_this());
-    };
+	RNWrapOpaque(RNWrap *owner, string aStr) : 
+	m_owner(owner), wrap(new RN::Wrap(aStr)) {
+		wrap-&gt;addListener(shared_from_this());
+	};
 
-    ~RNWrapOpaque() {
-        wrap-&gt;removeListener(shared_from_this());
-    }
+	~RNWrapOpaque() {
+		wrap-&gt;removeListener(shared_from_this());
+	}
 
-    void onStringDidChange(RN::WrapPtr cppWrap) {
-        [m_owner.delegate wrapStringDidChange:m_owner];
-    }       
+	void onStringDidChange(RN::WrapPtr cppWrap) {
+		[m_owner.delegate wrapStringDidChange:m_owner];
+	}		
 
-    RN::WrapPtr wrap;
+	RN::WrapPtr wrap;
 private:
-    RNWrap *m_owner;
+	RNWrap *m_owner;
 };
-</code></pre>
+</code></pre></div></div>
 
-<p>Unfortunately, this will crash. It&rsquo;s not possible to call <code>shared_from_this()</code> during a constructor. This can often be solved by adding a <code>Create()</code> method to separate construction from initialization. That&rsquo;s a good pattern, but doesn&rsquo;t work here because there&rsquo;s nowhere to store the <code>shared_ptr</code>. We have to store a raw pointer in the header.</p>
+<p>Unfortunately, this will crash. It’s not possible to call <code class="highlighter-rouge">shared_from_this()</code> during a constructor. This can often be solved by adding a <code class="highlighter-rouge">Create()</code> method to separate construction from initialization. That’s a good pattern, but doesn’t work here because there’s nowhere to store the <code class="highlighter-rouge">shared_ptr</code>. We have to store a raw pointer in the header.</p>
 
 <p>The best solution I believe is to accept that you need a second object for the listener. This actually scales pretty well since the opaque struct may store several objects, and breaking up the different listeners can be better for readability. So that brings us to our example:</p>
 
-<pre><code>class MyWrapListener : public RN::WrapListener {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyWrapListener : public RN::WrapListener {
 public:
-    MyWrapListener(RNWrap *owner) : m_owner(owner) {};
+	MyWrapListener(RNWrap *owner) : m_owner(owner) {};
 
-    void onStringDidChange(RN::WrapPtr cppWrap) {
-        [m_owner.delegate wrapStringDidChange:m_owner];
-    }   
+	void onStringDidChange(RN::WrapPtr cppWrap) {
+		[m_owner.delegate wrapStringDidChange:m_owner];
+	}	
 
 private:
-    RNWrap *m_owner;    
+	RNWrap *m_owner;	
 };
 
 struct RNWrapOpaque {
 public:
-    RNWrapOpaque(RNWrap *owner, string aStr) : 
-    wrap(new RN::Wrap(aStr)),
-    m_wrapListener(new MyWrapListener(owner)) {
-        wrap-&gt;addListener(m_wrapListener);
-    };
+	RNWrapOpaque(RNWrap *owner, string aStr) : 
+	wrap(new RN::Wrap(aStr)),
+	m_wrapListener(new MyWrapListener(owner)) {
+		wrap-&gt;addListener(m_wrapListener);
+	};
 
-    ~RNWrapOpaque() {
-        wrap-&gt;removeListener(m_wrapListener);
-    }
+	~RNWrapOpaque() {
+		wrap-&gt;removeListener(m_wrapListener);
+	}
 
-    RN::WrapPtr wrap;
+	RN::WrapPtr wrap;
 private:
-    RN::WrapListenerPtr m_wrapListener;
+	RN::WrapListenerPtr m_wrapListener;
 };
 
 @implementation RNWrap
 
 - (id)initWithString:(NSString *)aString delegate:(id&lt;RNWrapDelegate&gt;)aDelegate {
-    self = [super init];
-    if (self != nil) {
-        self.cpp = new RNWrapOpaque(self, [aString UTF8String]);
-        self.delegate = aDelegate;
-    }
-    return self;
+	self = [super init];
+	if (self != nil) {
+		self.cpp = new RNWrapOpaque(self, [aString UTF8String]);
+		self.delegate = aDelegate;
+	}
+	return self;
 }
-</code></pre>
+</code></pre></div></div>
 
 <p>The rest is generally as in the previous article.</p>
 
-<p><a href='http://robnapier.net/blog/wp-content/uploads/2010/06/CppWrap.zip'>CppWrap.zip</a></p>
+<p><a href="http://robnapier.net/blog/wp-content/uploads/2010/06/CppWrap.zip">CppWrap.zip</a></p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -254,21 +252,7 @@ private:
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

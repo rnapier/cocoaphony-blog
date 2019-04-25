@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -80,18 +79,15 @@
 
 <div class="entry-content"><p><i>Based on a <a href="http://stackoverflow.com/questions/874690/is-objective-c-only-used-for-development-on-mac-os-iphone/874837">post</a> at StackOverflow. The question was whether Objective-C is only used for development on Mac OS/iPhone and why.</i></p>
 
-<p>I think ObjC has been isolated to the Apple world through a quirk of history and the nature of proprietary systems.</p>
-
+<p>I think ObjC has been isolated to the Apple world through a quirk of history and the nature of proprietary systems.
 <!-- more -->
-
-
-<p>First, you need to separate ObjC from Cocoa. ObjC is a very primitive language. I think it is a very elegant language, but it is extremely basic. You can implement ObjCv1 in a C pre-processor. C++ and ObjC were developed about the same time. C++ put a huge amount of infrastructure in place to bring a C-like syntax to what is basically a completely different language. ObjC brought a Smalltalk-like syntax to C, with almost nothing else. Even things like +alloc and -release aren&rsquo;t language elements of ObjC. They&rsquo;re fairly simple wrappers around malloc() and free().<sup><a href="#footnote-1">[*]</a></sup> Standing on its own, ObjC isn&rsquo;t really that interesting (elegant as I think it is). This is very similar to the nature of Smalltalk. Without its object libraries, there isn&rsquo;t much you can do with it. With its object libraries, it&rsquo;s incredibly powerful.</p>
+First, you need to separate ObjC from Cocoa. ObjC is a very primitive language. I think it is a very elegant language, but it is extremely basic. You can implement ObjCv1 in a C pre-processor. C++ and ObjC were developed about the same time. C++ put a huge amount of infrastructure in place to bring a C-like syntax to what is basically a completely different language. ObjC brought a Smalltalk-like syntax to C, with almost nothing else. Even things like +alloc and -release aren’t language elements of ObjC. They’re fairly simple wrappers around malloc() and free().<sup><a href="#footnote-1">[*]</a></sup> Standing on its own, ObjC isn’t really that interesting (elegant as I think it is). This is very similar to the nature of Smalltalk. Without its object libraries, there isn’t much you can do with it. With its object libraries, it’s incredibly powerful.</p>
 
 <p>NeXT provided this entire framework on top of ObjC called NeXTSTEP. Since the NeXT computer was not a widespread commercial success, and NeXTSTEP was proprietary, not many people learned the framework or the underlying language. When Apple bought it and morphed it into Cocoa, it continued to be a proprietary system.</p>
 
-<p>GNUStep is out there, but they never developed anything interesting enough to bring in a lot of developers (a major web browser or word processor or the like). And Cocoa has gotten well ahead of GNUStep over the last few years. It&rsquo;s possible that with the rise of interest in Cocoa due to iPhone, GNUStep may finally revitalize and bring a nice cross-platform development framework, but I doubt it. Folks who have a background in C++ look at C# and see a clear improvement. When they look at ObjC, they see a lot of square brackets where they don&rsquo;t expect them. For people raised on the &ldquo;calling methods&rdquo; paradigm, the Smalltalk paradigm of &ldquo;passing messages&rdquo; is alien and even a bit scary. Many developers assume they need a strongly typed language to avoid bugs and are uncomfortable with a system that relies primarily on programmer discipline and careful consistency. It is much easier to hack something that &ldquo;just works&rdquo; in C# than in ObjC. ObjC really expects a lot more of the developer in understanding what&rsquo;s going on and not relying on the compiler to protect you from your hacks.</p>
+<p>GNUStep is out there, but they never developed anything interesting enough to bring in a lot of developers (a major web browser or word processor or the like). And Cocoa has gotten well ahead of GNUStep over the last few years. It’s possible that with the rise of interest in Cocoa due to iPhone, GNUStep may finally revitalize and bring a nice cross-platform development framework, but I doubt it. Folks who have a background in C++ look at C# and see a clear improvement. When they look at ObjC, they see a lot of square brackets where they don’t expect them. For people raised on the “calling methods” paradigm, the Smalltalk paradigm of “passing messages” is alien and even a bit scary. Many developers assume they need a strongly typed language to avoid bugs and are uncomfortable with a system that relies primarily on programmer discipline and careful consistency. It is much easier to hack something that “just works” in C# than in ObjC. ObjC really expects a lot more of the developer in understanding what’s going on and not relying on the compiler to protect you from your hacks.</p>
 
-<p>Basically, folks knew C from Unix, and C++ makes sense in terms of C, and Java makes sense in terms of C++, and C# is just cleaned up Java. ObjC isn&rsquo;t any of these. It&rsquo;s Smalltalk, and no one learns Smalltalk anymore.</p>
+<p>Basically, folks knew C from Unix, and C++ makes sense in terms of C, and Java makes sense in terms of C++, and C# is just cleaned up Java. ObjC isn’t any of these. It’s Smalltalk, and no one learns Smalltalk anymore.</p>
 
 <p><sup><a name="footnote-1">[*]</a></sup> I recently chatted with the guy who wrote +alloc about its history, and he might object to my calling it a simple wrapper given the inclusion of zones. So for you who know the difference, replace +alloc here with +new.</p>
 </div>
@@ -99,9 +95,9 @@
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -168,21 +164,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

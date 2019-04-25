@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I knew I&rsquo;d run into this when I released PandoraBoy 0.4.0, and someone ran into Issue 17. Moving from MacOS 10.4.10 to 10.4.11 included a &hellip;">
+  <meta name="description" content="I knew I’d run into this when I released PandoraBoy 0.4.0, and someone ran into Issue 17. Moving from MacOS 10.4.10 to 10.4.11 included a massive &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,17 +77,17 @@
   </header>
 
 
-<div class="entry-content"><p>I knew I&rsquo;d run into this when I released PandoraBoy 0.4.0, and someone ran into <a href="http://code.google.com/p/pandoraboy/issues/detail?id=17">Issue 17</a>. Moving from MacOS 10.4.10 to 10.4.11 included a massive change to WebKit, and the 0.4 line was meant to address this. Unfortunately I no longer had a 10.4.10 box to test against, and so I figured that something would probably break. Hope against hope, I figured everyone would have upgraded by now.</p>
+<div class="entry-content"><p>I knew I’d run into this when I released PandoraBoy 0.4.0, and someone ran into <a href="http://code.google.com/p/pandoraboy/issues/detail?id=17">Issue 17</a>. Moving from MacOS 10.4.10 to 10.4.11 included a massive change to WebKit, and the 0.4 line was meant to address this. Unfortunately I no longer had a 10.4.10 box to test against, and so I figured that something would probably break. Hope against hope, I figured everyone would have upgraded by now.</p>
 
-<p>Anyway, I will now undertake a series of &ldquo;did this fix it&rdquo; patches and we&rsquo;ll see if we can get it working again. Hopefully the entire problem was my removal of decidePolicyForNewWindowAction: which never seems to be called in the new WebKit under Pandora (but I should have kept for completeness anyway). But it&rsquo;s possible that the problem is deeper.</p>
+<p>Anyway, I will now undertake a series of “did this fix it” patches and we’ll see if we can get it working again. Hopefully the entire problem was my removal of decidePolicyForNewWindowAction: which never seems to be called in the new WebKit under Pandora (but I should have kept for completeness anyway). But it’s possible that the problem is deeper.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -155,21 +154,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

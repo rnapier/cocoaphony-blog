@@ -27,10 +27,9 @@ intuition. Faced with words like object, property, &hellip;">
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -85,18 +84,18 @@ intuition. Faced with words like object, property, &hellip;">
   <div class="entry-content"><p>...and I hated calculus.</p>
 
 <p>Yes, the functional world seems to overflow with bizarre terms that defy
-intuition. Faced with words like <em>object</em>, <em>property</em>, <em>inherit</em>, <em>class</em>, even
+intuition. Faced with words like <em>object</em>, <em>property</em>, <em>inherit</em>, <em>class</em>, even 
 non-programmers can get some handle on what they might mean. <em>Applicative
 functor</em> is not so kind. Nor is the ubiquitous <em>monad</em>, a word that feels
-designed to obscure its meaning (plus the ensuing
+designed to obscure its meaning (plus the ensuing 
 <a href="http://www.haskell.org/pipermail/haskell-cafe/2009-January/053317.html">arguments over whether something is really a monad or a monoid</a>).</p>
 
 <p>Let me boil functional programming down to its basics, the part you need before
 we can really get started: variables are evil. Stop mutating them. It just makes
 them more evil. If I could do just one thing to improve your Swift programs, it
-would be to generate an electric keyboard shock every time you typed <code>v</code> <code>a</code>
-<code>r</code>. Yeah, you&rsquo;ll need it sometimes, but each time you should ask &ldquo;is it worth
-the shock?&rdquo; And by &ldquo;the shock,&rdquo; I mean &ldquo;hard to find bugs.&rdquo;<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+would be to generate an electric keyboard shock every time you typed <code class="highlighter-rouge">v</code> <code class="highlighter-rouge">a</code>
+<code class="highlighter-rouge">r</code>. Yeah, you’ll need it sometimes, but each time you should ask “is it worth
+the shock?” And by “the shock,” I mean “hard to find bugs.”<sup id="fnref:computed"><a href="#fn:computed" class="footnote">1</a></sup></p>
 
 </div>
   
@@ -135,20 +134,22 @@ the shock?&rdquo; And by &ldquo;the shock,&rdquo; I mean &ldquo;hard to find bug
   </header>
 
 
-  <div class="entry-content"><p>In response to <a href="http://robnapier.net/i-dont-know-swift">I Don&rsquo;t Know Swift</a>:</p>
+  <div class="entry-content"><p>In response to <a href="http://robnapier.net/i-dont-know-swift">I Don’t Know Swift</a>:</p>
 
-<blockquote><p>Is this career advice? I am a web developer thinking about a &ldquo;career change&rdquo;
+<blockquote>
+  <p>Is this career advice? I am a web developer thinking about a “career change”
 to iOS. Since I have no background in CocoaTouch or anything Apple, would your
-advice be the same, to learn Swift?</p></blockquote>
+advice be the same, to learn Swift?</p>
+</blockquote>
 
-<p>I&rsquo;ve received different versions of this question since the day after Swift was
+<p>I’ve received different versions of this question since the day after Swift was
 released, from ObjC lovers and haters, seasoned pros and the uninitiated. Having
-had a very unusual (and privileged) career path, I&rsquo;m probably not qualified to
-give career advice, but I&rsquo;ve been asked enough that maybe it&rsquo;s worth talking
-about. Maybe I can frame how to think about it, even if I can&rsquo;t give you
-satisfying certainty. Maybe that&rsquo;s all advice really is.</p>
+had a very unusual (and privileged) career path, I’m probably not qualified to
+give career advice, but I’ve been asked enough that maybe it’s worth talking
+about. Maybe I can frame how to think about it, even if I can’t give you
+satisfying certainty. Maybe that’s all advice really is.</p>
 
-<p> </div>
+<p></div>
   
   
     <footer>
@@ -185,12 +186,12 @@ satisfying certainty. Maybe that&rsquo;s all advice really is.</p>
   </header>
 
 
-  <div class="entry-content"><p>I know a thing or two about Objective-C. It&rsquo;s not bragging. If you&rsquo;re reading my
-blog, there&rsquo;s a decent chance that I know more about Objective-C than you do. I
+  <div class="entry-content"><p>I know a thing or two about Objective-C. It’s not bragging. If you’re reading my
+blog, there’s a decent chance that I know more about Objective-C than you do. I
 have opinions about it. You should take them seriously even if you disagree.
-They&rsquo;re founded on shipping a lot of code. I&rsquo;ve shipped Cocoa software solo and
+They’re founded on shipping a lot of code. I’ve shipped Cocoa software solo and
 in big teams, OS X and iOS, year-long release cycles and 30 hours to build a
-demo for Steve Jobs. I&rsquo;ve been writing ObjC since 10.4 was the new hotness,
+demo for Steve Jobs. I’ve been writing ObjC since 10.4 was the new hotness,
 before ARC, before properties, before Intel. There are many developers with much
 more experience, but even so, I know a thing or two about Objective-C.</p>
 
@@ -198,8 +199,7 @@ more experience, but even so, I know a thing or two about Objective-C.</p>
 
 <p>Neither does anyone else.</p>
 
-<p>Not even Apple.</p>
-
+<p>Not even Apple.
 </div>
   
   
@@ -238,18 +238,19 @@ more experience, but even so, I know a thing or two about Objective-C.</p>
 
 
   <div class="entry-content"><p>Ever since Swift came out, I keep seeing weird comments that Swift is a
-functional programming language. I&rsquo;ve puzzled a bit over why anyone would say
-that, since there&rsquo;s really very little &ldquo;functional&rdquo; about Swift. It&rsquo;s a pretty
+functional programming language. I’ve puzzled a bit over why anyone would say
+that, since there’s really very little “functional” about Swift. It’s a pretty
 traditional object oriented language with a focus on generic programming.</p>
 
 <p>My conjecture is that people are using a feature list to determine a
-language&rsquo;s paradigm. But there&rsquo;s a reason we use the word <em>paradigm</em>.</p>
+language’s paradigm. But there’s a reason we use the word <em>paradigm</em>.</p>
 
-<blockquote><p>paradigm. (n) A worldview underlying the theories and methodology of a
-particular scientific subject</p></blockquote>
+<blockquote>
+  <p>paradigm. (n) A worldview underlying the theories and methodology of a
+particular scientific subject</p>
+</blockquote>
 
-<p>&ldquo;A worldview.&rdquo; Yeah, that captures it.</p>
-
+<p>“A worldview.” Yeah, that captures it.
 </div>
   
   
@@ -287,15 +288,15 @@ particular scientific subject</p></blockquote>
   </header>
 
 
-  <div class="entry-content"><p>The first public beta of Swift has been out for a week. I&rsquo;ve been there since
-the beginning. I&rsquo;ve read almost the entire book and have  written many
-<em>dozens</em> of lines of Swift code. So as an expert in the field, I&rsquo;m finally in
-a position to write the definitive review of the language. That&rsquo;s a joke, son.
-But I&rsquo;m going to dive in anyway, since that&rsquo;s what you do once you hit your
+  <div class="entry-content"><p>The first public beta of Swift has been out for a week. I’ve been there since
+the beginning. I’ve read almost the entire book and have  written many
+<em>dozens</em> of lines of Swift code. So as an expert in the field, I’m finally in
+a position to write the definitive review of the language. That’s a joke, son.
+But I’m going to dive in anyway, since that’s what you do once you hit your
 140 character limit.</p>
 
 <p>First, a spoiler. I basically like Swift. Given its goals and its constraints,
-I think it&rsquo;s a move in the right direction. Many of those complaining most
+I think it’s a move in the right direction. Many of those complaining most
 about Swift seem to misunderstand one or the other.</p>
 
 </div>
@@ -335,9 +336,9 @@ about Swift seem to misunderstand one or the other.</p>
   </header>
 
 
-  <div class="entry-content"><p><a href="http://renaissance.io/2014">Renaissance 2014</a> has been a great conference so far, and I loved getting the chance to discuss security today. If you&rsquo;re looking for the slides, code, and links, they&rsquo;re available at <a href="https://github.com/rnapier/security-right">github.com/rnapier/security-right</a>. If you missed my talk and would like to see it, don&rsquo;t forget that <a href="https://renaissance.io/membership">the videos</a> will be available for $49 through tomorrow (Jan 31). After that, it&rsquo;ll be $99.</p>
+  <div class="entry-content"><p><a href="http://renaissance.io/2014">Renaissance 2014</a> has been a great conference so far, and I loved getting the chance to discuss security today. If you’re looking for the slides, code, and links, they’re available at <a href="https://github.com/rnapier/security-right">github.com/rnapier/security-right</a>. If you missed my talk and would like to see it, don’t forget that <a href="https://renaissance.io/membership">the videos</a> will be available for $49 through tomorrow (Jan 31). After that, it’ll be $99.</p>
 
-<p>More later, but right now I&rsquo;m more interested in this talk on software ethics, so I&rsquo;m going to get back to listening.</p>
+<p>More later, but right now I’m more interested in this talk on software ethics, so I’m going to get back to listening.</p>
 </div>
   
   
@@ -373,10 +374,9 @@ about Swift seem to misunderstand one or the other.</p>
 
   <div class="entry-content"><p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
 
-<p>If your app uses SSL to communicate with your server (and it should), you generally don&rsquo;t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there&rsquo;s certainly no reason to trust the over 200 certificates in iOS 7&rsquo;s root store.</p>
+<p>If your app uses SSL to communicate with your server (and it should), you generally don’t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there’s certainly no reason to trust the over 200 certificates in iOS 7’s root store.</p>
 
-<p>The practice of trusting only your own certificate is called &ldquo;pinning,&rdquo; and I&rsquo;ve discussed it several times at conferences. I then say something like, &ldquo;It&rsquo;s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:&rdquo;</p>
-
+<p>The practice of trusting only your own certificate is called “pinning,” and I’ve discussed it several times at conferences. I then say something like, “It’s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:”
 </div>
   
   
@@ -416,18 +416,17 @@ about Swift seem to misunderstand one or the other.</p>
 
   <div class="entry-content"><p><strong>Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to RNCryptor 2.2 when it comes out this week.</strong></p>
 
-<p>I hate it when I do stupid things. But then you all get to learn something, so luckily some good can come of my shame. Please learn something so this isn&rsquo;t all for naught.</p>
+<p>I hate it when I do stupid things. But then you all get to learn something, so luckily some good can come of my shame. Please learn something so this isn’t all for naught.</p>
 
 <p><a href="https://github.com/rnapier/RNCryptor/issues/77">Issue #77</a> in RNCryptor is one of those classic bugs. Here it is, as gently pointed out to me by <a href="https://github.com/arthurwalasek">Arthur Walasek</a>:</p>
 
-<pre><code class="objc">int result = CCKeyDerivationPBKDF(keySettings.PBKDFAlgorithm,      // algorithm
-                   password.UTF8String, // password
-                   password.length, // passwordLength
-                   ...
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CCKeyDerivationPBKDF</span><span class="p">(</span><span class="n">keySettings</span><span class="p">.</span><span class="n">PBKDFAlgorithm</span><span class="p">,</span>      <span class="c1">// algorithm</span>
+                   <span class="n">password</span><span class="p">.</span><span class="n">UTF8String</span><span class="p">,</span> <span class="c1">// password</span>
+                   <span class="n">password</span><span class="p">.</span><span class="n">length</span><span class="p">,</span> <span class="c1">// passwordLength</span>
+                   <span class="p">...</span>
+</code></pre></div></div>
 
-<p>I have had this bug since I first wrote this code for iOS 5 PTL, and it&rsquo;s horrible. The problem, if you haven&rsquo;t seen it yet, is that <code>-length</code> returns the number of characters in <code>password</code>, not the number of bytes. In many languages you can get away with that, but not in multi-byte languages like Chinese.</p>
-
+<p>I have had this bug since I first wrote this code for iOS 5 PTL, and it’s horrible. The problem, if you haven’t seen it yet, is that <code class="highlighter-rouge">-length</code> returns the number of characters in <code class="highlighter-rouge">password</code>, not the number of bytes. In many languages you can get away with that, but not in multi-byte languages like Chinese.
 </div>
   
   
@@ -467,14 +466,15 @@ about Swift seem to misunderstand one or the other.</p>
 
   <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-
 <p>I got an <a href="https://github.com/rnapier/RNCryptor/issues/92">interesting question</a>
 recently:</p>
 
-<blockquote><p>Assuming a password is not in a dictionary, what length is required to make a
-brute force attack infeasible?</p></blockquote>
+<blockquote>
+  <p>Assuming a password is not in a dictionary, what length is required to make a
+brute force attack infeasible?</p>
+</blockquote>
 
-<p>That&rsquo;s a pretty good question, and we should be able to answer it fairly easily
+<p>That’s a pretty good question, and we should be able to answer it fairly easily
 given a few assumptions.</p>
 
 <p>The short answer is, using <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> and
@@ -520,8 +520,7 @@ how you would calculate good lengths for other assumptions.</p>
   </header>
 
 
-  <div class="entry-content"><p>After several years of WordPress, I finally decided to make a change. The main change was getting rid of comments. There were several useful comments over the years, but the vast majority of the comments that came in were spam. The spam filters got most of them, but over the last year, more and more have been getting through. They’ve become more subtle over the years, and so more of a headache to deal with on my side. The handful of useful comments weren’t worth it. Most of the time, people comment in order to ask me a question. They can still easily do that through email, and I can post any interesting threads as another blog post.</p>
-
+  <div class="entry-content"><p>After several years of WordPress, I finally decided to make a change. The main change was getting rid of comments. There were several useful comments over the years, but the vast majority of the comments that came in were spam. The spam filters got most of them, but over the last year, more and more have been getting through. They’ve become more subtle over the years, and so more of a headache to deal with on my side. The handful of useful comments weren’t worth it. Most of the time, people comment in order to ask me a question. They can still easily do that through email, and I can post any interesting threads as another blog post.
 </div>
   
   
@@ -566,21 +565,7 @@ how you would calculate good lengths for other assumptions.</p>
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

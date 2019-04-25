@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -80,17 +79,17 @@
 
 <div class="entry-content"><p>Why is it when I want to test PandoraBoy with an album that has no artwork available, suddenly Pandora becomes so good at having every piece of artwork on every track for 7 different stations until I run out of hourly skips?</p>
 
-<p>Well, at least I finally fixed that stupid &ldquo;thumbs-up in the lower left of the Pandora window&rdquo; bug that&rsquo;s been driving me crazy for so long. Check for nil returns people!</p>
+<p>Well, at least I finally fixed that stupid “thumbs-up in the lower left of the Pandora window” bug that’s been driving me crazy for so long. Check for nil returns people!</p>
 
-<p>I&rsquo;m still trying to understand how Pandora manages skip tracking. I&rsquo;m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don&rsquo;t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they&rsquo;re storing it in Flash local storage. I swear they didn&rsquo;t used to keep track of skips if you switched stations and then switched back, but then they also didn&rsquo;t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
+<p>I’m still trying to understand how Pandora manages skip tracking. I’m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don’t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they’re storing it in Flash local storage. I swear they didn’t used to keep track of skips if you switched stations and then switched back, but then they also didn’t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -157,21 +156,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -80,20 +79,17 @@
 
 <div class="entry-content"><p><i>We recently had a discussion on cocoa-students (the excellent list for Big Nerd Ranch alumni; yet another reason to go to BNR classes) about protecting Cocoa programs from reverse engineering, mostly around some anti-copying code. I had some thoughts on the subject since I happen to have a background in anti-counterfeiting.</i></p>
 
-<p>Cocoa is a reverse-engineer&rsquo;s dream. Spend some time at <a href="http://www.culater.net/wiki/moin.cgi/CocoaReverseEngineering">culater</a> before dreaming you can really protect a Cocoa program. Objective-C is meant to be highly readable both in source and at run time. Obfuscation is not in its nature. This only points out Objective-C&rsquo;s particular difficulties in this area; it is not to suggest C or C++ will save you. They&rsquo;re just not quite as trivial as Objective-C.</p>
+<p>Cocoa is a reverse-engineer’s dream. Spend some time at <a href="http://www.culater.net/wiki/moin.cgi/CocoaReverseEngineering">culater</a> before dreaming you can really protect a Cocoa program. Objective-C is meant to be highly readable both in source and at run time. Obfuscation is not in its nature. This only points out Objective-C’s particular difficulties in this area; it is not to suggest C or C++ will save you. They’re just not quite as trivial as Objective-C.</p>
 
-<p>That said, the world of obfuscation falls into three big camps: you can try to deal with 70% of your problem, 75% of your problem or 90% of your problem.</p>
-
+<p>That said, the world of obfuscation falls into three big camps: you can try to deal with 70% of your problem, 75% of your problem or 90% of your problem.
 <!-- more -->
+Dealing with 70% of your problem requires nothing more than pretty straightforward techniques. The majority of users will not download cracked copies, so almost anything will work. I tend to recommend this approach. Focus on your good customers; do <em>nothing</em> to tick them off, but consistently encourage them to give you money as they are naturally inclined to do. Any technique intended to stop the other 30% should be very carefully run through cost/benefit. How many of those 30% who wouldn’t have paid you before now will? How many of those 70% who would have paid you before now won’t because your “copy protection” drives them crazy? How much money do you spend to get that delta? This is revenue protection analysis, and should be a key part of any anti-copying discussion.</p>
 
+<p>Dealing with 75% of the problem is where most folks seem to eventually go, and it’s perhaps the most foolish. They try to build their own complex solutions, which just make things more complicated while only impacting the small group of people who would have attacked your product before, but you can actually stop with code you come up with in the 4 weeks you’re willing to devote to the problem. It’s not a big group. Most people who actually would take the trouble to break your simple solution can also break your complicated solution. And it only takes a few to do it and post it to Bittorrent. Apple spends a <em>lot</em> of money to harden the iPhone from jailbreaking, and they still can barely keep ahead (and generally don’t keep ahead).</p>
 
-<p>Dealing with 70% of your problem requires nothing more than pretty straightforward techniques. The majority of users will not download cracked copies, so almost anything will work. I tend to recommend this approach. Focus on your good customers; do <em>nothing</em> to tick them off, but consistently encourage them to give you money as they are naturally inclined to do. Any technique intended to stop the other 30% should be very carefully run through cost/benefit. How many of those 30% who wouldn&rsquo;t have paid you before now will? How many of those 70% who would have paid you before now won&rsquo;t because your &ldquo;copy protection&rdquo; drives them crazy? How much money do you spend to get that delta? This is revenue protection analysis, and should be a key part of any anti-copying discussion.</p>
+<p>Dealing with the 90% solution means hiring folks who do this full time, or licensing solutions from folks who do this full time. It means constantly evolving your system to adapt to new attacks. It means making this a full-time commitment for your company. See my discussion of Apple and jailbreaking. That’s the 90% solution.</p>
 
-<p>Dealing with 75% of the problem is where most folks seem to eventually go, and it&rsquo;s perhaps the most foolish. They try to build their own complex solutions, which just make things more complicated while only impacting the small group of people who would have attacked your product before, but you can actually stop with code you come up with in the 4 weeks you&rsquo;re willing to devote to the problem. It&rsquo;s not a big group. Most people who actually would take the trouble to break your simple solution can also break your complicated solution. And it only takes a few to do it and post it to Bittorrent. Apple spends a <em>lot</em> of money to harden the iPhone from jailbreaking, and they still can barely keep ahead (and generally don&rsquo;t keep ahead).</p>
-
-<p>Dealing with the 90% solution means hiring folks who do this full time, or licensing solutions from folks who do this full time. It means constantly evolving your system to adapt to new attacks. It means making this a full-time commitment for your company. See my discussion of Apple and jailbreaking. That&rsquo;s the 90% solution.</p>
-
-<p>There is no 100% solution. There isn&rsquo;t even a 95% solution.</p>
+<p>There is no 100% solution. There isn’t even a 95% solution.</p>
 
 <p>This used to be my full-time job. We controlled the hardware, the software, custom ASICS and PKI smart chips. We controlled the manufacturing and the sales channel. We used special security tapes and labels and holograms and some really funky techniques typically used in protecting currency. We sent people like me all over the world to monitor our partners and called in the police to conduct raids. Still, copies.</p>
 
@@ -103,9 +99,9 @@
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -172,21 +168,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

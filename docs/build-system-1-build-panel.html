@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="XCode has a decent build system, but it doesn&rsquo;t work as well as it could out of the box. With just a little work, you can make your projects &hellip;">
+  <meta name="description" content="XCode has a decent build system, but it doesn’t work as well as it could out of the box. With just a little work, you can make your projects easier &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,117 +77,84 @@
   </header>
 
 
-<div class="entry-content"><p>XCode has a decent build system, but it doesn&rsquo;t work as well as it could out of the box. With just a little work, you can make your projects easier to setup and maintain just the way you want them, improve your code, and even speed up your build times.</p>
+<div class="entry-content"><p>XCode has a decent build system, but it doesn’t work as well as it could out of the box. With just a little work, you can make your projects easier to setup and maintain just the way you want them, improve your code, and even speed up your build times.</p>
 
 <p>The first thing we want to do is get rid of one of the great obfuscations of Xcode: The Build panel.</p>
 
-<p><img class="center" src="/images/build-system-1-build-panel/buildpanel.png"></p>
+<p><img class="center" src="/images/build-system-1-build-panel/buildpanel.png" /></p>
 
-<p>The build panel seems convenient at first, but in practice it makes it hard to see what&rsquo;s going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you&rsquo;ve done this so someone doesn&rsquo;t come along later switch the setting. The Build Panel doesn&rsquo;t give you an easy way to include comments right along with the setting (the &ldquo;Comments&rdquo; panel is pretty useless in my experience), and it&rsquo;s easy to lose settings or accidentally apply them to only to one configuration.</p>
+<p>The build panel seems convenient at first, but in practice it makes it hard to see what’s going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you’ve done this so someone doesn’t come along later switch the setting. The Build Panel doesn’t give you an easy way to include comments right along with the setting (the “Comments” panel is pretty useless in my experience), and it’s easy to lose settings or accidentally apply them to only to one configuration.</p>
 
-<p>XCode provides a better solution called xcconfig files. Everything you can do in the build panel can be done in xcconfig files, and you can actually read them and make comments. So let&rsquo;s make some.</p>
-
-<!-- more -->
-
+<p>XCode provides a better solution called xcconfig files. Everything you can do in the build panel can be done in xcconfig files, and you can actually read them and make comments. So let’s make some.
+<!-- more --></p>
 
 <ol>
-<li>Create a new Window-Based iPhone Application. (Everything we do here works exactly the same for Mac.)</li>
-<li>Add a new group to your Groups &amp; Files called &ldquo;Build Configuration&rdquo;.</li>
-<li>Add a new file to the group. Under &ldquo;Other&rdquo; select &ldquo;Configuration Settings File.&rdquo; Call it &ldquo;Shared.xcconfig&rdquo;.</li>
-<li>Create three more xcconfig files called Debug, Release and Application.</li>
-<li>Double-click the Project to open the Project Info panel, and select Build.</li>
-<li>Select Configuration: &ldquo;Debug&rdquo; and Show: &ldquo;Settings Defined at This Level.&rdquo;</li>
-<li>Select all the settings (you can use Cmd-A here).</li>
-<li>Copy them with Cmd-C.</li>
-<li>Go back to Debug.xcconfig and paste with Cmd-V. You now know how to find out the xcconfig syntax for any Build Panel setting you&rsquo;re uncertain of.</li>
-<li>Go back to the Build Panel and hit Delete to set all settings to default. Select &ldquo;Show: All Settings&rdquo; so you can see your settings again.</li>
-<li>In the lower-right of the panel, for &ldquo;Based On:&rdquo; select &ldquo;Debug.&rdquo; You should see your old settings show back up, but not bold this time.</li>
-<li>Repeat for Configuration: &ldquo;Release&rdquo;. Copy them to Release.xcconfig and delete them from the Build Panel.</li>
-<li>Double-click on the Target, and repeat the process, moving both its Debug and Release settings to Application. Put in a comment to indicate which are the Debug settings and which are the Release settings. We&rsquo;ll clean them up shortly. Select &ldquo;Configuration: All Configurations&rdquo; and &ldquo;Based On: Application.&rdquo;</li>
+  <li>Create a new Window-Based iPhone Application. (Everything we do here works exactly the same for Mac.)</li>
+  <li>Add a new group to your Groups &amp; Files called “Build Configuration”.</li>
+  <li>Add a new file to the group. Under “Other” select “Configuration Settings File.” Call it “Shared.xcconfig”.</li>
+  <li>Create three more xcconfig files called Debug, Release and Application.</li>
+  <li>Double-click the Project to open the Project Info panel, and select Build.</li>
+  <li>Select Configuration: “Debug” and Show: “Settings Defined at This Level.”</li>
+  <li>Select all the settings (you can use Cmd-A here).</li>
+  <li>Copy them with Cmd-C.</li>
+  <li>Go back to Debug.xcconfig and paste with Cmd-V. You now know how to find out the xcconfig syntax for any Build Panel setting you’re uncertain of.</li>
+  <li>Go back to the Build Panel and hit Delete to set all settings to default. Select “Show: All Settings” so you can see your settings again.</li>
+  <li>In the lower-right of the panel, for “Based On:” select “Debug.” You should see your old settings show back up, but not bold this time.</li>
+  <li>Repeat for Configuration: “Release”. Copy them to Release.xcconfig and delete them from the Build Panel.</li>
+  <li>Double-click on the Target, and repeat the process, moving both its Debug and Release settings to Application. Put in a comment to indicate which are the Debug settings and which are the Release settings. We’ll clean them up shortly. Select “Configuration: All Configurations” and “Based On: Application.”</li>
 </ol>
 
+<p>We’ve now moved everything from the build panel to the xcconfig files, and the system should build. Debug and Release are slightly confused because we mixed the settings in Application, but we’ll fix that now.</p>
 
-<p>We&rsquo;ve now moved everything from the build panel to the xcconfig files, and the system should build. Debug and Release are slightly confused because we mixed the settings in Application, but we&rsquo;ll fix that now.</p>
+<p>Look in Application.xcconfig, and move anything that’s in Debug but not in Release to Debug.xcconfig, and anything in Release but not Debug to Release.xcconfig. Anything that’s in both, delete the second copy of.</p>
 
-<p>Look in Application.xcconfig, and move anything that&rsquo;s in Debug but not in Release to Debug.xcconfig, and anything in Release but not Debug to Release.xcconfig. Anything that&rsquo;s in both, delete the second copy of.</p>
+<p>Anything that is in both Release and Debug, move to Shared, and put <code class="highlighter-rouge">#include "Shared.xcconfig"</code> at the top of the Release and Debug configs.</p>
 
-<p>Anything that is in both Release and Debug, move to Shared, and put <code>#include "Shared.xcconfig"</code> at the top of the Release and Debug configs.</p>
+<p>If you’ve followed all the instructions, you should have four files that look like this (assuming your product’s name is “Test”):</p>
 
-<p>If you&rsquo;ve followed all the instructions, you should have four files that look like this (assuming your product&rsquo;s name is &ldquo;Test&rdquo;):</p>
+<h3 id="sharedxcconfig">Shared.xcconfig</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ARCHS = $(ARCHS_STANDARD_32_BIT)
+SDKROOT = iphoneos2.2.1
+CODE_SIGN_IDENTITY = 
+CODE_SIGN_IDENTITY[sdk=iphoneos#] = iPhone Developer
+PREBINDING = NO
+GCC_C_LANGUAGE_STANDARD = c99
+GCC_WARN_ABOUT_RETURN_TYPE = YES
+GCC_WARN_UNUSED_VARIABLE = YES
+</code></pre></div></div>
 
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Shared.xcconfig </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>ARCHS = $(ARCHS_STANDARD_32_BIT)
-</span><span class='line'>SDKROOT = iphoneos2.2.1
-</span><span class='line'>CODE_SIGN_IDENTITY =
-</span><span class='line'>CODE_SIGN_IDENTITY[sdk=iphoneos#] = iPhone Developer
-</span><span class='line'>PREBINDING = NO
-</span><span class='line'>GCC_C_LANGUAGE_STANDARD = c99
-</span><span class='line'>GCC_WARN_ABOUT_RETURN_TYPE = YES
-</span><span class='line'>GCC_WARN_UNUSED_VARIABLE = YES
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+<h3 id="releasexcconfig">Release.xcconfig</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Shared.xcconfig"
+COPY_PHASE_STRIP = YES
+</code></pre></div></div>
 
+<h3 id="debugxcconfig">Debug.xcconfig</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Shared.xcconfig"
+ONLY_ACTIVE_ARCH = YES
+COPY_PHASE_STRIP = NO
+GCC_DYNAMIC_NO_PIC = NO
+GCC_OPTIMIZATION_LEVEL = 0
+</code></pre></div></div>
 
+<h3 id="applicationxcconfig">Application.xcconfig</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INFOPLIST_FILE = Info.plist
+PRODUCT_NAME = Test
+ALWAYS_SEARCH_USER_PATHS = NO
+GCC_PRECOMPILE_PREFIX_HEADER = YES
+GCC_PREFIX_HEADER = Test_Prefix.pch
+</code></pre></div></div>
 
+<p>If you Build&amp;Run now, everything should work. It’s not a great build configuration, but it’s Apple’s default in a form that we can start understanding and improving.</p>
 
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Release.xcconfig </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>#include &quot;Shared.xcconfig&quot;
-</span><span class='line'>COPY_PHASE_STRIP = YES
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-
-
-
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Debug.xcconfig </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>#include &quot;Shared.xcconfig&quot;
-</span><span class='line'>ONLY_ACTIVE_ARCH = YES
-</span><span class='line'>COPY_PHASE_STRIP = NO
-</span><span class='line'>GCC_DYNAMIC_NO_PIC = NO
-</span><span class='line'>GCC_OPTIMIZATION_LEVEL = 0
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-
-
-
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Application.xcconfig </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='text'><span class='line'>INFOPLIST_FILE = Info.plist
-</span><span class='line'>PRODUCT_NAME = Test
-</span><span class='line'>ALWAYS_SEARCH_USER_PATHS = NO
-</span><span class='line'>GCC_PRECOMPILE_PREFIX_HEADER = YES
-</span><span class='line'>GCC_PREFIX_HEADER = Test_Prefix.pch
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-
-<p>If you Build&amp;Run now, everything should work. It&rsquo;s not a great build configuration, but it&rsquo;s Apple&rsquo;s default in a form that we can start understanding and improving.</p>
-
-<p>But before that, we&rsquo;re going to convert this to a Project Template, so we don&rsquo;t have to go through this process again. We&rsquo;ll do that in the <a href="http://robnapier.net/blog/project-templates-364">next part of this series</a>.</p>
+<p>But before that, we’re going to convert this to a Project Template, so we don’t have to go through this process again. We’ll do that in the <a href="http://robnapier.net/blog/project-templates-364">next part of this series</a>.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -255,21 +221,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

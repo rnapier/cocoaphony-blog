@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -80,68 +79,65 @@
 
 <div class="entry-content"><p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
 
-<p>If your app uses SSL to communicate with your server (and it should), you generally don&rsquo;t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there&rsquo;s certainly no reason to trust the over 200 certificates in iOS 7&rsquo;s root store.</p>
+<p>If your app uses SSL to communicate with your server (and it should), you generally don’t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there’s certainly no reason to trust the over 200 certificates in iOS 7’s root store.</p>
 
-<p>The practice of trusting only your own certificate is called &ldquo;pinning,&rdquo; and I&rsquo;ve discussed it several times at conferences. I then say something like, &ldquo;It&rsquo;s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:&rdquo;</p>
+<p>The practice of trusting only your own certificate is called “pinning,” and I’ve discussed it several times at conferences. I then say something like, “It’s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:”
+<!-- more --></p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+    <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="nf">mainBundle</span><span class="p">]</span> <span class="nf">pathForResource</span><span class="p">:</span><span class="s">@"www.google.com"</span>
+                                                     <span class="nf">ofType</span><span class="p">:</span><span class="s">@"cer"</span><span class="p">];</span>
+    <span class="n">NSData</span> <span class="o">*</span><span class="n">certData</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nf">dataWithContentsOfFile</span><span class="p">:</span><span class="n">path</span>
+                                              <span class="nf">options</span><span class="p">:</span><span class="mi">0</span>
+                                                <span class="n">error</span><span class="o">:&amp;</span><span class="n">error</span><span class="p">];</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">certData</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Handle error reading</span>
+    <span class="p">}</span>
+    
+    <span class="n">SecCertificateRef</span>
+    <span class="n">certificate</span> <span class="o">=</span> <span class="n">SecCertificateCreateWithData</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="n">__bridge</span> <span class="n">CFDataRef</span><span class="p">)</span><span class="n">certData</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">certificate</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Handle error parsing</span>
+    <span class="p">}</span>
+    
+    <span class="n">self</span><span class="p">.</span><span class="n">anchors</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSArray</span> <span class="nf">arrayWithObject</span><span class="p">:</span><span class="n">CFBridgingRelease</span><span class="p">(</span><span class="n">certificate</span><span class="p">)];</span>
+<span class="p">...</span>
 
-<!-- more -->
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">connection</span><span class="o">:</span><span class="p">(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="n">connection</span>
+<span class="n">willSendRequestForAuthenticationChallenge</span><span class="o">:</span><span class="p">(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="n">challenge</span> <span class="p">{</span>
 
+  <span class="n">SecTrustRef</span> <span class="n">trust</span> <span class="o">=</span> <span class="n">challenge</span><span class="p">.</span><span class="n">protectionSpace</span><span class="p">.</span><span class="n">serverTrust</span><span class="p">;</span>
+  
+  <span class="n">SecTrustSetAnchorCertificates</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="p">(</span><span class="n">__bridge</span> <span class="n">CFArrayRef</span><span class="p">)</span><span class="n">self</span><span class="p">.</span><span class="n">anchors</span><span class="p">);</span>
+  <span class="n">SecTrustSetAnchorCertificatesOnly</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+  
+  <span class="n">SecTrustResultType</span> <span class="n">result</span><span class="p">;</span>
+  <span class="n">OSStatus</span> <span class="n">status</span> <span class="o">=</span> <span class="n">SecTrustEvaluate</span><span class="p">(</span><span class="n">trust</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">errSecSuccess</span> <span class="o">&amp;&amp;</span>
+      <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="n">kSecTrustResultProceed</span> <span class="o">||</span>
+       <span class="n">result</span> <span class="o">==</span> <span class="n">kSecTrustResultUnspecified</span><span class="p">))</span> <span class="p">{</span>
 
-<pre><code class="objc">...
-    NSError *error = NULL;
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"www.google.com"
-                                                     ofType:@"cer"];
-    NSData *certData = [NSData dataWithContentsOfFile:path
-                                              options:0
-                                                error:&amp;error];
-
-    if (! certData) {
-      // Handle error reading
-    }
-
-    SecCertificateRef
-    certificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)certData);
-
-    if (!certificate) {
-      // Handle error parsing
-    }
-
-    self.anchors = [NSArray arrayWithObject:CFBridgingRelease(certificate)];
-...
-
-- (void)connection:(NSURLConnection *)connection
-willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-
-  SecTrustRef trust = challenge.protectionSpace.serverTrust;
-
-  SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef)self.anchors);
-  SecTrustSetAnchorCertificatesOnly(trust, true);
-
-  SecTrustResultType result;
-  OSStatus status = SecTrustEvaluate(trust, &amp;result);
-  if (status == errSecSuccess &amp;&amp;
-      (result == kSecTrustResultProceed ||
-       result == kSecTrustResultUnspecified)) {
-
-    NSURLCredential *cred = [NSURLCredential credentialForTrust:trust];
-    [challenge.sender useCredential:cred forAuthenticationChallenge:challenge];
-  }
-  else {
-    [challenge.sender cancelAuthenticationChallenge:challenge];
-  }
-}
-</code></pre>
+    <span class="n">NSURLCredential</span> <span class="o">*</span><span class="n">cred</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLCredential</span> <span class="nf">credentialForTrust</span><span class="p">:</span><span class="n">trust</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">challenge</span><span class="p">.</span><span class="n">sender</span> <span class="nf">useCredential</span><span class="p">:</span><span class="n">cred</span> <span class="nf">forAuthenticationChallenge</span><span class="p">:</span><span class="n">challenge</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">challenge</span><span class="p">.</span><span class="n">sender</span> <span class="nf">cancelAuthenticationChallenge</span><span class="p">:</span><span class="n">challenge</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <p>I mean, really, what could be simpler. OK, maybe it could be simpler. Maybe if it were a little simpler, everyone would do it. So how about this?</p>
 
-<pre><code class="objc">- (void)connection:(NSURLConnection *)connection
-willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-  NSString *path = [[NSBundle mainBundle] pathForResource:@"mycert"
-                                                   ofType:@"cer"];
-  RNPinnedCertValidator *validator = [[RNPinnedCertValidator alloc] initWithCertificatePath:path];
-  [validator validateChallenge:challenge];
-}
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">connection</span><span class="p">:(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="nv">connection</span>
+<span class="nf">willSendRequestForAuthenticationChallenge</span><span class="p">:(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="nv">challenge</span> <span class="p">{</span>
+  <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="nf">mainBundle</span><span class="p">]</span> <span class="nf">pathForResource</span><span class="p">:</span><span class="s">@"mycert"</span>
+                                                   <span class="nf">ofType</span><span class="p">:</span><span class="s">@"cer"</span><span class="p">];</span>
+  <span class="n">RNPinnedCertValidator</span> <span class="o">*</span><span class="n">validator</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RNPinnedCertValidator</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCertificatePath</span><span class="p">:</span><span class="n">path</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">validator</span> <span class="nf">validateChallenge</span><span class="p">:</span><span class="n">challenge</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <p>Is that simple enough? Then go grab <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</p>
 </div>
@@ -149,9 +145,9 @@ willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challe
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -218,21 +214,7 @@ willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challe
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

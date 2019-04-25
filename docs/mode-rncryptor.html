@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I&rsquo;ve decided to make a change &hellip;">
+  <meta name="description" content="After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I’ve decided to make a change to the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,17 +77,17 @@
   </header>
 
 
-<div class="entry-content"><p>After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I&rsquo;ve decided to make a change to the default AES mode used by RNCryptor from its current CTR to the much more ubiquitous CBC.</p>
+<div class="entry-content"><p>After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I’ve decided to make a change to the default AES mode used by RNCryptor from its current CTR to the much more ubiquitous CBC.</p>
 
-<p>CTR mode has several advantages that I was hoping to exploit. First, it does not require padding, so it is not subject to padding oracle attacks (the cipher text is also generally a few bytes shorter than the equivalent CBC). That said, if the same nonce+counter+key combination is ever reused, an attacker can easily compute the key. This is pretty unlikely given how RNCryptor generates its nonce, but it&rsquo;s not impossible. If the same IV+key is used for CBC mode, then some information is leaked to an attacker, but its not nearly as catastrophic as reusing a nonce. The point is that CTR is not a home run here. It&rsquo;s different, exchanging one possible vulnerability for a different one (since RNCryptor does not store previous nonces to prevent reuse).</p>
+<p>CTR mode has several advantages that I was hoping to exploit. First, it does not require padding, so it is not subject to padding oracle attacks (the cipher text is also generally a few bytes shorter than the equivalent CBC). That said, if the same nonce+counter+key combination is ever reused, an attacker can easily compute the key. This is pretty unlikely given how RNCryptor generates its nonce, but it’s not impossible. If the same IV+key is used for CBC mode, then some information is leaked to an attacker, but its not nearly as catastrophic as reusing a nonce. The point is that CTR is not a home run here. It’s different, exchanging one possible vulnerability for a different one (since RNCryptor does not store previous nonces to prevent reuse).</p>
 
-<p>It is also possible to compute CTR in parallel on multiple cores. Apple doesn&rsquo;t currently do this, and is not highly likely to do so in the future. They might, but it&rsquo;s not something to adapt the design to.</p>
+<p>It is also possible to compute CTR in parallel on multiple cores. Apple doesn’t currently do this, and is not highly likely to do so in the future. They might, but it’s not something to adapt the design to.</p>
 
-<p>Almost every AES system out there implements CBC, so using any other mode introduces a significant interoperability problem. A mode would need to be dramatically better to be worth that. CTR has not lived up to that requirement, and so I&rsquo;m switching to CBC.</p>
+<p>Almost every AES system out there implements CBC, so using any other mode introduces a significant interoperability problem. A mode would need to be dramatically better to be worth that. CTR has not lived up to that requirement, and so I’m switching to CBC.</p>
 
 <p>This will make it much easier to write RNCryptor-compatible modules in Java, JavaScript, etc., as have been requested.</p>
 
-<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code>CCKeyDerivationPBKDF</code>.</p>
+<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code class="highlighter-rouge">CCKeyDerivationPBKDF</code>.</p>
 
 <p>If you update, note that this is incompatible with your existing encrypted files. I doubt there is enough field usage out there that this is an issue, but if it is, let me know and I can discuss with you how to convert.</p>
 </div>
@@ -96,9 +95,9 @@
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -165,21 +164,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

@@ -9,8 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="In response to I Don&rsquo;t Know Swift: Is this career advice? I am a web developer thinking about a &ldquo;career change&rdquo;
-to iOS. Since I &hellip;">
+  <meta name="description" content="In response to I Don’t Know Swift: Is this career advice? I am a web developer thinking about a “career change”
+to iOS. Since I have no background in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,10 +27,9 @@ to iOS. Since I &hellip;">
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -79,22 +78,24 @@ to iOS. Since I &hellip;">
   </header>
 
 
-<div class="entry-content"><p>In response to <a href="http://robnapier.net/i-dont-know-swift">I Don&rsquo;t Know Swift</a>:</p>
+<div class="entry-content"><p>In response to <a href="http://robnapier.net/i-dont-know-swift">I Don’t Know Swift</a>:</p>
 
-<blockquote><p>Is this career advice? I am a web developer thinking about a &ldquo;career change&rdquo;
+<blockquote>
+  <p>Is this career advice? I am a web developer thinking about a “career change”
 to iOS. Since I have no background in CocoaTouch or anything Apple, would your
-advice be the same, to learn Swift?</p></blockquote>
+advice be the same, to learn Swift?</p>
+</blockquote>
 
-<p>I&rsquo;ve received different versions of this question since the day after Swift was
+<p>I’ve received different versions of this question since the day after Swift was
 released, from ObjC lovers and haters, seasoned pros and the uninitiated. Having
-had a very unusual (and privileged) career path, I&rsquo;m probably not qualified to
-give career advice, but I&rsquo;ve been asked enough that maybe it&rsquo;s worth talking
-about. Maybe I can frame how to think about it, even if I can&rsquo;t give you
-satisfying certainty. Maybe that&rsquo;s all advice really is.</p>
+had a very unusual (and privileged) career path, I’m probably not qualified to
+give career advice, but I’ve been asked enough that maybe it’s worth talking
+about. Maybe I can frame how to think about it, even if I can’t give you
+satisfying certainty. Maybe that’s all advice really is.</p>
 
-<p> <!--more--></p>
+<p><!--more--></p>
 
-<h4>For the iOS newcomer from dynamic, scripting languages</h4>
+<h4 id="for-the-ios-newcomer-from-dynamic-scripting-languages">For the iOS newcomer from dynamic, scripting languages</h4>
 
 <p>Let me start with the most interesting case to me, and the one that started
 this post: you know nothing about iOS and come from mostly a web background.
@@ -102,106 +103,105 @@ Should you learn Swift?</p>
 
 <p>Right now is the hardest time you could pick to learn iOS. Does that excite you?
 Then absolutely; come learn iOS. You can have an influence on the platform today
-in ways that won&rsquo;t come again soon.</p>
+in ways that won’t come again soon.</p>
 
 <p>But if you stayed away from iOS because of square brackets, I assure you that
-today&rsquo;s Swift has a higher learning curve. Someday Swift will be simpler to
-learn than ObjC, especially once more of Cocoa is tailored to it.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> But
+today’s Swift has a higher learning curve. Someday Swift will be simpler to
+learn than ObjC, especially once more of Cocoa is tailored to it.<sup id="fnref:cocoa"><a href="#fn:cocoa" class="footnote">1</a></sup> But
 today, crazy features like implicitly unwrapped optionals are something you have
-to deal with on day one. We&rsquo;re still working out the best ways to deal with
+to deal with on day one. We’re still working out the best ways to deal with
 common coding problems. The handful of tutorials are mostly based on a few days
 of experience. And has anyone mentioned that the compiler still crashes <em>all the
 time</em>.</p>
 
-<p><span class='pullquote-right' data-pullquote='Today&#8217;s Swift is not a language for the easily intimidated.'></p>
+<p><span class="pullquote-right" data-pullquote="Today&#8217;s Swift is not a language for the easily intimidated."></span></p>
 
-<p>Yes, Swift calls methods with parentheses. That doesn&rsquo;t make it anything like
+<p>Yes, Swift calls methods with parentheses. That doesn’t make it anything like
 JavaScript. The square bracket rules in ObjC are simple, and dot notation is
 only slightly more complicated. The rules for parameter names in Swift still
-trip me up. Today&rsquo;s Swift is not a language for the easily intimidated. It
+trip me up. Today’s Swift is not a language for the easily intimidated. It
 is a language for the curious and the inventor. If you start most projects by
-installing a long list of dependencies, Swift probably isn&rsquo;t ready for you quite
+installing a long list of dependencies, Swift probably isn’t ready for you quite
 yet.</p>
 
-<p></span></p>
+<p>&lt;/span&gt;</p>
 
-<p>Swift&rsquo;s syntax looks slightly more like dynamic languages than ObjC. That&rsquo;s an
+<p>Swift’s syntax looks slightly more like dynamic languages than ObjC. That’s an
 illusion caused by type inference. Swift is much more strongly typed than ObjC.
-It&rsquo;s much closer to Scala than to Ruby. You&rsquo;ll spend a lot of time fighting with
+It’s much closer to Scala than to Ruby. You’ll spend a lot of time fighting with
 the compiler to accept your program due to confusing type errors. If your
-reaction is &ldquo;thank goodness the compiler is verifying that my code is legal, I
-hope they improve the error messages soon,&rdquo; then Swift is your language. If your
-reaction is &ldquo;stupid compiler; I know this code will work fine, just run it&rdquo; then
-you&rsquo;re going to hate Swift.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+reaction is “thank goodness the compiler is verifying that my code is legal, I
+hope they improve the error messages soon,” then Swift is your language. If your
+reaction is “stupid compiler; I know this code will work fine, just run it” then
+you’re going to hate Swift.<sup id="fnref:types"><a href="#fn:types" class="footnote">2</a></sup></p>
 
-<h3>For the iOS newcomer from strongly-typed, compiled languages</h3>
+<h3 id="for-the-ios-newcomer-from-strongly-typed-compiled-languages">For the iOS newcomer from strongly-typed, compiled languages</h3>
 
-<p>If you&rsquo;re an experienced Java, C#, or C++ programmer, it&rsquo;s possible that Swift
+<p>If you’re an experienced Java, C#, or C++ programmer, it’s possible that Swift
 will be a more natural transition than ObjC. The generic programming aspects
 have some similarities (though C++ developers will probably be frustrated at the
-lack of iterators). If you&rsquo;re a Scala developer, then Swift will probably make
+lack of iterators). If you’re a Scala developer, then Swift will probably make
 much more sense than ObjC.</p>
 
 <p>But still, as for web developers, this is the hardest time to learn iOS. The
 features of Swift are in flux and probably will be for a while. Cocoa is still
-Cocoa. If you find <code>UITableViewController</code> confusing, absolutely nothing has
-changed with Swift.<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+Cocoa. If you find <code class="highlighter-rouge">UITableViewController</code> confusing, absolutely nothing has
+changed with Swift.<sup id="fnref:tableview"><a href="#fn:tableview" class="footnote">3</a></sup></p>
 
 <p>The reason to learn Swift is because you want to develop for iOS. But today,
 the <em>easier</em> route is to come through ObjC and pick up Swift when it stabilizes.
 The reason to learn Swift today is to be part of the beginning of Swift.</p>
 
-<h3>For experienced ObjC devs</h3>
+<h3 id="for-experienced-objc-devs">For experienced ObjC devs</h3>
 
-<p>If you&rsquo;re shipping Cocoa apps today, clearly you&rsquo;re going to stay in ObjC for
-some time to come. You certainly shouldn&rsquo;t go rewrite your whole app. For new
-apps, the more complex it is, the more I would suggest ObjC. If it&rsquo;s pretty
+<p>If you’re shipping Cocoa apps today, clearly you’re going to stay in ObjC for
+some time to come. You certainly shouldn’t go rewrite your whole app. For new
+apps, the more complex it is, the more I would suggest ObjC. If it’s pretty
 simple, it may be a great place to try out Swift, at least for some parts. The
-great news is that it&rsquo;s not all or nothing. You can write one class in Swift and
+great news is that it’s not all or nothing. You can write one class in Swift and
 another in ObjC, and it really seems to work pretty well.</p>
 
-<p>Treat Swift like Autolayout.<sup id="fnref:4"><a href="#fn:4" rel="footnote">4</a></sup> You don&rsquo;t have to jump over the first day
-it&rsquo;s released, but eventually you&rsquo;re going to need to come over or things are
+<p>Treat Swift like Autolayout.<sup id="fnref:carbon"><a href="#fn:carbon" class="footnote">4</a></sup> You don’t have to jump over the first day
+it’s released, but eventually you’re going to need to come over or things are
 going to get harder and harder. The best approach is to experiment with it
-early, and migrate as you develop new things. There&rsquo;s no need to jump onto it
-day one unless that&rsquo;s your interest. But within 2-3 years, you likely should
-do new work in Swift unless there&rsquo;s a specific reason not to. And you should
-definitely learn Swift sometime over the next year or two. Clearly that&rsquo;s what
+early, and migrate as you develop new things. There’s no need to jump onto it
+day one unless that’s your interest. But within 2-3 years, you likely should
+do new work in Swift unless there’s a specific reason not to. And you should
+definitely learn Swift sometime over the next year or two. Clearly that’s what
 Apple wants long term, and fighting Apple as an iOS dev is a losing game.</p>
 
-<h3>For the iOS newcomer from functional languages and for general language enthusiasts who don&rsquo;t care about Cocoa</h3>
+<h3 id="for-the-ios-newcomer-from-functional-languages-and-for-general-language-enthusiasts-who-dont-care-about-cocoa">For the iOS newcomer from functional languages and for general language enthusiasts who don’t care about Cocoa</h3>
 
 <p>I have a whole post planned for you. Stay tuned.</p>
 
-<h3>OK&hellip; so what do I do?</h3>
+<h3 id="ok-so-what-do-i-do">OK… so what do I do?</h3>
 
-<p>Look, do what you want. I&rsquo;ve made my career focusing on things that interested
-me that later turned out to be commercially valuable. I&rsquo;ve been really lucky.
-That probably doesn&rsquo;t work for everyone, so who am I to give advice? But since
-you asked&hellip;</p>
+<p>Look, do what you want. I’ve made my career focusing on things that interested
+me that later turned out to be commercially valuable. I’ve been really lucky.
+That probably doesn’t work for everyone, so who am I to give advice? But since
+you asked…</p>
 
-<p>If you&rsquo;re totally excited about Swift, start today. Why are you even asking me?</p>
+<p>If you’re totally excited about Swift, start today. Why are you even asking me?</p>
 
 <p>For other Cocoa-devs, pick up Swift over the next couple of iOS releases.</p>
 
-<p><span class='pullquote-right' data-pullquote='if you want to understand the future of Swift, first learn the basics of
-Haskell'>
-For non-Cocoa devs, if you need to ask, then you probably shouldn&rsquo;t jump into
+<p><span class="pullquote-right" data-pullquote="if you want to understand the future of Swift, first learn the basics of Haskell"> 
+For non-Cocoa devs, if you need to ask, then you probably shouldn’t jump into
 Swift today. If you have the time to learn a new language,
 <a href="http://learnyouahaskell.com">learn Haskell</a>. I  hate to be a Haskell fanboi.
-I&rsquo;m not even a very good a Haskell programmer.<sup id="fnref:5"><a href="#fn:5" rel="footnote">5</a></sup> That&rsquo;s not the point. The
+I’m not even a very good a Haskell programmer.<sup id="fnref:good"><a href="#fn:good" class="footnote">5</a></sup> That’s not the point. The
 point is that Swift wants to be functional.
-<a href="http://robnapier.net/swift-is-not-functional">It isn&rsquo;t functional</a>, but it wants to be.
+<a href="http://robnapier.net/swift-is-not-functional">It isn’t functional</a>, but it wants to be.
 So if you want to understand the future of Swift, first learn the basics of
-Haskell.<sup id="fnref:6"><a href="#fn:6" rel="footnote">6</a></sup> You should be able to read
-<a href="http://chris.eidhof.nl/posts/json-parsing-in-swift.html">Chris Eidhof&rsquo;s JSON Parser</a> and know
-why <code>&lt;*&gt;</code> and <code>&gt;&gt;=</code> were the obvious operators to use. You may agree or disagree
-with his parser, but if you can&rsquo;t read Haskell, you won&rsquo;t even understand the
+Haskell.<sup id="fnref:haskell"><a href="#fn:haskell" class="footnote">6</a></sup> You should be able to read
+<a href="http://chris.eidhof.nl/posts/json-parsing-in-swift.html">Chris Eidhof’s JSON Parser</a> and know
+why <code class="highlighter-rouge">&lt;*&gt;</code> and <code class="highlighter-rouge">&gt;&gt;=</code> were the obvious operators to use. You may agree or disagree
+with his parser, but if you can’t read Haskell, you won’t even understand the 
 discussion.
 </span></p>
 
-<p>I remember programming in the mid-nineties when objects started to become &ldquo;a
-thing.&rdquo; Understanding objects, at least the terminology, eventually become an
+<p>I remember programming in the mid-nineties when objects started to become “a
+thing.” Understanding objects, at least the terminology, eventually become an
 important part of being a real programmer. OOP had been around for decades at
 that point, but it was the mid-nineties when it started to matter. The paradigm
 changed, and today many programmers have trouble contemplating programming
@@ -212,39 +212,44 @@ slow, too bloated, to academic. But today, even Fortran has objects.</p>
 <p>I see the same things happening today in functional programming. After decades
 of existing on the edges of the profession, it now comes up often in mainstream
 discussions, and it will definitely continue to influence Swift. When Swift is
-finally ready for you, you&rsquo;ll be much more ready for Swift.</p>
+finally ready for you, you’ll be much more ready for Swift.</p>
 
-<p>So that&rsquo;s my advice, for what it&rsquo;s worth. Get ahead of that wave. When you do
-that, you&rsquo;ll have a useful skill no matter the platform. But more about that in
+<p>So that’s my advice, for what it’s worth. Get ahead of that wave. When you do
+that, you’ll have a useful skill no matter the platform. But more about that in
 my next post.</p>
 
-<p>And then yeah, sure, come play with us in Swift. It&rsquo;s a blast!</p>
-<div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>My assumption is that 8.X will clean up some of the Cocoa <code>!</code>s and similar tweaks, along with significant optimizer improvements. Then 9 will see some Swift-ification of Foundation (or more Foundation features in Swift stdlib). 10 will see more Swift-ification of UIKit (maybe replacing more selector-based patterns with closures). The specifics are just conjecture, but making iOS development a Swift-centric experience is clearly a multi-release effort.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-<li id="fn:2">
-<p>On the other hand, if you&rsquo;re comfortable with type theory, you may find Swift&rsquo;s type system <a href="http://nomothetis.svbtle.com/type-variance-in-swift">a bit limited</a>. And the stdlib types in Beta 4 are still ugly and restrictive IMO. They&rsquo;re getting better, but they still heavily rely on private details that make implementing your own Collections and Generators very frustrating. I hope this is cleaned up by v1, but I don&rsquo;t know that it will be.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
-<li id="fn:3">
-<p>And nothing is likely to change in the foreseeable future. The use of delegates and datasources in <code>UITableView</code> are on purpose and work exactly as intended. If you don&rsquo;t like that approach, you are unlikely ever to like iOS development. I happen to think <code>UITableView</code> is pretty brilliant.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
-<li id="fn:4">
-<p>For Mac devs, ObjC is the new Carbon. Take your lessons on its future from that. It&rsquo;ll be around and fully supported for much longer than people expect. But eventually they&rsquo;re going to start breaking ObjC things so that Swift can work better.<a href="#fnref:4" rev="footnote">&#8617;</a></p></li>
-<li id="fn:5">
-<p>The joke is: Haskell is the language that proves you&rsquo;re a bad programmer. I guess my next post should be titled &ldquo;I don&rsquo;t know Haskell, either.&rdquo;<a href="#fnref:5" rev="footnote">&#8617;</a></p></li>
-<li id="fn:6">
-<p>I feel like I should justify &ldquo;why Haskell rather than X&rdquo; here. Why not ML, OCaml, F#? But if you follow the FP discussions floating around Swift, Haskell is always front of mind. It&rsquo;s the <a href="http://nondot.org/sabre/">only FP language that Chris Lattner calls out</a> explicitly as an influence in Swift, and it includes a lot of the concepts that are working their way into Swift. If you&rsquo;re going to pick one FP language to start with, it&rsquo;s the one I recommend.<a href="#fnref:6" rev="footnote">&#8617;</a></p></li>
-</ol>
-</div>
+<p>And then yeah, sure, come play with us in Swift. It’s a blast!</p>
 
+<div class="footnotes">
+  <ol>
+    <li id="fn:cocoa">
+      <p>My assumption is that 8.X will clean up some of the Cocoa <code class="highlighter-rouge">!</code>s and similar tweaks, along with significant optimizer improvements. Then 9 will see some Swift-ification of Foundation (or more Foundation features in Swift stdlib). 10 will see more Swift-ification of UIKit (maybe replacing more selector-based patterns with closures). The specifics are just conjecture, but making iOS development a Swift-centric experience is clearly a multi-release effort. <a href="#fnref:cocoa" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:types">
+      <p>On the other hand, if you’re comfortable with type theory, you may find Swift’s type system <a href="http://nomothetis.svbtle.com/type-variance-in-swift">a bit limited</a>. And the stdlib types in Beta 4 are still ugly and restrictive IMO. They’re getting better, but they still heavily rely on private details that make implementing your own Collections and Generators very frustrating. I hope this is cleaned up by v1, but I don’t know that it will be. <a href="#fnref:types" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:tableview">
+      <p>And nothing is likely to change in the foreseeable future. The use of delegates and datasources in <code class="highlighter-rouge">UITableView</code> are on purpose and work exactly as intended. If you don’t like that approach, you are unlikely ever to like iOS development. I happen to think <code class="highlighter-rouge">UITableView</code> is pretty brilliant. <a href="#fnref:tableview" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:carbon">
+      <p>For Mac devs, ObjC is the new Carbon. Take your lessons on its future from that. It’ll be around and fully supported for much longer than people expect. But eventually they’re going to start breaking ObjC things so that Swift can work better. <a href="#fnref:carbon" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:good">
+      <p>The joke is: Haskell is the language that proves you’re a bad programmer. I guess my next post should be titled “I don’t know Haskell, either.” <a href="#fnref:good" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:haskell">
+      <p>I feel like I should justify “why Haskell rather than X” here. Why not ML, OCaml, F#? But if you follow the FP discussions floating around Swift, Haskell is always front of mind. It’s the <a href="http://nondot.org/sabre/">only FP language that Chris Lattner calls out</a> explicitly as an influence in Swift, and it includes a lot of the concepts that are working their way into Swift. If you’re going to pick one FP language to start with, it’s the one I recommend. <a href="#fnref:haskell" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -311,21 +316,7 @@ my next post.</p>
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

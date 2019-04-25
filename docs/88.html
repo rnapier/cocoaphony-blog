@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,22 +77,20 @@
   </header>
 
 
-<div class="entry-content"><p>Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the random noise in the picture. First secret: spend some time and read through every patch available, particularly the ones in Tools. It&rsquo;s important to know what&rsquo;s available so you don&rsquo;t spend hours trying to reinvent the basics. And don&rsquo;t forget that &ldquo;transparent&rdquo; defaults to meaning &ldquo;whatever random memory happens to be on the video card.&rdquo;</p>
+<div class="entry-content"><p>Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the random noise in the picture. First secret: spend some time and read through every patch available, particularly the ones in Tools. It’s important to know what’s available so you don’t spend hours trying to reinvent the basics. And don’t forget that “transparent” defaults to meaning “whatever random memory happens to be on the video card.”</p>
 
-<p>I&rsquo;ll be spend quite a bit of time trying to improve the interface for the full-screen plugins. I&rsquo;m trying to make it as easy to write new full-screen modes as to write new screen savers. Once I&rsquo;ve gotten a second full-screen plugin written, I think I&rsquo;ll better know how to structure the interface.</p>
+<p>I’ll be spend quite a bit of time trying to improve the interface for the full-screen plugins. I’m trying to make it as easy to write new full-screen modes as to write new screen savers. Once I’ve gotten a second full-screen plugin written, I think I’ll better know how to structure the interface.</p>
 
-<p>I&rsquo;ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you&rsquo;d get a stray &ldquo;ERROR: Could not find webNetscapePluggin&rdquo; error in your logs. Hopefully that&rsquo;s now fixed.</p>
-
+<p>I’ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you’d get a stray “ERROR: Could not find webNetscapePluggin” error in your logs. Hopefully that’s now fixed.</p>
 <div class="post-body entry-content">Should post a 0.6 (or at least 0.6 beta) sometime after the New Year.</div>
-
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -160,21 +157,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Observing NSNotifications in a view control is a good thing. But remember, just because you&rsquo;re not onscreen doesn&rsquo;t mean that you&rsquo; &hellip;">
+  <meta name="description" content="Observing NSNotifications in a view control is a good thing. But remember, just because you’re not onscreen doesn’t mean that you’re not still &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,26 +77,23 @@
   </header>
 
 
-<div class="entry-content"><p>Observing NSNotifications in a view control is a good thing. But remember, just because you&rsquo;re not onscreen doesn&rsquo;t mean that you&rsquo;re not still observing. This is particularly noteworthy on iPhone, where your view can get dropped any time memory is tight and you&rsquo;re offscreen, but it can bite you anywhere.</p>
+<div class="entry-content"><p>Observing NSNotifications in a view control is a good thing. But remember, just because you’re not onscreen doesn’t mean that you’re not still observing. This is particularly noteworthy on iPhone, where your view can get dropped any time memory is tight and you’re offscreen, but it can bite you anywhere.</p>
 
-<p>ViewControllers, WindowControllers and other UI controllers are often better off registering and uregistering for notifications when they are put on and off the screen rather than when they are allocated and deallocated. This often means that they will need to update their state when put on screen. For example, an icon indicating &ldquo;connected&rdquo; might be part of a StatusViewController. When StatusView comes on screen, StatusViewController should update the connected status and then begin observing changes on it. When StatusView goes off screen, StatusViewController should stop observing.</p>
-
+<p>ViewControllers, WindowControllers and other UI controllers are often better off registering and uregistering for notifications when they are put on and off the screen rather than when they are allocated and deallocated. This often means that they will need to update their state when put on screen. For example, an icon indicating “connected” might be part of a StatusViewController. When StatusView comes on screen, StatusViewController should update the connected status and then begin observing changes on it. When StatusView goes off screen, StatusViewController should stop observing.
 <!-- more -->
+But wait, what if StatusViewController is the only thing keeping track of of the connection status? Then when StatusView comes on screen, there’s no one to ask for the current status. This tells us that StatusViewController is doing too much. It’s gone beyond being a Controller and has started holding data, which makes it a Model class. The fix? A model object should be keeping track of current connection status. A Connection object, a Status object or whatever makes sense. But not the ViewController. The ViewController’s job is to manage the view (the drawing of data), not store data. Since Status never goes on or off the screen, it will always be able to observe the current connection state and will always be available for the ViewController to query.</p>
 
+<p>Be on the lookout for Controllers who are doing Model work. A View can get data through its ViewController, and other controllers can access view information from the ViewController. But if model objects are talking to a ViewController, it’s probably become too big.</p>
 
-<p>But wait, what if StatusViewController is the only thing keeping track of of the connection status? Then when StatusView comes on screen, there&rsquo;s no one to ask for the current status. This tells us that StatusViewController is doing too much. It&rsquo;s gone beyond being a Controller and has started holding data, which makes it a Model class. The fix? A model object should be keeping track of current connection status. A Connection object, a Status object or whatever makes sense. But not the ViewController. The ViewController&rsquo;s job is to manage the view (the drawing of data), not store data. Since Status never goes on or off the screen, it will always be able to observe the current connection state and will always be available for the ViewController to query.</p>
-
-<p>Be on the lookout for Controllers who are doing Model work. A View can get data through its ViewController, and other controllers can access view information from the ViewController. But if model objects are talking to a ViewController, it&rsquo;s probably become too big.</p>
-
-<p>Simple rule: don&rsquo;t store data in anything that imports UIKit.h or Cocoa.h. If you can&rsquo;t get by with Foundation.h, you&rsquo;re not a model object.</p>
+<p>Simple rule: don’t store data in anything that imports UIKit.h or Cocoa.h. If you can’t get by with Foundation.h, you’re not a model object.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -164,21 +160,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

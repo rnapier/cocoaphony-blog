@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For those of you having trouble with Flash 10.1, I&rsquo;ve fixed PB to handle it. This moves from the hackish &ldquo;dig around in the &hellip;">
+  <meta name="description" content="For those of you having trouble with Flash 10.1, I’ve fixed PB to handle it. This moves from the hackish “dig around in the NetscapePlugin objects &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,53 +77,51 @@
   </header>
 
 
-<div class="entry-content"><p>For those of you having trouble with Flash 10.1, I&rsquo;ve fixed PB to handle it. This moves from the hackish &ldquo;dig around in the NetscapePlugin objects and call undocumented methods&rdquo; approach to a standard CGEvent based keyboard injection. You can&rsquo;t use NSApp&rsquo;s sendEvent: to talk to Flash (probably because Flash is not in Cocoa). But the following code is a good general purpose &ldquo;send me a virtual keystroke.&rdquo;</p>
+<div class="entry-content"><p>For those of you having trouble with Flash 10.1, I’ve fixed PB to handle it. This moves from the hackish “dig around in the NetscapePlugin objects and call undocumented methods” approach to a standard CGEvent based keyboard injection. You can’t use NSApp’s sendEvent: to talk to Flash (probably because Flash is not in Cocoa). But the following code is a good general purpose “send me a virtual keystroke.”
+<!-- more --></p>
 
-<!-- more -->
-
-
-<pre><code>- (void)sendKeyPress:(int)keycode withModifier:(int)modifier
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)sendKeyPress:(int)keycode withModifier:(int)modifier
 {
-    ProcessSerialNumber psn;
-    GetCurrentProcess(&amp;psn);
-    CGEventRef modifierEvent;
-    if (modifier != 0)
-    {
-        modifierEvent = CGEventCreateKeyboardEvent(NULL, modifier, YES);
-        CGEventPostToPSN(&amp;psn, modifierEvent);
-    }
-
-    CGEventRef keyEvent = CGEventCreateKeyboardEvent(NULL, keycode, YES);
-    CGEventPostToPSN(&amp;psn, keyEvent);
-    CGEventSetType(keyEvent, kCGEventKeyUp);
-    CGEventPostToPSN(&amp;psn, keyEvent);
-    CFRelease(keyEvent);
-
-    if (modifier != 0)
-    {
-        CGEventSetType(modifierEvent, kCGEventKeyUp);
-        CGEventPostToPSN(&amp;psn, modifierEvent);
-        CFRelease(modifierEvent);
-    }
+	ProcessSerialNumber psn;
+	GetCurrentProcess(&amp;psn);
+	CGEventRef modifierEvent;
+	if (modifier != 0)
+	{
+		modifierEvent = CGEventCreateKeyboardEvent(NULL, modifier, YES);
+		CGEventPostToPSN(&amp;psn, modifierEvent);
+	}
+	
+	CGEventRef keyEvent = CGEventCreateKeyboardEvent(NULL, keycode, YES);
+	CGEventPostToPSN(&amp;psn, keyEvent);
+	CGEventSetType(keyEvent, kCGEventKeyUp);
+	CGEventPostToPSN(&amp;psn, keyEvent);
+	CFRelease(keyEvent);
+		
+	if (modifier != 0)
+	{
+		CGEventSetType(modifierEvent, kCGEventKeyUp);
+		CGEventPostToPSN(&amp;psn, modifierEvent);
+		CFRelease(modifierEvent);
+	}
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>First note the use of <code>CGEventPostToPSN()</code>. I originally made the mistake of using <code>CGEventPost()</code>. The problem is that this will send the keystroke to the currently active application, not PandoraBoy. For keyboard shortcuts and applescript where PB will certainly be in the background, <code>CGEventPostToPSN()</code> is a must here.</p>
+<p>First note the use of <code class="highlighter-rouge">CGEventPostToPSN()</code>. I originally made the mistake of using <code class="highlighter-rouge">CGEventPost()</code>. The problem is that this will send the keystroke to the currently active application, not PandoraBoy. For keyboard shortcuts and applescript where PB will certainly be in the background, <code class="highlighter-rouge">CGEventPostToPSN()</code> is a must here.</p>
 
-<p>Note that this uses virtual keycodes. That&rsquo;s fine for PB, since (for now) we only send things that are universal (like spacebar). But it will be a problem when I implement sending &ldquo;z&rdquo; to snooze a song. The problem is that &ldquo;z&rdquo; means &ldquo;the location of &lsquo;z&rsquo; on an ANSI keyboard.&rdquo; If you have a different keyboard layout, it&rsquo;s still going to act like you pressed that lower left-hand key beside the shift, not &ldquo;z&rdquo;. If people have trouble with this, I&rsquo;ll look into UCKeyboardLayout, but it was too much for tonight, and I don&rsquo;t need it myself.</p>
+<p>Note that this uses virtual keycodes. That’s fine for PB, since (for now) we only send things that are universal (like spacebar). But it will be a problem when I implement sending “z” to snooze a song. The problem is that “z” means “the location of ‘z’ on an ANSI keyboard.” If you have a different keyboard layout, it’s still going to act like you pressed that lower left-hand key beside the shift, not “z”. If people have trouble with this, I’ll look into UCKeyboardLayout, but it was too much for tonight, and I don’t need it myself.</p>
 
-<p>The modifiers are tricky because if you want to send &ldquo;Z&rdquo; that really means &ldquo;shift down, z down, z up, shift up.&rdquo; This method takes care of all that for you. You would send &ldquo;Z&rdquo; like this:</p>
+<p>The modifiers are tricky because if you want to send “Z” that really means “shift down, z down, z up, shift up.” This method takes care of all that for you. You would send “Z” like this:</p>
 
-<pre><code>[self sendKeyPress:kVK_ANSI_Z withModifier:kVK_Shift];
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[self sendKeyPress:kVK_ANSI_Z withModifier:kVK_Shift];
+</code></pre></div></div>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -191,21 +188,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

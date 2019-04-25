@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -82,42 +81,39 @@
 
 <p>For those who read my blog for Cocoa (and recently Swift) discussion, you may be surprised that most of my professional work right now is in Go, C, and C++ (in that order). So I thought I might take a moment to discuss Go.</p>
 
-<p>First, it&rsquo;s important to say that I really like Go. I didn&rsquo;t think I would. I&rsquo;m a language snob at heart. Before Swift, I&rsquo;d been spending a lot of time on the <a href="http://learnyouahaskell.com">functional</a> side of the <a href="http://www.scala-lang.org">street</a> with a brief dallience with <a href="http://akka.io">actors</a>. I was just about to do deeper <a href="http://clojure.org">into the parens</a>, when I wound up taking a side trip into Google-land and Go. I&rsquo;d dipped my toe into the water once before and been turned off by what seemed to be the sloppiness of the language. How variables are declared bugged me (turns out it <a href="http://gophercon.sourcegraph.com/post/83845316771/panel-discussion-with-go-team-members">bugs the lead language designer</a>, too). The multiple return types of <code>range</code> bugged me. <a href="http://blog.golang.org/strings">Strings switching between code points and bytes</a> bugged me. The fact that Go can&rsquo;t implement its own <code>append()</code> harkened back to funky Perl magic. Go just seemed sloppy and under-considered.</p>
+<p>First, it’s important to say that I really like Go. I didn’t think I would. I’m a language snob at heart. Before Swift, I’d been spending a lot of time on the <a href="http://learnyouahaskell.com">functional</a> side of the <a href="http://www.scala-lang.org">street</a> with a brief dallience with <a href="http://akka.io">actors</a>. I was just about to do deeper <a href="http://clojure.org">into the parens</a>, when I wound up taking a side trip into Google-land and Go. I’d dipped my toe into the water once before and been turned off by what seemed to be the sloppiness of the language. How variables are declared bugged me (turns out it <a href="http://gophercon.sourcegraph.com/post/83845316771/panel-discussion-with-go-team-members">bugs the lead language designer</a>, too). The multiple return types of <code class="highlighter-rouge">range</code> bugged me. <a href="http://blog.golang.org/strings">Strings switching between code points and bytes</a> bugged me. The fact that Go can’t implement its own <code class="highlighter-rouge">append()</code> harkened back to funky Perl magic. Go just seemed sloppy and under-considered.</p>
 
-<!-- more --> 
+<!-- more -->
 
-
-<p>But a coworker made a joke about rewriting an important service in Go, and after laughing about it, I thought I&rsquo;d at least take another look. It turned out to be a great fit. Go&rsquo;s bread-and-butter is concurrent network services, which is what we wanted to solve. So I dug a bit more.</p>
-
-<ul>
-<li>Very cross-platform out of the box.
+<p>But a coworker made a joke about rewriting an important service in Go, and after laughing about it, I thought I’d at least take another look. It turned out to be a great fit. Go’s bread-and-butter is concurrent network services, which is what we wanted to solve. So I dug a bit more.</p>
 
 <ul>
-<li>Not &ldquo;sort-of cross-platform as long as it&rsquo;s unix&rdquo; like C/C++. Real-world Windows support is pretty good. No wchar/tchar/char madness.</li>
+  <li>Very cross-platform out of the box.
+    <ul>
+      <li>Not “sort-of cross-platform as long as it’s unix” like C/C++. Real-world Windows support is pretty good. No wchar/tchar/char madness.</li>
+    </ul>
+  </li>
+  <li>Built-in cross-platform networking support that integrates with the native stack.</li>
+  <li>Native binaries. No need to ship a separate interpreter, runtime, or VM.</li>
+  <li>Handles concurrency very well.</li>
+  <li>Pretty easy to pick up for C programmers</li>
 </ul>
-</li>
-<li>Built-in cross-platform networking support that integrates with the native stack.</li>
-<li>Native binaries. No need to ship a separate interpreter, runtime, or VM.</li>
-<li>Handles concurrency very well.</li>
-<li>Pretty easy to pick up for C programmers</li>
-</ul>
 
+<p>It was a good fit. I went ahead and reworked the system in Go. I’ve been very happy with the results so far.</p>
 
-<p>It was a good fit. I went ahead and reworked the system in Go. I&rsquo;ve been very happy with the results so far.</p>
+<p><span class="pullquote-right" data-pullquote="Go feels under-engineered because it only solves real problems."></span></p>
 
-<p><span class='pullquote-right' data-pullquote='Go feels under-engineered because it only solves real problems.'></p>
+<p>So what have I learned by actually building something? Go feels under-engineered because it only solves real problems. If you’ve ever worked in a wood shop, you’ve probably made a jig at some point. They’re little pieces of wood that help you hold plywood while you cut it, or spacers that tell you where to put the guide bar for a specific tool, or hold-downs that keep a board in place while you’re working on it. They’re not always pretty. They often solve hyper-specific problems and work only with your specific tools. And when you look at ones that have been used a lot, they sometimes seem a little weird. There might be a random cutout in the middle. Or some little piece that sticks off at an angle. Or the corner might be missing a piece. And when you compare them to “real” tools, “general” tools like you’d buy from a catalog, they’re pretty homey or homely depending on how you’re thinking about it.</p>
 
-<p>So what have I learned by actually building something? Go feels under-engineered because it only solves real problems. If you&rsquo;ve ever worked in a wood shop, you&rsquo;ve probably made a jig at some point. They&rsquo;re little pieces of wood that help you hold plywood while you cut it, or spacers that tell you where to put the guide bar for a specific tool, or hold-downs that keep a board in place while you&rsquo;re working on it. They&rsquo;re not always pretty. They often solve hyper-specific problems and work only with your specific tools. And when you look at ones that have been used a lot, they sometimes seem a little weird. There might be a random cutout in the middle. Or some little piece that sticks off at an angle. Or the corner might be missing a piece. And when you compare them to &ldquo;real&rdquo; tools, &ldquo;general&rdquo; tools like you&rsquo;d buy from a catalog, they&rsquo;re pretty homey or homely depending on how you&rsquo;re thinking about it.</p>
+<p>&lt;/span&gt;</p>
 
-<p></span></p>
+<p>But when you use one of them in your shop, you learn that the random cutout is because you store it against the wall and it would block the light switch otherwise. And if you put your hand on that little extra piece that sticks out, then the board won’t fall at the end of the cut. And the corner… well the corner is where you messed up when you were first making it and it’s kind of ugly, but it never actually matters when you use it. And that’s Go. Not a single thing I mentioned in the first paragraph has actually come up as a problem. Its really good at solving the problems that it solves, which happen to be very common problems for people who need to ship software, especially networking software.</p>
 
-<p>But when you use one of them in your shop, you learn that the random cutout is because you store it against the wall and it would block the light switch otherwise. And if you put your hand on that little extra piece that sticks out, then the board won&rsquo;t fall at the end of the cut. And the corner… well the corner is where you messed up when you were first making it and it&rsquo;s kind of ugly, but it never actually matters when you use it. And that&rsquo;s Go. Not a single thing I mentioned in the first paragraph has actually come up as a problem. Its really good at solving the problems that it solves, which happen to be very common problems for people who need to ship software, especially networking software.</p>
-
-<p>Probably the biggest complaint people have with Go is the lack of generics. And I did run into that in just the first couple of weeks of work on my project, and I wound up with a bunch of duplicated code to work around it. And then, when it was all working, I refactored out the duplicated code. And I refactored again. And in the end, the whole thing was simpler and shorter than what I would have done with generics. So again, in the end, Go turned out to be a language for solving real problems rather than a language filled with beautiful tools, and so you build real solutions rather than finding excuses to use your beautiful tools. Don&rsquo;t try to make Go what it isn&rsquo;t. If you&rsquo;re trying to solve abstract CS problems in their most generalized forms, then you may find it frustrating. But if you&rsquo;re trying to solve specific, practical problems in the forms professional developers typically encounter, Go is quite nice.</p>
+<p>Probably the biggest complaint people have with Go is the lack of generics. And I did run into that in just the first couple of weeks of work on my project, and I wound up with a bunch of duplicated code to work around it. And then, when it was all working, I refactored out the duplicated code. And I refactored again. And in the end, the whole thing was simpler and shorter than what I would have done with generics. So again, in the end, Go turned out to be a language for solving real problems rather than a language filled with beautiful tools, and so you build real solutions rather than finding excuses to use your beautiful tools. Don’t try to make Go what it isn’t. If you’re trying to solve abstract CS problems in their most generalized forms, then you may find it frustrating. But if you’re trying to solve specific, practical problems in the forms professional developers typically encounter, Go is quite nice.</p>
 
 <p>I recently wrote some Go code that looked basically like this:</p>
 
-<pre><code>func (f *Frobulator) frobulate() error {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func (f *Frobulator) frobulate() error {
   if f.thingsToFrobulate &gt; 0 {
     var err error
 
@@ -141,13 +137,13 @@
 
   return f.cleanup()
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>There&rsquo;s a lot of boilerplate duplication there with some &ldquo;almost the same, but kinda different&rdquo; stuff in the middle that feels awkward.</p>
+<p>There’s a lot of boilerplate duplication there with some “almost the same, but kinda different” stuff in the middle that feels awkward.</p>
 
 <p>If I were writing this in Swift with my <a href="https://github.com/LlamaKit/LlamaKit">LlamaKit</a> bells-and-functional-whistles, I might write it as:</p>
 
-<pre><code>func frobulate() -&gt; Result&lt;Void&gt; {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func frobulate() -&gt; Result&lt;Void&gt; {
   var result = success(())
   if self.thingsToFrobulate &gt; 0 {
     result = logit(FrobulatingMessage)
@@ -157,17 +153,17 @@
   }
   return result &gt;&gt;== self.cleanup
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>The Swift+LlamaKit version is half as long, and almost every line is focused on the task at hand. It feels much more elegant. There is far less duplication. But there&rsquo;s a pretty big story in how these two functions were written.</p>
+<p>The Swift+LlamaKit version is half as long, and almost every line is focused on the task at hand. It feels much more elegant. There is far less duplication. But there’s a pretty big story in how these two functions were written.</p>
 
-<p>When writing the Swift function, I found myself spending a lot of time thinking about how to write it. Should I use <code>&gt;&gt;==</code> or <code>.flatMap()</code>? Should I use my custom <code>Result</code> here at all, or should I stick to standard Swift and return <code>NSError?</code>, or maybe <code>Bool</code> with an <code>NSErrorPtr</code>? This was my first time using <code>Result&lt;Void&gt;</code>, and I started asking myself if I should create a typealias for that and maybe a helper function for the slightly strange looking <code>success(())</code>. The <code>var</code> bothered me. It always feels like a hack in FP, like you&rsquo;re not smart enough to do it right. I wrote a different version that didn&rsquo;t have a <code>var</code>. That duplicated <code>self.cleanup</code> in two places. So I started working on a new function that would let me include the conditional in the functional composition. I made and re-made a lot of choices. <sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+<p>When writing the Swift function, I found myself spending a lot of time thinking about how to write it. Should I use <code class="highlighter-rouge">&gt;&gt;==</code> or <code class="highlighter-rouge">.flatMap()</code>? Should I use my custom <code class="highlighter-rouge">Result</code> here at all, or should I stick to standard Swift and return <code class="highlighter-rouge">NSError?</code>, or maybe <code class="highlighter-rouge">Bool</code> with an <code class="highlighter-rouge">NSErrorPtr</code>? This was my first time using <code class="highlighter-rouge">Result&lt;Void&gt;</code>, and I started asking myself if I should create a typealias for that and maybe a helper function for the slightly strange looking <code class="highlighter-rouge">success(())</code>. The <code class="highlighter-rouge">var</code> bothered me. It always feels like a hack in FP, like you’re not smart enough to do it right. I wrote a different version that didn’t have a <code class="highlighter-rouge">var</code>. That duplicated <code class="highlighter-rouge">self.cleanup</code> in two places. So I started working on a new function that would let me include the conditional in the functional composition. I made and re-made a lot of choices. <sup id="fnref:swift"><a href="#fn:swift" class="footnote">1</a></sup></p>
 
-<p><span class='pullquote-right' data-pullquote='When writing the Go function, I started at the top and typed until I got to the bottom.'></p>
+<p><span class="pullquote-right" data-pullquote="When writing the Go function, I started at the top and typed until I got to the bottom."></span></p>
 
-<p>When writing the Go function, I started at the top and typed until I got to the bottom. And that was it. There aren&rsquo;t very many ways to write this function in Go. I expect that most Go programmers, given the same set of helper functions, would have written it almost identically. Because of gofmt, I don&rsquo;t even make formatting decisions.</p>
+<p>When writing the Go function, I started at the top and typed until I got to the bottom. And that was it. There aren’t very many ways to write this function in Go. I expect that most Go programmers, given the same set of helper functions, would have written it almost identically. Because of gofmt, I don’t even make formatting decisions.</p>
 
-<p></span></p>
+<p>&lt;/span&gt;</p>
 
 <p>I could probably spend another hour polishing my dozen-line Swift function and building generic tools to make it easier in the future for people (at least those who use my toolkits) to write this kind of code beautifully.</p>
 
@@ -177,23 +173,22 @@
 
 <p>Did I mention Go compiles <em>really fast</em>?</p>
 
-<p>But late at night, when it&rsquo;s my own time for my own projects, it&rsquo;s Swift I&rsquo;d rather work in.</p>
+<p>But late at night, when it’s my own time for my own projects, it’s Swift I’d rather work in.</p>
 <div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>The underlying issue here isn&rsquo;t that I chose to use special operators out of LlamaKit. I could have written the Swift code in <a href="https://gist.github.com/rnapier/27ba98c827c9d7798879">the same style as the Go code</a> or in <a href="https://gist.github.com/rnapier/4a48b24024ff969f2e94">traditional ObjC style</a>. The point is that there are lots of ways you could do it, and lots of ways different Swift developers will <em>choose</em> to do it because the language is very flexible and there is no obvious &ldquo;Swift way.&rdquo;<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-</ol>
+  <ol>
+    <li id="fn:swift">
+      <p>The underlying issue here isn’t that I chose to use special operators out of LlamaKit. I could have written the Swift code in <a href="https://gist.github.com/rnapier/27ba98c827c9d7798879">the same style as the Go code</a> or in <a href="https://gist.github.com/rnapier/4a48b24024ff969f2e94">traditional ObjC style</a>. The point is that there are lots of ways you could do it, and lots of ways different Swift developers will <em>choose</em> to do it because the language is very flexible and there is no obvious “Swift way.” <a href="#fnref:swift" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
 </div>
-
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -260,21 +255,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

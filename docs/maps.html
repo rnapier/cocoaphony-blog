@@ -27,10 +27,9 @@ Functional Wish Fulfillment: Kind of like map, but kind of different. And I toss
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -82,21 +81,22 @@ Functional Wish Fulfillment: Kind of like map, but kind of different. And I toss
 <div class="entry-content"><p>I had a bit of a throw-away line in
 <a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>:</p>
 
-<blockquote><p>Kind of like map, but kind of different.</p></blockquote>
+<blockquote>
+  <p>Kind of like map, but kind of different.</p>
+</blockquote>
 
-<p>And I tossed a call to <code>map</code>, unexplained, in the middle of the parsing code. I
-got a little ahead of myself there. Sorry about that. Cocoa has no <code>map</code>. Maybe
+<p>And I tossed a call to <code class="highlighter-rouge">map</code>, unexplained, in the middle of the parsing code. I
+got a little ahead of myself there. Sorry about that. Cocoa has no <code class="highlighter-rouge">map</code>. Maybe
 not everyone coming to Swift has a long history with this amazing little
-function. In a field where monads get all the press, it&rsquo;s time to step back and
+function. In a field where monads get all the press, it’s time to step back and
 talk about the humble map.</p>
 
 <!-- more -->
 
-
-<p>After years of begging for a <code>map</code> function in Cocoa, here comes Swift with
+<p>After years of begging for a <code class="highlighter-rouge">map</code> function in Cocoa, here comes Swift with
 three different versions built-in:</p>
 
-<pre><code>/// Haskell's fmap for Optionals.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// Haskell's fmap for Optionals.
 func map&lt;T, U&gt;(x: T?, f: (T) -&gt; U) -&gt; U?
 
 /// Return an `Array` containing the results of mapping `transform` over `source`.
@@ -104,32 +104,32 @@ func map&lt;C : CollectionType, T&gt;(source: C, transform: (C.Generator.Element
 
 /// Return an `Array` containing the results of mapping `transform` over `source`.
 func map&lt;S : SequenceType, T&gt;(source: S, transform: (S.Generator.Element) -&gt; T) -&gt; [T]
-</code></pre>
+</code></pre></div></div>
 
-<p>Plus it has <code>map</code> methods on <code>Array</code>, <code>Dictionary</code>, <code>Optional</code>, <code>Range</code>,
-<code>Slice</code>, and a bunch of other classes.</p>
+<p>Plus it has <code class="highlighter-rouge">map</code> methods on <code class="highlighter-rouge">Array</code>, <code class="highlighter-rouge">Dictionary</code>, <code class="highlighter-rouge">Optional</code>, <code class="highlighter-rouge">Range</code>,
+<code class="highlighter-rouge">Slice</code>, and a bunch of other classes.</p>
 
 <p>Now I know that the very first comment in the Swift header mentions both
-&ldquo;Haskell&rdquo; and a non-word &ldquo;fmap,&rdquo; but trust me, most uses of <code>map</code> aren&rsquo;t complex
-at all. Most of the time, it&rsquo;s just the world&rsquo;s simplest for-loop.</p>
+“Haskell” and a non-word “fmap,” but trust me, most uses of <code class="highlighter-rouge">map</code> aren’t complex
+at all. Most of the time, it’s just the world’s simplest for-loop.</p>
 
-<p>Let&rsquo;s take a really common pattern you&rsquo;ve probably written dozens of times (if
-not in Swift, than in every language you&rsquo;ve ever worked in):</p>
+<p>Let’s take a really common pattern you’ve probably written dozens of times (if
+not in Swift, than in every language you’ve ever worked in):</p>
 
-<pre><code>let domains = ["apple.com", "google.com", "robnapier.net"]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let domains = ["apple.com", "google.com", "robnapier.net"]
 
 var urls = [NSURL]()
 for domain in domains {
   urls.append(NSURL(scheme: "http", host: domain, path: "/"))
 }
 // urls =&gt; [http://apple.com/, http://google.com/, http://robnapier.net/]
-</code></pre>
+</code></pre></div></div>
 
-<p>In a generic language like Swift, &ldquo;pattern&rdquo; means there&rsquo;s a probably a function
-hiding in there, so let&rsquo;s pull out the part that doesn&rsquo;t change and call it
-<code>map</code>:</p>
+<p>In a generic language like Swift, “pattern” means there’s a probably a function
+hiding in there, so let’s pull out the part that doesn’t change and call it
+<code class="highlighter-rouge">map</code>:</p>
 
-<pre><code>// Let's replace String with T and NSURL with U
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Let's replace String with T and NSURL with U
 // and let's pull out the NSURL(...) and call it transform()
 func map&lt;T, U&gt;(source: [T], transform: T -&gt; U) -&gt; [U] {
   var result = [U]()
@@ -146,18 +146,19 @@ let urls = map(domains, { NSURL(scheme: "http", host: $0, path: "/") })
 let urls = domains.map{ NSURL(scheme: "http", host: $0, path: "/") }
 
 // urls =&gt; [http://apple.com/, http://google.com/, http://robnapier.net/]
-</code></pre>
 
-<p>So <code>map</code> replaces the for-loop when you have data in one form and want it in
+</code></pre></div></div>
+
+<p>So <code class="highlighter-rouge">map</code> replaces the for-loop when you have data in one form and want it in
 some other form.</p>
 
-<h2>Keeping what you want</h2>
+<h2 id="keeping-what-you-want">Keeping what you want</h2>
 
-<p>Let&rsquo;s think about another really common for-loop. You have a bunch of items, but
+<p>Let’s think about another really common for-loop. You have a bunch of items, but
 you only want some of them. For example, maybe you want to filter out
-<code>NSNotFound</code>.</p>
+<code class="highlighter-rouge">NSNotFound</code>.</p>
 
-<pre><code>let values = [1, 1, 2, NSNotFound, 3]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let values = [1, 1, 2, NSNotFound, 3]
 
 var found = [Int]()
 for value in values {
@@ -166,12 +167,12 @@ for value in values {
   }
 }
 // found =&gt; [1, 1, 2, 3]
-</code></pre>
+</code></pre></div></div>
 
-<p>Again, we wind up with this really generic for-loop. Let&rsquo;s factor out the common
+<p>Again, we wind up with this really generic for-loop. Let’s factor out the common
 part.</p>
 
-<pre><code>// Replace Int with T, and instead of hard-coding the test, pass a function
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Replace Int with T, and instead of hard-coding the test, pass a function
 // that takes an element and returns whether to include it.
 func filter&lt;T&gt;(source: [T], includeElement: T -&gt; Bool) -&gt; [T] {
   var found = [T]()
@@ -190,14 +191,14 @@ let found = filter(values, { $0 != NSNotFound })
 let found = values.filter{ $0 != NSNotFound }
 
 // found =&gt; [1, 1, 2, 3]
-</code></pre>
+</code></pre></div></div>
 
 <p>And again we replace our cut-and-paste for-loop with a reusable function that
-captures the goal. We save some code, but it&rsquo;s more than that. We can compose
+captures the goal. We save some code, but it’s more than that. We can compose
 filters and maps to create more interesting things in highly readable ways.
 For example, to extract simple http URLs from text:</p>
 
-<pre><code>func embeddedURLs(text: String) -&gt; [NSURL] {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func embeddedURLs(text: String) -&gt; [NSURL] {
   return text
     .componentsSeparatedByString(" ")
     .filter{ $0.hasPrefix("http://") }
@@ -206,197 +207,198 @@ For example, to extract simple http URLs from text:</p>
 
 embeddedURLs("This text contains a link to http://www.apple.com and other stuff.")
 // =&gt; ["http://www.apple.com"]
-</code></pre>
+</code></pre></div></div>
 
 <p>Or see this <a href="http://stackoverflow.com/a/25486591/97337">downcasting example</a>
 from StackOverflow.</p>
 
-<p>The goal of using <code>map</code> and <code>filter</code> this way is to make your code easier to
+<p>The goal of using <code class="highlighter-rouge">map</code> and <code class="highlighter-rouge">filter</code> this way is to make your code easier to
 read, understand, and debug. It gets the boilerplate out of the way and leaves
-you with the key parts of what you&rsquo;re trying to do.</p>
+you with the key parts of what you’re trying to do.</p>
 
-<h2>Map is what for does</h2>
+<h2 id="map-is-what-for-does">Map is what for does</h2>
 
-<p>Even though I&rsquo;ve discussed <code>map</code> in terms of <code>for</code>, they&rsquo;re quite different.
-<code>map</code> <em>is</em>. <code>for</code> <em>does</em>. Remember the first example:</p>
+<p>Even though I’ve discussed <code class="highlighter-rouge">map</code> in terms of <code class="highlighter-rouge">for</code>, they’re quite different.
+<code class="highlighter-rouge">map</code> <em>is</em>. <code class="highlighter-rouge">for</code> <em>does</em>. Remember the first example:</p>
 
-<pre><code>var urls = [NSURL]()
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var urls = [NSURL]()
 for domain in domains {
   urls.append(NSURL(scheme: "http", host: domain, path: "/"))
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>In this code, <code>urls</code> is mutated by a series of <code>append</code> calls until it contains
-the values we want. This code says how to construct <code>urls</code>. On the other hand:</p>
+<p>In this code, <code class="highlighter-rouge">urls</code> is mutated by a series of <code class="highlighter-rouge">append</code> calls until it contains
+the values we want. This code says how to construct <code class="highlighter-rouge">urls</code>. On the other hand:</p>
 
-<pre><code>let urls = domains.map{ NSURL(scheme: "http", host: $0, path: "/") }
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let urls = domains.map{ NSURL(scheme: "http", host: $0, path: "/") }
+</code></pre></div></div>
 
-<p>In this code, <code>urls</code> <em>is</em> the mapping of <code>domains</code> to <code>NSURL</code> constructors. This
-code doesn&rsquo;t require any specific implementation of <code>map</code>. In principle, <code>urls</code>
-could be constructed lazily the first time it&rsquo;s read, or each element could be
+<p>In this code, <code class="highlighter-rouge">urls</code> <em>is</em> the mapping of <code class="highlighter-rouge">domains</code> to <code class="highlighter-rouge">NSURL</code> constructors. This
+code doesn’t require any specific implementation of <code class="highlighter-rouge">map</code>. In principle, <code class="highlighter-rouge">urls</code>
+could be constructed lazily the first time it’s read, or each element could be
 lazily constructed when requested. The mapping could be performed in parallel or
 in reverse order. It could be performed once and cached, or recomputed every
-time it&rsquo;s accessed. In principle, we don&rsquo;t care. As long as the mapping only
+time it’s accessed. In principle, we don’t care. As long as the mapping only
 depends on its inputs, and as long as there are no side effects, we will always
 get the same result. This is the heart of good functional programming. We
-<em>define</em> <code>urls</code> and let the system worry about how to <em>compute</em> it.</p>
+<em>define</em> <code class="highlighter-rouge">urls</code> and let the system worry about how to <em>compute</em> it.</p>
 
 <p>In practice, life is seldom quite that simple, and the implementation does
 matter for performance. Still, a functional approach makes it much easier to
 change our mind about the implementation. For example, in Swift today, we can
-switch from immediate mapping to lazy mapping by just adding <code>lazy()</code> like this:</p>
+switch from immediate mapping to lazy mapping by just adding <code class="highlighter-rouge">lazy()</code> like this:</p>
 
-<pre><code>let urls = lazy(domains).map{ NSURL(scheme: "http", host: $0, path: "/") })
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let urls = lazy(domains).map{ NSURL(scheme: "http", host: $0, path: "/") })
+</code></pre></div></div>
 
-<p>Compare that to the changes you&rsquo;d have to make to your <code>for</code> code to make this a
-lazy computation. One can easily imagine the implementation of a <code>parallel()</code>
+<p>Compare that to the changes you’d have to make to your <code class="highlighter-rouge">for</code> code to make this a
+lazy computation. One can easily imagine the implementation of a <code class="highlighter-rouge">parallel()</code>
 modifier. By focusing our code on what things are, rather than how we construct
 them, swapping out one implementation for another is much simpler.</p>
 
-<h2>It&rsquo;s all about the types</h2>
+<h2 id="its-all-about-the-types">It’s all about the types</h2>
 
 <p>In Wish Driven Development, our wish generally takes the form of a function
-signature. So it&rsquo;s very important that you learn to read and think about
+signature. So it’s very important that you learn to read and think about
 function signatures, especially signatures that include functions as parameters.
-Let&rsquo;s look at <code>map</code> again:</p>
+Let’s look at <code class="highlighter-rouge">map</code> again:</p>
 
-<pre><code>func map&lt;T, U&gt;(source: [T], transform: T -&gt; U) -&gt; [U]
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(source: [T], transform: T -&gt; U) -&gt; [U]
+</code></pre></div></div>
 
-<p>Let&rsquo;s strip away some syntax noise to get to the heart of what&rsquo;s going on:</p>
+<p>Let’s strip away some syntax noise to get to the heart of what’s going on:</p>
 
-<pre><code>map([T], T -&gt; U) -&gt; [U]
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map([T], T -&gt; U) -&gt; [U]
+</code></pre></div></div>
 
-<p>Or maybe you&rsquo;d rather read it this way:</p>
+<p>Or maybe you’d rather read it this way:</p>
 
-<pre><code>map([From], From -&gt; To) -&gt; [To]
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map([From], From -&gt; To) -&gt; [To]
+</code></pre></div></div>
 
-<p>This takes an array of &ldquo;something,&rdquo; and a function that can convert one
-&ldquo;something&rdquo; into a &ldquo;something else,&rdquo; and returns an array of &ldquo;something else.&rdquo;
+<p>This takes an array of “something,” and a function that can convert one
+“something” into a “something else,” and returns an array of “something else.”
 So you should use this function when you have an array of some type, and you
 want an equal-sized array of some other type, and you know how to convert a
 single element of the first type into the second type.</p>
 
-<p>Let&rsquo;s look at <code>filter</code> in the same way:</p>
+<p>Let’s look at <code class="highlighter-rouge">filter</code> in the same way:</p>
 
-<pre><code>filter([T], T -&gt; Bool) -&gt; [T]
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter([T], T -&gt; Bool) -&gt; [T]
+</code></pre></div></div>
 
 <p>So this takes an array of something, and a function that returns true or false
 based on one of them, and returns an array of the same kind of things.</p>
 
-<p>Even if I took away the names <code>map</code> and <code>filter</code>, you should have some guess
-what these functions do, just based on what they take and what they return.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+<p>Even if I took away the names <code class="highlighter-rouge">map</code> and <code class="highlighter-rouge">filter</code>, you should have some guess
+what these functions do, just based on what they take and what they return.<sup id="fnref:haskell"><a href="#fn:haskell" class="footnote">1</a></sup></p>
 
-<p>Let&rsquo;s go back to the Swift header for moment. By this time, the  <code>map&lt;C:
-CollectionType, T&gt;</code> function and the <code>map&lt;S: SequenceType, T&gt;</code> function should
-make some sense. They&rsquo;re just more generic versions of our array-only <code>map</code>. But
-there&rsquo;s one more version that seems different than the others:</p>
+<p>Let’s go back to the Swift header for moment. By this time, the  <code class="highlighter-rouge">map&lt;C:
+CollectionType, T&gt;</code> function and the <code class="highlighter-rouge">map&lt;S: SequenceType, T&gt;</code> function should
+make some sense. They’re just more generic versions of our array-only <code class="highlighter-rouge">map</code>. But
+there’s one more version that seems different than the others:</p>
 
-<pre><code>func map&lt;T, U&gt;(x: T?, f: (T) -&gt; U) -&gt; U?
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(x: T?, f: (T) -&gt; U) -&gt; U?
+</code></pre></div></div>
 
 <p>What does that mean? It takes an optional of something, and a function that can
-convert &ldquo;something&rdquo; into &ldquo;something else&rdquo; and returns an optional of &ldquo;something
-else.&rdquo; That sounds a lot like our array version of map, if you just replace the
-word &ldquo;array&rdquo; with &ldquo;optional.&rdquo; Can we do that? Does that even make sense?</p>
+convert “something” into “something else” and returns an optional of “something
+else.” That sounds a lot like our array version of map, if you just replace the
+word “array” with “optional.” Can we do that? Does that even make sense?</p>
 
-<p>Let&rsquo;s strip away some extra syntax and sugar so we can get a clearer view of
+<p>Let’s strip away some extra syntax and sugar so we can get a clearer view of
 these signatures:</p>
 
-<pre><code>map(Array&lt;T&gt;,    T -&gt; U) -&gt; Array&lt;U&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map(Array&lt;T&gt;,    T -&gt; U) -&gt; Array&lt;U&gt;
 map(Optional&lt;T&gt;, T -&gt; U) -&gt; Optional&lt;U&gt;
-</code></pre>
+</code></pre></div></div>
 
-<p>That&rsquo;s really, really interesting (at least to me), but if we go any deeper down
-this rabbit hole, I&rsquo;m going to have to start using mathy words.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> You
-came here to learn practical applications. So let&rsquo;s crawl back up a step.</p>
+<p>That’s really, really interesting (at least to me), but if we go any deeper down
+this rabbit hole, I’m going to have to start using mathy words.<sup id="fnref:functor"><a href="#fn:functor" class="footnote">2</a></sup> You
+came here to learn practical applications. So let’s crawl back up a step.</p>
 
-<p>So what does it mean to &ldquo;map&rdquo; over an optional? Well, mapping over an array
+<p>So what does it mean to “map” over an optional? Well, mapping over an array
 meant generating one element for every element in the array. Why not the same
-for optionals? If there&rsquo;s something inside (<code>Some</code>), map it, if not, return
-<code>None</code>. Let&rsquo;s write that:</p>
+for optionals? If there’s something inside (<code class="highlighter-rouge">Some</code>), map it, if not, return
+<code class="highlighter-rouge">None</code>. Let’s write that:</p>
 
-<pre><code>func map&lt;T, U&gt;(x: T?, f: T -&gt; U) -&gt; U? {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(x: T?, f: T -&gt; U) -&gt; U? {
   switch x {
   case .Some(let value): return .Some(f(value))
   case .None: return .None
   }
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>If that sounds a little like optional-chaining (<code>?.</code>), then you&rsquo;re getting it.
-Optional-chaining is just a more method-friendly version of <code>map</code>.</p>
+<p>If that sounds a little like optional-chaining (<code class="highlighter-rouge">?.</code>), then you’re getting it.
+Optional-chaining is just a more method-friendly version of <code class="highlighter-rouge">map</code>.</p>
 
 <p>So if we can map over an array, and we can map over an optional, can we map over
-anything else? How about the <code>Result</code> type we built in
-<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>?<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup></p>
+anything else? How about the <code class="highlighter-rouge">Result</code> type we built in
+<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>?<sup id="fnref:box"><a href="#fn:box" class="footnote">3</a></sup></p>
 
-<pre><code>func map&lt;T, U&gt;(x: Result&lt;T&gt;, f: T -&gt; U) -&gt; Result&lt;U&gt; {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(x: Result&lt;T&gt;, f: T -&gt; U) -&gt; Result&lt;U&gt; {
   switch x {
   case .Success(let box): return .Success(Box(f(box.unbox)))
   case .Failure(let err): return .Failure(err)
   }
 }
-</code></pre>
+</code></pre></div></div>
 
 <p>Again, focus on learning to read the types:</p>
 
-<pre><code>map(Result&lt;T&gt;, T -&gt; U) -&gt; Result&lt;U&gt;
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map(Result&lt;T&gt;, T -&gt; U) -&gt; Result&lt;U&gt;
+</code></pre></div></div>
 
-<p>Given a <code>Result</code> of one type (<code>T</code>), and function that can convert that type into
-another type (<code>U</code>), I can get a <code>Result</code> of that second type.</p>
+<p>Given a <code class="highlighter-rouge">Result</code> of one type (<code class="highlighter-rouge">T</code>), and function that can convert that type into
+another type (<code class="highlighter-rouge">U</code>), I can get a <code class="highlighter-rouge">Result</code> of that second type.</p>
 
-<p>Given an <code>F&lt;&gt;</code> that contains <code>T</code> and a function that maps a <code>T</code> to a <code>U</code>, I can
-use <code>map</code> to convert <code>F&lt;T&gt;</code> into <code>F&lt;U&gt;</code>.</p>
+<p>Given an <code class="highlighter-rouge">F&lt;&gt;</code> that contains <code class="highlighter-rouge">T</code> and a function that maps a <code class="highlighter-rouge">T</code> to a <code class="highlighter-rouge">U</code>, I can
+use <code class="highlighter-rouge">map</code> to convert <code class="highlighter-rouge">F&lt;T&gt;</code> into <code class="highlighter-rouge">F&lt;U&gt;</code>.</p>
 
-<p>That&rsquo;s starting to sound like math, so maybe we&rsquo;ll leave it there before we go
+<p>That’s starting to sound like math, so maybe we’ll leave it there before we go
 too far.</p>
 
-<h2>Thoughts till next time</h2>
+<h2 id="thoughts-till-next-time">Thoughts till next time</h2>
 
-<p>We dug pretty deep in <code>map</code> here, breezed through <code>filter</code>, and started to think
+<p>We dug pretty deep in <code class="highlighter-rouge">map</code> here, breezed through <code class="highlighter-rouge">filter</code>, and started to think
 about the power of functions to separate intent from implementation. We touched
 on the importance of types in understanding functions. And then we stumbled
-across some interesting similarities in <code>Array</code> and <code>Optional</code> and <code>Result</code> that
+across some interesting similarities in <code class="highlighter-rouge">Array</code> and <code class="highlighter-rouge">Optional</code> and <code class="highlighter-rouge">Result</code> that
 expanded our mappable world.</p>
 
-<p>If you&rsquo;re like I was the first time I walked down this road, your head is
+<p>If you’re like I was the first time I walked down this road, your head is
 spinning just a little bit right now, but maybe a few things are starting to
-make sense. It&rsquo;s worth playing with these things in a playground. Look in your
-code for some for-loops and see if you could convert them to <code>map</code> or <code>filter</code>
-instead. Don&rsquo;t force it. The goal isn&rsquo;t to use fancy library functions, and the
-goal isn&rsquo;t to make your code short. The goal is to make your code clear. Play
+make sense. It’s worth playing with these things in a playground. Look in your
+code for some for-loops and see if you could convert them to <code class="highlighter-rouge">map</code> or <code class="highlighter-rouge">filter</code>
+instead. Don’t force it. The goal isn’t to use fancy library functions, and the
+goal isn’t to make your code short. The goal is to make your code clear. Play
 with formatting and see what makes your point most obvious. Try creating helper
 functions. Refactor. Try again.</p>
 
-<p>Soon we&rsquo;ll explore some more of these transforming functions and see what they
+<p>Soon we’ll explore some more of these transforming functions and see what they
 can do for us. Until then, stop mutating. Evolve.</p>
 <div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>In Haskell, which has a pretty consistent syntax, you can actually search the documentation for functions that transform the types you want. That turns out to be harder in Swift because of parameter names and syntactic sugar, but the idea of reading types is just as important.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-<li id="fn:2">
-<p>That word is &ldquo;functor&rdquo; if you&rsquo;re curious. A <a href="https://en.wikibooks.org/wiki/Haskell/The_Functor_class">functor</a> is a structure you can map over. It&rsquo;d probably be clearer if we called it &ldquo;mappable.&rdquo;<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
-<li id="fn:3">
-<p>Remember that &ldquo;box&rdquo; and &ldquo;unbox&rdquo; are just because of a compiler limitation in Beta6.<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
-</ol>
+  <ol>
+    <li id="fn:haskell">
+      <p>In Haskell, which has a pretty consistent syntax, you can actually search the documentation for functions that transform the types you want. That turns out to be harder in Swift because of parameter names and syntactic sugar, but the idea of reading types is just as important. <a href="#fnref:haskell" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:functor">
+      <p>That word is “functor” if you’re curious. A <a href="https://en.wikibooks.org/wiki/Haskell/The_Functor_class">functor</a> is a structure you can map over. It’d probably be clearer if we called it “mappable.” <a href="#fnref:functor" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:box">
+      <p>Remember that “box” and “unbox” are just because of a compiler limitation in Beta6. <a href="#fnref:box" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
 </div>
-
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -463,21 +465,7 @@ can do for us. Until then, stop mutating. Evolve.</p>
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

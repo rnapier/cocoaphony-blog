@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Based on a discussion from StackOverflow. Sometimes you want to inject some logic into a method you don&rsquo;t control. The most common sane reason &hellip;">
+  <meta name="description" content="Based on a discussion from StackOverflow. Sometimes you want to inject some logic into a method you don’t control. The most common sane reason to do &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -80,18 +79,16 @@
 
 <div class="entry-content"><p><em>Based on a <a href="http://stackoverflow.com/questions/1929740/is-there-a-way-to-retrieve-every-responder-that-has-handled-a-uitouch">discussion</a> from StackOverflow.</em></p>
 
-<p>Sometimes you want to inject some logic into a method you don&rsquo;t control. The most common sane reason to do this is for debugging or profiling. For instance, you might want to log every time the various <code>NSNotificationCenter</code> methods are called so you can determine if that&rsquo;s a performance bottleneck. (As I discovered myself, if you have thousands of notification observations in your system, it can be a serious performance problem.)</p>
+<p>Sometimes you want to inject some logic into a method you don’t control. The most common sane reason to do this is for debugging or profiling. For instance, you might want to log every time the various <code class="highlighter-rouge">NSNotificationCenter</code> methods are called so you can determine if that’s a performance bottleneck. (As I discovered myself, if you have thousands of notification observations in your system, it can be a serious performance problem.)</p>
 
-<p>In most OOP languages your only option would be to subclass the object you want to instrument and then arrange for every instance of that object to be your subclass. In many cases that&rsquo;s either very difficult or outright impossible, particularly if the object is used internally by a system framework. But Objective-C is highly dynamic, and message dispatching is resolved at runtime. You can modify how it works.</p>
+<p>In most OOP languages your only option would be to subclass the object you want to instrument and then arrange for every instance of that object to be your subclass. In many cases that’s either very difficult or outright impossible, particularly if the object is used internally by a system framework. But Objective-C is highly dynamic, and message dispatching is resolved at runtime. You can modify how it works.
+<!-- more --></p>
 
-<!-- more -->
-
-
-<p>On Mac, there is an <code>NSObject</code> method called <code>poseAsClass:</code> that can achieve this easily. Unfortunately, it&rsquo;s deprecated in 10.5 and isn&rsquo;t available at all for Mac 64-bit and iPhone. I want a technique that I can use reliably for all my platforms, and luckily there is a fully supported alternative: <code>method_exchangeImplemenations()</code>.</p>
+<p>On Mac, there is an <code class="highlighter-rouge">NSObject</code> method called <code class="highlighter-rouge">poseAsClass:</code> that can achieve this easily. Unfortunately, it’s deprecated in 10.5 and isn’t available at all for Mac 64-bit and iPhone. I want a technique that I can use reliably for all my platforms, and luckily there is a fully supported alternative: <code class="highlighter-rouge">method_exchangeImplemenations()</code>.</p>
 
 <p>So how do we use it? First, we create a category on our target (NSNotificationCenter):</p>
 
-<pre><code>@interface NSNotificationCenter (RNHijack)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface NSNotificationCenter (RNHijack)
 + (void)hijack;
 @end
 
@@ -115,21 +112,21 @@
     NSLog(@"Removing observer: %@", notificationObserver);
     [self RNHijack_removeObserver:notificationObserver];
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>Then, somewhere early in my program, I call <code>[NSNotificationCenter hijack]</code>. Now, every <code>removeObserver:</code> message is logged, no matter who sends it, even inside Cocoa itself. To make sure that I catch everything, I often put this in main.m, before the call to &lsquo;NSApplicationMain()&rsquo;.</p>
+<p>Then, somewhere early in my program, I call <code class="highlighter-rouge">[NSNotificationCenter hijack]</code>. Now, every <code class="highlighter-rouge">removeObserver:</code> message is logged, no matter who sends it, even inside Cocoa itself. To make sure that I catch everything, I often put this in main.m, before the call to ‘NSApplicationMain()’.</p>
 
-<p>The line to pay particular notice to is the apparent infinite loop in <code>RNHijack_removeObserver:</code> that seems to call itself. Why does this work? Because method_exchangeImplementation() <em>swaps</em> the two implementations. The old <code>removeObserver:</code> now points to my implementation, but conversely <code>RNHijack_removeObserver:</code> points to the <em>old</em> implementation.</p>
+<p>The line to pay particular notice to is the apparent infinite loop in <code class="highlighter-rouge">RNHijack_removeObserver:</code> that seems to call itself. Why does this work? Because method_exchangeImplementation() <em>swaps</em> the two implementations. The old <code class="highlighter-rouge">removeObserver:</code> now points to my implementation, but conversely <code class="highlighter-rouge">RNHijack_removeObserver:</code> points to the <em>old</em> implementation.</p>
 
-<p>It is hard to imagine code that is more confusing and fragile than this, which is why this technique must be used with the utmost care. Personally I can&rsquo;t imagine using this outside of debugging and profiling. But when you need it, it is an incredibly powerful tool.</p>
+<p>It is hard to imagine code that is more confusing and fragile than this, which is why this technique must be used with the utmost care. Personally I can’t imagine using this outside of debugging and profiling. But when you need it, it is an incredibly powerful tool.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -196,21 +193,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

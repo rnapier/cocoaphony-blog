@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I haven&rsquo;t forgotten about PandoraBoy, but I&rsquo;ve been very busy these last couple of weeks. I&rsquo;m now a full-time Mac programmer, and &hellip;">
+  <meta name="description" content="I haven’t forgotten about PandoraBoy, but I’ve been very busy these last couple of weeks. I’m now a full-time Mac programmer, and so I’ve been &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -81,13 +80,13 @@
   </header>
 
 
-  <div class="entry-content"><p>I haven&rsquo;t forgotten about PandoraBoy, but I&rsquo;ve been very busy these last couple of weeks. I&rsquo;m now a full-time Mac programmer, and so I&rsquo;ve been spending most of my time doing &ldquo;real&rdquo; hacking. Next week I go to Big Nerd Ranch for training, so I&rsquo;ll take PB with me to hack on.</p>
+  <div class="entry-content"><p>I haven’t forgotten about PandoraBoy, but I’ve been very busy these last couple of weeks. I’m now a full-time Mac programmer, and so I’ve been spending most of my time doing “real” hacking. Next week I go to Big Nerd Ranch for training, so I’ll take PB with me to hack on.</p>
 
-<p>I just built my first kernel extension and begun trying it out. Kernel programming is a whole different world&hellip; When it doesn&rsquo;t work, Gray Screen/Reboot. I&rsquo;m glad that (a) OSX boots quick, and (b) I have a lot of computers&hellip;</p>
+<p>I just built my first kernel extension and begun trying it out. Kernel programming is a whole different world… When it doesn’t work, Gray Screen/Reboot. I’m glad that (a) OSX boots quick, and (b) I have a lot of computers…</p>
 
-<p>I&rsquo;m trying to waste system resources in a guaranteed way. I have these boxes with 2G of memory, and need to test problems that show up on 512MB machines and I don&rsquo;t have any 512MB sticks&hellip;.</p>
+<p>I’m trying to waste system resources in a guaranteed way. I have these boxes with 2G of memory, and need to test problems that show up on 512MB machines and I don’t have any 512MB sticks….</p>
 
-<p>As I study Mac OS X Advanced Programming, I think I may be able to do this with mlock() and not have to use a kext. I&rsquo;ve read other things that suggest that mlock() won&rsquo;t work the way I want in a user app. So testing is in my future.</p>
+<p>As I study Mac OS X Advanced Programming, I think I may be able to do this with mlock() and not have to use a kext. I’ve read other things that suggest that mlock() won’t work the way I want in a user app. So testing is in my future.</p>
 </div>
   
   
@@ -121,14 +120,12 @@
   </header>
 
 
-  <div class="entry-content"><p>Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the random noise in the picture. First secret: spend some time and read through every patch available, particularly the ones in Tools. It&rsquo;s important to know what&rsquo;s available so you don&rsquo;t spend hours trying to reinvent the basics. And don&rsquo;t forget that &ldquo;transparent&rdquo; defaults to meaning &ldquo;whatever random memory happens to be on the video card.&rdquo;</p>
+  <div class="entry-content"><p>Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the random noise in the picture. First secret: spend some time and read through every patch available, particularly the ones in Tools. It’s important to know what’s available so you don’t spend hours trying to reinvent the basics. And don’t forget that “transparent” defaults to meaning “whatever random memory happens to be on the video card.”</p>
 
-<p>I&rsquo;ll be spend quite a bit of time trying to improve the interface for the full-screen plugins. I&rsquo;m trying to make it as easy to write new full-screen modes as to write new screen savers. Once I&rsquo;ve gotten a second full-screen plugin written, I think I&rsquo;ll better know how to structure the interface.</p>
+<p>I’ll be spend quite a bit of time trying to improve the interface for the full-screen plugins. I’m trying to make it as easy to write new full-screen modes as to write new screen savers. Once I’ve gotten a second full-screen plugin written, I think I’ll better know how to structure the interface.</p>
 
-<p>I&rsquo;ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you&rsquo;d get a stray &ldquo;ERROR: Could not find webNetscapePluggin&rdquo; error in your logs. Hopefully that&rsquo;s now fixed.</p>
-
+<p>I’ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you’d get a stray “ERROR: Could not find webNetscapePluggin” error in your logs. Hopefully that’s now fixed.</p>
 <div class="post-body entry-content">Should post a 0.6 (or at least 0.6 beta) sometime after the New Year.</div>
-
 </div>
   
   
@@ -162,13 +159,13 @@
   </header>
 
 
-  <div class="entry-content"><p>Huge changes in PandoraBoy on the way. I&rsquo;m working on full-screen mode, so you can run PandoraBoy from across the room and still see what&rsquo;s currently playing. Building a smooth transition from window to full-screen without interrupting playback has taken my a couple of days, but I think it&rsquo;s a pleasing effect. Right now it doesn&rsquo;t do a lot more than be a full-screen Pandora window (which isn&rsquo;t very exciting in itself, though much harder than it sounds), but next I&rsquo;ll work on a plug-in architecture to let you put various information on the bottom portion of the screen. Then it&rsquo;ll actually be useful.</p>
+  <div class="entry-content"><p>Huge changes in PandoraBoy on the way. I’m working on full-screen mode, so you can run PandoraBoy from across the room and still see what’s currently playing. Building a smooth transition from window to full-screen without interrupting playback has taken my a couple of days, but I think it’s a pleasing effect. Right now it doesn’t do a lot more than be a full-screen Pandora window (which isn’t very exciting in itself, though much harder than it sounds), but next I’ll work on a plug-in architecture to let you put various information on the bottom portion of the screen. Then it’ll actually be useful.</p>
 
-<p>Why is it so hard to go full-screen you may ask? Afterall, it&rsquo;s just a webpage. But the mini-player is a web page that assumes the window is a specific size. Getting the background gradient to look right at any size is the main problem, since there is no direct way to scale a background in CSS2. repeat-x handles left-to-right scaling, but the pandora background isn&rsquo;t tileable vertically. My final solution was to build an NSImageView which holds a flipped version of the Pandora background, and then placed it immediately underneath the pandora webview. It handles all vertical stretching and gives a nice darker area at the bottom rather than just fading to white.</p>
+<p>Why is it so hard to go full-screen you may ask? Afterall, it’s just a webpage. But the mini-player is a web page that assumes the window is a specific size. Getting the background gradient to look right at any size is the main problem, since there is no direct way to scale a background in CSS2. repeat-x handles left-to-right scaling, but the pandora background isn’t tileable vertically. My final solution was to build an NSImageView which holds a flipped version of the Pandora background, and then placed it immediately underneath the pandora webview. It handles all vertical stretching and gives a nice darker area at the bottom rather than just fading to white.</p>
 
-<p>I&rsquo;ll also investigate a black-screen mode with the pandora player standing with no background. I had that working at one point, but it&rsquo;s been hard to recreate it in a way to zooms cleanly. CSS2 and Javascript just aren&rsquo;t nearly as powerful as Cocoa&hellip;.</p>
+<p>I’ll also investigate a black-screen mode with the pandora player standing with no background. I had that working at one point, but it’s been hard to recreate it in a way to zooms cleanly. CSS2 and Javascript just aren’t nearly as powerful as Cocoa….</p>
 
-<p>If you&rsquo;re feeling insanely adventurous, it&rsquo;s all checked in on truck in subversion&hellip;.</p>
+<p>If you’re feeling insanely adventurous, it’s all checked in on truck in subversion….</p>
 </div>
   
   
@@ -204,7 +201,7 @@
 
   <div class="entry-content"><p>PandoraBoy 0.5 is live. Go forth.</p>
 
-<p>I may not get to work on PB for a few days at least. One-way call paths will be my life for a little while I suspect. Or maybe it&rsquo;s just USB audio input failing in some strange way&hellip; ah telephony.</p>
+<p>I may not get to work on PB for a few days at least. One-way call paths will be my life for a little while I suspect. Or maybe it’s just USB audio input failing in some strange way… ah telephony.</p>
 </div>
   
   
@@ -238,7 +235,7 @@
   </header>
 
 
-  <div class="entry-content"><p>PB 0.5 is in my final testing. Just going to let it run a few hours before I post it on Monday. Adds station changing (finally) from menu, applescript or hotkeys. It&rsquo;s actually a much larger change than it looks. There was a lot of under-the-covers restructuring while I got that working.</p>
+  <div class="entry-content"><p>PB 0.5 is in my final testing. Just going to let it run a few hours before I post it on Monday. Adds station changing (finally) from menu, applescript or hotkeys. It’s actually a much larger change than it looks. There was a lot of under-the-covers restructuring while I got that working.</p>
 
 <p>Next plans: either investigate how to masquerade as iTunes (so that stuff that works with iTunes will transparently work with PandoraBoy), or work on some eye-candy features (full-screen mode, floating semi-transparent windows, etc.)</p>
 </div>
@@ -276,9 +273,9 @@
 
   <div class="entry-content"><p>Why is it when I want to test PandoraBoy with an album that has no artwork available, suddenly Pandora becomes so good at having every piece of artwork on every track for 7 different stations until I run out of hourly skips?</p>
 
-<p>Well, at least I finally fixed that stupid &ldquo;thumbs-up in the lower left of the Pandora window&rdquo; bug that&rsquo;s been driving me crazy for so long. Check for nil returns people!</p>
+<p>Well, at least I finally fixed that stupid “thumbs-up in the lower left of the Pandora window” bug that’s been driving me crazy for so long. Check for nil returns people!</p>
 
-<p>I&rsquo;m still trying to understand how Pandora manages skip tracking. I&rsquo;m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don&rsquo;t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they&rsquo;re storing it in Flash local storage. I swear they didn&rsquo;t used to keep track of skips if you switched stations and then switched back, but then they also didn&rsquo;t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
+<p>I’m still trying to understand how Pandora manages skip tracking. I’m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don’t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they’re storing it in Flash local storage. I swear they didn’t used to keep track of skips if you switched stations and then switched back, but then they also didn’t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
 </div>
   
   
@@ -312,11 +309,11 @@
   </header>
 
 
-  <div class="entry-content"><p>I&rsquo;m switching jobs over this weekend from information security to Mac development. In the process, I&rsquo;m also moving mostly to work-from-home, taking over a corner of my wife&rsquo;s workrooms and turning it into a decent home office/lab. In the process of copying huge files around, I think I pushed my Linksys over the edge and it stopped talking on its WAN (PPPoE) port. In my researching trying to fix it, I learned that the Westell modems that Bellsouth gives you for FastAccess are in fact full routers. And actually I&rsquo;d say it&rsquo;s a bit nicer router than the Linksys. So project #3 in the the &ldquo;get ready for new job&rdquo; turned out to be &ldquo;completely reorganize home network.&rdquo; I like the new setup, though. I can get to the Westell directly now (192.168.1.254) for diagnostics. And the Westell has a nice NAT setup system.</p>
+  <div class="entry-content"><p>I’m switching jobs over this weekend from information security to Mac development. In the process, I’m also moving mostly to work-from-home, taking over a corner of my wife’s workrooms and turning it into a decent home office/lab. In the process of copying huge files around, I think I pushed my Linksys over the edge and it stopped talking on its WAN (PPPoE) port. In my researching trying to fix it, I learned that the Westell modems that Bellsouth gives you for FastAccess are in fact full routers. And actually I’d say it’s a bit nicer router than the Linksys. So project #3 in the the “get ready for new job” turned out to be “completely reorganize home network.” I like the new setup, though. I can get to the Westell directly now (192.168.1.254) for diagnostics. And the Westell has a nice NAT setup system.</p>
 
-<p>On the annoying front, for some reason my Microsoft Laser Mouse 6000 which has worked so well for me for so long at the office, now doesn&rsquo;t reliably click. Moving it works fine, it just doesn&rsquo;t always recognize clicking. It&rsquo;s driving me nuts. I&rsquo;m wondering what the change is. I&rsquo;m on Leopard now, which might impact it. Just not certain.</p>
+<p>On the annoying front, for some reason my Microsoft Laser Mouse 6000 which has worked so well for me for so long at the office, now doesn’t reliably click. Moving it works fine, it just doesn’t always recognize clicking. It’s driving me nuts. I’m wondering what the change is. I’m on Leopard now, which might impact it. Just not certain.</p>
 
-<p>Moving over to Leopard on my primary box also meant spending a lot of time trying to get PandoraBoy happy. I&rsquo;ve been having trouble with the Shortcut Recorder palette for a long time now where IB won&rsquo;t load the palette. I think I&rsquo;ve finally gotten it sane again. Definitely staying on Xcode 2.5 for now. I&rsquo;ll wait for SR to get their Leopard IB3 support solid before I consider moving. I&rsquo;ve had requests to get PB running on 10.3.9, and I&rsquo;m not ready to try that in XCode3.</p>
+<p>Moving over to Leopard on my primary box also meant spending a lot of time trying to get PandoraBoy happy. I’ve been having trouble with the Shortcut Recorder palette for a long time now where IB won’t load the palette. I think I’ve finally gotten it sane again. Definitely staying on Xcode 2.5 for now. I’ll wait for SR to get their Leopard IB3 support solid before I consider moving. I’ve had requests to get PB running on 10.3.9, and I’m not ready to try that in XCode3.</p>
 
 <p>Oh, and first impressions of moving to Leopard: wow, Leopard rocks.</p>
 </div>
@@ -352,9 +349,9 @@
   </header>
 
 
-  <div class="entry-content"><p>Have I mentioned recently how much I love Cocoa? Even when I hate Cocoa, I love working in it. And things that drive me nuts (like the lack of regexes) come along in due course (Leopard). I was listening to CocoaRadio today and there was a comment along these lines. Cocoa has been evolving for about 20 years now. Much of the core is carried over from NeXT. But rather than &ldquo;showing its age&rdquo; it keeps showing its wisdom, and those early guys thought it out well enough that Apple hasn&rsquo;t had to start over again and again as Windows has with Win32 to MFC/WTL to .NET. For how unusual Objective-C is, it&rsquo;s a constant rather than moving between C, C++, C#, and Java as the winds blow. (And the more I program in Objective-C, the more I enjoy it.)</p>
+  <div class="entry-content"><p>Have I mentioned recently how much I love Cocoa? Even when I hate Cocoa, I love working in it. And things that drive me nuts (like the lack of regexes) come along in due course (Leopard). I was listening to CocoaRadio today and there was a comment along these lines. Cocoa has been evolving for about 20 years now. Much of the core is carried over from NeXT. But rather than “showing its age” it keeps showing its wisdom, and those early guys thought it out well enough that Apple hasn’t had to start over again and again as Windows has with Win32 to MFC/WTL to .NET. For how unusual Objective-C is, it’s a constant rather than moving between C, C++, C#, and Java as the winds blow. (And the more I program in Objective-C, the more I enjoy it.)</p>
 
-<p>Tonight I added a station-changing menu to PandoraBoy. There&rsquo;s still a lot to add to make it really useful (hotkey support and Applescript at least), but the core&rsquo;s there, and it wasn&rsquo;t hard. It forced me to simplify a slight duplication in the object model (PandoraControl and Controller were doing almost exactly the same work so I&rsquo;ve merged them). That cleaned up a lot of redundant code. Even after merging the two objects, Controller is under 400 lines of code, so I don&rsquo;t think I need to worry about splitting Controller back up some other way.</p>
+<p>Tonight I added a station-changing menu to PandoraBoy. There’s still a lot to add to make it really useful (hotkey support and Applescript at least), but the core’s there, and it wasn’t hard. It forced me to simplify a slight duplication in the object model (PandoraControl and Controller were doing almost exactly the same work so I’ve merged them). That cleaned up a lot of redundant code. Even after merging the two objects, Controller is under 400 lines of code, so I don’t think I need to worry about splitting Controller back up some other way.</p>
 </div>
   
   
@@ -388,9 +385,9 @@
   </header>
 
 
-  <div class="entry-content"><p>More hacking on station lists tonight. So far it&rsquo;s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through NSURLProtocols). The station list comes back as an XML document, and I can copy that off into an easy array for later use. The only thing I need to work more on is QuickMix management, since those are magically pulled out of the main channel list, and I should probably do the same to avoid confusion.</p>
+  <div class="entry-content"><p>More hacking on station lists tonight. So far it’s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through NSURLProtocols). The station list comes back as an XML document, and I can copy that off into an easy array for later use. The only thing I need to work more on is QuickMix management, since those are magically pulled out of the main channel list, and I should probably do the same to avoid confusion.</p>
 
-<p>I&rsquo;ve talked often with folks about XML and how there are so many good ways to compress it quite effectively and it&rsquo;s strange that XML developers have chosen not to do that. Rather, real XML winds up being insanely verbose and bloated on the wire. I hereby take back my earlier complaints. The fact that I can read XML by sniffing the traffic without having to apply any decoding (not even gunzip), and can recognize XML easily when I come across it, is one of the biggest boons to reverse engineering I&rsquo;ve ever encountered. Long live human readable data formats!</p>
+<p>I’ve talked often with folks about XML and how there are so many good ways to compress it quite effectively and it’s strange that XML developers have chosen not to do that. Rather, real XML winds up being insanely verbose and bloated on the wire. I hereby take back my earlier complaints. The fact that I can read XML by sniffing the traffic without having to apply any decoding (not even gunzip), and can recognize XML easily when I come across it, is one of the biggest boons to reverse engineering I’ve ever encountered. Long live human readable data formats!</p>
 </div>
   
   
@@ -424,9 +421,9 @@
   </header>
 
 
-  <div class="entry-content"><p>I knew I&rsquo;d run into this when I released PandoraBoy 0.4.0, and someone ran into <a href="http://code.google.com/p/pandoraboy/issues/detail?id=17">Issue 17</a>. Moving from MacOS 10.4.10 to 10.4.11 included a massive change to WebKit, and the 0.4 line was meant to address this. Unfortunately I no longer had a 10.4.10 box to test against, and so I figured that something would probably break. Hope against hope, I figured everyone would have upgraded by now.</p>
+  <div class="entry-content"><p>I knew I’d run into this when I released PandoraBoy 0.4.0, and someone ran into <a href="http://code.google.com/p/pandoraboy/issues/detail?id=17">Issue 17</a>. Moving from MacOS 10.4.10 to 10.4.11 included a massive change to WebKit, and the 0.4 line was meant to address this. Unfortunately I no longer had a 10.4.10 box to test against, and so I figured that something would probably break. Hope against hope, I figured everyone would have upgraded by now.</p>
 
-<p>Anyway, I will now undertake a series of &ldquo;did this fix it&rdquo; patches and we&rsquo;ll see if we can get it working again. Hopefully the entire problem was my removal of decidePolicyForNewWindowAction: which never seems to be called in the new WebKit under Pandora (but I should have kept for completeness anyway). But it&rsquo;s possible that the problem is deeper.</p>
+<p>Anyway, I will now undertake a series of “did this fix it” patches and we’ll see if we can get it working again. Hopefully the entire problem was my removal of decidePolicyForNewWindowAction: which never seems to be called in the new WebKit under Pandora (but I should have kept for completeness anyway). But it’s possible that the problem is deeper.</p>
 </div>
   
   
@@ -467,21 +464,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

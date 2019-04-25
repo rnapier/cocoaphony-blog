@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I&rsquo;ve decided to make a change &hellip;">
+  <meta name="description" content="After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I’ve decided to make a change to the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -81,17 +80,17 @@
   </header>
 
 
-  <div class="entry-content"><p>After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I&rsquo;ve decided to make a change to the default AES mode used by RNCryptor from its current CTR to the much more ubiquitous CBC.</p>
+  <div class="entry-content"><p>After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I’ve decided to make a change to the default AES mode used by RNCryptor from its current CTR to the much more ubiquitous CBC.</p>
 
-<p>CTR mode has several advantages that I was hoping to exploit. First, it does not require padding, so it is not subject to padding oracle attacks (the cipher text is also generally a few bytes shorter than the equivalent CBC). That said, if the same nonce+counter+key combination is ever reused, an attacker can easily compute the key. This is pretty unlikely given how RNCryptor generates its nonce, but it&rsquo;s not impossible. If the same IV+key is used for CBC mode, then some information is leaked to an attacker, but its not nearly as catastrophic as reusing a nonce. The point is that CTR is not a home run here. It&rsquo;s different, exchanging one possible vulnerability for a different one (since RNCryptor does not store previous nonces to prevent reuse).</p>
+<p>CTR mode has several advantages that I was hoping to exploit. First, it does not require padding, so it is not subject to padding oracle attacks (the cipher text is also generally a few bytes shorter than the equivalent CBC). That said, if the same nonce+counter+key combination is ever reused, an attacker can easily compute the key. This is pretty unlikely given how RNCryptor generates its nonce, but it’s not impossible. If the same IV+key is used for CBC mode, then some information is leaked to an attacker, but its not nearly as catastrophic as reusing a nonce. The point is that CTR is not a home run here. It’s different, exchanging one possible vulnerability for a different one (since RNCryptor does not store previous nonces to prevent reuse).</p>
 
-<p>It is also possible to compute CTR in parallel on multiple cores. Apple doesn&rsquo;t currently do this, and is not highly likely to do so in the future. They might, but it&rsquo;s not something to adapt the design to.</p>
+<p>It is also possible to compute CTR in parallel on multiple cores. Apple doesn’t currently do this, and is not highly likely to do so in the future. They might, but it’s not something to adapt the design to.</p>
 
-<p>Almost every AES system out there implements CBC, so using any other mode introduces a significant interoperability problem. A mode would need to be dramatically better to be worth that. CTR has not lived up to that requirement, and so I&rsquo;m switching to CBC.</p>
+<p>Almost every AES system out there implements CBC, so using any other mode introduces a significant interoperability problem. A mode would need to be dramatically better to be worth that. CTR has not lived up to that requirement, and so I’m switching to CBC.</p>
 
 <p>This will make it much easier to write RNCryptor-compatible modules in Java, JavaScript, etc., as have been requested.</p>
 
-<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code>CCKeyDerivationPBKDF</code>.</p>
+<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code class="highlighter-rouge">CCKeyDerivationPBKDF</code>.</p>
 
 <p>If you update, note that this is incompatible with your existing encrypted files. I doubt there is enough field usage out there that this is an issue, but if it is, let me know and I can discuss with you how to convert.</p>
 </div>
@@ -127,20 +126,20 @@
   </header>
 
 
-  <div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn&rsquo;t find it anywhere and I was sick of writing it over and over again&hellip;. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot&rsquo;s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash&rsquo;s</a>, but they solve different problems.</i></p>
+  <div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn’t find it anywhere and I was sick of writing it over and over again…. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot’s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash’s</a>, but they solve different problems.</i></p>
 
-<p>Have you ever noticed how hard it is to write a repeating <code>NSTimer</code> that doesn&rsquo;t create a retain loop? Almost always you wind up with something like this:</p>
+<p>Have you ever noticed how hard it is to write a repeating <code class="highlighter-rouge">NSTimer</code> that doesn’t create a retain loop? Almost always you wind up with something like this:</p>
 
-<pre><code>[NSTimer scheduledTimerWithTimeInterval:1
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSTimer scheduledTimerWithTimeInterval:1
                                  target:self
                                selector:@selector(something)
                                userInfo:nil 
                                 repeats:YES];
-</code></pre>
+</code></pre></div></div>
 
-<p>Seems easy enough, except it&rsquo;s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you&rsquo;d think this would be easy. And it should be, so I fixed it. I just still can&rsquo;t quite believe I&rsquo;m the first to do so.</p>
+<p>Seems easy enough, except it’s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you’d think this would be easy. And it should be, so I fixed it. I just still can’t quite believe I’m the first to do so.</p>
 
-<p>Anyway, for your consideration I present a very simple class called <code>RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn&rsquo;t address.</p>
+<p>Anyway, for your consideration I present a very simple class called <code class="highlighter-rouge">RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn’t address.</p>
 
 <p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
 </div>
@@ -176,12 +175,11 @@
   </header>
 
 
-  <div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a &ldquo;language.&rdquo; It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code>.mm</code> is a blight on your code. Never let it spread.</p>
+  <div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a “language.” It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code class="highlighter-rouge">.mm</code> is a blight on your code. Never let it spread.</p>
 
-<p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple&rsquo;s frameworks are implemented in C++.</p>
+<p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple’s frameworks are implemented in C++.</p>
 
-<p>So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your &ldquo;middleware&rdquo; in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).</p>
-
+<p>So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your “middleware” in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).
 </div>
   
   
@@ -219,7 +217,7 @@
   </header>
 
 
-  <div class="entry-content"><p>I&rsquo;ve been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It&rsquo;s a good interface. It works. I could use a few more features in the Issues module, but it&rsquo;s nice that they keep it simple. I&rsquo;ve tried BitBucket and Assembla, and looked at several others. I&rsquo;ve managed my own servers. In every test, github wins.</p>
+  <div class="entry-content"><p>I’ve been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It’s a good interface. It works. I could use a few more features in the Issues module, but it’s nice that they keep it simple. I’ve tried BitBucket and Assembla, and looked at several others. I’ve managed my own servers. In every test, github wins.</p>
 
 <p>Except for price. github is often the most expensive. Especially if you need what I need, which is several small repositories, each with a small number of collaborators (often just one or two). But just a few of those can push you into the Medium plan, or even into the Bronze plan.</div>
   
@@ -262,9 +260,7 @@
 
 <blockquote>"One point in his article that McConnell did not address--<strong>programmer compensation does not vary accordingly.</strong> This is a telling point--if the difference is productivity can be 10X, why is it that salaries rarely fall outside the 2X range for experienced developers?" [emphasis in original]</blockquote>
 
-
-<p>He then provides some fairly satisfying answers. &ldquo;The other guy is actually overpaid.&rdquo; &ldquo;You&rsquo;re confusing coding with actual business value.&rdquo; &ldquo;Companies pay the least they can get away with.&rdquo; etc. All his answers make good, intuitive sense. Unfortunately, despite being a longtime fan of Steve McConnell&rsquo;s work, I believe most are irrelevant or incorrect.</p>
-
+<p>He then provides some fairly satisfying answers. “The other guy is actually overpaid.” “You’re confusing coding with actual business value.” “Companies pay the least they can get away with.” etc. All his answers make good, intuitive sense. Unfortunately, despite being a longtime fan of Steve McConnell’s work, I believe most are irrelevant or incorrect.
 </div>
   
   
@@ -302,9 +298,9 @@
   </header>
 
 
-  <div class="entry-content"><p>Last night&rsquo;s <a href="http://meetup.trianglecocoa.com/events/49569052/">CocoaHeads</a> was a blast. <a href="http://www.dtsquaredsoftware.com/">Alondo</a>, you have to come give an intermediate/advanced talk on Storyboards. Thanks a lot to @scottpenrose for his lightning and thunder, and @flightblog for his inspiration (METAR gave me a lot of headaches, too). And of course, thanks especially to <a href="http://log.jsh.in/">Josh</a> for organizing everything. And a new place for NSCoder? You rock.</p>
+  <div class="entry-content"><p>Last night’s <a href="http://meetup.trianglecocoa.com/events/49569052/">CocoaHeads</a> was a blast. <a href="http://www.dtsquaredsoftware.com/">Alondo</a>, you have to come give an intermediate/advanced talk on Storyboards. Thanks a lot to @scottpenrose for his lightning and thunder, and @flightblog for his inspiration (METAR gave me a lot of headaches, too). And of course, thanks especially to <a href="http://log.jsh.in/">Josh</a> for organizing everything. And a new place for NSCoder? You rock.</p>
 
-<p>For those who didn&rsquo;t scribble notes fast enough, my Core Foundation presentation is attached (including the fix for my memory leak; was it Jay who found that?) I&rsquo;ll make sure to fix the code in the book for the next edition.</p>
+<p>For those who didn’t scribble notes fast enough, my Core Foundation presentation is attached (including the fix for my memory leak; was it Jay who found that?) I’ll make sure to fix the code in the book for the next edition.</p>
 
 <p><a href="/assets/Building-a-Core-Foundation.pdf">Building a Core Foundation Presentation</a></p>
 </div>
@@ -340,7 +336,7 @@
   </header>
 
 
-  <div class="entry-content"><p>When <a href="/fast-bezier-intro">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That&rsquo;s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code>-Os</code> optimized function. But we&rsquo;re just getting warmed up. We haven&rsquo;t yet gotten half of the performance available.</p>
+  <div class="entry-content"><p>When <a href="/fast-bezier-intro">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That’s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code class="highlighter-rouge">-Os</code> optimized function. But we’re just getting warmed up. We haven’t yet gotten half of the performance available.</p>
 
 </div>
   
@@ -379,10 +375,9 @@
   </header>
 
 
-  <div class="entry-content"><p>[If you want the answer to last time&rsquo;s homework, skip to the end.]</p>
+  <div class="entry-content"><p>[If you want the answer to last time’s homework, skip to the end.]</p>
 
-<p>So you want to hand-calculate Bézier curves. Good for you. It comes up more often then you&rsquo;d think on iOS, even though <code>UIBezierPath</code> is supposed to do it all for you. The truth is, sometimes you need the numbers yourself. For instance if you want to calculate intersections, or you want to draw text along the curve (like in <a href="https://github.com/rnapier/ios5ptl/tree/master/ch18/CurvyText">CurvyText</a> from <a href="http://iosptl.com">iOS:PTL</a> chapter 18).</p>
-
+<p>So you want to hand-calculate Bézier curves. Good for you. It comes up more often then you’d think on iOS, even though <code class="highlighter-rouge">UIBezierPath</code> is supposed to do it all for you. The truth is, sometimes you need the numbers yourself. For instance if you want to calculate intersections, or you want to draw text along the curve (like in <a href="https://github.com/rnapier/ios5ptl/tree/master/ch18/CurvyText">CurvyText</a> from <a href="http://iosptl.com">iOS:PTL</a> chapter 18).
 </div>
   
   
@@ -422,10 +417,9 @@
 
   <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
+<p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I’ll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
 
-<p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I&rsquo;ll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
-
-<p>In this post, I&rsquo;m targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it&rsquo;s hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you&rsquo;re like me, and once upon a time you actually took linear algebra, but today you wouldn&rsquo;t know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn&rsquo;t been released…) My goal isn&rsquo;t to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
+<p>In this post, I’m targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it’s hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you’re like me, and once upon a time you actually took linear algebra, but today you wouldn’t know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn’t been released…) My goal isn’t to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
 
 </div>
   
@@ -468,16 +462,15 @@
 
 <p>Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://iosptl.com">our book</a> is devoted to the ins-and-outs of this subject.</p>
 
-<p>But sometimes you just have a simple <code>UIWebView</code>, and you want to cache the last version of the page. You&rsquo;d think that <code>NSURLCache</code> would handle this for you, but it&rsquo;s much more complicated than that. <code>NSURLCache</code> doesn&rsquo;t cache everything you&rsquo;d think it would. Sometimes this is because of Apple&rsquo;s decisions in order to save space. Just as often, however, it&rsquo;s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
+<p>But sometimes you just have a simple <code class="highlighter-rouge">UIWebView</code>, and you want to cache the last version of the page. You’d think that <code class="highlighter-rouge">NSURLCache</code> would handle this for you, but it’s much more complicated than that. <code class="highlighter-rouge">NSURLCache</code> doesn’t cache everything you’d think it would. Sometimes this is because of Apple’s decisions in order to save space. Just as often, however, it’s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
 
 <p>What I wanted was a simple mechanism for the following case:</p>
 
 <ul>
-<li>You have a UIWebView that points to a website with embedded images</li>
-<li>When you&rsquo;re online, you want the normal caching algorithms (nothing fancy)</li>
-<li>When you&rsquo;re offline, you want to show the last version of the page</li>
+  <li>You have a UIWebView that points to a website with embedded images</li>
+  <li>When you’re online, you want the normal caching algorithms (nothing fancy)</li>
+  <li>When you’re offline, you want to show the last version of the page</li>
 </ul>
-
 
 <p>My test case was simple: a webview that loads cnn.com (a nice complicated webpage with lots of images). Run it once. Quit. Turn off the network. Run it again. CNN should display.</p>
 
@@ -525,21 +518,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

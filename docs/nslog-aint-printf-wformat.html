@@ -27,10 +27,9 @@ NSLog(@"%s", 1); And you compiled with -Wformat. You might expect both of these 
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -81,33 +80,33 @@ NSLog(@"%s", 1); And you compiled with -Wformat. You might expect both of these 
 
 <div class="entry-content"><p>So say you had this code:</p>
 
-<pre><code>printf("%s", 1);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>printf("%s", 1);
 NSLog(@"%s", 1);
-</code></pre>
+</code></pre></div></div>
 
-<p>And you compiled with <code>-Wformat</code>. You might expect both of these lines to kick out a warning:</p>
+<p>And you compiled with <code class="highlighter-rouge">-Wformat</code>. You might expect both of these lines to kick out a warning:</p>
 
-<pre><code>Format '%s' expects type 'char *', but argument 2 has type 'int'
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Format '%s' expects type 'char *', but argument 2 has type 'int'
+</code></pre></div></div>
 
-<p>You&rsquo;d be particularly misled when you went and looked at the definition of <code>NSLog()</code>:</p>
+<p>You’d be particularly misled when you went and looked at the definition of <code class="highlighter-rouge">NSLog()</code>:</p>
 
-<pre><code>FOUNDATION_EXPORT void NSLog(NSString *format, ...) __attribute__((format(__NSString__, 1, 2)));
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FOUNDATION_EXPORT void NSLog(NSString *format, ...) __attribute__((format(__NSString__, 1, 2)));
+</code></pre></div></div>
 
-<p>Why look there, doesn&rsquo;t that look like it should provide format type checking? Oh how foolish. Neither gcc nor clang can actually handle that <code>__NSString__</code> specifier in a robust way. So the first line above will give a useful warning, but the second one will silently compile and later crash. Exciting, I know. You have been warned.</p>
+<p>Why look there, doesn’t that look like it should provide format type checking? Oh how foolish. Neither gcc nor clang can actually handle that <code class="highlighter-rouge">__NSString__</code> specifier in a robust way. So the first line above will give a useful warning, but the second one will silently compile and later crash. Exciting, I know. You have been warned.</p>
 
-<p> <code>-Wformat-nonliteral</code> and <code>-Wformat-security</code> do catch dangerous calls like <code>NSLog(foo)</code>, so <code>__NSString__</code> isn&rsquo;t a complete loss, but it&rsquo;s a shame we can&rsquo;t get type checking here.</p>
+<p><code class="highlighter-rouge">-Wformat-nonliteral</code> and <code class="highlighter-rouge">-Wformat-security</code> do catch dangerous calls like <code class="highlighter-rouge">NSLog(foo)</code>, so <code class="highlighter-rouge">__NSString__</code> isn’t a complete loss, but it’s a shame we can’t get type checking here.</p>
 
-<p>There&rsquo;s a good discussion of this at <a href="http://stackoverflow.com/questions/1229212/nslog-improper-format-specifier-affects-other-variables]">NSLog(…) improper format specifier affects other variables?</a></p>
+<p>There’s a good discussion of this at <a href="http://stackoverflow.com/questions/1229212/nslog-improper-format-specifier-affects-other-variables]">NSLog(…) improper format specifier affects other variables?</a></p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -174,21 +173,7 @@ NSLog(@"%s", 1);
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

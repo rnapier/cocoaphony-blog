@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,78 +77,76 @@
   </header>
 
 
-<div class="entry-content"><p>CoreText is a very powerful system for laying out text in arbitrary ways. This is going to be a bit of a whirlwind tour of it to help out <a href="http://stackoverflow.com/questions/5284516/how-can-i-draw-image-with-text-wrapping-on-ios">nonamelive on StackOverflow</a>.</a> I&rsquo;m working on an advanced iOS book right now, and I&rsquo;ll have a longer writeup there.</p>
+<div class="entry-content"><p>CoreText is a very powerful system for laying out text in arbitrary ways. This is going to be a bit of a whirlwind tour of it to help out <a href="http://stackoverflow.com/questions/5284516/how-can-i-draw-image-with-text-wrapping-on-ios">nonamelive on StackOverflow</a>.&lt;/a&gt; I’m working on an advanced iOS book right now, and I’ll have a longer writeup there.
+<!-- more --></p>
 
-<!-- more -->
-
-
-<p>Once you have your arbitrary paths, you want to break them down into rectangles. I&rsquo;ve written some code to do this that assumes a known hight for the text lines. Things get more complicated if you have text that includes different font sizes (you need to do some guessing, then try to layout, and go back and correct things if you were wrong).</p>
+<p>Once you have your arbitrary paths, you want to break them down into rectangles. I’ve written some code to do this that assumes a known hight for the text lines. Things get more complicated if you have text that includes different font sizes (you need to do some guessing, then try to layout, and go back and correct things if you were wrong).</p>
 
 <p>The goal of this code is to walk down the path boundary, trying to grow an ever-larger rectangle. If the width or the offset of the boundary changes, then it starts a new rectangle.</p>
 
-<pre><code>- (CFArrayRef)copyRectangularPathsForPath:(CGPathRef)path 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (CFArrayRef)copyRectangularPathsForPath:(CGPathRef)path 
                                    height:(CGFloat)height {
-    CFMutableArrayRef paths = CFArrayCreateMutable(NULL, 0, 
+	CFMutableArrayRef paths = CFArrayCreateMutable(NULL, 0, 
                                                    &amp;kCFTypeArrayCallBacks);
 
-    // First, check if we're a rectangle. If so, we can skip the hard parts.
-    CGRect rect;
-    if (CGPathIsRect(path, &amp;rect)) {
-        CFArrayAppendValue(paths, path);
-    }
-    else {
-        // Build up the boxes one line at a time. If two boxes have the 
+	// First, check if we're a rectangle. If so, we can skip the hard parts.
+	CGRect rect;
+	if (CGPathIsRect(path, &amp;rect)) {
+		CFArrayAppendValue(paths, path);
+	}
+	else {
+		// Build up the boxes one line at a time. If two boxes have the 
         // same width and offset, then merge them.
-        CGRect boundingBox = CGPathGetPathBoundingBox(path);
-        CGRect frameRect = CGRectZero;
-        for (CGFloat y = CGRectGetMaxY(boundingBox) - height; 
+		CGRect boundingBox = CGPathGetPathBoundingBox(path);
+		CGRect frameRect = CGRectZero;
+		for (CGFloat y = CGRectGetMaxY(boundingBox) - height; 
                      y &gt; height; y -= height) {
-            CGRect lineRect =
+			CGRect lineRect =
                    CGRectMake(CGRectGetMinX(boundingBox), y, 
                               CGRectGetWidth(boundingBox), height);
-            CGContextAddRect(UIGraphicsGetCurrentContext(), lineRect);
-
+			CGContextAddRect(UIGraphicsGetCurrentContext(), lineRect);
+			
             // Do the math with full precision so we don't drift, 
             // but do final render on pixel boundaries.
-            lineRect = CGRectIntegral(clipRectToPath(lineRect, path));
-            CGContextAddRect(UIGraphicsGetCurrentContext(), lineRect);
+			lineRect = CGRectIntegral(clipRectToPath(lineRect, path));
+			CGContextAddRect(UIGraphicsGetCurrentContext(), lineRect);
 
-            if (! CGRectIsEmpty(lineRect)) {
-                if (CGRectIsEmpty(frameRect)) {
-                    frameRect = lineRect;
-                }
-                else if (frameRect.origin.x == lineRect.origin.x &amp;&amp; 
+			if (! CGRectIsEmpty(lineRect)) {
+				if (CGRectIsEmpty(frameRect)) {
+					frameRect = lineRect;
+				}
+				else if (frameRect.origin.x == lineRect.origin.x &amp;&amp; 
                          frameRect.size.width == lineRect.size.width) {
-                    frameRect = CGRectMake(lineRect.origin.x,                                                                                                                                      lineRect.origin.y,                                                                                                                                      lineRect.size.width, 
+					frameRect = CGRectMake(lineRect.origin.x,                                                                                       											   lineRect.origin.y,                                                                                         											   lineRect.size.width, 
                                 CGRectGetMaxY(frameRect) - CGRectGetMinY(lineRect));
-                }
-                else {
-                    CGMutablePathRef framePath =
+				}
+				else {
+					CGMutablePathRef framePath =
                                          CGPathCreateMutable();
-                    CGPathAddRect(framePath, NULL, frameRect);
-                    CFArrayAppendValue(paths, framePath);
+					CGPathAddRect(framePath, NULL, frameRect);
+					CFArrayAppendValue(paths, framePath);
 
-                    CFRelease(framePath);
-                    frameRect = lineRect;
-                }
-            }
-        }
+					CFRelease(framePath);
+					frameRect = lineRect;
+				}
+			}
+		}
+		
+		if (! CGRectIsEmpty(frameRect))	{
+			CGMutablePathRef framePath = CGPathCreateMutable();
+			CGPathAddRect(framePath, NULL, frameRect);
+			CFArrayAppendValue(paths, framePath);
+			CFRelease(framePath);
+		}			
+	}
 
-        if (! CGRectIsEmpty(frameRect)) {
-            CGMutablePathRef framePath = CGPathCreateMutable();
-            CGPathAddRect(framePath, NULL, frameRect);
-            CFArrayAppendValue(paths, framePath);
-            CFRelease(framePath);
-        }           
-    }
-
-    return paths;
+	return paths;
 }
-</code></pre>
+</code></pre></div></div>
 
-<p>Remember, the coordinate system here is flipped for iOS. So <code>CGRectGetMaxY()</code> is returning the top of the box, not the bottom. The call to <code>clipRectToPath()</code> is from my previous post on clipping rectangles to paths. Also noteworthy here is our use of <code>UIGraphicsGetCurrentContext()</code>. This routine is meant to be called inside of <code>drawRect:</code>.</p>
+<p>Remember, the coordinate system here is flipped for iOS. So <code class="highlighter-rouge">CGRectGetMaxY()</code> is returning the top of the box, not the bottom. The call to <code class="highlighter-rouge">clipRectToPath()</code> is from my previous post on clipping rectangles to paths. Also noteworthy here is our use of <code class="highlighter-rouge">UIGraphicsGetCurrentContext()</code>. This routine is meant to be called inside of <code class="highlighter-rouge">drawRect:</code>.</p>
 
-<p>There are some inefficiencies here. More efficient approaches would calculate the rectangles a single time, rather than during <code>drawRect:</code> (though this isn&rsquo;t as inefficient as it sounds, since we try to avoid calling <code>drawRect:</code> more than we need). A better implementation could avoid some of the memory churn in <code>clipRectToPath()</code> by allocating a single large buffer. But this hopefully is a reasonable example of how to attack the problem.</p>
+<p>There are some inefficiencies here. More efficient approaches would calculate the rectangles a single time, rather than during <code class="highlighter-rouge">drawRect:</code> (though this isn’t as inefficient as it sounds, since we try to avoid calling <code class="highlighter-rouge">drawRect:</code> more than we need). A better implementation could avoid some of the memory churn in <code class="highlighter-rouge">clipRectToPath()</code> by allocating a single large buffer. But this hopefully is a reasonable example of how to attack the problem.</p>
 
 <p>An example Xcode project is attached.</p>
 
@@ -159,9 +156,9 @@
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -228,21 +225,7 @@
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

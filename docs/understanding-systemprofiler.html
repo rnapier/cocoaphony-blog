@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,119 +77,116 @@
   </header>
 
 
-<div class="entry-content"><p>It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is &ldquo;what does system_profiler actually do?&rdquo;  But it&rsquo;s a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It&rsquo;s a whirlwind tour of how you begin to attack programs using pretty standard tools. I&rsquo;m not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you&rsquo;re going to hide how your program works, make sure you research those first. You&rsquo;ll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.</p>
-
+<div class="entry-content"><p>It thought I was going to be quiet for two weeks, now three posts in a day. There was a <a href="http://stackoverflow.com/questions/1050377/machine-id-for-mac-os/1050569#1050569">good question</a> on Stack Overflow about getting system information. The actual question is “what does system_profiler actually do?”  But it’s a good way to show how to begin to understand how any program works on the Mac. Here are some of  the most basic tools of the trade. This is not a deep tutorial on reverse engineering. It’s a whirlwind tour of how you begin to attack programs using pretty standard tools. I’m not getting into any of the anti-obfuscation tools like Onyx the Black Cat or commercial tools like IDA Pro, or even code injection like SIMBL or F-ScriptAnywhere. When you think you’re going to hide how your program works, make sure you research those first. You’ll learn quickly how hard that really is. Maybe you should read my thoughts about <a href="http://robnapier.net/blog/obfuscating-cocoa-389">Obfuscating Cocoa</a>.
 <!-- more -->
+Of course you start with the obvious, “man system_profiler”. But that doesn’t give as much information as we want. So let’s tear apart the binary and see what’s going on, shall we?</p>
 
-
-<p>Of course you start with the obvious, &ldquo;man system_profiler&rdquo;. But that doesn&rsquo;t give as much information as we want. So let&rsquo;s tear apart the binary and see what&rsquo;s going on, shall we?</p>
-
-<pre><code class="bash">$ otool -L /usr/sbin/system_profiler
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>otool <span class="nt">-L</span> /usr/sbin/system_profiler
 system_profiler:
-    /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport (compatibility version 1.0.0, current version 1.0.0)
-    /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 677.22.0)
-    /usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 1.0.0)
-    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 111.1.4)
-    /usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 227.0.0)
-    /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 476.17.0)
-</code></pre>
+	/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation <span class="o">(</span>compatibility version 300.0.0, current version 677.22.0<span class="o">)</span>
+	/usr/lib/libgcc_s.1.dylib <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+	/usr/lib/libSystem.B.dylib <span class="o">(</span>compatibility version 1.0.0, current version 111.1.4<span class="o">)</span>
+	/usr/lib/libobjc.A.dylib <span class="o">(</span>compatibility version 1.0.0, current version 227.0.0<span class="o">)</span>
+	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation <span class="o">(</span>compatibility version 150.0.0, current version 476.17.0<span class="o">)</span>
+</code></pre></div></div>
 
-<p>So we see it&rsquo;s using CoreFoundation and a private framework. Let&rsquo;s see what we can learn from that private framework.</p>
+<p>So we see it’s using CoreFoundation and a private framework. Let’s see what we can learn from that private framework.</p>
 
-<pre><code class="bash">$ otool -L /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>otool <span class="nt">-L</span> /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport
 /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport:
-    /System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport (compatibility version 1.0.0, current version 1.0.0)
-    /System/Library/Frameworks/IOKit.framework/Versions/A/IOKit (compatibility version 1.0.0, current version 275.0.0)
-    /System/Library/PrivateFrameworks/DiskManagement.framework/Versions/A/DiskManagement (compatibility version 1.0.0, current version 1.0.0)
-    /System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa (compatibility version 1.0.0, current version 12.0.0)
-    /System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration (compatibility version 1.0.0, current version 212.2.0)
-    /usr/lib/libcurl.4.dylib (compatibility version 5.0.0, current version 5.0.0)
-    /usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.3)
-    /usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 1.0.0)
-    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 111.1.4)
-    /usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 227.0.0)
-    /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 476.17.0)
-    /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 949.45.0)
-    /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 677.22.0)
-</code></pre>
+	/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+	/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit <span class="o">(</span>compatibility version 1.0.0, current version 275.0.0<span class="o">)</span>
+	/System/Library/PrivateFrameworks/DiskManagement.framework/Versions/A/DiskManagement <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+	/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa <span class="o">(</span>compatibility version 1.0.0, current version 12.0.0<span class="o">)</span>
+	/System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration <span class="o">(</span>compatibility version 1.0.0, current version 212.2.0<span class="o">)</span>
+	/usr/lib/libcurl.4.dylib <span class="o">(</span>compatibility version 5.0.0, current version 5.0.0<span class="o">)</span>
+	/usr/lib/libz.1.dylib <span class="o">(</span>compatibility version 1.0.0, current version 1.2.3<span class="o">)</span>
+	/usr/lib/libgcc_s.1.dylib <span class="o">(</span>compatibility version 1.0.0, current version 1.0.0<span class="o">)</span>
+	/usr/lib/libSystem.B.dylib <span class="o">(</span>compatibility version 1.0.0, current version 111.1.4<span class="o">)</span>
+	/usr/lib/libobjc.A.dylib <span class="o">(</span>compatibility version 1.0.0, current version 227.0.0<span class="o">)</span>
+	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation <span class="o">(</span>compatibility version 150.0.0, current version 476.17.0<span class="o">)</span>
+	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit <span class="o">(</span>compatibility version 45.0.0, current version 949.45.0<span class="o">)</span>
+	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation <span class="o">(</span>compatibility version 300.0.0, current version 677.22.0<span class="o">)</span>
+</code></pre></div></div>
 
-<p>We see it&rsquo;s in Cocoa. Nice, we can use <a href="http://www.codethecode.com/projects/class-dump/">class-dump</a> on it. And we see a bunch of public and private frameworks in there. We won&rsquo;t go into all of those here. But you can tear them apart using the same techniques we&rsquo;re going to use on DiskManagement:</p>
+<p>We see it’s in Cocoa. Nice, we can use <a href="http://www.codethecode.com/projects/class-dump/">class-dump</a> on it. And we see a bunch of public and private frameworks in there. We won’t go into all of those here. But you can tear them apart using the same techniques we’re going to use on DiskManagement:</p>
 
-<pre><code class="objc">$ class-dump /System/Library/PrivateFrameworks/DiskManagement.framework/Versions/A/DiskManagement
-...
-@interface DMManager : NSObject
-{
-    id _instPriv;
-}
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">class</span><span class="o">-</span><span class="n">dump</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">PrivateFrameworks</span><span class="o">/</span><span class="n">DiskManagement</span><span class="p">.</span><span class="n">framework</span><span class="o">/</span><span class="n">Versions</span><span class="o">/</span><span class="n">A</span><span class="o">/</span><span class="n">DiskManagement</span>
+<span class="p">...</span>
+<span class="k">@interface</span> <span class="nc">DMManager</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="p">{</span>
+    <span class="n">id</span> <span class="n">_instPriv</span><span class="p">;</span>
+<span class="p">}</span>
 
-+ (BOOL)systemResourcesSufficient;
-+ (BOOL)systemAtMountPoint:(id)fp8 lowVersion:(int)fp12 lowInclusive:(BOOL)fp16 highVersion:(int)fp20 highInclusive:(BOOL)fp24;
-+ (id)sharedManager;
-+ (id)sharedManagerWithoutAuthentication;
-+ (void)initialize;
-- (id)initWithAuthentication:(BOOL)fp8;
-- (void)dealloc;
-- (id)agent;
-- (void)updateGID:(int)fp8;
-- (id)getPartitionStartLocationForDisk:(id)fp8;
-- (id)getInfoForChildrenOfDisk:(id)fp8 sortedBy:(id)fp12;
-- (void)enableVirtualDisks;
-- (void)disableVirtualDisks;
-- (id)diskWithIdentifier:(id)fp8;
-- (id)diskWithDiskIdentifier:(id)fp8;
-- (id)diskWithDeviceTreePath:(id)fp8;
-- (id)diskWithUUID:(id)fp8;
-- (id)diskWithUUIDInDisk:(id)fp8;
-- (id)diskWithDisk:(id)fp8;
-- (id)rootDisk;
-...
-</code></pre>
+<span class="o">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">systemResourcesSufficient</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">systemAtMountPoint</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span> <span class="nf">lowVersion</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">fp12</span> <span class="nf">lowInclusive</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">fp16</span> <span class="nf">highVersion</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">fp20</span> <span class="nf">highInclusive</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">fp24</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">sharedManager</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">sharedManagerWithoutAuthentication</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">initialize</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">initWithAuthentication</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">dealloc</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">agent</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">updateGID</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">getPartitionStartLocationForDisk</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">getInfoForChildrenOfDisk</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span> <span class="nf">sortedBy</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp12</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">enableVirtualDisks</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">disableVirtualDisks</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">diskWithIdentifier</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">diskWithDiskIdentifier</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">diskWithDeviceTreePath</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">diskWithUUID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">diskWithUUIDInDisk</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">diskWithDisk</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">rootDisk</span><span class="p">;</span>
+<span class="p">...</span>
+</code></pre></div></div>
 
-<p>Hey, that might be handy in trying to understand unique things about our system (the thing we happen to be interested in). You can continue this approach through any of the pieces that look interesting. Of course you&rsquo;re going to have to guess a bit about types, but you can call these methods in your code and then ask the resulting object for its -class.</p>
+<p>Hey, that might be handy in trying to understand unique things about our system (the thing we happen to be interested in). You can continue this approach through any of the pieces that look interesting. Of course you’re going to have to guess a bit about types, but you can call these methods in your code and then ask the resulting object for its -class.</p>
 
-<p>We could do this all day (and you probably will, chasing down various libraries that look interesting and writing small projects to explore them), but let&rsquo;s take a completely different track. Let&rsquo;s go from static to dynamic and see what system_profiler actually <b>does</b> when it runs.</p>
+<p>We could do this all day (and you probably will, chasing down various libraries that look interesting and writing small projects to explore them), but let’s take a completely different track. Let’s go from static to dynamic and see what system_profiler actually <b>does</b> when it runs.</p>
 
-<pre><code class="c">$ sudo dtruss /usr/sbin/system_profiler
-...
-stat("/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport\0", 0xBFFFD3E8, 0xFFFFFFFFBFFFBCA4)         = 0 0
-open("/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport\0", 0x0, 0x0)       = 3 0
-pread(0x3, "\312\376\272\276\0", 0x1000, 0x0)        = 4096 0
-pread(0x3, "\316\372\355\376\a\0", 0x1000, 0x1000)       = 4096 0
-mmap(0x3F000000, 0xD000, 0x5, 0x12, 0x3, 0x100000000)        = 0x3F000000 0
-...
-open_nocancel("/System/Library/SystemProfiler/SPBluetoothReporter.spreporter/Contents\0", 0x100004, 0x316310)        = 3 0
-...
-</code></pre>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">sudo</span> <span class="n">dtruss</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">system_profiler</span>
+<span class="p">...</span>
+<span class="n">stat</span><span class="p">(</span><span class="s">"/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport</span><span class="se">\0</span><span class="s">"</span><span class="p">,</span> <span class="mh">0xBFFFD3E8</span><span class="p">,</span> <span class="mh">0xFFFFFFFFBFFFBCA4</span><span class="p">)</span>		 <span class="o">=</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="n">open</span><span class="p">(</span><span class="s">"/System/Library/PrivateFrameworks/SPSupport.framework/Versions/A/SPSupport</span><span class="se">\0</span><span class="s">"</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">)</span>		 <span class="o">=</span> <span class="mi">3</span> <span class="mi">0</span>
+<span class="n">pread</span><span class="p">(</span><span class="mh">0x3</span><span class="p">,</span> <span class="s">"</span><span class="se">\312\376\272\276\0</span><span class="s">"</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">)</span>		 <span class="o">=</span> <span class="mi">4096</span> <span class="mi">0</span>
+<span class="n">pread</span><span class="p">(</span><span class="mh">0x3</span><span class="p">,</span> <span class="s">"</span><span class="se">\316\372\355\376\a\0</span><span class="s">"</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">)</span>		 <span class="o">=</span> <span class="mi">4096</span> <span class="mi">0</span>
+<span class="n">mmap</span><span class="p">(</span><span class="mh">0x3F000000</span><span class="p">,</span> <span class="mh">0xD000</span><span class="p">,</span> <span class="mh">0x5</span><span class="p">,</span> <span class="mh">0x12</span><span class="p">,</span> <span class="mh">0x3</span><span class="p">,</span> <span class="mh">0x100000000</span><span class="p">)</span>		 <span class="o">=</span> <span class="mh">0x3F000000</span> <span class="mi">0</span>
+<span class="p">...</span>
+<span class="n">open_nocancel</span><span class="p">(</span><span class="s">"/System/Library/SystemProfiler/SPBluetoothReporter.spreporter/Contents</span><span class="se">\0</span><span class="s">"</span><span class="p">,</span> <span class="mh">0x100004</span><span class="p">,</span> <span class="mh">0x316310</span><span class="p">)</span>		 <span class="o">=</span> <span class="mi">3</span> <span class="mi">0</span>
+<span class="p">...</span>
+</code></pre></div></div>
 
 <p>So we see all the frameworks it uses, and hey, /System/Library/SystemProfiler sure looks interesting. I wonder what we might do with that?</p>
 
-<pre><code class="objc">$ class-dump /System/Library/SystemProfiler/SPNetworkReporter.spreporter/Contents/MacOS/SPNetworkReporter
-struct __SCDynamicStore;
-...
-@interface SPNetworkReporter : SPReporter
-{
-    struct __SCDynamicStore *_scStore;
-    NSMutableDictionary *_localizedServiceNames;
-}
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">class</span><span class="o">-</span><span class="n">dump</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">SystemProfiler</span><span class="o">/</span><span class="n">SPNetworkReporter</span><span class="p">.</span><span class="n">spreporter</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">MacOS</span><span class="o">/</span><span class="n">SPNetworkReporter</span>
+<span class="k">struct</span> <span class="n">__SCDynamicStore</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="k">@interface</span> <span class="nc">SPNetworkReporter</span> <span class="p">:</span> <span class="nc">SPReporter</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">__SCDynamicStore</span> <span class="o">*</span><span class="n">_scStore</span><span class="p">;</span>
+    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">_localizedServiceNames</span><span class="p">;</span>
+<span class="p">}</span>
 
-- (id)_hardwareDictionaryForInterface:(id)fp8;
-- (id)_proxyDictionaryForServiceID:(id)fp8;
-- (id)_ipv4DictionaryForServiceID:(id)fp8;
-- (id)_ipv6DictionaryForServiceID:(id)fp8;
-- (id)_dnsDictionaryForServiceID:(id)fp8;
-- (id)_appleTalkDictionaryForServiceID:(id)fp8;
-- (id)_ethernetDictionaryForServiceID:(id)fp8 interfaceID:(id)fp12;
-- (id)_dhcpDictionaryForServiceID:(id)fp8;
-- (id)_dictionaryForServiceID:(id)fp8;
-- (id)updateDictionary:(id)fp8;
-- (void)dealloc;
+<span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">_hardwareDictionaryForInterface</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_proxyDictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_ipv4DictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_ipv6DictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_dnsDictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_appleTalkDictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_ethernetDictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span> <span class="nf">interfaceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp12</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_dhcpDictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_dictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">updateDictionary</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">dealloc</span><span class="p">;</span>
 
-@end
-</code></pre>
+<span class="k">@end</span>
+</code></pre></div></div>
 
-<p>OK, but what does this one really do? Maybe if if we had a nice way to disassemble it&hellip;. Like maybe <a href="http://otx.osxninja.com/">otx</a>.</p>
+<p>OK, but what does this one really do? Maybe if if we had a nice way to disassemble it…. Like maybe <a href="http://otx.osxninja.com/">otx</a>.</p>
 
-<pre><code class="c-objdump">$ otx /System/Library/SystemProfiler/SPNetworkReporter.spreporter/Contents/MacOS/SPNetworkReporter
+<pre><code class="language-c-objdump">$ otx /System/Library/SystemProfiler/SPNetworkReporter.spreporter/Contents/MacOS/SPNetworkReporter
 ...
 -(id)[SPNetworkReporter _hardwareDictionaryForInterface:]
     +0  00000f0e  55             pushl    %ebp
@@ -219,17 +215,17 @@ struct __SCDynamicStore;
 ...
 </code></pre>
 
-<p>Digging through we&rsquo;ll see a lot of stuff starting &ldquo;IO.&rdquo; Just a little googling will teach us that means IOKit. So maybe that&rsquo;s going to be a good place to study in understanding this better.</p>
+<p>Digging through we’ll see a lot of stuff starting “IO.” Just a little googling will teach us that means IOKit. So maybe that’s going to be a good place to study in understanding this better.</p>
 
-<p>This is just the start, and the goal is to get people thinking in the right way and get some basic tools in their hands. These aren&rsquo;t black-hat tools. These are the basic tools of the trade. Any experienced Mac developer should know enough to tear apart Apple&rsquo;s code to figure out how they&rsquo;re doing what they do. That let&rsquo;s us write better Mac apps, even if we avoid using the private interfaces.</p>
+<p>This is just the start, and the goal is to get people thinking in the right way and get some basic tools in their hands. These aren’t black-hat tools. These are the basic tools of the trade. Any experienced Mac developer should know enough to tear apart Apple’s code to figure out how they’re doing what they do. That let’s us write better Mac apps, even if we avoid using the private interfaces.</p>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -296,21 +292,7 @@ struct __SCDynamicStore;
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

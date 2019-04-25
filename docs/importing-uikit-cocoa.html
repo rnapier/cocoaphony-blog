@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -78,38 +77,36 @@
   </header>
 
 
-<div class="entry-content"><p>I work on a lot of projects that share significant code between iPhone and Mac versions. This is the beauty of Cocoa. While working on these projects, I&rsquo;ve bumped into this idiom many times:</p>
+<div class="entry-content"><p>I work on a lot of projects that share significant code between iPhone and Mac versions. This is the beauty of Cocoa. While working on these projects, I’ve bumped into this idiom many times:</p>
 
-<pre><code>#ifdef TARGET_OS_IPHONE
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
 #import &lt;UIKit/UIKit.h&gt;
 #else
 #import &lt;Cocoa/Cocoa.h&gt;
 #endif
-</code></pre>
+</code></pre></div></div>
 
 <p>This is almost never correct, and almost always means that someone imported Cocoa.h into a model class. Model classes should never rely on UIKit or Cocoa. They should just import Foundation.h.</p>
 
-<p>There is one interesting exception that we&rsquo;ve run into: NSImage versus UIImage. These are really model classes, but they&rsquo;re part of AppKit and UIKit. They have very similar interfaces, so in most code you should be able to interchange them and keep everything portable. What to do?</p>
+<p>There is one interesting exception that we’ve run into: NSImage versus UIImage. These are really model classes, but they’re part of AppKit and UIKit. They have very similar interfaces, so in most code you should be able to interchange them and keep everything portable. What to do?
+<!-- more --></p>
 
-<!-- more -->
-
-
-<pre><code>#ifdef TARGET_OS_IPHONE
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
 #import &lt;UIKit/UIImage.h&gt;
 typedef UIImage XXImage;
 #else
 #import &lt;AppKit/NSImage.h&gt;
 typedef NSImage XXImage;
 #endif
-</code></pre>
+</code></pre></div></div>
 
-<p>You can now import XXimage.h into your model classes and use XXImage anywhere you would normally use NSImage or UIImage (as long as you&rsquo;re using them in a portable way). In your UI (platform) code, you can still use NSImage or UIImage normally; no need to use XXImage everywhere, since the types are compatible.</p>
+<p>You can now import XXimage.h into your model classes and use XXImage anywhere you would normally use NSImage or UIImage (as long as you’re using them in a portable way). In your UI (platform) code, you can still use NSImage or UIImage normally; no need to use XXImage everywhere, since the types are compatible.</p>
 
-<p>Or you could go to CGImages exclusively, but what a pain if you don&rsquo;t need them already.</p>
+<p>Or you could go to CGImages exclusively, but what a pain if you don’t need them already.</p>
 
-<p><b>EDIT Sep 24, 2009:</b> In light of a Radar I&rsquo;ve recently opened (radar://7224053), I need to amend the above. It&rsquo;s better to use #define rather than typedef. I strongly prefer typedef, but there&rsquo;s a bizarre bug that it bumps into. Typedef confuses <code>valueForKey:</code> for some reason. You can use the following code to determine if the bug has been fixed yet:</p>
+<p><b>EDIT Sep 24, 2009:</b> In light of a Radar I’ve recently opened (radar://7224053), I need to amend the above. It’s better to use #define rather than typedef. I strongly prefer typedef, but there’s a bizarre bug that it bumps into. Typedef confuses <code class="highlighter-rouge">valueForKey:</code> for some reason. You can use the following code to determine if the bug has been fixed yet:</p>
 
-<pre><code>#import &lt;Foundation/Foundation.h&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import &lt;Foundation/Foundation.h&gt;
 // Swapping #define for typedef makes this work
 typedef NSString MYString;
 //#define MYString NSString
@@ -130,15 +127,15 @@ int main (int argc, const char * argv[]) {
     [pool drain];
     return 0;
 }
-</code></pre>
+</code></pre></div></div>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -205,21 +202,7 @@ int main (int argc, const char * argv[]) {
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 

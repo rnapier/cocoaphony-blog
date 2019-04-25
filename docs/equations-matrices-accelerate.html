@@ -26,10 +26,9 @@
   <link href="https://twitter.com/cocoaphony" rel="me" />
   <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
-  // <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
   <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
-  <script src='/javascripts/footnotes.js' type="text/javascript"></script>
-
+  
 </head>
 
 <body    class="collapse-sidebar sidebar-footer" >
@@ -80,13 +79,11 @@
 
 <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
+<p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I’ll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
 
-<p>Chapter 18 of <a href="http:/book">iOS:PTL</a> includes code for calculating points on a Bézier curve (see CurvyText in the <a href="/bookcode">sample code</a>). In the book, I hinted that this operation would likely be well suited to the <a href="https://developer.apple.com/performance/accelerateframework.html">Accelerate framework</a>. The Accelerate framework provides hardware-accelerated vector operations. Solving Bézier equations seems a perfect fit. I&rsquo;ll get more into Accelerate in later posts (including some thoughts on when to use it), but first I need to introduce some mathematical groundwork.</p>
-
-<p>In this post, I&rsquo;m targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it&rsquo;s hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you&rsquo;re like me, and once upon a time you actually took linear algebra, but today you wouldn&rsquo;t know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn&rsquo;t been released…) My goal isn&rsquo;t to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
+<p>In this post, I’m targeting a specific kind of developer; one like myself. My mathematically inclined friends will find this so trivial that it’s hardly worth discussing. For those of you who have never seen a matrix before, this may be a bit dense. But if you’re like me, and once upon a time you actually took linear algebra, but today you wouldn’t know a transpose if it invited you to dinner, this may help. (The last time I computed a dot-product, the Newton hadn’t been released…) My goal isn’t to teach you Guassian elimination or eigenvalues. My goal is to show you by example the specific tools you need to convert the math you find in a book into matrices so you can calculate it faster. (And how to cheat with the incredible new tools available to us.)</p>
 
 <!-- more -->
-
 
 <p>So by way of example, we will consider the cubic Bézier curve (as expressed by <a href="http://en.wikipedia.org/wiki/Bézier_curve#Cubic_B.C3.A9zier_curves">Wikipedia</a>):</p>
 
@@ -96,22 +93,21 @@
 \end{equation}
 </div>
 
-
 <p>This means that for each coordinate (x,y), you calculate the above for values running from t=0 to t=1. In C that translates into:</p>
 
-<pre><code class="objc">static CGFloat Bezier(CGFloat t, CGFloat P0, CGFloat P1, CGFloat P2,
-                  CGFloat P3) {
-  return 
-    powf(1-t, 3) * P0
-    + 3 * powf(1-t, 2) * t * P1
-    + 3 * (1-t) * powf(t, 2) * P2
-    + powf(t, 3) * P3;
-}
-</code></pre>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="n">CGFloat</span> <span class="nf">Bezier</span><span class="p">(</span><span class="n">CGFloat</span> <span class="n">t</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">P0</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">P1</span><span class="p">,</span> <span class="n">CGFloat</span> <span class="n">P2</span><span class="p">,</span>
+   	              <span class="n">CGFloat</span> <span class="n">P3</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> 
+    <span class="n">powf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">P0</span>
+    <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">powf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">P1</span>
+    <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">powf</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">P2</span>
+    <span class="o">+</span> <span class="n">powf</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">P3</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p>For the four control points (<code>P0</code>&hellip;<code>P3</code>), you pass the <code>x</code> value to <code>Bezier()</code> and get back the <code>x</code> value of the curve. Repeat for <code>y</code>. There are many reasons that the above approach is inefficient. We&rsquo;ll discuss that more in later posts. But for this post, the goal is to figure out how to convert this into an matrix operation so we can use some of of our fancy hardware to calculate it for us.</p>
+<p>For the four control points (<code class="highlighter-rouge">P0</code>…<code class="highlighter-rouge">P3</code>), you pass the <code class="highlighter-rouge">x</code> value to <code class="highlighter-rouge">Bezier()</code> and get back the <code class="highlighter-rouge">x</code> value of the curve. Repeat for <code class="highlighter-rouge">y</code>. There are many reasons that the above approach is inefficient. We’ll discuss that more in later posts. But for this post, the goal is to figure out how to convert this into an matrix operation so we can use some of of our fancy hardware to calculate it for us.</p>
 
-<p>The first step is realizing what kind of matrix we want. Our goal is to collect all the <code>t</code> terms into one matrix, all the <code>P</code> terms into one matrix. and all the constants into a third matrix. When we&rsquo;re done, it&rsquo;ll look like this (where <code>K</code> is the constants):</p>
+<p>The first step is realizing what kind of matrix we want. Our goal is to collect all the <code class="highlighter-rouge">t</code> terms into one matrix, all the <code class="highlighter-rouge">P</code> terms into one matrix. and all the constants into a third matrix. When we’re done, it’ll look like this (where <code class="highlighter-rouge">K</code> is the constants):</p>
 
 <div>
 \begin{equation}
@@ -119,13 +115,12 @@
 \end{equation}
 </div>
 
-
 <p>Written out, that looks like:</p>
 
 <div>
 \begin{equation}
 \mathbf{B}(t) = \begin{pmatrix}
-\mathbf{P}_0 & \mathbf{P}_1 & \mathbf{P}_2 & \mathbf{P}_3 
+\mathbf{P}_0 &amp; \mathbf{P}_1 &amp; \mathbf{P}_2 &amp; \mathbf{P}_3 
 \end{pmatrix}
 \begin{pmatrix}
 ??? \\\\
@@ -141,12 +136,11 @@ t \\\\
 \end{equation}
 </div>
 
+<p>The four <code class="highlighter-rouge">P</code> values are the control points from the Bézier equation (these are points, so they include an x and y). The four <code class="highlighter-rouge">t</code> terms are the powers that occur in the equation (remember: 1 = t<sup>0 </sup>).</p>
 
-<p>The four <code>P</code> values are the control points from the Bézier equation (these are points, so they include an x and y). The four <code>t</code> terms are the powers that occur in the equation (remember: 1 = t<sup>0 </sup>).</p>
+<p>When you multiply matrices, the result has the number of rows in the first matrix and the number of columns in the second. So <code class="highlighter-rouge">P</code> is 1x4 and the constants are MxN (we’ll figure out M and N shortly). So that result is 1xN. Times <code class="highlighter-rouge">T</code> (4x1) and we’ll finish up with a 1x1 matrix. A single point value. This is why it matters that <code class="highlighter-rouge">P</code> is in a row and <code class="highlighter-rouge">T</code> is in a column.</p>
 
-<p>When you multiply matrices, the result has the number of rows in the first matrix and the number of columns in the second. So <code>P</code> is 1x4 and the constants are MxN (we&rsquo;ll figure out M and N shortly). So that result is 1xN. Times <code>T</code> (4x1) and we&rsquo;ll finish up with a 1x1 matrix. A single point value. This is why it matters that <code>P</code> is in a row and <code>T</code> is in a column.</p>
-
-<p>But a &ldquo;point&rdquo; is a vector. Let&rsquo;s make that a little clearer (I hope):</p>
+<p>But a “point” is a vector. Let’s make that a little clearer (I hope):</p>
 
 <div>
 \begin{equation}
@@ -155,7 +149,7 @@ B_x(t)\\\\
 B_y(t)
 \end{pmatrix}
  = \begin{pmatrix}
-\mathbf{P}_0 & \mathbf{P}_1 & \mathbf{P}_2 & \mathbf{P}_3 
+\mathbf{P}_0 &amp; \mathbf{P}_1 &amp; \mathbf{P}_2 &amp; \mathbf{P}_3 
 \end{pmatrix}
 \begin{pmatrix}
 ???\\\\
@@ -171,8 +165,7 @@ t \\\\
 \end{equation}
 </div>
 
-
-<p>OK, that&rsquo;s a little closer to a <code>CGPoint</code>. One x, one y. But what about &ldquo;the constants?&rdquo; These are the multipliers for each of the terms in &ldquo;expanded form.&rdquo; What we want is our equation in a form like:</p>
+<p>OK, that’s a little closer to a <code class="highlighter-rouge">CGPoint</code>. One x, one y. But what about “the constants?” These are the multipliers for each of the terms in “expanded form.” What we want is our equation in a form like:</p>
 
 <div>
 \begin{equation}
@@ -180,8 +173,7 @@ aP_0t^3 + bP_0t^2 + cP_0t + dP_0 + eP_1t^3 + fP_1t^2 + gP_1t + \cdots
 \end{equation}
 </div>
 
-
-<p>This gives us the sum of every combination of each <code>P</code> with each power of <code>t</code>. When you see &ldquo;the sum of every combination&rdquo; you should be thinking dot product and matrix multiplication. From this equation, it shouldn&rsquo;t take a lot of imagination to figure out what <code>K</code> looks like.</p>
+<p>This gives us the sum of every combination of each <code class="highlighter-rouge">P</code> with each power of <code class="highlighter-rouge">t</code>. When you see “the sum of every combination” you should be thinking dot product and matrix multiplication. From this equation, it shouldn’t take a lot of imagination to figure out what <code class="highlighter-rouge">K</code> looks like.</p>
 
 <div>
 \begin{equation}
@@ -190,13 +182,13 @@ B_x(t)\\\\
 B_y(t)
 \end{pmatrix}
  = \begin{pmatrix}
-\mathbf{P}_0 & \mathbf{P}_1 & \mathbf{P}_2 & \mathbf{P}_3 
+\mathbf{P}_0 &amp; \mathbf{P}_1 &amp; \mathbf{P}_2 &amp; \mathbf{P}_3 
 \end{pmatrix}
 \begin{pmatrix}
-a & b & c & d \\\\
-e & f & g & h \\\\
-i & j & k & l \\\\
-m & n & o & p
+a &amp; b &amp; c &amp; d \\\\
+e &amp; f &amp; g &amp; h \\\\
+i &amp; j &amp; k &amp; l \\\\
+m &amp; n &amp; o &amp; p
 \end{pmatrix}
 \begin{pmatrix}
 t^3 \\\\
@@ -207,43 +199,55 @@ t \\\\
 \end{equation}
 </div>
 
-
 <p>Now, if only we had a way to figure out all those constants easily. We could do it with pencil and paper, but I always screw up simple algebra. If only there were some device that did mechanical operations really well. Just imagine if someone put up a <a href="http://www.wolframalpha.com/">free web service</a> that would do algebra for you.</p>
 
 <p>Bless you Wolfram. You are my hero.</p>
 
-<p>So we head over to Wolfram|Alpha and ask it to <a href="http://www.wolframalpha.com/input/?i=expand+%281-t%29%5E3+P_0+%2B+3+%281-t%29%5E2+t+P_1+%2B+3+%281-t%29+t%5E2+P_2+%2B+t%5E3+P_3">expand the Bézier equation</a> for us:</p>
+<table>
+  <tbody>
+    <tr>
+      <td>So we head over to Wolfram</td>
+      <td>Alpha and ask it to <a href="http://www.wolframalpha.com/input/?i=expand+%281-t%29%5E3+P_0+%2B+3+%281-t%29%5E2+t+P_1+%2B+3+%281-t%29+t%5E2+P_2+%2B+t%5E3+P_3">expand the Bézier equation</a> for us:</td>
+    </tr>
+  </tbody>
+</table>
 
-<pre><code>expand (1-t)^3 P_0 + 3 (1-t)^2 t P_1 + 3 (1-t) t^2 P_2 + t^3 P_3
-</code></pre>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expand (1-t)^3 P_0 + 3 (1-t)^2 t P_1 + 3 (1-t) t^2 P_2 + t^3 P_3
+</code></pre></div></div>
 
-<p><img class="center" src="/images/equations-matrices-accelerate/wolframalpha-20120206103919629.gif"></p>
+<p><img class="center" src="/images/equations-matrices-accelerate/wolframalpha-20120206103919629.gif" /></p>
 
 <p>And from that, we can work out our matrix:</p>
 
 <div>
 \begin{equation}
 \begin{pmatrix}
--1 & 3 & -3 & 1\\\\
-3 & -6 & 3 & 0 \\\\
--3 & 3 & 0 & 0 \\\\
-1 & 0 & 0 & 0
+-1 &amp; 3 &amp; -3 &amp; 1\\\\
+3 &amp; -6 &amp; 3 &amp; 0 \\\\
+-3 &amp; 3 &amp; 0 &amp; 0 \\\\
+1 &amp; 0 &amp; 0 &amp; 0
 \end{pmatrix}
 \end{equation}
 </div>
 
+<p>Now, in fairness, I have found this matrix several <a href="http://www.google.com/search?client=safari&amp;rls=en&amp;q=bezier+matrix&amp;ie=UTF-8&amp;oe=UTF-8">places on the internet</a>. So why bother doing all this? Why not just copy the final answer? For the Bézier calculations I wanted to do, I also need the first derivative of this, and I couldn’t find the matrix for that anywhere. So sometimes the answer isn’t just out there for you. And from experience, let me say that trying to debug this kind of code when you don’t actually know what the matrix means is… challenging.</p>
 
-<p>Now, in fairness, I have found this matrix several <a href="http://www.google.com/search?client=safari&rls=en&q=bezier+matrix&ie=UTF-8&oe=UTF-8">places on the internet</a>. So why bother doing all this? Why not just copy the final answer? For the Bézier calculations I wanted to do, I also need the first derivative of this, and I couldn&rsquo;t find the matrix for that anywhere. So sometimes the answer isn&rsquo;t just out there for you. And from experience, let me say that trying to debug this kind of code when you don&rsquo;t actually know what the matrix means is&hellip; challenging.</p>
-
-<p>As an exercise, calculate the matrix for the Bézier derivative yourself. Wolfram|Alpha will give you the derivative of a function using the command <code>derivative</code> (instead of <code>expand</code>). I&rsquo;ll give you a hint: the matrix is not 4x4. I&rsquo;ll post the answer (and how to get it) in my next installment.</p>
+<table>
+  <tbody>
+    <tr>
+      <td>As an exercise, calculate the matrix for the Bézier derivative yourself. Wolfram</td>
+      <td>Alpha will give you the derivative of a function using the command <code class="highlighter-rouge">derivative</code> (instead of <code class="highlighter-rouge">expand</code>). I’ll give you a hint: the matrix is not 4x4. I’ll post the answer (and how to get it) in my next installment.</td>
+    </tr>
+  </tbody>
+</table>
 </div>
 
 
   <footer>
     <p class="meta">
-      
+      <!-- 
 <span class="byline author vcard">Posted by <span class="fn">Rob Napier</span></span>
-
+ -->
       
 
 
@@ -310,21 +314,7 @@ t \\\\
 
 
 
-<!-- Fathom - simple website analytics - https://usefathom.com -->
-<script>
-(function(f, a, t, h, o, m){
-a[h]=a[h]||function(){
-    (a[h].q=a[h].q||[]).push(arguments)
-};
-o=f.createElement('script'),
-m=f.getElementsByTagName('script')[0];
-o.async=1; o.src=t; o.id='fathom-script';
-m.parentNode.insertBefore(o,m)
-})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
-fathom('set', 'siteId', 'MSRAZWIU');
-fathom('trackPageview');
-</script>
-<!-- / Fathom -->
+
 
 
 
