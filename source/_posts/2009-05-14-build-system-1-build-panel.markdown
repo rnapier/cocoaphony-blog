@@ -55,7 +55,8 @@ Anything that is in both Release and Debug, move to Shared, and put `#include "S
 
 If you've followed all the instructions, you should have four files that look like this (assuming your product's name is "Test"):
 
-{% codeblock lang:text Shared.xcconfig %}
+### Shared.xcconfig
+```
 ARCHS = $(ARCHS_STANDARD_32_BIT)
 SDKROOT = iphoneos2.2.1
 CODE_SIGN_IDENTITY = 
@@ -64,28 +65,31 @@ PREBINDING = NO
 GCC_C_LANGUAGE_STANDARD = c99
 GCC_WARN_ABOUT_RETURN_TYPE = YES
 GCC_WARN_UNUSED_VARIABLE = YES
-{% endcodeblock %}
+```
 
-{% codeblock lang:text Release.xcconfig %}
+### Release.xcconfig
+```
 #include "Shared.xcconfig"
 COPY_PHASE_STRIP = YES
-{% endcodeblock %}
+```
 
-{% codeblock lang:text Debug.xcconfig %}
+### Debug.xcconfig
+```
 #include "Shared.xcconfig"
 ONLY_ACTIVE_ARCH = YES
 COPY_PHASE_STRIP = NO
 GCC_DYNAMIC_NO_PIC = NO
 GCC_OPTIMIZATION_LEVEL = 0
-{% endcodeblock %}
+```
 
-{% codeblock lang:text Application.xcconfig %}
+### Application.xcconfig
+```
 INFOPLIST_FILE = Info.plist
 PRODUCT_NAME = Test
 ALWAYS_SEARCH_USER_PATHS = NO
 GCC_PRECOMPILE_PREFIX_HEADER = YES
 GCC_PREFIX_HEADER = Test_Prefix.pch
-{% endcodeblock %}
+```
 
 If you Build&Run now, everything should work. It's not a great build configuration, but it's Apple's default in a form that we can start understanding and improving.
 
