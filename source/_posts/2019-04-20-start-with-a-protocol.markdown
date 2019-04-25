@@ -216,7 +216,7 @@ func fetch&lt;Model&gt;(_ model: Model.Type,
                   completion: @escaping (Result<Model, Error>) -> Void)
 {
     let urlRequest = URLRequest(url: baseURL
-        .appendingPathComponent(<span class="chl">Model.apiPath</span>)
+        .appendingPathComponent(<span class="chl">Model.apiBase</span>)
         .appendingPathComponent("\(id)")
     )
 
