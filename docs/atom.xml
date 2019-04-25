@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-25T18:53:50-04:00</updated>
+  <updated>2019-04-25T18:56:35-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -265,9 +265,9 @@ func fetch&lt;Model&gt;(_ model: Model.Type,
 
 <h2 id="first-checkpoint">First checkpoint</h2>
 
-<p>I know this has been basic so far. I know many of you “know all this.” This article is a warm-up, and the point of the exercise is not <em>what</em> was built, but <em>how</em> it was built. I started with simple, concrete code, and extracted first a generic function, and then a simple (no associated type) protocol. This is exactly the opposite of starting with a Request PAT. This was just the first step. This system is nowhere near as flexible and powerful as it could be, but already it’s meeting the goal I set at the beginning: “fetch a several model types from an API and decode them.” Keep the goal in mind and don’t let the protocols get out in front of you.</p>
+<p>I know this has been basic so far. I know many of you “know all this.” This article is a warm-up, and the point of the exercise is not <em>what</em> was built, but <em>how</em> it was built. I started with simple, concrete code, and extracted first a generic function, and then a simple (no associated type) protocol. This is exactly the opposite of starting with a Request PAT and then trying to figure out the callers. This was just the first step. This system is nowhere near as flexible and powerful as it could be, but already it’s meeting the goal I set at the beginning: “fetch a several model types from an API and decode them.” Keep the current goal in mind and don’t let the protocols get out in front of you.</p>
 
-<p>Next time, I’ll push this example further, and start seeing what protocol oriented programming can really accomplish.</p>
+<p>Next time, I’ll push this example further, and start seeing what protocol oriented programming can really accomplish. Eventually I’ll even need a PAT!</p>
 ]]></content>
   </entry>
   
