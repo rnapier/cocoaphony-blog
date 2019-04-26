@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-26T09:37:50-04:00</updated>
+  <updated>2019-04-26T09:43:50-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -200,7 +200,6 @@ func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
                   id: Int,
                   completion: @escaping (Result&lt;<span class="chl">Model</span>, Error&gt;) -&gt; Void)
                   <span class="chl">where Model: Fetchable</span>
-
 {
     let urlRequest = URLRequest(url: baseURL
         .appendingPathComponent(<span class="cer">"??? user | document ???"</span>)
