@@ -183,6 +183,8 @@ Implementing `fetch` is pretty straightforward, except for one small <span class
 func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
                   id: Int,
                   completion: @escaping (Result<<span class="chl">Model</span>, Error>) -> Void)
+                  <span class="chl">where Model: Fetchable</span>
+
 {
     let urlRequest = URLRequest(url: baseURL
         .appendingPathComponent(<span class="cer">"??? user | document ???"</span>)
@@ -214,6 +216,7 @@ I need a protocol that requires that the type be Decodable, and also requires th
 func fetch&lt;Model&gt;(_ model: Model.Type,
                   id: Int,
                   completion: @escaping (Result<Model, Error>) -> Void)
+                  where Model: Fetchable
 {
     let urlRequest = URLRequest(url: baseURL
         .appendingPathComponent(<span class="chl">Model.apiBase</span>)
