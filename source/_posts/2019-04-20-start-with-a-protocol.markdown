@@ -256,3 +256,5 @@ I can take any type I want and conform it to my own protocols to use it in new a
 I know this has been basic so far. I know many of you "know all this." This article is a warm-up, and the point of the exercise is not *what* was built, but *how* it was built. I started with simple, concrete code, and extracted first a generic function, and then a simple (no associated type) protocol. This is exactly the opposite of starting with a Request PAT and then trying to figure out the callers. This was just the first step. This system is nowhere near as flexible and powerful as it could be, but already it's meeting the goal I set at the beginning: "fetch a several model types from an API and decode them." Keep the current goal in mind and don't let the protocols get out in front of you.
 
 Next time, I'll push this example further, and start seeing what protocol oriented programming can really accomplish. Eventually I'll even need a PAT!
+
+(I don't have comments on this site, but if you're interested in any conversations about it, follow the thread on [Twitter](https://twitter.com/cocoaphony/status/1121549665789411333).)
