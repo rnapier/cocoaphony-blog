@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-28T12:46:25-04:00</updated>
+  <updated>2019-04-28T12:51:41-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -54,7 +54,7 @@
 
 <h2 id="theres-always-usually-an-exception">There’s <strike>always</strike> usually an exception</h2>
 
-<p>OK, what about the exceptions? There <em>are</em> a some protocols that do conform to themselves. <code class="highlighter-rouge">@objc</code> protocols do unless they have “static” requirements such as <code class="highlighter-rouge">init</code>, or static properties or methods. And in Swift 5, Error conforms to itself so that you can say <code class="highlighter-rouge">Result&lt;T, Error&gt;</code>. If Error didn’t conform to itself, you’d have to use a concrete type for the error. But these are compiler-enforced special cases. You can’t make <em>your</em> protocol conform to itself.</p>
+<p>OK, what about the exceptions? There <em>are</em> a some protocols that do conform to themselves. <code class="highlighter-rouge">@objc</code> protocols do unless they have “static” requirements such as <code class="highlighter-rouge">init</code>, or static properties or methods. And in Swift 5, Error conforms to itself so that you can have “untyped” Results like <code class="highlighter-rouge">Result&lt;T, Error&gt;</code>. If Error didn’t conform to itself, you’d have to use a concrete type for the error. But these are compiler-enforced special cases. You can’t make <em>your</em> protocol conform to itself.</p>
 
 <h2 id="impossible-or-just-not-implemented">Impossible? Or just not implemented?</h2>
 
@@ -72,7 +72,11 @@
 
 <h2 id="i-of-course-mean-existentials">I of course mean “existentials”</h2>
 
-<p>I want to talk about this more later, but when I say “a protocol doesn’t conform to itself,” it’s more accurate to say “the existential of a protocol doesn’t conform to that protocol.” But again, that’s for a later sidebar….</p>
+<p>I want to talk about this more later, but when I say “a protocol doesn’t conform to itself,” it’s more accurate to say “the existential of a protocol doesn’t conform to that protocol.” But again, that’s for a later sidebar…. The thing to keep in mind is that these two things are different:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">f</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">P</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">t</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span>    <span class="c1">// This requires a concrete T that conforms to P</span>
+<span class="kd">func</span> <span class="nf">f</span><span class="p">(</span><span class="nv">p</span><span class="p">:</span> <span class="kt">P</span><span class="p">)</span>          <span class="c1">// This requires a variable of type P (pedantically: "a P existential")</span>
+</code></pre></div></div>
 
 <p>So that’s just a quick side-bar. Next time, I’ll continue expanding the network stack.</p>
 ]]></content>

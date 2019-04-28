@@ -38,7 +38,7 @@ And so again: Protocols do not conform to protocols, not even to themselves.
 
 ## There's <strike>always</strike> usually an exception
 
-OK, what about the exceptions? There *are* a some protocols that do conform to themselves. `@objc` protocols do unless they have "static" requirements such as `init`, or static properties or methods. And in Swift 5, Error conforms to itself so that you can say `Result<T, Error>`. If Error didn't conform to itself, you'd have to use a concrete type for the error. But these are compiler-enforced special cases. You can't make *your* protocol conform to itself.
+OK, what about the exceptions? There *are* a some protocols that do conform to themselves. `@objc` protocols do unless they have "static" requirements such as `init`, or static properties or methods. And in Swift 5, Error conforms to itself so that you can have "untyped" Results like `Result<T, Error>`. If Error didn't conform to itself, you'd have to use a concrete type for the error. But these are compiler-enforced special cases. You can't make *your* protocol conform to itself.
 
 ## Impossible? Or just not implemented?
 
@@ -57,6 +57,11 @@ In this series I'm generally going to talk about things I know from experience u
 
 ## I of course mean "existentials"
 
-I want to talk about this more later, but when I say "a protocol doesn't conform to itself," it's more accurate to say "the existential of a protocol doesn't conform to that protocol." But again, that's for a later sidebar....
+I want to talk about this more later, but when I say "a protocol doesn't conform to itself," it's more accurate to say "the existential of a protocol doesn't conform to that protocol." But again, that's for a later sidebar.... The thing to keep in mind is that these two things are different:
+
+```swift
+func f<T: P>(t: T)    // This requires a concrete T that conforms to P
+func f(p: P)          // This requires a variable of type P (pedantically: "a P existential")
+```
 
 So that's just a quick side-bar. Next time, I'll continue expanding the network stack.
