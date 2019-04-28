@@ -36,6 +36,34 @@ And in fact, I see people try to write that all the time. But how could that pos
 
 And so again: Protocols do not conform to protocols, not even to themselves.
 
+## When will it bite me?
+
+When I say this bites people all the time, here's a common example: Say you have a protocol and an extension on Array:
+
+```swift
+protocol MyProtocol {...}
+
+extension Array where Element: MyProtocol {
+    func doThing() { ... }
+}
+```
+
+And then you have some array of MyProtocol:
+
+```swift
+let things: [MyProtocol] = ...
+```
+
+You might imagine that you could call `things.doThing()`. After all, `doThing()` applies to any array of MyProtocol, and what's more MyProtocol than MyProtocol? But that's exactly what you can't do. The syntax `where Element: MyProtocol` means "Element conforms to MyProtocol." And as I've repeated many times now: MyProtocol does not conform to itself. In order to add an extension on `[MyProtocol]`, you would need to write an extension with `==` rather than `:`.
+
+```swift
+extension Array where Element == MyProtocol {
+    func doThing() { ... }
+}
+```
+
+This says that Element *is exactly* MyProtocol. That doesn't include types that conform to MyProtocol. It only applies exactly to `[MyProtocol]`.
+
 ## There's <strike>always</strike> usually an exception
 
 OK, what about the exceptions? There *are* a some protocols that do conform to themselves. `@objc` protocols do unless they have "static" requirements such as `init`, or static properties or methods. And in Swift 5, Error conforms to itself so that you can have "untyped error" Results like `Result<T, Error>`. If Error didn't conform to itself, you'd have to use a concrete type for the error. But these are compiler-enforced special cases. You can't make *your* protocol conform to itself.

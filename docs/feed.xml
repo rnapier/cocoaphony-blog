@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://robnapier.net/feed.xml" rel="self" type="application/atom+xml" /><link href="https://robnapier.net/" rel="alternate" type="text/html" /><updated>2019-04-28T13:01:13-04:00</updated><id>https://robnapier.net/feed.xml</id><title type="html">Cocoaphony</title><subtitle>Mac and iOS development with a focus on Swift and functional programming</subtitle><author><name>Rob Napier</name></author><entry><title type="html">Protocols Sidebar I: Protocols are nonconformists</title><link href="https://robnapier.net/nonconformist" rel="alternate" type="text/html" title="Protocols Sidebar I: Protocols are nonconformists" /><published>2019-04-28T12:43:00-04:00</published><updated>2019-04-28T12:43:00-04:00</updated><id>https://robnapier.net/nonconformist</id><content type="html" xml:base="https://robnapier.net/nonconformist">&lt;p&gt;&lt;a href=&quot;/start-with-a-protocol&quot;&gt;Last time&lt;/a&gt;, I mentioned something in passing:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://robnapier.net/feed.xml" rel="self" type="application/atom+xml" /><link href="https://robnapier.net/" rel="alternate" type="text/html" /><updated>2019-04-28T16:19:55-04:00</updated><id>https://robnapier.net/feed.xml</id><title type="html">Cocoaphony</title><subtitle>Mac and iOS development with a focus on Swift and functional programming</subtitle><author><name>Rob Napier</name></author><entry><title type="html">Protocols Sidebar I: Protocols are nonconformists</title><link href="https://robnapier.net/nonconformist" rel="alternate" type="text/html" title="Protocols Sidebar I: Protocols are nonconformists" /><published>2019-04-28T12:43:00-04:00</published><updated>2019-04-28T12:43:00-04:00</updated><id>https://robnapier.net/nonconformist</id><content type="html" xml:base="https://robnapier.net/nonconformist">&lt;p&gt;&lt;a href=&quot;/start-with-a-protocol&quot;&gt;Last time&lt;/a&gt;, I mentioned something in passing:&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;I need a new protocol.&lt;/p&gt;
@@ -31,6 +31,31 @@
 &lt;p&gt;And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with &lt;code class=&quot;highlighter-rouge&quot;&gt;result&lt;/code&gt;? It’s only known method would be &lt;code class=&quot;highlighter-rouge&quot;&gt;init(from: Decoder)&lt;/code&gt;. There are no instance methods on Decodable.&lt;/p&gt;
 
 &lt;p&gt;And so again: Protocols do not conform to protocols, not even to themselves.&lt;/p&gt;
+
+&lt;h2 id=&quot;when-will-it-bite-me&quot;&gt;When will it bite me?&lt;/h2&gt;
+
+&lt;p&gt;When I say this bites people all the time, here’s a common example: Say you have a protocol and an extension on Array:&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;protocol&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;MyProtocol&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;MyProtocol&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;doThing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And then you have some array of MyProtocol:&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;things&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;MyProtocol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You might imagine that you could call &lt;code class=&quot;highlighter-rouge&quot;&gt;things.doThing()&lt;/code&gt;. After all, &lt;code class=&quot;highlighter-rouge&quot;&gt;doThing()&lt;/code&gt; applies to any array of MyProtocol, and what’s more MyProtocol than MyProtocol? But that’s exactly what you can’t do. The syntax &lt;code class=&quot;highlighter-rouge&quot;&gt;where Element: MyProtocol&lt;/code&gt; means “Element conforms to MyProtocol.” And as I’ve repeated many times now: MyProtocol does not conform to itself. In order to add an extension on &lt;code class=&quot;highlighter-rouge&quot;&gt;[MyProtocol]&lt;/code&gt;, you would need to write an extension with &lt;code class=&quot;highlighter-rouge&quot;&gt;==&lt;/code&gt; rather than &lt;code class=&quot;highlighter-rouge&quot;&gt;:&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Element&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;MyProtocol&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;doThing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This says that Element &lt;em&gt;is exactly&lt;/em&gt; MyProtocol. That doesn’t include types that conform to MyProtocol. It only applies exactly to &lt;code class=&quot;highlighter-rouge&quot;&gt;[MyProtocol]&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h2 id=&quot;theres-always-usually-an-exception&quot;&gt;There’s &lt;strike&gt;always&lt;/strike&gt; usually an exception&lt;/h2&gt;
 

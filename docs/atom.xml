@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-28T13:01:13-04:00</updated>
+  <updated>2019-04-28T16:19:55-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -51,6 +51,31 @@
 <p>And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with <code class="highlighter-rouge">result</code>? It’s only known method would be <code class="highlighter-rouge">init(from: Decoder)</code>. There are no instance methods on Decodable.</p>
 
 <p>And so again: Protocols do not conform to protocols, not even to themselves.</p>
+
+<h2 id="when-will-it-bite-me">When will it bite me?</h2>
+
+<p>When I say this bites people all the time, here’s a common example: Say you have a protocol and an extension on Array:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">MyProtocol</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt">MyProtocol</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">doThing</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And then you have some array of MyProtocol:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">things</span><span class="p">:</span> <span class="p">[</span><span class="kt">MyProtocol</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+</code></pre></div></div>
+
+<p>You might imagine that you could call <code class="highlighter-rouge">things.doThing()</code>. After all, <code class="highlighter-rouge">doThing()</code> applies to any array of MyProtocol, and what’s more MyProtocol than MyProtocol? But that’s exactly what you can’t do. The syntax <code class="highlighter-rouge">where Element: MyProtocol</code> means “Element conforms to MyProtocol.” And as I’ve repeated many times now: MyProtocol does not conform to itself. In order to add an extension on <code class="highlighter-rouge">[MyProtocol]</code>, you would need to write an extension with <code class="highlighter-rouge">==</code> rather than <code class="highlighter-rouge">:</code>.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span> <span class="o">==</span> <span class="kt">MyProtocol</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">doThing</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This says that Element <em>is exactly</em> MyProtocol. That doesn’t include types that conform to MyProtocol. It only applies exactly to <code class="highlighter-rouge">[MyProtocol]</code>.</p>
 
 <h2 id="theres-always-usually-an-exception">There’s <strike>always</strike> usually an exception</h2>
 
