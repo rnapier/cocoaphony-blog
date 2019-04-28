@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-28T12:44:13-04:00</updated>
+  <updated>2019-04-28T12:46:25-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -19,6 +19,15 @@
     <updated>2019-04-28T12:43:00-04:00</updated>
     <id>https://robnapier.net/nonconformist</id>
     <content type="html"><![CDATA[<p><a href="https://robnapier.net/start-with-a-protocol">Last time</a>, I mentioned something in passing:</p>
+
+<blockquote>
+  <p>I need a new protocol.</p>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <blockquote>
   <p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="highlighter-rouge">apiBase</code>.</p>
