@@ -108,7 +108,7 @@
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Decodable</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with <code class="highlighter-rouge">result</code>? It’s only known method would be <code class="highlighter-rouge">decode</code>.</p>
+<p>And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with <code class="highlighter-rouge">result</code>? It’s only known method would be <code class="highlighter-rouge">init(from: Decoder)</code>. There are no instance methods on Decodable.</p>
 
 <p>And so again: Protocols do not conform to protocols, not even to themselves.</p>
 

@@ -32,7 +32,7 @@ Well, remember that JSONDecoder’s `decode` method requires a type that conform
 let result = try JSONDecoder().decode(Decodable.self, from: data)
 ```
 
-And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with `result`? It's only known method would be `decode`.
+And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with `result`? It's only known method would be `init(from: Decoder)`. There are no instance methods on Decodable.
 
 And so again: Protocols do not conform to protocols, not even to themselves.
 
