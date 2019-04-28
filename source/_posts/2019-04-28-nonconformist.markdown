@@ -38,7 +38,7 @@ And so again: Protocols do not conform to protocols, not even to themselves.
 
 ## There's <strike>always</strike> usually an exception
 
-OK, what about the exceptions? There *are* a some protocols that do conform to themselves. `@objc` protocols do unless they have "static" requirements such as `init`, or static properties or methods. And in Swift 5, Error conforms to itself so that you can have "untyped" Results like `Result<T, Error>`. If Error didn't conform to itself, you'd have to use a concrete type for the error. But these are compiler-enforced special cases. You can't make *your* protocol conform to itself.
+OK, what about the exceptions? There *are* a some protocols that do conform to themselves. `@objc` protocols do unless they have "static" requirements such as `init`, or static properties or methods. And in Swift 5, Error conforms to itself so that you can have "untyped error" Results like `Result<T, Error>`. If Error didn't conform to itself, you'd have to use a concrete type for the error. But these are compiler-enforced special cases. You can't make *your* protocol conform to itself.
 
 ## Impossible? Or just not implemented?
 
