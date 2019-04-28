@@ -46,7 +46,7 @@ But could they? Yes, some could in principle. The rule is pretty straightforward
 
 ```swift
 let encodables: [Encodable] = ...
-try JSONEncoder().encode(encodables)
+let json = try JSONEncoder().encode(encodables)
 ```
 
 Will this ever work? I don't know. It's been brought up a few times on [Swift Evolution](https://forums.swift.org/t/will-existentials-ever-conform-to-their-protocols/4919), and hasn't been rejected outright. One concern is that adding an `init` requirement to an existing protocol could break existing usage (possibly in downstream code) in ways that might surprise developers. I haven't found a clear statement, but it seems the team wants to make this work someday.

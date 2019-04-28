@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-28T12:58:59-04:00</updated>
+  <updated>2019-04-28T13:01:13-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -61,7 +61,7 @@
 <p>But could they? Yes, some could in principle. The rule is pretty straightforward: if a protocol includes an <code class="highlighter-rouge">init</code> or <code class="highlighter-rouge">static</code> requirement, or includes a <code class="highlighter-rouge">Self</code> method parameter, then self-conformance is tricky. If there is no such requirement, then it it’s much more straightforward (basically the same as for <code class="highlighter-rouge">@objc</code>). There’s no deep reason that Encodable can’t be Encodable. The following could work, and I think would be both sensible and useful, it just doesn’t today:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">encodables</span><span class="p">:</span> <span class="p">[</span><span class="kt">Encodable</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
-<span class="k">try</span> <span class="kt">JSONEncoder</span><span class="p">()</span><span class="o">.</span><span class="nf">encode</span><span class="p">(</span><span class="n">encodables</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">json</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">JSONEncoder</span><span class="p">()</span><span class="o">.</span><span class="nf">encode</span><span class="p">(</span><span class="n">encodables</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>Will this ever work? I don’t know. It’s been brought up a few times on <a href="https://forums.swift.org/t/will-existentials-ever-conform-to-their-protocols/4919">Swift Evolution</a>, and hasn’t been rejected outright. One concern is that adding an <code class="highlighter-rouge">init</code> requirement to an existing protocol could break existing usage (possibly in downstream code) in ways that might surprise developers. I haven’t found a clear statement, but it seems the team wants to make this work someday.</p>
