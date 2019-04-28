@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Protocols Sidebar I: Protocols are nonconformists"
+title: 'Protocols Sidebar I: Protocols are nonconformists'
+date: 2019-04-28 12:43 -0400
 ---
-
 [Last time]({% link _posts/2019-04-20-start-with-a-protocol.markdown %}), I mentioned something in passing:
 
 > I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, `apiBase`.

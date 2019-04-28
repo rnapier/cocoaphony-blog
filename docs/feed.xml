@@ -1,4 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://robnapier.net/feed.xml" rel="self" type="application/atom+xml" /><link href="https://robnapier.net/" rel="alternate" type="text/html" /><updated>2019-04-26T11:06:52-04:00</updated><id>https://robnapier.net/feed.xml</id><title type="html">Cocoaphony</title><subtitle>Mac and iOS development with a focus on Swift and functional programming</subtitle><author><name>Rob Napier</name></author><entry><title type="html">Protocols I: “Start with a protocol,” he said</title><link href="https://robnapier.net/start-with-a-protocol" rel="alternate" type="text/html" title="Protocols I: &quot;Start with a protocol,&quot; he said" /><published>2019-04-22T00:00:00-04:00</published><updated>2019-04-22T00:00:00-04:00</updated><id>https://robnapier.net/start-with-a-protocol</id><content type="html" xml:base="https://robnapier.net/start-with-a-protocol">&lt;h2 id=&quot;in-the-beginning-crusty&quot;&gt;In the beginning, Crusty&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://robnapier.net/feed.xml" rel="self" type="application/atom+xml" /><link href="https://robnapier.net/" rel="alternate" type="text/html" /><updated>2019-04-28T12:44:13-04:00</updated><id>https://robnapier.net/feed.xml</id><title type="html">Cocoaphony</title><subtitle>Mac and iOS development with a focus on Swift and functional programming</subtitle><author><name>Rob Napier</name></author><entry><title type="html">Protocols Sidebar I: Protocols are nonconformists</title><link href="https://robnapier.net/nonconformist" rel="alternate" type="text/html" title="Protocols Sidebar I: Protocols are nonconformists" /><published>2019-04-28T12:43:00-04:00</published><updated>2019-04-28T12:43:00-04:00</updated><id>https://robnapier.net/nonconformist</id><content type="html" xml:base="https://robnapier.net/nonconformist">&lt;p&gt;&lt;a href=&quot;/start-with-a-protocol&quot;&gt;Last time&lt;/a&gt;, I mentioned something in passing:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, &lt;code class=&quot;highlighter-rouge&quot;&gt;apiBase&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Read that again. It &lt;em&gt;requires&lt;/em&gt; that the type be Decodable and also &lt;em&gt;requires&lt;/em&gt; other things. I didn’t say that Fetchable &lt;em&gt;is&lt;/em&gt; Decodable. It isn’t.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;protocols-do-not-conform&quot;&gt;Protocols do not conform&lt;/h2&gt;
+
+&lt;p&gt;Protocols (with a few exceptions) do not conform to protocols, not even to themselves. A type that conforms to Fetchable, must also conform to Decodable, but Fetchable is not Decodable. Fetchable is not Fetchable. Decodable is not Decodable. Why do I keep repeating this. Because you will forget, and it will bite you. What would it mean if Decodable were Decodable?&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Decodable&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Well, remember that JSONDecoder’s &lt;code class=&quot;highlighter-rouge&quot;&gt;decode&lt;/code&gt; method requires a type that conforms to Decodable. If Decodable (or Fetchable) conformed to Decodable, I could write:&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;JSONDecoder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Decodable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with &lt;code class=&quot;highlighter-rouge&quot;&gt;result&lt;/code&gt;? It’s only known method would be &lt;code class=&quot;highlighter-rouge&quot;&gt;decode&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;And so again: Protocols do not conform to protocols, not even to themselves.&lt;/p&gt;
+
+&lt;h2 id=&quot;theres-always-usually-an-exception&quot;&gt;There’s &lt;strike&gt;always&lt;/strike&gt; usually an exception&lt;/h2&gt;
+
+&lt;p&gt;OK, what about the exceptions? There &lt;em&gt;are&lt;/em&gt; a some protocols that do conform to themselves. &lt;code class=&quot;highlighter-rouge&quot;&gt;@objc&lt;/code&gt; protocols do unless they have “static” requirements such as &lt;code class=&quot;highlighter-rouge&quot;&gt;init&lt;/code&gt;, or static properties or methods. And in Swift 5, Error conforms to itself so that you can say &lt;code class=&quot;highlighter-rouge&quot;&gt;Result&amp;lt;T, Error&amp;gt;&lt;/code&gt;. If Error didn’t conform to itself, you’d have to use a concrete type for the error. But these are compiler-enforced special cases. You can’t make &lt;em&gt;your&lt;/em&gt; protocol conform to itself.&lt;/p&gt;
+
+&lt;h2 id=&quot;impossible-or-just-not-implemented&quot;&gt;Impossible? Or just not implemented?&lt;/h2&gt;
+
+&lt;p&gt;But could they? Yes, some could in principle. The rule is pretty straightforward: if a protocol includes an &lt;code class=&quot;highlighter-rouge&quot;&gt;init&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;static&lt;/code&gt; requirement, or includes a &lt;code class=&quot;highlighter-rouge&quot;&gt;Self&lt;/code&gt; method parameter, then self-conformance is tricky. If there is no such requirement, then it it’s much more straightforward (basically the same as for &lt;code class=&quot;highlighter-rouge&quot;&gt;@objc&lt;/code&gt;). There’s no deep reason that Encodable can’t be Encodable. The following could work, and I think would be both sensible and useful, it just doesn’t today:&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;encodables&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Encodable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;JSONEncoder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;encodables&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Will this ever work? I don’t know. It’s been brought up a few times on &lt;a href=&quot;https://forums.swift.org/t/will-existentials-ever-conform-to-their-protocols/4919&quot;&gt;Swift Evolution&lt;/a&gt;, and hasn’t been rejected outright. One concern is that adding an &lt;code class=&quot;highlighter-rouge&quot;&gt;init&lt;/code&gt; requirement to an existing protocol could break existing usage (possibly in downstream code) in ways that might surprise developers. I haven’t found a clear statement, but it seems the team wants to make this work someday.&lt;/p&gt;
+
+&lt;p&gt;It’s even possible that “challenging” protocols could self-conform if there were default implementations. One could imagine a Swift where &lt;code class=&quot;highlighter-rouge&quot;&gt;Collection(1, 2, 3)&lt;/code&gt; would return an Array in a Collection existential. (I’m not suggesting that would be a good idea; I really don’t know. It’s just that it’s the kind of thing one could imagine.)&lt;/p&gt;
+
+&lt;p&gt;In this series I’m generally going to talk about things I know from experience using today’s Swift or can predict about likely-near-term Swift (i.e. there’s an SE in the works). So any time I say something like “that won’t work,” I mean “without adding a significant feature to Swift that I don’t know is planned.” (Hopefully folks will continue to correct me if I’m misleading about how hard something would be.)&lt;/p&gt;
+
+&lt;h2 id=&quot;i-of-course-mean-existentials&quot;&gt;I of course mean “existentials”&lt;/h2&gt;
+
+&lt;p&gt;I want to talk about this more later, but when I say “a protocol doesn’t conform to itself,” it’s more accurate to say “the existential of a protocol doesn’t conform to that protocol.” But again, that’s for a later sidebar….&lt;/p&gt;
+
+&lt;p&gt;So that’s just a quick side-bar. Next time, I’ll continue expanding the network stack.&lt;/p&gt;</content><author><name>Rob Napier</name></author><summary type="html">Last time, I mentioned something in passing: I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, apiBase. Read that again. It requires that the type be Decodable and also requires other things. I didn’t say that Fetchable is Decodable. It isn’t.</summary></entry><entry><title type="html">Protocols I: “Start with a protocol,” he said</title><link href="https://robnapier.net/start-with-a-protocol" rel="alternate" type="text/html" title="Protocols I: &quot;Start with a protocol,&quot; he said" /><published>2019-04-22T00:00:00-04:00</published><updated>2019-04-22T00:00:00-04:00</updated><id>https://robnapier.net/start-with-a-protocol</id><content type="html" xml:base="https://robnapier.net/start-with-a-protocol">&lt;h2 id=&quot;in-the-beginning-crusty&quot;&gt;In the beginning, Crusty&lt;/h2&gt;
 
 &lt;p&gt;In 2015, at WWDC, &lt;a href=&quot;https://twitter.com/DaveAbrahams&quot;&gt;Dave Abrahams&lt;/a&gt; gave what I believe is still the greatest Swift talk ever given, and certainly the most influential. &lt;a href=&quot;https://developer.apple.com/videos/play/wwdc2015/408/&quot;&gt;”Protocol-Oriented Programming in Swift,”&lt;/a&gt; or as it is more affectionately known, “The Crusty Talk.”&lt;/p&gt;
 
@@ -592,141 +639,4 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   &lt;li&gt;Continuing to prepare for &lt;a href=&quot;http://www.dotswift.io&quot;&gt;dotSwift&lt;/a&gt;.&lt;/li&gt;
   &lt;li&gt;Getting back to the blog.&lt;/li&gt;
   &lt;li&gt;RNCryptor v5, which will finally update the data format to improve performance, security, and robustness. Much of the v4 design was specifically to make v5 easier to write.&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Rob Napier</name></author><summary type="html">After months of writing and rewriting, I am happy to finally announce RNCryptor 4 beta 1 in Swift. RNCryptor 4 is a complete rewrite of RNCryptor for Swift 2 with full bridging support to Objective-C. It has a streamlined API, simpler installation, and improved internals. It continues to use the v3 data format and is fully interoperable with other RNCryptor implementations. For users desiring a fully Objective-C solution, v3 is still available. I don’t currently plan to do significant new work on v3, but will consider it if there is strong interest. Going forward, I expect most OS X and iOS projects to be able to accept a mix of ObjC and Swift code. Objective-C continues to be a fully supported language in RNCryptor 4. I plan to convert this to a final release in a week or so if no major issues are discovered. I now move onto: Continuing to prepare for dotSwift. Getting back to the blog. RNCryptor v5, which will finally update the data format to improve performance, security, and robustness. Much of the v4 design was specifically to make v5 easier to write.</summary></entry><entry><title type="html">A Little Respect for AnySequence</title><link href="https://robnapier.net/erasure" rel="alternate" type="text/html" title="A Little Respect for AnySequence" /><published>2015-08-04T15:42:00-04:00</published><updated>2015-08-04T15:42:00-04:00</updated><id>https://robnapier.net/erasure</id><content type="html" xml:base="https://robnapier.net/erasure">&lt;p&gt;Once upon a time, when Swift was young, there were a couple of types called &lt;code class=&quot;highlighter-rouge&quot;&gt;SequenceOf&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;GeneratorOf&lt;/code&gt;, and they could type erase stuff. “Type erase?” you may ask. “I thought we &lt;em&gt;loved&lt;/em&gt; types.” We do. Don’t worry. Our types aren’t going anywhere. But sometimes we want them to be a little less…precise.&lt;/p&gt;
-
-&lt;p&gt;In Swift 2, our little type erasers got a rename and some friends. Now they’re all named “Any”-something. So &lt;code class=&quot;highlighter-rouge&quot;&gt;SequenceOf&lt;/code&gt; became &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;GeneratorOf&lt;/code&gt; became &lt;code class=&quot;highlighter-rouge&quot;&gt;AnyGenerator&lt;/code&gt; and there are a gaggle of indexes and collections from &lt;code class=&quot;highlighter-rouge&quot;&gt;AnyForwardIndex&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;AnyRandomAccessCollection&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;So what are these type erasers? Let’s start with how to use one and we’ll work backwards to why.&lt;!-- more --&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let seq = AnySequence([1,2,3])
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This creates an &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&amp;lt;Int&amp;gt;&lt;/code&gt;. It’s just a sequence of Ints that we can iterate over. Isn’t &lt;code class=&quot;highlighter-rouge&quot;&gt;[1,2,3]&lt;/code&gt; also a sequence of Ints we can iterate over? Well, yeah. But it’s also explicitly an Array. And sometimes you don’t want to have to deal with that kind of implementation detail.&lt;/p&gt;
-
-&lt;h2 id=&quot;who-needs-types-like-that&quot;&gt;Who Needs Types Like That?&lt;/h2&gt;
-
-&lt;p&gt;Let’s consider a little more complicated case:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let xs = [1,2,3]
-let ys = [&quot;A&quot;,&quot;B&quot;,&quot;C&quot;]
-let zs = zip(xs.reverse(), ys.reverse())
-// Zip2Sequence&amp;lt;ReverseRandomAccessCollection&amp;lt;Array&amp;lt;Int&amp;gt;&amp;gt;, ReverseRandomAccessCollection&amp;lt;Array&amp;lt;String&amp;gt;&amp;gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;That’s quite a type. Imagine it as the return type of a function:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func reverseZip&amp;lt;T,U&amp;gt;(xs: [T], _ ys: [U]) -&amp;gt; Zip2Sequence&amp;lt;ReverseRandomAccessCollection&amp;lt;[T]&amp;gt;, ReverseRandomAccessCollection&amp;lt;[U]&amp;gt;&amp;gt; {
-  return zip(xs.reverse(), ys.reverse())
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;That’s insane. Let’s not do that. Not only is the type overwhelming, but it ties us to this particular implementation. We might want to refactor the code like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  return zip(xs, ys).reverse()
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Then the return type would change to &lt;code class=&quot;highlighter-rouge&quot;&gt;[(T,U)]&lt;/code&gt; and all the callers would have to be updated. Clearly we’re leaking too much information about our implementation. What’s the point of &lt;code class=&quot;highlighter-rouge&quot;&gt;reverseZip&lt;/code&gt;? Is it to return a &lt;code class=&quot;highlighter-rouge&quot;&gt;Zip2Sequence&amp;lt;...&amp;gt;&lt;/code&gt;? No. It’s to return a sequence of tuples. We want a type that means “a sequence of tuples.” Often we use &lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt; for that, but there’s an even less restrictive way that doesn’t require making an extra copy: &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func reverseZip&amp;lt;T,U&amp;gt;(xs: [T], _ ys: [U]) -&amp;gt; AnySequence&amp;lt;(T,U)&amp;gt; {
-    return AnySequence(zip(xs, ys).reverse())
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now we can keep our implementation details private. If we have some internal sequence type, we don’t have to share it with our callers. We just give them what they need and no more.&lt;/p&gt;
-
-&lt;p&gt;Notice that &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&lt;/code&gt; is not a protocol. It’s a generic &lt;code class=&quot;highlighter-rouge&quot;&gt;struct&lt;/code&gt; that wraps another sequence. You can’t use an &lt;code class=&quot;highlighter-rouge&quot;&gt;[Int]&lt;/code&gt; in a place that expects an &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&amp;lt;Int&amp;gt;&lt;/code&gt;. You still want to use &lt;code class=&quot;highlighter-rouge&quot;&gt;SequenceType&lt;/code&gt; for parameters in most cases.&lt;/p&gt;
-
-&lt;p&gt;These “Any” type erasers also aren’t like &lt;code class=&quot;highlighter-rouge&quot;&gt;Any&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;AnyObject&lt;/code&gt;, which are protocols that just “hide” the type. You can still &lt;code class=&quot;highlighter-rouge&quot;&gt;as!&lt;/code&gt; an &lt;code class=&quot;highlighter-rouge&quot;&gt;AnyObject&lt;/code&gt; back to its original type. &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&lt;/code&gt; and its kin completely encapsulate the underlying data. You can’t get the original back. This creates a very strong abstraction layer and strengthens type safety by making &lt;code class=&quot;highlighter-rouge&quot;&gt;as!&lt;/code&gt; casting impossible.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.openradar.me/radar?id=5528602095386624&quot;&gt;The new names worry me a little&lt;/a&gt; because they make it look like &lt;code class=&quot;highlighter-rouge&quot;&gt;AnyObject&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&lt;/code&gt; are the same kind of thing when they’re not. But the new naming convention is definitely more flexible. You couldn’t have named the &lt;code class=&quot;highlighter-rouge&quot;&gt;AnyIndex&lt;/code&gt; types using the old &lt;code class=&quot;highlighter-rouge&quot;&gt;...Of&lt;/code&gt; convention. So, I’m getting used to the new names.&lt;/p&gt;
-
-&lt;h2 id=&quot;chains-of-association&quot;&gt;Chains of Association&lt;/h2&gt;
-
-&lt;p&gt;Hopefully by now you’re sold on why you’d want to use a type eraser. But would you ever want to build one? Let’s look at an example that comes up pretty often around associated types in protocols.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// An Animal can eat
-protocol Animal {
-    typealias Food
-    func feed(food: Food)
-}
-
-// Kinds of Food
-struct Grass {}
-struct Worm {}
-
-struct Cow: Animal {
-    func feed(food: Grass) { print(&quot;moo&quot;) }
-}
-
-struct Goat: Animal {
-    func feed(food: Grass) { print(&quot;bah&quot;) }
-}
-
-struct Bird: Animal {
-    func feed(food: Worm) { print(&quot;chirp&quot;) }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;So now let’s say we have a bunch of grass available and we’d like to feed it to some grass eaters. Seems easy:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for animal in grassEaters {
-    animal.feed(Grass())
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now we just have to create this array of grass eaters. Should be simple, right? Hmmm…&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let grassEaters = [Cow(), Goat()] // error: '_' is not convertible to 'Goat'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;That’s a weird error. We probably just need to be explicit about the the type.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let grassEaters: [Animal] = [Cow(), Goat()]
-// error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;We all know that error, don’t we? OK, let’s try generics.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let grassEaters: [Animal&amp;lt;Grass&amp;gt;] = [Cow(), Goat()]
-// error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Still? Oh right. You can’t specialize an associated type using generic syntax. That’s fine, we’ll just make the protocol generic.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;protocol Animal&amp;lt;Food&amp;gt; {
-    func feed(food: Food)
-}
-// error: Statement cannot begin with a closure expression
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Right, protocols can’t be generic. Type-safety is for chumps. Let’s go back to Objective-C.&lt;/p&gt;
-
-&lt;p&gt;…Or maybe type erasure is what we need. Let’s build &lt;code class=&quot;highlighter-rouge&quot;&gt;AnyAnimal&lt;/code&gt;. There are several ways to do this, but the easiest in my opinion is with closures.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;struct AnyAnimal&amp;lt;Food&amp;gt;: Animal {
-    private let _feed: (Food) -&amp;gt; Void
-    init&amp;lt;Base: Animal where Food == Base.Food&amp;gt;(_ base: Base) {
-        _feed = base.feed
-    }
-    func feed(food: Food) { _feed(food) }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;(While this works exactly like &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&lt;/code&gt;, this isn’t how &lt;code class=&quot;highlighter-rouge&quot;&gt;AnySequence&lt;/code&gt; is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)&lt;/p&gt;
-
-&lt;p&gt;Now we can make &lt;code class=&quot;highlighter-rouge&quot;&gt;grassEaters&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let grassEaters = [AnyAnimal(Cow()), AnyAnimal(Goat())] // Type is [AnyAnimal&amp;lt;Grass&amp;gt;]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;But we still get type safety if we try to incorrectly mix our animals:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())]
-// error: type of expression is ambiguous without more context
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This kind of type eraser lets us convert a protocol with associated types into a generic type. That means we can put it in properties and return values and other places that we can’t use protocols directly. As you use more protocols in your Swift (and &lt;a href=&quot;https://developer.apple.com/videos/wwdc/2015/?id=408&quot;&gt;you should be&lt;/a&gt;), I think this will become an important tool in your toolbelt.&lt;/p&gt;
-
-&lt;p&gt;So get out there and erase some over-specific types. Focus on the protocol, hide the implementation.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://gist.github.com/rnapier/03674b399e3bc517b9cd&quot;&gt;And here’s the code for your amusement.&lt;/a&gt;&lt;/p&gt;</content><author><name>Rob Napier</name></author><summary type="html">Once upon a time, when Swift was young, there were a couple of types called SequenceOf and GeneratorOf, and they could type erase stuff. “Type erase?” you may ask. “I thought we loved types.” We do. Don’t worry. Our types aren’t going anywhere. But sometimes we want them to be a little less…precise. In Swift 2, our little type erasers got a rename and some friends. Now they’re all named “Any”-something. So SequenceOf became AnySequence and GeneratorOf became AnyGenerator and there are a gaggle of indexes and collections from AnyForwardIndex to AnyRandomAccessCollection. So what are these type erasers? Let’s start with how to use one and we’ll work backwards to why. let seq = AnySequence([1,2,3]) This creates an AnySequence&amp;lt;Int&amp;gt;. It’s just a sequence of Ints that we can iterate over. Isn’t [1,2,3] also a sequence of Ints we can iterate over? Well, yeah. But it’s also explicitly an Array. And sometimes you don’t want to have to deal with that kind of implementation detail. Who Needs Types Like That? Let’s consider a little more complicated case: let xs = [1,2,3] let ys = [&quot;A&quot;,&quot;B&quot;,&quot;C&quot;] let zs = zip(xs.reverse(), ys.reverse()) // Zip2Sequence&amp;lt;ReverseRandomAccessCollection&amp;lt;Array&amp;lt;Int&amp;gt;&amp;gt;, ReverseRandomAccessCollection&amp;lt;Array&amp;lt;String&amp;gt;&amp;gt;&amp;gt; That’s quite a type. Imagine it as the return type of a function: func reverseZip&amp;lt;T,U&amp;gt;(xs: [T], _ ys: [U]) -&amp;gt; Zip2Sequence&amp;lt;ReverseRandomAccessCollection&amp;lt;[T]&amp;gt;, ReverseRandomAccessCollection&amp;lt;[U]&amp;gt;&amp;gt; { return zip(xs.reverse(), ys.reverse()) } That’s insane. Let’s not do that. Not only is the type overwhelming, but it ties us to this particular implementation. We might want to refactor the code like this: return zip(xs, ys).reverse() Then the return type would change to [(T,U)] and all the callers would have to be updated. Clearly we’re leaking too much information about our implementation. What’s the point of reverseZip? Is it to return a Zip2Sequence&amp;lt;...&amp;gt;? No. It’s to return a sequence of tuples. We want a type that means “a sequence of tuples.” Often we use Array for that, but there’s an even less restrictive way that doesn’t require making an extra copy: AnySequence. func reverseZip&amp;lt;T,U&amp;gt;(xs: [T], _ ys: [U]) -&amp;gt; AnySequence&amp;lt;(T,U)&amp;gt; { return AnySequence(zip(xs, ys).reverse()) } Now we can keep our implementation details private. If we have some internal sequence type, we don’t have to share it with our callers. We just give them what they need and no more. Notice that AnySequence is not a protocol. It’s a generic struct that wraps another sequence. You can’t use an [Int] in a place that expects an AnySequence&amp;lt;Int&amp;gt;. You still want to use SequenceType for parameters in most cases. These “Any” type erasers also aren’t like Any and AnyObject, which are protocols that just “hide” the type. You can still as! an AnyObject back to its original type. AnySequence and its kin completely encapsulate the underlying data. You can’t get the original back. This creates a very strong abstraction layer and strengthens type safety by making as! casting impossible. The new names worry me a little because they make it look like AnyObject and AnySequence are the same kind of thing when they’re not. But the new naming convention is definitely more flexible. You couldn’t have named the AnyIndex types using the old ...Of convention. So, I’m getting used to the new names. Chains of Association Hopefully by now you’re sold on why you’d want to use a type eraser. But would you ever want to build one? Let’s look at an example that comes up pretty often around associated types in protocols. // An Animal can eat protocol Animal { typealias Food func feed(food: Food) } // Kinds of Food struct Grass {} struct Worm {} struct Cow: Animal { func feed(food: Grass) { print(&quot;moo&quot;) } } struct Goat: Animal { func feed(food: Grass) { print(&quot;bah&quot;) } } struct Bird: Animal { func feed(food: Worm) { print(&quot;chirp&quot;) } } So now let’s say we have a bunch of grass available and we’d like to feed it to some grass eaters. Seems easy: for animal in grassEaters { animal.feed(Grass()) } Now we just have to create this array of grass eaters. Should be simple, right? Hmmm… let grassEaters = [Cow(), Goat()] // error: '_' is not convertible to 'Goat' That’s a weird error. We probably just need to be explicit about the the type. let grassEaters: [Animal] = [Cow(), Goat()] // error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements We all know that error, don’t we? OK, let’s try generics. let grassEaters: [Animal&amp;lt;Grass&amp;gt;] = [Cow(), Goat()] // error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements Still? Oh right. You can’t specialize an associated type using generic syntax. That’s fine, we’ll just make the protocol generic. protocol Animal&amp;lt;Food&amp;gt; { func feed(food: Food) } // error: Statement cannot begin with a closure expression Right, protocols can’t be generic. Type-safety is for chumps. Let’s go back to Objective-C. …Or maybe type erasure is what we need. Let’s build AnyAnimal. There are several ways to do this, but the easiest in my opinion is with closures. struct AnyAnimal&amp;lt;Food&amp;gt;: Animal { private let _feed: (Food) -&amp;gt; Void init&amp;lt;Base: Animal where Food == Base.Food&amp;gt;(_ base: Base) { _feed = base.feed } func feed(food: Food) { _feed(food) } } (While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.) Now we can make grassEaters: let grassEaters = [AnyAnimal(Cow()), AnyAnimal(Goat())] // Type is [AnyAnimal&amp;lt;Grass&amp;gt;] But we still get type safety if we try to incorrectly mix our animals: let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())] // error: type of expression is ambiguous without more context This kind of type eraser lets us convert a protocol with associated types into a generic type. That means we can put it in properties and return values and other places that we can’t use protocols directly. As you use more protocols in your Swift (and you should be), I think this will become an important tool in your toolbelt. So get out there and erase some over-specific types. Focus on the protocol, hide the implementation. And here’s the code for your amusement.</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Rob Napier</name></author><summary type="html">After months of writing and rewriting, I am happy to finally announce RNCryptor 4 beta 1 in Swift. RNCryptor 4 is a complete rewrite of RNCryptor for Swift 2 with full bridging support to Objective-C. It has a streamlined API, simpler installation, and improved internals. It continues to use the v3 data format and is fully interoperable with other RNCryptor implementations. For users desiring a fully Objective-C solution, v3 is still available. I don’t currently plan to do significant new work on v3, but will consider it if there is strong interest. Going forward, I expect most OS X and iOS projects to be able to accept a mix of ObjC and Swift code. Objective-C continues to be a fully supported language in RNCryptor 4. I plan to convert this to a final release in a week or so if no major issues are discovered. I now move onto: Continuing to prepare for dotSwift. Getting back to the blog. RNCryptor v5, which will finally update the data format to improve performance, security, and robustness. Much of the v4 design was specifically to make v5 easier to write.</summary></entry></feed>

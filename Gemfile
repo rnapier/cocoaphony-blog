@@ -21,8 +21,9 @@ gem "jekyll", "~> 3.7.4"
 group :jekyll_plugins do
   gem "jekyll-feed"
   gem 'jekyll-paginate'
+  gem 'jekyll-compose'
 end
 
 gem 'pygments.rb'
 gem 'rdiscount'
-gem 'octopress'
+# gem 'octopress'

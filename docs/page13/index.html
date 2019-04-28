@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I haven’t forgotten about PandoraBoy, but I’ve been very busy these last couple of weeks. I’m now a full-time Mac programmer, and so I’ve been &hellip;">
+  <meta name="description" content="Well, I’m spending a little more time hacking PandoraBoy today. It now will compile under XCode3 for anyone playing along at home. I’m hoping to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-xcode3">PandoraBoy and XCode3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-01-13T17:38:47-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Well, I’m spending a little more time hacking PandoraBoy today. It now will compile under XCode3 for anyone playing along at home. I’m hoping to learn a lot this week to move things forward even more. Right now I’m <a href="http://www.serenbeinn.com/">here</a>, getting ready for <a href="http://bignerdranch.com/classes/cocoa.shtml">this</a>. Sometimes I think I picked a good life this time.</p>
+
+<p>Now if I can just get back into my home computer to get my PB todo list…. Back into full-screen mode stuff.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -388,42 +424,6 @@
   <div class="entry-content"><p>More hacking on station lists tonight. So far it’s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through NSURLProtocols). The station list comes back as an XML document, and I can copy that off into an easy array for later use. The only thing I need to work more on is QuickMix management, since those are magically pulled out of the main channel list, and I should probably do the same to avoid confusion.</p>
 
 <p>I’ve talked often with folks about XML and how there are so many good ways to compress it quite effectively and it’s strange that XML developers have chosen not to do that. Rather, real XML winds up being insanely verbose and bloated on the wire. I hereby take back my earlier complaints. The fact that I can read XML by sniffing the traffic without having to apply any decoding (not even gunzip), and can recognize XML easily when I come across it, is one of the biggest boons to reverse engineering I’ve ever encountered. Long live human readable data formats!</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/75">75</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-02T17:27:50-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I knew I’d run into this when I released PandoraBoy 0.4.0, and someone ran into <a href="http://code.google.com/p/pandoraboy/issues/detail?id=17">Issue 17</a>. Moving from MacOS 10.4.10 to 10.4.11 included a massive change to WebKit, and the 0.4 line was meant to address this. Unfortunately I no longer had a 10.4.10 box to test against, and so I figured that something would probably break. Hope against hope, I figured everyone would have upgraded by now.</p>
-
-<p>Anyway, I will now undertake a series of “did this fix it” patches and we’ll see if we can get it working again. Hopefully the entire problem was my removal of decidePolicyForNewWindowAction: which never seems to be called in the new WebKit under Pandora (but I should have kept for completeness anyway). But it’s possible that the problem is deeper.</p>
 </div>
   
   

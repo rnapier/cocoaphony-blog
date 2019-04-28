@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For those of you worried about the trouble with PandoraBoy’s hotkeys and Applescript, I’ve finally carved out some time to work on this stuff. I keep &hellip;">
+  <meta name="description" content="In Part 1 of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/project-templates">Building the Build System - Part 2 - Project Templates</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-05-20T18:00:42-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn’t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it’s easier than ever. Let’s make one.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/project-templates">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -427,44 +466,6 @@
     <footer>
       <a rel="full-article" href="/learning-iphone-scratch">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/memory-managing-iboutlets">Memory Managing IBOutlets</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-03-22T13:29:22-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Apple <em>finally </em>updated the <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmNibObjects.html">Memory Management Guide</a> to deal with IBOutlets.</p>
-
-<p>They came to the same recommendation that many of us have. Treat them exactly like other properties. Mark them as retain properties, release them in -dealloc, and overload -setView to clear them in low-memory situations. This last recommendation was one that many of us used, but was based on undocumented behaviors. Apple finally documented the behavior because there’s no other good way to do it given their internal implementation.</p>
-
-<p>Unfortunately they haven’t updated the “Using View Controllers” documentation to include this stuff, and the section on how -loadView works is still a bit vague. I’ve sent them feedback on those pages.</p>
-</div>
-  
   
 
 

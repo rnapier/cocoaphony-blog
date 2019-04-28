@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For the last several months, all of my technical time not devoted to my primary employment has been absorbed in a little iPad project. Nights and &hellip;">
+  <meta name="description" content="CoreText is a very powerful system for laying out text in arbitrary ways. This is going to be a bit of a whirlwind tour of it to help out nonamelive &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/wrapping-text-around-shape-with-coretext">Wrapping Text Around a Shape With CoreText</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2011-03-25T12:15:19-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>CoreText is a very powerful system for laying out text in arbitrary ways. This is going to be a bit of a whirlwind tour of it to help out <a href="http://stackoverflow.com/questions/5284516/how-can-i-draw-image-with-text-wrapping-on-ios">nonamelive on StackOverflow</a>.&lt;/a&gt; I’m working on an advanced iOS book right now, and I’ll have a longer writeup there.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/wrapping-text-around-shape-with-coretext">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -392,60 +430,6 @@
     <footer>
       <a rel="full-article" href="/chinese-study">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/nslog-aint-printf-wformat">NSLog Ain't Printf in -Wformat</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2010-04-13T11:45:15-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>So say you had this code:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>printf("%s", 1);
-NSLog(@"%s", 1);
-</code></pre></div></div>
-
-<p>And you compiled with <code class="highlighter-rouge">-Wformat</code>. You might expect both of these lines to kick out a warning:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Format '%s' expects type 'char *', but argument 2 has type 'int'
-</code></pre></div></div>
-
-<p>You’d be particularly misled when you went and looked at the definition of <code class="highlighter-rouge">NSLog()</code>:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FOUNDATION_EXPORT void NSLog(NSString *format, ...) __attribute__((format(__NSString__, 1, 2)));
-</code></pre></div></div>
-
-<p>Why look there, doesn’t that look like it should provide format type checking? Oh how foolish. Neither gcc nor clang can actually handle that <code class="highlighter-rouge">__NSString__</code> specifier in a robust way. So the first line above will give a useful warning, but the second one will silently compile and later crash. Exciting, I know. You have been warned.</p>
-
-<p><code class="highlighter-rouge">-Wformat-nonliteral</code> and <code class="highlighter-rouge">-Wformat-security</code> do catch dangerous calls like <code class="highlighter-rouge">NSLog(foo)</code>, so <code class="highlighter-rouge">__NSString__</code> isn’t a complete loss, but it’s a shame we can’t get type checking here.</p>
-
-<p>There’s a good discussion of this at <a href="http://stackoverflow.com/questions/1229212/nslog-improper-format-specifier-affects-other-variables]">NSLog(…) improper format specifier affects other variables?</a></p>
-</div>
-  
   
 
 

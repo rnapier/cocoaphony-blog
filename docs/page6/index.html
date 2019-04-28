@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For those who have asked (and it’s the #1 question I’m asked about the book), iOS 5 Programming Pushing the Limits is now available in Kindle format &hellip;">
+  <meta name="description" content="The most up-to-date source for this is now available at github. Your programs need to deal gracefully with being offline. Mugunth Kumar has built an &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/offline-uiwebview-nsurlprotocol">Drop-in Offline Caching for UIWebView (and NSURLProtocol)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-01-29T14:56:11-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>The most up-to-date source for this is now available at <a href="https://github.com/rnapier/RNCachingURLProtocol">github</a>.</em></p>
+
+<p>Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://iosptl.com">our book</a> is devoted to the ins-and-outs of this subject.</p>
+
+<p>But sometimes you just have a simple <code class="highlighter-rouge">UIWebView</code>, and you want to cache the last version of the page. You’d think that <code class="highlighter-rouge">NSURLCache</code> would handle this for you, but it’s much more complicated than that. <code class="highlighter-rouge">NSURLCache</code> doesn’t cache everything you’d think it would. Sometimes this is because of Apple’s decisions in order to save space. Just as often, however, it’s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
+
+<p>What I wanted was a simple mechanism for the following case:</p>
+
+<ul>
+  <li>You have a UIWebView that points to a website with embedded images</li>
+  <li>When you’re online, you want the normal caching algorithms (nothing fancy)</li>
+  <li>When you’re offline, you want to show the last version of the page</li>
+</ul>
+
+<p>My test case was simple: a webview that loads cnn.com (a nice complicated webpage with lots of images). Run it once. Quit. Turn off the network. Run it again. CNN should display.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/offline-uiwebview-nsurlprotocol">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -381,44 +434,6 @@
   
     <footer>
       <a rel="full-article" href="/laying-out-text-with-coretext">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/wrapping-text-around-shape-with-coretext">Wrapping Text Around a Shape With CoreText</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2011-03-25T12:15:19-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>CoreText is a very powerful system for laying out text in arbitrary ways. This is going to be a bit of a whirlwind tour of it to help out <a href="http://stackoverflow.com/questions/5284516/how-can-i-draw-image-with-text-wrapping-on-ios">nonamelive on StackOverflow</a>.&lt;/a&gt; I’m working on an advanced iOS book right now, and I’ll have a longer writeup there.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/wrapping-text-around-shape-with-coretext">Read on &rarr;</a>
     </footer>
   
 

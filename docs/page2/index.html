@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Forgive a slight divergence. I’ll bring it back to software development before the end. A friend of mine is an arborist. He takes care of a large &hellip;">
+  <meta name="description" content="Once upon a time, when Swift was young, there were a couple of types called SequenceOf and GeneratorOf, and they could type erase stuff. “Type erase &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/erasure">A Little Respect for AnySequence</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2015-08-04T15:42:00-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Once upon a time, when Swift was young, there were a couple of types called <code class="highlighter-rouge">SequenceOf</code> and <code class="highlighter-rouge">GeneratorOf</code>, and they could type erase stuff. “Type erase?” you may ask. “I thought we <em>loved</em> types.” We do. Don’t worry. Our types aren’t going anywhere. But sometimes we want them to be a little less…precise.</p>
+
+<p>In Swift 2, our little type erasers got a rename and some friends. Now they’re all named “Any”-something. So <code class="highlighter-rouge">SequenceOf</code> became <code class="highlighter-rouge">AnySequence</code> and <code class="highlighter-rouge">GeneratorOf</code> became <code class="highlighter-rouge">AnyGenerator</code> and there are a gaggle of indexes and collections from <code class="highlighter-rouge">AnyForwardIndex</code> to <code class="highlighter-rouge">AnyRandomAccessCollection</code>.</p>
+
+<p>So what are these type erasers? Let’s start with how to use one and we’ll work backwards to why.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/erasure">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -439,50 +480,6 @@ talk about the humble map.</p>
   
     <footer>
       <a rel="full-article" href="/maps">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-08-18T22:00:00-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Yes, this is another of those “how to parse JSON in Swift” blog posts that seem
-to be required of every Swift blogger. And yes, several of the techniques we’ll
-work through come from the functional programming world. And, <em>yes</em>,
-Swift+Functional+JSON is itself a well-worn trail. But still, I hope you find
-this exploration helpful. Don’t think of it as functional programming. Think of
-it as the path of “I wish there were a function that….”</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/functional-wish-fulfillment">Read on &rarr;</a>
     </footer>
   
 

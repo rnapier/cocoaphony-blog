@@ -48,7 +48,6 @@ plugins:
   - jekyll-feed
 plugins_dir: plugins
 
-
 # highlighter: rogue # default python pygments have been replaced by pygments.rb
 
 subscribe_rss: /atom.xml

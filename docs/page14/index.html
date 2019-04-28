@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="It’s been quite a while since I’ve updated the Rob Report, but I have some things to chat about on the technical front. Most of my work these days is &hellip;">
+  <meta name="description" content="I knew I’d run into this when I released PandoraBoy 0.4.0, and someone ran into Issue 17. Moving from MacOS 10.4.10 to 10.4.11 included a massive &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/75">75</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2007-12-02T17:27:50-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I knew I’d run into this when I released PandoraBoy 0.4.0, and someone ran into <a href="http://code.google.com/p/pandoraboy/issues/detail?id=17">Issue 17</a>. Moving from MacOS 10.4.10 to 10.4.11 included a massive change to WebKit, and the 0.4 line was meant to address this. Unfortunately I no longer had a 10.4.10 box to test against, and so I figured that something would probably break. Hope against hope, I figured everyone would have upgraded by now.</p>
+
+<p>Anyway, I will now undertake a series of “did this fix it” patches and we’ll see if we can get it working again. Hopefully the entire problem was my removal of decidePolicyForNewWindowAction: which never seems to be called in the new WebKit under Pandora (but I should have kept for completeness anyway). But it’s possible that the problem is deeper.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

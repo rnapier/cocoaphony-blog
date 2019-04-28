@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="After several feature requests, much consideration, and a long chat with the security engineering team at Apple, I’ve decided to make a change to the &hellip;">
+  <meta name="description" content="I have completed the major work for RNCryptor asynchronous operations on the async branch. This changes the API and the file format. I’ll be &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/rncryptor-async">RNCryptor Async</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have completed the major work for RNCryptor asynchronous operations on the <a href="https://github.com/rnapier/RNCryptor/tree/async">async branch</a>. This changes the API and the file format. I’ll be documenting this more formally within a few weeks, but here are the high points:
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/rncryptor-async">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -426,59 +464,6 @@
   
     <footer>
       <a rel="full-article" href="/equations-matrices-accelerate">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/offline-uiwebview-nsurlprotocol">Drop-in Offline Caching for UIWebView (and NSURLProtocol)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-01-29T14:56:11-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>The most up-to-date source for this is now available at <a href="https://github.com/rnapier/RNCachingURLProtocol">github</a>.</em></p>
-
-<p>Your programs need to deal gracefully with being offline. Mugunth Kumar has built an excellent toolkit that manages REST connections while offline called <a href="https://github.com/MugunthKumar/MKNetworkKit">MKNetworkKit</a>, and Chapter 17 of <a href="http://iosptl.com">our book</a> is devoted to the ins-and-outs of this subject.</p>
-
-<p>But sometimes you just have a simple <code class="highlighter-rouge">UIWebView</code>, and you want to cache the last version of the page. You’d think that <code class="highlighter-rouge">NSURLCache</code> would handle this for you, but it’s much more complicated than that. <code class="highlighter-rouge">NSURLCache</code> doesn’t cache everything you’d think it would. Sometimes this is because of Apple’s decisions in order to save space. Just as often, however, it’s because the HTTP caching rules explicitly prevent caching a particular resource.</p>
-
-<p>What I wanted was a simple mechanism for the following case:</p>
-
-<ul>
-  <li>You have a UIWebView that points to a website with embedded images</li>
-  <li>When you’re online, you want the normal caching algorithms (nothing fancy)</li>
-  <li>When you’re offline, you want to show the last version of the page</li>
-</ul>
-
-<p>My test case was simple: a webview that loads cnn.com (a nice complicated webpage with lots of images). Run it once. Quit. Turn off the network. Run it again. CNN should display.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/offline-uiwebview-nsurlprotocol">Read on &rarr;</a>
     </footer>
   
 

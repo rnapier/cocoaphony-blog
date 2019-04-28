@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For those of you familiar with SQL and coming to Core Data, you probably want to separate the concept of “database” into the two kinds we’re &hellip;">
+  <meta name="description" content="Apple finally updated the Memory Management Guide to deal with IBOutlets. They came to the same recommendation that many of us have. Treat them &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/memory-managing-iboutlets">Memory Managing IBOutlets</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-03-22T13:29:22-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Apple <em>finally </em>updated the <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmNibObjects.html">Memory Management Guide</a> to deal with IBOutlets.</p>
+
+<p>They came to the same recommendation that many of us have. Treat them exactly like other properties. Mark them as retain properties, release them in -dealloc, and overload -setView to clear them in low-memory situations. This last recommendation was one that many of us used, but was based on undocumented behaviors. Apple finally documented the behavior because there’s no other good way to do it given their internal implementation.</p>
+
+<p>Unfortunately they haven’t updated the “Using View Controllers” documentation to include this stuff, and the section on how -loadView works is still a bit vague. I’ve sent them feedback on those pages.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -414,45 +452,6 @@
   <div class="entry-content"><div class="post-body entry-content">I'm back into PandoraBoy development. Looks like Pandora changed something with their last UI update, and it's broken PB and maybe also Pandora.FM (who uses the same API as we do). We're just not getting events anymore from the API. So I've dropped a note to their support list and we'll see if they can help us out at all. This is why Growl is broken; Pandora doesn't know when tracks change.</div>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/xcode-visual-studio">XCode vs. Visual Studio</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2008-06-20T10:50:24-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I move between VS and XCode a bit without shuddering or fussing, which seems to make me a strange creature. In general, shocking as it is to say on a Cocoa list, VS is actually a much more powerful environment. Most who love XCode have little used VS (at least VS2005 or later, <a href="http://vs.net/" target="_blank">VS.NET</a> is clunky IMO). But learning what actually is better about VS requires using XCode for quite some time. Most of the initial complaints are simply small differences between the two; many of which I prefer the XCode way. But then, XCode is a Mac app, and I generally prefer Mac UI.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/xcode-visual-studio">Read on &rarr;</a>
-    </footer>
   
 
 

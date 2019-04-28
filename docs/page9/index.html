@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For the last couple of nights I’ve finally gotten back to PandoraBoy work. The backlog of issues has gotten a bit out of hand as I’ve focused on &hellip;">
+  <meta name="description" content="I started implementing a hotkey to regrowl the current song. ishermandom sent me a patch months ago to do this, and I’ve just started integrating it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/regrowling-song">Re-growling Song in PB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-08-19T09:01:02-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I started implementing a hotkey to regrowl the current song. ishermandom sent me a patch months ago to do this, and I’ve just started integrating it. It’s very small, I just hadn’t done it yet. Since I’ve restructured hotkeys due to the ShortcutRecorder upgrade, I’ve actually had to reimplement it anyway, but really, it’s not complicated.</p>
+
+<p>I also pulled some of the NSLog() statements out, so PB will no longer fill your Console with messages about what song is playing. If you want need this functionality for something, let me know. There are better ways for me to implement it.</p>
+
+<p>Funny, Pandora seems down this morning? The silence is deafening. Even while I’m investigating why the flash player isn’t coming up (even in Safari), I keep hitting my “play” shortcut because its too quiet. I guess I pull out iTunes….</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -407,45 +445,6 @@ An event timestamp is a big, unsigned, 64-bit number. That's big, really big. Yo
 <p>So if my math is right, “a long time” translates into over 2850 years. And it’s counted since the last reboot. I think we’ll avoid the Y2K problem on this one.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/project-templates">Building the Build System - Part 2 - Project Templates</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-05-20T18:00:42-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In <a href="/blog/build-system-1-build-panel">Part 1</a> of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This is useful, but a bit tedious to set up every time you make a new project. What we need is a way to automatically create new projects that have our setup in place already. Wouldn’t it be nice if you could create new Project Templates just like the ones that come with Xcode? You can, and since the release of the iPhone version of Xcode, it’s easier than ever. Let’s make one.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/project-templates">Read on &rarr;</a>
-    </footer>
   
 
 
