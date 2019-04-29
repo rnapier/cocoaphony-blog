@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-29T12:03:34-04:00</updated>
+  <updated>2019-04-29T12:06:06-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -191,6 +191,8 @@ final class APIClient {
 <p>This network stack still is nowhere near as flexible and powerful as I want. But now it can fetch a wide variety of model types from a particular type of API in a very composable and testable way. That’s great progress. For some very simple APIs, it might even be done. There’s no need to make it more flexible for its own sake. But I think we’ll quickly find more features we need to add.</p>
 
 <p>Next time, I’ll jump back up to the very top of the stack, to the models, and show where a PAT (protocol with associated type) can really shine.</p>
+
+<p><a href="https://robnapier.net/assets/protocols/StartWithAProtocol.zip">Swift Playground</a></p>
 <div class="footnotes">
   <ol>
     <li id="fn:1">
@@ -556,6 +558,8 @@ func fetch&lt;Model&gt;(_ model: Model.Type,
 <p>I know this has been basic so far. I know many of you “know all this.” This article is a warm-up, and the point of the exercise is not <em>what</em> was built, but <em>how</em> it was built. I started with simple, concrete code, and extracted first a generic function, and then a simple (no associated type) protocol. This is exactly the opposite of starting with a Request PAT and then trying to figure out the callers. This was just the first step. This system is nowhere near as flexible and powerful as it could be, but already it’s meeting the goal I set at the beginning: “fetch a several model types from an API and decode them.” Keep the current goal in mind and don’t let the protocols get out in front of you.</p>
 
 <p>Next time, I’ll push this example further, and start seeing what protocol oriented programming can really accomplish. Eventually I’ll even need a PAT!</p>
+
+<p><a href="https://robnapier.net/assets/protocols/StartWithAProtocol.zip">Swift Playground</a></p>
 
 <p>(I don’t have comments on this site, but if you’re interested in any conversations about it, follow the thread on <a href="https://twitter.com/cocoaphony/status/1121549665789411333">Twitter</a>.)</p>
 <div class="footnotes">

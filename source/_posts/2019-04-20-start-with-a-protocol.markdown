@@ -263,4 +263,6 @@ I know this has been basic so far. I know many of you "know all this." This arti
 
 Next time, I'll push this example further, and start seeing what protocol oriented programming can really accomplish. Eventually I'll even need a PAT!
 
+[Swift Playground](/assets/protocols/StartWithAProtocol.zip)
+
 (I don't have comments on this site, but if you're interested in any conversations about it, follow the thread on [Twitter](https://twitter.com/cocoaphony/status/1121549665789411333).)

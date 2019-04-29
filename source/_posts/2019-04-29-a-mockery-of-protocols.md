@@ -183,3 +183,5 @@ At each layer above the network layer, additional context and meaning is applied
 This network stack still is nowhere near as flexible and powerful as I want. But now it can fetch a wide variety of model types from a particular type of API in a very composable and testable way. That's great progress. For some very simple APIs, it might even be done. There's no need to make it more flexible for its own sake. But I think we'll quickly find more features we need to add.
 
 Next time, I'll jump back up to the very top of the stack, to the models, and show where a PAT (protocol with associated type) can really shine.
+
+[Swift Playground](/assets/protocols/StartWithAProtocol.zip)
