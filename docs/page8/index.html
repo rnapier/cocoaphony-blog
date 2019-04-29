@@ -9,8 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="So say you had this code: printf("%s", 1);
-NSLog(@"%s", 1); And you compiled with -Wformat. You might expect both of these lines to kick out a &hellip;">
+  <meta name="description" content="Over the years I’ve travelled to China several times, and now I’m working with large group of developers in Suzhou, Hangzhou and Hefei. A few weeks &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -54,6 +53,43 @@ NSLog(@"%s", 1); And you compiled with -Wformat. You might expect both of these 
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/chinese-study">Chinese Study</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2010-04-28T11:00:57-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the years I’ve travelled to China several times, and now I’m working with large group of developers in Suzhou, Hangzhou and Hefei. A few weeks ago I was able to visit again, and that’s gotten me back in the mood to study Chinese. It often helps me to write down things as I learn them, and some of my Chinese coworkers read this blog and might help set me straight as I wander through their language like a bull in a China shop (as it were….) It’s a bit off the trail for Cocoa development, so feel free to use the Subscribe2 link on the right to take this category off of your email subscription.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/chinese-study">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -427,55 +463,6 @@ NSLog(@"%s", 1);
   
     <footer>
       <a rel="full-article" href="/implementing-nscopying">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/importing-uikit-cocoa">Importing UIKit vs. Cocoa</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-08-20T11:28:40-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I work on a lot of projects that share significant code between iPhone and Mac versions. This is the beauty of Cocoa. While working on these projects, I’ve bumped into this idiom many times:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
-#import &lt;UIKit/UIKit.h&gt;
-#else
-#import &lt;Cocoa/Cocoa.h&gt;
-#endif
-</code></pre></div></div>
-
-<p>This is almost never correct, and almost always means that someone imported Cocoa.h into a model class. Model classes should never rely on UIKit or Cocoa. They should just import Foundation.h.</p>
-
-<p>There is one interesting exception that we’ve run into: NSImage versus UIImage. These are really model classes, but they’re part of AppKit and UIKit. They have very similar interfaces, so in most code you should be able to interchange them and keep everything portable. What to do?
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/importing-uikit-cocoa">Read on &rarr;</a>
     </footer>
   
 

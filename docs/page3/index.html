@@ -9,8 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Yes, this is another of those “how to parse JSON in Swift” blog posts that seem
-to be required of every Swift blogger. And yes, several of the &hellip;">
+  <meta name="description" content="I had a bit of a throw-away line in
+Functional Wish Fulfillment: Kind of like map, but kind of different. And I tossed a call to map, unexplained, in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -54,6 +54,56 @@ to be required of every Swift blogger. And yes, several of the &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/maps">Maps... Wait, They Don't Love You Like I Love You</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-08-28T08:20:25-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I had a bit of a throw-away line in
+<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>:</p>
+
+<blockquote>
+  <p>Kind of like map, but kind of different.</p>
+</blockquote>
+
+<p>And I tossed a call to <code class="highlighter-rouge">map</code>, unexplained, in the middle of the parsing code. I
+got a little ahead of myself there. Sorry about that. Cocoa has no <code class="highlighter-rouge">map</code>. Maybe
+not everyone coming to Swift has a long history with this amazing little
+function. In a field where monads get all the press, it’s time to step back and
+talk about the humble map.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/maps">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -476,62 +526,6 @@ about Swift seem to misunderstand one or the other.</p>
   
     <footer>
       <a rel="full-article" href="/rncryptor-truncating-passwords">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/brute-forcing-passwords">Brute Forcing Passwords</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-12-27T15:15:30-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-<p>I got an <a href="https://github.com/rnapier/RNCryptor/issues/92">interesting question</a>
-recently:</p>
-
-<blockquote>
-  <p>Assuming a password is not in a dictionary, what length is required to make a
-brute force attack infeasible?</p>
-</blockquote>
-
-<p>That’s a pretty good question, and we should be able to answer it fairly easily
-given a few assumptions.</p>
-
-<p>The short answer is, using <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> and
-some reasonable security assumptions, it would be very difficult to brute-force
-an 8 character password randomly taken from all the easily typable characters on
-an English keyboard. The rest of this article will discuss my assumptions, and
-how you would calculate good lengths for other assumptions.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/brute-forcing-passwords">Read on &rarr;</a>
     </footer>
   
 

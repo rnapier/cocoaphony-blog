@@ -9,7 +9,9 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="After several years of WordPress, I finally decided to make a change. The main change was getting rid of comments. There were several useful comments &hellip;">
+  <meta name="description" content="I got an interesting question
+recently: Assuming a password is not in a dictionary, what length is required to make a
+brute force attack infeasible &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +55,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/brute-forcing-passwords">Brute Forcing Passwords</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-12-27T15:15:30-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<p>I got an <a href="https://github.com/rnapier/RNCryptor/issues/92">interesting question</a>
+recently:</p>
+
+<blockquote>
+  <p>Assuming a password is not in a dictionary, what length is required to make a
+brute force attack infeasible?</p>
+</blockquote>
+
+<p>That’s a pretty good question, and we should be able to answer it fairly easily
+given a few assumptions.</p>
+
+<p>The short answer is, using <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> and
+some reasonable security assumptions, it would be very difficult to brute-force
+an 8 character password randomly taken from all the easily typable characters on
+an English keyboard. The rest of this article will discuss my assumptions, and
+how you would calculate good lengths for other assumptions.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/brute-forcing-passwords">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -402,45 +460,6 @@
   <div class="entry-content"><p>I have brought the <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> async branch to master. This is a major change in API, but I believe much more flexible. I’ve stripped the API down quite a lot, so please let me know if there are missing features. I’m particularly interested in anyone who needs better support for reading and writing files. I haven’t added any methods for that until I see how people are really using it.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/phone-screen">Phone-screening Cocoa Developers</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2012-06-26T11:15:12-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There was an <a href="http://stackoverflow.com/questions/1019636/phone-screen-questions-for-mac-os-x-developer-positions/1019759#1019759">interesting question</a> on StackOverflow that was unfortunately closed as off topic. It was off topic, but it’s still a useful question. When phone screening potential Cocoa developers, what kinds of questions should you ask? I’ve helped several clients screen potential candidates over the years, and so I have several questions I use to help with that.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/phone-screen">Read on &rarr;</a>
-    </footer>
   
 
 

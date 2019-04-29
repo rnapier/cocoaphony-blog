@@ -9,7 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="In Part 1 of our series, you learned how to use basic xcconfig files to manage build configuration in Xcode rather than using the Build Panel. This &hellip;">
+  <meta name="description" content="I can’t take credit for finding this myself. Gilad Gurantz forwarded it to me. From the Quartz Event Services documentation: CGEventTimestamp
+Defines &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +54,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cgeventtimestamps-are-big">CGEventTimestamps Are Big</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2009-06-02T17:45:47-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I can’t take credit for finding this myself. Gilad Gurantz forwarded it to me. From the Quartz Event Services documentation:</p>
+
+<blockquote><p><b>CGEventTimestamp</b></p>
+Defines the elapsed time in nanoseconds since startup that a Quartz event occurred.
+
+<code>typedef uint64_t CGEventTimestamp;</code>
+
+<b>Discussion</b>
+An event timestamp is a big, unsigned, 64-bit number. That's big, really big. You just won't believe how vastly, hugely, mind-bogglingly big it is. You may think your application has been running for a long time, but that's just peanuts to an event timestamp.</blockquote>
+
+<p>So if my math is right, “a long time” translates into over 2850 years. And it’s counted since the last reboot. I think we’ll avoid the Y2K problem on this one.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -423,48 +468,6 @@
   
     <footer>
       <a rel="full-article" href="/wrapping-c-objc">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/learning-iphone-scratch">Learning iPhone From Scratch</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2009-03-31T20:15:57-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I’ll talk more about it later, but the absolute best way to learn iPhone is to learn Mac first. That’s how I teach my classes. The available Mac educational resources are just much better, at least today.</p>
-
-<p>The absolute gold standard for learning Cocoa on Mac is <a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&amp;tag=cocoaphony-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&amp;l=as2&amp;o=1&amp;a=0321503619" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
- by Aaron Hillegass. It is <em>the</em> book. I have a syllabus based on it that’s stripped down to the chapters that are useful for iPhone programmers. I’ll get that into a blog post.</p>
-
-<p>When I teach this, it runs between 5 and 10 full days depending on how in-depth I cover the Mac side.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/learning-iphone-scratch">Read on &rarr;</a>
     </footer>
   
 

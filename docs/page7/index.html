@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="CoreText is a very powerful system for laying out text in arbitrary ways. This is going to be a bit of a whirlwind tour of it to help out nonamelive &hellip;">
+  <meta name="description" content="I’m back in full book-writing mode, now working with Mugunth Kumar, who is brilliant. Go check out his stuff. Hopefully we’ll have something &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/laying-out-text-with-coretext">Laying Out Text With Core Text</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2011-05-20T11:09:12-04:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I’m back in full book-writing mode, now working with <a href="http://mugunthkumar.com/">Mugunth Kumar</a>, who is brilliant. Go check out his stuff. Hopefully we’ll have something published and in all your hands by the end of the year. The book has taken up most of my writing time, so the blog will continue to be a bit quiet, but sometimes I like to answer a Stackoverflow question a bit more fully than I can there.</p>
+
+<p>Today’s question is about <a href="http://stackoverflow.com/questions/6062420/core-text-performance/6062816#6062816">laying out text without <code class="highlighter-rouge">CTFramesetter</code></a>. We’re going to take a whirlwind tour through some CoreText code to demonstrate this. It’s not quite what the OP was asking about, but it shows some techniques and I had it handy. I’ll be writing a whole chapter on Core Text soon.</p>
+
+<p>The goal of this project was to make “pinch” view. It lays out text in a view, and where ever you touch, the text is pinched towards that point. It’s not meant to be really useful. Everything is done in <code class="highlighter-rouge">drawRect:</code>, which is ok in this case, since we only draw when we’re dirty, and when we’re dirty we have to redraw everything anyway. But in many cases, you’d want to do these calculations elsewhere, and only do final drawing in <code class="highlighter-rouge">drawRect:</code>.</p>
+
+<p>We start with some basic view layout, and loop until we run out of text or run out of vertical space in the view.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/laying-out-text-with-coretext">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -392,43 +436,6 @@
   
     <footer>
       <a rel="full-article" href="/wrapping-c-take-2-1">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/chinese-study">Chinese Study</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2010-04-28T11:00:57-04:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Over the years I’ve travelled to China several times, and now I’m working with large group of developers in Suzhou, Hangzhou and Hefei. A few weeks ago I was able to visit again, and that’s gotten me back in the mood to study Chinese. It often helps me to write down things as I learn them, and some of my Chinese coworkers read this blog and might help set me straight as I wander through their language like a bull in a China shop (as it were….) It’s a bit off the trail for Cocoa development, so feel free to use the Subscribe2 link on the right to take this category off of your email subscription.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/chinese-study">Read on &rarr;</a>
     </footer>
   
 

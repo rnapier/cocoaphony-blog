@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Well, I’m spending a little more time hacking PandoraBoy today. It now will compile under XCode3 for anyone playing along at home. I’m hoping to &hellip;">
+  <meta name="description" content="No, I haven't forgotten about PandoraBoy, but I have been exceedingly busy of late. Of course it comes in the middle of my work on a large feature ( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,40 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/upcoming-pandoraboy-release">Upcoming PandoraBoy Release</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2008-02-12T16:08:56-05:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="post-body entry-content">No, I haven't forgotten about PandoraBoy, but I have been exceedingly busy of late. Of course it comes in the middle of my work on a large feature (Full Screen plugins), so I've done a lot of PB work, but haven't made a new release. I'm about to the point of releasing what I have (which works but isn't pretty) and rolling some critical bug fixes out in the not too distant future.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -388,42 +422,6 @@
   <div class="entry-content"><p>Have I mentioned recently how much I love Cocoa? Even when I hate Cocoa, I love working in it. And things that drive me nuts (like the lack of regexes) come along in due course (Leopard). I was listening to CocoaRadio today and there was a comment along these lines. Cocoa has been evolving for about 20 years now. Much of the core is carried over from NeXT. But rather than “showing its age” it keeps showing its wisdom, and those early guys thought it out well enough that Apple hasn’t had to start over again and again as Windows has with Win32 to MFC/WTL to .NET. For how unusual Objective-C is, it’s a constant rather than moving between C, C++, C#, and Java as the winds blow. (And the more I program in Objective-C, the more I enjoy it.)</p>
 
 <p>Tonight I added a station-changing menu to PandoraBoy. There’s still a lot to add to make it really useful (hotkey support and Applescript at least), but the core’s there, and it wasn’t hard. It forced me to simplify a slight duplication in the object model (PandoraControl and Controller were doing almost exactly the same work so I’ve merged them). That cleaned up a lot of redundant code. Even after merging the two objects, Controller is under 400 lines of code, so I don’t think I need to worry about splitting Controller back up some other way.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/77">77</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2007-12-02T22:15:39-05:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>More hacking on station lists tonight. So far it’s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through NSURLProtocols). The station list comes back as an XML document, and I can copy that off into an easy array for later use. The only thing I need to work more on is QuickMix management, since those are magically pulled out of the main channel list, and I should probably do the same to avoid confusion.</p>
-
-<p>I’ve talked often with folks about XML and how there are so many good ways to compress it quite effectively and it’s strange that XML developers have chosen not to do that. Rather, real XML winds up being insanely verbose and bloated on the wire. I hereby take back my earlier complaints. The fact that I can read XML by sniffing the traffic without having to apply any decoding (not even gunzip), and can recognize XML easily when I come across it, is one of the biggest boons to reverse engineering I’ve ever encountered. Long live human readable data formats!</p>
 </div>
   
   

@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Protocols II: A mockery of protocols"
+title: 'Protocols II: A mockery of protocols'
+date: 2019-04-29 11:18 -0400
 ---
-
 [In the last section]({% link _posts/2019-04-20-start-with-a-protocol.markdown %}), I ended my little network stack at this point:
 
 ```swift
