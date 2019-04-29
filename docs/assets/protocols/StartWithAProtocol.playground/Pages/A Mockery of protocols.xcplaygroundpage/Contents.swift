@@ -5,7 +5,7 @@ import Foundation
 
 // Something that can be fetched from the API
 protocol Fetchable: Decodable {
-    static var apiBase: String { get }
+    static var apiBase: String { get }  // The part of the URL for this fetchable type
 }
 
 // A transport maps a URLRequest to Data, asynchronously
@@ -36,16 +36,18 @@ final class APIClient {
         self.transport = transport
     }
 
+    // Fetch any Fetchable type given an ID, and return it asynchronously
     func fetch<Model: Fetchable>(_ model: Model.Type,
                                  id: Int,
-                                 completion:
-        @escaping (Result<Model, Error>) -> Void)
+                                 completion: @escaping (Result<Model, Error>) -> Void)
     {
+        // Construct the URLRequest
         let urlRequest = URLRequest(url: baseURL
             .appendingPathComponent(Model.apiBase)
             .appendingPathComponent("\(id)")
         )
 
+        // Send it to the transport
         transport.send(request: urlRequest) { data in
             completion(Result {
                 return try JSONDecoder().decode(Model.self,

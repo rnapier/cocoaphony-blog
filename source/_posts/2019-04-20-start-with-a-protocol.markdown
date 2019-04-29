@@ -94,6 +94,7 @@ This may not be our final implementations, but they're good enough to get starte
 I also want a client to manage my connection to the server. I'm marking classes "final" to remind you that there's no class inheritance here. I'm not suggesting you need to include "final" on all your class definitions. It's not usually necessary. I'm making it a reference type because the client might eventually have some shared state. For example, if a login step were required, I'd want all references to the client to be logged in together.
 
 ```swift
+// A client that fetches things from the API
 final class APIClient {
     let baseURL = URL(string: "https://www.example.com")!
     let session = URLSession.shared
@@ -108,11 +109,13 @@ And now I want the code to fetch and decode a User, as a method on APIClient.
 func fetchUser(id: Int,
                completion: @escaping (Result<User, Error>) -> Void)
 {
+    // Construct the URLRequest
     let urlRequest = URLRequest(url: baseURL
         .appendingPathComponent("user")
         .appendingPathComponent("\(id)")
     )
 
+    // Send it to the URLSession
     session.dataTask(with: urlRequest) { (data, _, error) in
         if let error = error { completion(.failure(error)) }
         else if let data = data {
@@ -135,11 +138,13 @@ func fetchUser(id: Int,
 func fetch<span class="chl">Document</span>(id: Int,
                completion: @escaping (Result<<span class="chl">Document</span>, Error>) -> Void)
 {
+    // Construct the URLRequest
     let urlRequest = URLRequest(url: baseURL
         .appendingPathComponent(<span class="chl">"document"</span>)
         .appendingPathComponent("\(id)")
     )
 
+    // Send it to the URLSession
     session.dataTask(with: urlRequest) { (data, _, error) in
         if let error = error { completion(.failure(error)) }
         else if let data = data {
@@ -191,11 +196,13 @@ func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
                   completion: @escaping (Result<<span class="chl">Model</span>, Error>) -> Void)
                   <span class="chl">where Model: Fetchable</span>
 {
+    // Construct the URLRequest
     let urlRequest = URLRequest(url: baseURL
         .appendingPathComponent(<span class="cer">"??? user | document ???"</span>)
         .appendingPathComponent("\(id)")
     )
 
+    // Send it to the URLSession
     session.dataTask(with: urlRequest) { (data, _, error) in
         if let error = error { completion(.failure(error)) }
         else if let data = data {
@@ -210,6 +217,7 @@ func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
 There's this string that’s either "user" or "document". That’s something that this algorithm requires, but isn’t part of Decodable. So Decodable isn’t powerful enough to implement this. I need a new protocol.
 
 ```swift
+// Something that can be fetched from the API
 protocol Fetchable: Decodable {
     static var apiBase: String { get }
 }
@@ -218,6 +226,7 @@ protocol Fetchable: Decodable {
 I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, `apiBase`. <!-- (See [Protocols do not conform]() for more on the difference between "*requires* Decodable" and "*is* Decodable.") --> With that, I can finish writing `fetch`:
 
 <pre>
+// Fetch any Fetchable type given an ID, and return it asynchronously
 func fetch&lt;Model&gt;(_ model: Model.Type,
                   id: Int,
                   completion: @escaping (Result<Model, Error>) -> Void)

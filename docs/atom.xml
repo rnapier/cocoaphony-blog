@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-29T12:06:06-04:00</updated>
+  <updated>2019-04-29T12:37:06-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -20,24 +20,28 @@
     <id>https://robnapier.net/a-mockery-of-protocols</id>
     <content type="html"><![CDATA[<p><a href="https://robnapier.net/start-with-a-protocol">In the last section</a>, I ended my little network stack at this point:</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
-    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Something that can be fetched from the API</span>
+<span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>  <span class="c1">// The part of the URL for this type</span>
 <span class="p">}</span>
 
+<span class="c1">// A client that fetches things from the API</span>
 <span class="kd">final</span> <span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">baseURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span>
     <span class="k">let</span> <span class="nv">session</span><span class="p">:</span> <span class="kt">URLSession</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span>
 
+    <span class="c1">// Fetch any Fetchable type given an ID, and return it asynchronously</span>
     <span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">model</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span>
                                  <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-                                 <span class="nv">completion</span><span class="p">:</span>
-        <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+                                 <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
     <span class="p">{</span>
+        <span class="c1">// Construct the URLRequest</span>
         <span class="k">let</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">baseURL</span>
             <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="n">apiBase</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
         <span class="p">)</span>
 
+        <span class="c1">// Send it to URLSession</span>
         <span class="n">session</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">urlRequest</span><span class="p">)</span> <span class="p">{</span>
             <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
             <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
@@ -66,7 +70,8 @@ The basic premise of a mock is to build a test object that mimics some other obj
 
 <p>So my goal isn’t to “mock” URLSession, but to abstract the functionality I need. What I want is to map a URLRequest to Data, asynchronously:<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Transport</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A transport maps a URLRequest to Data, asynchronously</span>
+<span class="kd">protocol</span> <span class="kt">Transport</span> <span class="p">{</span>
     <span class="kd">func</span> <span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span>
               <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">}</span>
@@ -106,16 +111,18 @@ final class APIClient {
         self.transport = transport
     }</span>
 
+    // Fetch any Fetchable type given an ID, and return it asynchronously
     func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type,
                                  id: Int,
-                                 completion:
-        @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
+                                 completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
     {
+        // Construct the URLRequest
         let urlRequest = URLRequest(url: baseURL
             .appendingPathComponent(Model.apiBase)
             .appendingPathComponent(&quot;\(id)&quot;)
         )
 
+        // Send it to the transport
         <span class="chl">transport.send(request: urlRequest) { data in
             completion(Result {
                 return try JSONDecoder().decode(Model.self,
@@ -130,7 +137,8 @@ final class APIClient {
 
 <p>Transport is a lot more powerful than just “a URLSession mock.” It’s a function that converts URLRequests into Data. That means it can be composed. I can build a Transport that wraps other Transports. For example, I can build a Transport that adds headers to every request.</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="kd">class</span> <span class="kt">AddHeaders</span><span class="p">:</span> <span class="kt">Transport</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add headers to an existing transport</span>
+<span class="kd">final</span> <span class="kd">class</span> <span class="kt">AddHeaders</span><span class="p">:</span> <span class="kt">Transport</span>
 <span class="p">{</span>
     <span class="k">let</span> <span class="nv">base</span><span class="p">:</span> <span class="kt">Transport</span>
     <span class="k">var</span> <span class="nv">headers</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]</span>
@@ -159,7 +167,8 @@ final class APIClient {
 
 <p>For completeness, here’s a “mock” Transport, but it’s probably the least interesting thing we can do with this protocol.</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">TestTransportError</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Error</span> <span class="p">{</span> <span class="k">case</span> <span class="n">tooManyRequests</span> <span class="p">}</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A transport that returns static values for tests</span>
+<span class="kd">enum</span> <span class="kt">TestTransportError</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Error</span> <span class="p">{</span> <span class="k">case</span> <span class="n">tooManyRequests</span> <span class="p">}</span>
 
 <span class="kd">final</span> <span class="kd">class</span> <span class="kt">TestTransport</span><span class="p">:</span> <span class="kt">Transport</span> <span class="p">{</span>
     <span class="k">var</span> <span class="nv">history</span><span class="p">:</span> <span class="p">[</span><span class="kt">URLRequest</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -396,7 +405,8 @@ How do I know this won’t go well? I’ll discuss it much more in depth later, 
 
 <p>I also want a client to manage my connection to the server. I’m marking classes “final” to remind you that there’s no class inheritance here. I’m not suggesting you need to include “final” on all your class definitions. It’s not usually necessary. I’m making it a reference type because the client might eventually have some shared state. For example, if a login step were required, I’d want all references to the client to be logged in together.</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A client that fetches things from the API</span>
+<span class="kd">final</span> <span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">baseURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span>
     <span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span>
 
@@ -409,11 +419,13 @@ How do I know this won’t go well? I’ll discuss it much more in depth later, 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">fetchUser</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
                <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">User</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">{</span>
+    <span class="c1">// Construct the URLRequest</span>
     <span class="k">let</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">baseURL</span>
         <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"user"</span><span class="p">)</span>
         <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
     <span class="p">)</span>
 
+    <span class="c1">// Send it to the URLSession</span>
     <span class="n">session</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">urlRequest</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
         <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span> <span class="nf">completion</span><span class="p">(</span><span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="p">))</span> <span class="p">}</span>
         <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span>
@@ -436,11 +448,13 @@ How do I know this won’t go well? I’ll discuss it much more in depth later, 
 func fetch<span class="chl">Document</span>(id: Int,
                completion: @escaping (Result&lt;<span class="chl">Document</span>, Error&gt;) -&gt; Void)
 {
+    // Construct the URLRequest
     let urlRequest = URLRequest(url: baseURL
         .appendingPathComponent(<span class="chl">"document"</span>)
         .appendingPathComponent("\(id)")
     )
 
+    // Send it to the URLSession
     session.dataTask(with: urlRequest) { (data, _, error) in
         if let error = error { completion(.failure(error)) }
         else if let data = data {
@@ -489,11 +503,13 @@ func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
                   completion: @escaping (Result&lt;<span class="chl">Model</span>, Error&gt;) -&gt; Void)
                   <span class="chl">where Model: Fetchable</span>
 {
+    // Construct the URLRequest
     let urlRequest = URLRequest(url: baseURL
         .appendingPathComponent(<span class="cer">"??? user | document ???"</span>)
         .appendingPathComponent("\(id)")
     )
 
+    // Send it to the URLSession
     session.dataTask(with: urlRequest) { (data, _, error) in
         if let error = error { completion(.failure(error)) }
         else if let data = data {
@@ -507,7 +523,8 @@ func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
 
 <p>There’s this string that’s either “user” or “document”. That’s something that this algorithm requires, but isn’t part of Decodable. So Decodable isn’t powerful enough to implement this. I need a new protocol.</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Something that can be fetched from the API</span>
+<span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
     <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -515,6 +532,7 @@ func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
 <p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="highlighter-rouge">apiBase</code>. <!-- (See [Protocols do not conform]() for more on the difference between "*requires* Decodable" and "*is* Decodable.") --> With that, I can finish writing <code class="highlighter-rouge">fetch</code>:</p>
 
 <pre>
+// Fetch any Fetchable type given an ID, and return it asynchronously
 func fetch&lt;Model&gt;(_ model: Model.Type,
                   id: Int,
                   completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)

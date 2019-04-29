@@ -6,24 +6,28 @@ date: 2019-04-29 11:18 -0400
 [In the last section]({% link _posts/2019-04-20-start-with-a-protocol.markdown %}), I ended my little network stack at this point:
 
 ```swift
+// Something that can be fetched from the API
 protocol Fetchable: Decodable {
-    static var apiBase: String { get }
+    static var apiBase: String { get }  // The part of the URL for this type
 }
 
+// A client that fetches things from the API
 final class APIClient {
     let baseURL = URL(string: "https://www.example.com")!
     let session: URLSession = URLSession.shared
 
+    // Fetch any Fetchable type given an ID, and return it asynchronously
     func fetch<Model: Fetchable>(_ model: Model.Type,
                                  id: Int,
-                                 completion:
-        @escaping (Result<Model, Error>) -> Void)
+                                 completion: @escaping (Result<Model, Error>) -> Void)
     {
+        // Construct the URLRequest
         let urlRequest = URLRequest(url: baseURL
             .appendingPathComponent(Model.apiBase)
             .appendingPathComponent("\(id)")
         )
 
+        // Send it to URLSession
         session.dataTask(with: urlRequest) {
             (data, _, error) in
             if let error = error {
@@ -55,6 +59,7 @@ So my goal isn't to "mock" URLSession, but to abstract the functionality I need.
 [^1]: Throughout this series, whenever it's unambiguous, I'll refer to `Result<Value, Error>` as just "Value."
 
 ```swift
+// A transport maps a URLRequest to Data, asynchronously
 protocol Transport {
     func send(request: URLRequest,
               completion: @escaping (Result<Data, Error>) -> Void)
@@ -96,16 +101,18 @@ final class APIClient {
         self.transport = transport
     }</span>
 
+    // Fetch any Fetchable type given an ID, and return it asynchronously
     func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type,
                                  id: Int,
-                                 completion:
-        @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
+                                 completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
     {
+        // Construct the URLRequest
         let urlRequest = URLRequest(url: baseURL
             .appendingPathComponent(Model.apiBase)
             .appendingPathComponent(&quot;\(id)&quot;)
         )
 
+        // Send it to the transport
         <span class="chl">transport.send(request: urlRequest) { data in
             completion(Result {
                 return try JSONDecoder().decode(Model.self,
@@ -121,6 +128,7 @@ By using a default value in `init`, callers can still use the `APIClient()` synt
 Transport is a lot more powerful than just "a URLSession mock." It's a function that converts URLRequests into Data. That means it can be composed. I can build a Transport that wraps other Transports. For example, I can build a Transport that adds headers to every request.
 
 ```swift
+// Add headers to an existing transport
 final class AddHeaders: Transport
 {
     let base: Transport
@@ -151,6 +159,7 @@ This means I can extend existing systems in a really flexible way. I can add enc
 For completeness, here's a "mock" Transport, but it's probably the least interesting thing we can do with this protocol.
 
 ```swift
+// A transport that returns static values for tests
 enum TestTransportError: Swift.Error { case tooManyRequests }
 
 final class TestTransport: Transport {
