@@ -82,6 +82,7 @@ And then anything that requires a Transport can use a URLSession directly. No ne
 *This is ever-so-slightly a lie. Right now [there's a bug](https://bugs.swift.org/browse/SR-10481) that will crash the Swift compiler if you try to do this. It only impacts a very specific situation, but it's the situation that this code relies on. So I do need an adapter for now. But I expect this to be fixed in the near future.*
 
 ```swift
+// A wrapper around URLSession until SR-10481 is resolved
 class NetworkTransport: Transport {
     static let shared = NetworkTransport()
 
@@ -156,9 +157,9 @@ let transport = AddHeaders(base: NetworkTransport.shared,
                            headers: ["Authorization": "..."])
 ```
 
-Now, rather than having every request deal with authorization, that can be centralized to a single Transport transparently. If the authorization token changes, then I can update a single object, and all future requests will get the right headers, even if they were pending at the time the authorization was changed. But this is unit testable. I can swap in whatever lower-level Transport I want under AddHeaders.
+Now, rather than having every request deal with authorization, that can be centralized to a single Transport transparently. If the authorization token changes, then I can update a single object, and all future requests will get the right headers. But this is still unit testable (even the AddHeaders part). I can swap in whatever lower-level Transport I want.
 
-This means I can extend existing systems in a really flexible way. I can add encryption or logging or caching or priority queues or automatic retries or whatever without intermingling that with the actual network layer. I can tunnel all the network traffic over a custom VPN protocol (I've done exactly that with a system like this), all without losing the ability to unit test. So yes, I get mocks, but I get so much more.
+This means I can extend existing systems in a really flexible way. I can add encryption or logging or caching or priority queues or automatic retries or whatever without intermingling that with the actual network layer. I can tunnel all the network traffic over a custom VPN protocol (I've done exactly that with a system like this), all without losing the ability to unit test. So yes, I get mocks, yes, I get unit testing, but I get so much more.
 
 For completeness, here's a "mock" Transport, but it's probably the least interesting thing we can do with this protocol.
 
@@ -186,12 +187,12 @@ And I still haven’t used an associated type or a Self requirement. Transport d
 
 ## Common currency
 
-The split between a `Client.fetch`, which is generic, and `Transport.send`, which is not, is a common structure that I look for. `Transport.send` operates on a small set of concrete types: URLRequest in, Data out. When you're working with a small set of concrete types, then composition is easy. Anything that can generate a URLRequest or can consume Data can participate. When angle-brackets and associated types start creeping in, the code becomes more expressive, but harder to compose because you have to make sure all the types line up.
+The split between a `APIClient.fetch`, which is generic, and `Transport.send`, which is not, is a common structure that I look for. `Transport.send` operates on a small set of concrete types: URLRequest in, Data out. When you're working with a small set of concrete types, then composition is easy. Anything that can generate a URLRequest or can consume Data can participate. `APIClient.fetch` converts Data into any kind of generic Fetchable. When angle-brackets and associated types start creeping in, the code becomes more expressive, but harder to compose because you have to make sure all the types line up.
 
 The power of the Internet is that it mostly operates on just one type: the packet. It doesn't care what's in the packet or what the packet "means." It just moves packets from one place to another; packets in, packets out. And that's why the Internet is so flexible, and the equipment that makes it work can be implemented by numerous vendors in wildly different ways, and they can all work together. 
 
 At each layer above the network layer, additional context and meaning is applied to the information. It's interpreted as user information or commands to execute or video to display. That's composition, gluing together independent layers, each with their own concerns. When designing protocols, I try to employ the same approach. Particularly at the lowest layers I look for common, concrete types to work with. URL and URLRequest. Data and Int. Simple functions like `() -> Void`. As I move up the stack, then greater meaning is applied to the data in the form of model types and the like. That means it's easy to write Transports and many different things can use Transports. And that's the goal.
 
-This network stack still is nowhere near as flexible and powerful as I want. But now it can fetch a wide variety of model types from a particular type of API in a very composable and testable way. That's great progress. For some very simple APIs, it might even be done. There's no need to make it more flexible for its own sake. But I think we'll quickly find some more features we need.
+This network stack still is nowhere near as flexible and powerful as I want. But now it can fetch a wide variety of model types from a particular type of API in a very composable and testable way. That's great progress. For some very simple APIs, it might even be done. There's no need to make it more flexible for its own sake. But I think we'll quickly find more features we need to add.
 
 Next time, I'll jump back up to the very top of the stack, to the models, and show where a PAT (protocol with associated type) can really shine.
