@@ -163,7 +163,9 @@ func fetch<Model: Decodable>(_: Model.Type, id: Int,
 
 ## Where should type parameters go?
 
-Before going on, it's worth exploring the signature. Notice that I pass the type of Model as a parameter. It doesn't even need a name, because the value won't be used. It's just there to nail down the type parameter in the function's parameters rather than in completion handler's parameters. Doing it that way makes type inference a lot nicer. Consider JSONDecoder's `decode` method. It's called this way:
+Before going on, it's worth exploring the signature. Notice that I pass the type of Model as a parameter. It doesn't even need a name, because the value won't be used. It's just there to nail down the type parameter in the function's parameters rather than in completion handler's parameters. I'm mostly doing this to show a technique, and because `fetch(2) { ... }` is a bit ambiguous to the reader (since all ID types are Int currently). Sometimes this makes sense, sometimes it doesn't.
+
+A good example where I think it makes a lot of sense is JSONDecoder's `decode` method. It's called this way:
 
 <pre>
 let value = try JSONDecoder().decode(<span class="chl">Int.self</span>, from: data)
@@ -175,7 +177,11 @@ It could have been designed this way instead:
 let value<span class="chl">: Int</span> = try JSONDecoder().decode(data)
 </pre>
 
-It would have even been a little shorter that way. But it doesn't scale as well. It creates a lot of headaches when things get more complicated, and it makes the compiler errors much harder to understand. So make sure that every type parameter shows up in a function parameter, rather than just the type of the return value or something in a closure.
+It would have even been a little shorter that way. But it forces the caller to add a type annotation on the variable, which is a little ugly, and unusual in Swift. If the only place the type parameter shows up is in the return value, I usually recommend passing it as a parameter. But in any case, try writing some code with it, and focus on making things clear at the call-site. [^1]
+
+[^1]: A previous version of this post advocated for this approach much more strongly, but [some questions on Twitter](https://twitter.com/peres/status/1121824695211429888) made me rethink this.
+
+## Making `fetch` generic
 
 Implementing `fetch` is pretty straightforward, except for one small <span class="cer">problem</span>:
 

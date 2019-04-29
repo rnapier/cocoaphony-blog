@@ -1,0 +1,190 @@
+---
+layout: post
+title: "Protocols II: A mockery of protocols"
+---
+
+[In the last section]({% link _posts/2019-04-20-start-with-a-protocol.markdown %}), I ended my little network stack at this point:
+
+```swift
+final class Client {
+    let session: URLSession = URLSession.shared
+
+    func fetch<Model: Fetchable>(_ model: Model.Type,
+                                 id: Int,
+                                 completion:
+        @escaping (Result<Model, Error>) -> Void)
+    {
+        let urlRequest = URLRequest(url: baseURL
+            .appendingPathComponent(Model.apiBase)
+            .appendingPathComponent("\(id)")
+        )
+
+        session.dataTask(with: urlRequest) {
+            (data, _, error) in
+            if let error = error {
+                completion(.failure(error))
+            }
+            else if let data = data {
+                let decoder = JSONDecoder()
+                completion(Result {
+                    try decoder.decode(Model.self,
+                                       from: data)
+                })
+            }
+            }.resume()
+    }
+}
+```
+
+This can fetch and decode any Fetchable model from an API endpoint that has an URL something like `<base>/<model>/<id>`. That's pretty good, but we can do a lot better. A natural first question is "how do I test this?" It relies explicitly on URLSession, which is very hard to test against. A natural approach would be to create a protocol to mock URLSession.
+
+I hope by the time you're done with this series, hearing "create a protocol to mock" makes you flinch just a little.
+<!--more-->
+
+The basic premise of a mock is to build a test object that mimics some other object you want to replace. That encourages you to design a protocol that very closely matches the existing interface, and then your "mock object" will also closely match that interface. This makes your "real" object, the protocol, and the mock evolve tightly in lockstep, and it cuts off opportunities for more powerful protocols that aren't tied to one implementation.
+
+If the only reason you can imagine using a protocol is for testing, then you're not getting all you could out of it. Protocols can be so much more.
+
+So my goal isn't to "mock" URLSession, but to abstract the functionality I need. What I'm really doing here is mapping an URLRequest to Data asynchronously:
+
+```swift
+protocol Transport {
+    func fetch(request: URLRequest,
+               completion: @escaping (Result<Data, Error>) -> Void)
+}
+```
+
+Notice that nothing about that says "HTTP server over the network." Anything that can map an URLRequest to Data asynchronously is fine. It could be a database. It could be static unit test data. It could be flat files. It could be different routes depending on the scheme.
+
+Now comes the power of retroactive modeling. I can extend URLSession to be a Transport:
+
+```swift
+extension URLSession: Transport {
+    func fetch(request: URLRequest,
+               completion: @escaping (Result<Data, Error>) -> Void)
+    {
+        self.dataTask(with: request) { (data, _, error) in
+            if let error = error { completion(.failure(error)) }
+            else if let data = data { completion(.success(data)) }
+            }.resume()
+    }
+}
+```
+
+And then anything that requires a Transport can use an URLSession directly. No need for wrappers or adapters. It just works. A few lines of code and it just works, without giving up any of the power of URLSession.
+
+*This is ever-so-slightly a lie. Right now [there's a bug](https://bugs.swift.org/browse/SR-10481) that will crash the Swift compiler if you try to do this. So I do need an adapter for now. But I expect this to be fixed in the near future.*
+
+```swift
+class NetworkTransport: Transport {
+    static let shared = NetworkTransport()
+    let session: URLSession
+    init(session: URLSession = .shared) { self.session = session }
+
+    func fetch(request: URLRequest,
+               completion: @escaping (Result<Data, Error>) -> Void)
+    {
+        session.dataTask(with: request) { (data, _, error) in
+            if let error = error { completion(.failure(error)) }
+            else if let data = data { completion(.success(data)) }
+            }.resume()
+    }
+}
+```
+
+<style>
+    .chl { color: yellow; } /* code highlight */
+</style>
+
+With that in place, `Client` relies on Transport rather than URLSession.
+
+<pre>
+final class Client {
+    <span class="chl">let transport: Transport
+
+    init(transport: Transport = NetworkTransport.shared) {
+        self.transport = transport
+    }</span>
+
+    func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type,
+                                 id: Int,
+                                 completion:
+        @escaping (Result&lt;Model, Error&gt;) -&amp;gt; Void)
+    {
+        let urlRequest = URLRequest(url: baseURL
+            .appendingPathComponent(Model.apiBase)
+            .appendingPathComponent(&amp;quot;\(id)&amp;quot;)
+        )
+
+        <span class="chl">transport.fetch(request: urlRequest) { data in
+            completion(Result {
+                return try JSONDecoder().decode(Model.self,
+                                                from: data.get())
+            })
+        }</span>
+    }
+}
+</pre>
+
+By using a default value in `init`, callers can still use the `Client()` syntax if they want the standard network transport. Build clearly and simply, even if it adds a little typing. Then use tools like parameter defaults or convenience initializers to make the syntax nicer.
+
+Transport is a lot more powerful than just "an URLSession mock." It's a function that converts URLRequests into Data. That means it can be composed. I can build a Transport that builds on another Transport. For example, I can build a transport that adds headers to every request.
+
+```swift
+final class AddHeaders: Transport
+{
+    func fetch(request: URLRequest,
+               completion: @escaping (Result<Data, Error>) -> Void)
+    {
+        var newRequest = request
+        for (key, value) in headers { newRequest.addValue(value, forHTTPHeaderField: key) }
+        base.fetch(request: newRequest, completion: completion)
+    }
+
+    let base: Transport
+    var headers: [String: String]
+}
+
+let transport = AddHeaders(base: NetworkTransport.shared,
+                           headers: ["Authorization": "..."])
+```
+
+Now, rather than having every request deal with authorization, that can be centralized to a single Transport. If the authorization token changes, then I can update a single object, and all future requests will get the right headers. But this is still unit testable. I can swap in whatever lower-level Transport I want. 
+
+This means I can extend existing systems in a really flexible way. I can add encryption or logging or caching or priority queues or automatic retries or whatever without intermingling that with the actual network layer. So yes, I get mocks, but I get so much more.
+
+For completeness, here's the "mock" Transport, but it's probably the least interesting thing we can do with this protocol.
+
+```swift
+enum TestTransportError: Swift.Error { case tooManyRequests }
+
+final class TestTransport: Transport {
+    init(responseData: [Data]) { self.responseData = responseData }
+
+    func send(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) {
+        history.append(request)
+        if !responseData.isEmpty {
+            completion(.success(responseData.removeFirst()))
+        } else {
+            completion(.failure(TestTransportError.tooManyRequests))
+        }
+    }
+
+    var history: [URLRequest] = []
+    var responseData: [Data]
+}
+```
+
+And I still haven’t used an associated type or a Self requirement. Transport doesn't need any of that. It's not even generic.
+
+## Common currency
+
+The split between a `Client.fetch`, which is generic, and `Transport.send`, which is not, is a common structure that I seek out. `Transport.send` operates on a small set of concrete types: URLRequest in, Data out. When you're working with a small set of concrete types, then composition is easy. Anything that can generate an URLRequest or can consume Data can participate. When angle-brackets and associated types start creeping in, the code becomes more expressive, but less flexible because you have to make sure all the types line up.
+
+The power of the Internet is that it operates on just one type: the packet. It doesn't care what's in the packet or what the packet represents. It just moves packets from one place to another; packets in, packets out. And that's why the Internet is so flexible, and the equipment that makes it work can be implemented by numerous vendors in wildly different ways, and they can all work together. 
+
+At each layer above the network layer, additional context and meaning is applied to the information. It's interpreted as user information or commands to execute or video to display. That's composition. Gluing together independent layers, each with their own concerns. When designing protocols, I try to employ the same approach. Particularly at the lowest layers I look for common, concrete currencies that all the pieces can communicate using. URL and URLRequest. Data and Int. Simple functions like `() -> Void`. As I move up the stack, then greater meaning is applied to the data in the form of model types and the like. And that means that it's easy to write Transports, and many different things can use Transports. And that's the goal.
+
+This network stack still is nowhere near as flexible and powerful as I want. But it can fetch a wide variety of model types from a particular type of API in a very composable and testable way. That's great progress. For some very simple APIs, it might even be done. There's no need to make it more flexible for its own sake. But I think we'll quickly find some more features we need.
+
+Next time, I'll jump back up to the very top of the stack, to the models, where there are many unrelated types that are still pretty similar. And that's where a PAT (protocol with associated type) can really shine.
