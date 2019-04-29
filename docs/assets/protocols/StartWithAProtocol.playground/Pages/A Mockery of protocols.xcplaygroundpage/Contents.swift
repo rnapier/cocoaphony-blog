@@ -50,8 +50,7 @@ final class APIClient {
         // Send it to the transport
         transport.send(request: urlRequest) { data in
             completion(Result {
-                return try JSONDecoder().decode(Model.self,
-                                                from: data.get())
+                return try JSONDecoder().decode(Model.self, from: data.get())
             })
         }
     }

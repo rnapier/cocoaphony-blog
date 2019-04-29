@@ -111,10 +111,8 @@ protocol Fetchable: Decodable { &hellip;">
                 <span class="nf">completion</span><span class="p">(</span><span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
             <span class="p">}</span>
             <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span>
-                <span class="k">let</span> <span class="nv">decoder</span> <span class="o">=</span> <span class="kt">JSONDecoder</span><span class="p">()</span>
                 <span class="nf">completion</span><span class="p">(</span><span class="kt">Result</span> <span class="p">{</span>
-                    <span class="k">try</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
-                                       <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+                    <span class="k">try</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
                 <span class="p">})</span>
             <span class="p">}</span>
             <span class="p">}</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>

@@ -34,10 +34,8 @@ final class APIClient {
                 completion(.failure(error))
             }
             else if let data = data {
-                let decoder = JSONDecoder()
                 completion(Result {
-                    try decoder.decode(Model.self,
-                                       from: data)
+                    try JSONDecoder().decode(Model.self, from: data)
                 })
             }
             }.resume()
@@ -115,8 +113,7 @@ final class APIClient {
         // Send it to the transport
         <span class="chl">transport.send(request: urlRequest) { data in
             completion(Result {
-                return try JSONDecoder().decode(Model.self,
-                                                from: data.get())
+                return try JSONDecoder().decode(Model.self, from: data.get())
             })
         }</span>
     }

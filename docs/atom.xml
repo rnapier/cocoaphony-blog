@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-29T12:37:06-04:00</updated>
+  <updated>2019-04-29T12:39:50-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -48,10 +48,8 @@
                 <span class="nf">completion</span><span class="p">(</span><span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
             <span class="p">}</span>
             <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span>
-                <span class="k">let</span> <span class="nv">decoder</span> <span class="o">=</span> <span class="kt">JSONDecoder</span><span class="p">()</span>
                 <span class="nf">completion</span><span class="p">(</span><span class="kt">Result</span> <span class="p">{</span>
-                    <span class="k">try</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
-                                       <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+                    <span class="k">try</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
                 <span class="p">})</span>
             <span class="p">}</span>
             <span class="p">}</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
@@ -125,8 +123,7 @@ final class APIClient {
         // Send it to the transport
         <span class="chl">transport.send(request: urlRequest) { data in
             completion(Result {
-                return try JSONDecoder().decode(Model.self,
-                                                from: data.get())
+                return try JSONDecoder().decode(Model.self, from: data.get())
             })
         }</span>
     }
