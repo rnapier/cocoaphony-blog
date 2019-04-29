@@ -10,48 +10,42 @@ protocol Fetchable: Decodable {
 
 // A transport maps a URLRequest to Data, asynchronously
 protocol Transport {
-    func send(request: URLRequest,
-              completion: @escaping (Result<Data, Error>) -> Void)
+    func send(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void)
 }
 
 // Retroactively model URLSession as a Transport
 extension URLSession: Transport {
-    func send(request: URLRequest,
-              completion: @escaping (Result<Data, Error>) -> Void)
+    func send(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void)
     {
-        self.dataTask(with: request) { (data, _, error) in
+        let task = self.dataTask(with: request) { (data, _, error) in
             if let error = error { completion(.failure(error)) }
             else if let data = data { completion(.success(data)) }
-            }.resume()
+        }
+        task.resume()
     }
 }
 
 // A client that fetches things from the API
 final class APIClient {
     let baseURL = URL(string: "https://www.example.com")!
-
     let transport: Transport
 
-    init(transport: Transport = URLSession.shared) {
-        self.transport = transport
-    }
+    init(transport: Transport = URLSession.shared) { self.transport = transport }
 
     // Fetch any Fetchable type given an ID, and return it asynchronously
-    func fetch<Model: Fetchable>(_ model: Model.Type,
-                                 id: Int,
+    func fetch<Model: Fetchable>(_ model: Model.Type, id: Int,
                                  completion: @escaping (Result<Model, Error>) -> Void)
     {
         // Construct the URLRequest
-        let urlRequest = URLRequest(url: baseURL
+        let url = baseURL
             .appendingPathComponent(Model.apiBase)
             .appendingPathComponent("\(id)")
-        )
+        let urlRequest = URLRequest(url: url)
 
         // Send it to the transport
         transport.send(request: urlRequest) { data in
-            completion(Result {
-                return try JSONDecoder().decode(Model.self, from: data.get())
-            })
+            let result = Result { try JSONDecoder().decode(Model.self, from: data.get()) }
+            completion(result)
         }
     }
 }
@@ -87,8 +81,7 @@ final class AddHeaders: Transport
         self.headers = headers
     }
 
-    func send(request: URLRequest,
-              completion: @escaping (Result<Data, Error>) -> Void)
+    func send(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void)
     {
         var newRequest = request
         for (key, value) in headers { newRequest.addValue(value, forHTTPHeaderField: key) }

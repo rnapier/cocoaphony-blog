@@ -17,28 +17,25 @@ final class APIClient {
     let session: URLSession = URLSession.shared
 
     // Fetch any Fetchable type given an ID, and return it asynchronously
-    func fetch<Model: Fetchable>(_ model: Model.Type,
-                                 id: Int,
+    func fetch<Model: Fetchable>(_ model: Model.Type, id: Int,
                                  completion: @escaping (Result<Model, Error>) -> Void)
     {
         // Construct the URLRequest
-        let urlRequest = URLRequest(url: baseURL
+        let url = baseURL
             .appendingPathComponent(Model.apiBase)
             .appendingPathComponent("\(id)")
-        )
+        let urlRequest = URLRequest(url: url)
 
         // Send it to URLSession
-        session.dataTask(with: urlRequest) {
-            (data, _, error) in
+        let task = session.dataTask(with: urlRequest) { (data, _, error) in
             if let error = error {
                 completion(.failure(error))
+            } else if let data = data {
+                let result = Result { try JSONDecoder().decode(Model.self, from: data) } 
+                completion(result)
             }
-            else if let data = data {
-                completion(Result {
-                    try JSONDecoder().decode(Model.self, from: data)
-                })
-            }
-            }.resume()
+        }
+        task.resume()
     }
 }
 ```
@@ -59,8 +56,7 @@ So my goal isn't to "mock" URLSession, but to abstract the functionality I need.
 ```swift
 // A transport maps a URLRequest to Data, asynchronously
 protocol Transport {
-    func send(request: URLRequest,
-              completion: @escaping (Result<Data, Error>) -> Void)
+    func send(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void)
 }
 ```
 
@@ -70,13 +66,13 @@ Now comes the power of retroactive modeling. I can extend URLSession to be a Tra
 
 ```swift
 extension URLSession: Transport {
-    func send(request: URLRequest,
-              completion: @escaping (Result<Data, Error>) -> Void)
+    func send(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void)
     {
-        self.dataTask(with: request) { (data, _, error) in
+        let task = self.dataTask(with: request) { (data, _, error) in
             if let error = error { completion(.failure(error)) }
             else if let data = data { completion(.success(data)) }
-            }.resume()
+        }
+        task.resume()
     }
 }
 ```
@@ -92,29 +88,24 @@ With that in place, `APIClient` can use Transport rather than URLSession.
 <pre>
 final class APIClient {
     let baseURL = URL(string: &quot;https://www.example.com&quot;)!
-
     <span class="chl">let transport: Transport</span>   
 
-    <span class="chl">init(transport: Transport = URLSession.shared) {
-        self.transport = transport
-    }</span>
+    <span class="chl">init(transport: Transport = URLSession.shared) { self.transport = transport }</span>
 
     // Fetch any Fetchable type given an ID, and return it asynchronously
-    func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type,
-                                 id: Int,
+    func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type, id: Int,
                                  completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
     {
         // Construct the URLRequest
-        let urlRequest = URLRequest(url: baseURL
+        let url = baseURL
             .appendingPathComponent(Model.apiBase)
             .appendingPathComponent(&quot;\(id)&quot;)
-        )
+        let urlRequest = URLRequest(url: url)
 
         // Send it to the transport
         <span class="chl">transport.send(request: urlRequest) { data in
-            completion(Result {
-                return try JSONDecoder().decode(Model.self, from: data.get())
-            })
+            let result = Result { try JSONDecoder().decode(Model.self, from: data.get()) }
+            completion(result)
         }</span>
     }
 }
@@ -136,8 +127,7 @@ final class AddHeaders: Transport
         self.headers = headers
     }
 
-    func send(request: URLRequest,
-               completion: @escaping (Result<Data, Error>) -> Void)
+    func send(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void)
     {
         var newRequest = request
         for (key, value) in headers { newRequest.addValue(value, forHTTPHeaderField: key) }
