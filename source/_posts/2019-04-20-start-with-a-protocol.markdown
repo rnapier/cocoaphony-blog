@@ -106,24 +106,24 @@ final class APIClient {
 And now I want the code to fetch and decode a User, as a method on APIClient.
 
 ```swift
-func fetchUser(id: Int,
-               completion: @escaping (Result<User, Error>) -> Void)
+func fetchUser(id: Int, completion: @escaping (Result<User, Error>) -> Void)
 {
     // Construct the URLRequest
-    let urlRequest = URLRequest(url: baseURL
+    let url = baseURL
         .appendingPathComponent("user")
         .appendingPathComponent("\(id)")
-    )
+    let urlRequest = URLRequest(url: url)
 
     // Send it to the URLSession
-    session.dataTask(with: urlRequest) { (data, _, error) in
-        if let error = error { completion(.failure(error)) }
-        else if let data = data {
-            completion(Result {
-                try JSONDecoder().decode(User.self, from: data)
-            })
+    let task = session.dataTask(with: urlRequest) { (data, _, error) in
+        if let error = error { 
+            completion(.failure(error))
+        } else if let data = data {
+            let result = Result { try JSONDecoder().decode(Model.self, from: data) }
+            completion(result)
         }
-        }.resume()
+    }
+    task.resume()
 }
 ```
 
@@ -135,31 +135,31 @@ func fetchUser(id: Int,
 </style>
 
 <pre>
-func fetch<span class="chl">Document</span>(id: Int,
-               completion: @escaping (Result<<span class="chl">Document</span>, Error>) -> Void)
+func fetch<span class="chl">Document</span>(id: Int, completion: @escaping (Result<<span class="chl">Document</span>, Error>) -> Void)
 {
     // Construct the URLRequest
-    let urlRequest = URLRequest(url: baseURL
+    let url = baseURL
         .appendingPathComponent(<span class="chl">"document"</span>)
         .appendingPathComponent("\(id)")
-    )
+    let urlRequest = URLRequest(url: url)
 
     // Send it to the URLSession
-    session.dataTask(with: urlRequest) { (data, _, error) in
-        if let error = error { completion(.failure(error)) }
-        else if let data = data {
-            completion(Result {
-                try JSONDecoder().decode(<span class="chl">Document</span>.self, from: data)
-            })
+    let task = session.dataTask(with: urlRequest) { (data, _, error) in
+        if let error = error { 
+            completion(.failure(error)) 
+        } else if let data = data {
+            let result = Result { try JSONDecoder().decode(<span class="chl">Document</span>.self, from: data) }
+            completion(result)
         }
-        }.resume()
+    }
+    task.resume()
 }
 </pre>
 
 Unsurprisingly, `fetchDocument` is almost identical except for four changes: the function name, the type to pass to the closure, the URL path, and the type to decode. It's so similar because I copied and pasted it. And when you find yourself copying and pasting, that's where I know there's probably some reusable code. So I extract that into a generic function:
 
 ```swift
-func fetch<Model: Decodable>(_: Model.Type, id: Int,
+func fetch<Model: Decodable>(_: Model.Type, id: Int, 
                              completion: @escaping (Result<Model, Error>) -> Void)
 {
    ...
@@ -191,26 +191,26 @@ It would have even been a little shorter that way. But it forces the caller to a
 Implementing `fetch` is pretty straightforward, except for one small <span class="cer">problem</span>:
 
 <pre>
-func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span>
-                  id: Int,
+func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span> id: Int,
                   completion: @escaping (Result<<span class="chl">Model</span>, Error>) -> Void)
-                  <span class="chl">where Model: Fetchable</span>
+    <span class="chl">where Model: Fetchable</span>
 {
     // Construct the URLRequest
-    let urlRequest = URLRequest(url: baseURL
+    let url =  baseURL
         .appendingPathComponent(<span class="cer">"??? user | document ???"</span>)
         .appendingPathComponent("\(id)")
-    )
+    let urlRequest = URLRequest(url: url)
 
     // Send it to the URLSession
-    session.dataTask(with: urlRequest) { (data, _, error) in
-        if let error = error { completion(.failure(error)) }
-        else if let data = data {
-            completion(Result {
-                try JSONDecoder().decode(<span class="chl">Model</span>.self, from: data)
-            })
+    let task = session.dataTask(with: urlRequest) { (data, _, error) in
+        if let error = error { 
+           completion(.failure(error)) 
+        } else if let data = data {
+            let result = Result { try JSONDecoder().decode(<span class="chl">Model</span>.self, from: data) }
+            completion(result)
         }
-        }.resume()
+    }
+    task.resume()
 }
 </pre>
 
@@ -227,24 +227,23 @@ I need a protocol that requires that the type be Decodable, and also requires th
 
 <pre>
 // Fetch any Fetchable type given an ID, and return it asynchronously
-func fetch&lt;Model&gt;(_ model: Model.Type,
-                  id: Int,
+func fetch&lt;Model&gt;(_ model: Model.Type, id: Int,
                   completion: @escaping (Result<Model, Error>) -> Void)
-                  where Model: Fetchable
+    where Model: Fetchable
 {
-    let urlRequest = URLRequest(url: baseURL
+    let url = baseURL
         .appendingPathComponent(<span class="chl">Model.apiBase</span>)
         .appendingPathComponent("\(id)")
-    )
+    let urlRequest = URLRequest(url: url)
 
-    session.dataTask(with: urlRequest) { (data, _, error) in
+    let task = session.dataTask(with: urlRequest) { (data, _, error) in
         if let error = error { completion(.failure(error)) }
         else if let data = data {
-            completion(Result {
-                try JSONDecoder().decode(Model.self, from: data)
-            })
+            let result = Result { try JSONDecoder().decode(Model.self, from: data) }
+            completion(result)
         }
-        }.resume()
+    }
+    task.resume()
 }
 </pre>
 

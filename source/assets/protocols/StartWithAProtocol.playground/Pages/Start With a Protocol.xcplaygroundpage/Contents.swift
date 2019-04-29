@@ -14,28 +14,26 @@ final class APIClient {
     let session: URLSession = URLSession.shared
 
     // Fetch any Fetchable type given an ID, and return it asynchronously
-    func fetch<Model: Fetchable>(_ model: Model.Type,
-                                 id: Int,
-                                 completion: @escaping (Result<Model, Error>) -> Void)
+    func fetch<Model>(_ model: Model.Type, id: Int,
+                      completion: @escaping (Result<Model, Error>) -> Void)
+        where Model: Fetchable
     {
         // Construct the URLRequest
-        let urlRequest = URLRequest(url: baseURL
+        let url = baseURL
             .appendingPathComponent(Model.apiBase)
             .appendingPathComponent("\(id)")
-        )
+        let urlRequest = URLRequest(url: url)
 
         // Send it to URLSession
-        session.dataTask(with: urlRequest) {
-            (data, _, error) in
+        let task = session.dataTask(with: urlRequest) { (data, _, error) in
             if let error = error {
                 completion(.failure(error))
+            } else if let data = data {
+                let result = Result { try JSONDecoder().decode(Model.self, from: data) }
+                completion(result)
             }
-            else if let data = data {
-                completion(Result {
-                    try JSONDecoder().decode(Model.self, from: data)
-                })
-            }
-            }.resume()
+        }
+        task.resume()
     }
 }
 
