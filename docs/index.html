@@ -88,6 +88,7 @@
 <span class="p">}</span>
 
 <span class="kd">final</span> <span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">baseURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span>
     <span class="k">let</span> <span class="nv">session</span><span class="p">:</span> <span class="kt">URLSession</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span>
 
     <span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">model</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span>

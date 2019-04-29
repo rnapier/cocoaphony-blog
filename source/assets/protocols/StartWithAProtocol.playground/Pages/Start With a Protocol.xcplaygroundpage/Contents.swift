@@ -1,14 +1,20 @@
+// Code for Protocols I: "Start with a protocol," he said
+// http://robnapier.net/start-with-a-protocol
+
 import Foundation
 
+// Something that can be fetched from the API
 protocol Fetchable: Decodable {
     static var apiBase: String { get }
 }
 
+// A client that fetches things from the API
 final class APIClient {
-    let session: URLSession = URLSession.shared
     let baseURL = URL(string: "https://www.example.com")!
+    let session: URLSession = URLSession.shared
 
-    func fetch<Model: Fetchable>(id: Int,
+    func fetch<Model: Fetchable>(_ model: Model.Type,
+                                 id: Int,
                                  completion:
         @escaping (Result<Model, Error>) -> Void)
     {
@@ -33,15 +39,26 @@ final class APIClient {
     }
 }
 
+// User model object
 struct User: Codable, Hashable {
     let id: Int
     let name: String
+}
+
+// Document model object
+struct Document: Codable, Hashable {
+    let id: Int
+    let title: String
 }
 
 extension User: Fetchable {
     static var apiBase: String { return "user" }
 }
 
-func dothing(user: Result<User, Error>) {}
+extension Document: Fetchable {
+    static var apiBase: String { return "document" }
+}
 
-APIClient().fetch(id: 2) { user in dothing(user: user) }
+APIClient().fetch(User.self, id: 1) {
+    print($0)
+}

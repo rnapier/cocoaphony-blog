@@ -11,6 +11,7 @@ protocol Fetchable: Decodable {
 }
 
 final class APIClient {
+    let baseURL = URL(string: "https://www.example.com")!
     let session: URLSession = URLSession.shared
 
     func fetch<Model: Fetchable>(_ model: Model.Type,
@@ -55,8 +56,8 @@ So my goal isn't to "mock" URLSession, but to abstract the functionality I need.
 
 ```swift
 protocol Transport {
-    func fetch(request: URLRequest,
-               completion: @escaping (Result<Data, Error>) -> Void)
+    func send(request: URLRequest,
+              completion: @escaping (Result<Data, Error>) -> Void)
 }
 ```
 
@@ -66,8 +67,8 @@ Now comes the power of retroactive modeling. I can extend URLSession to be a Tra
 
 ```swift
 extension URLSession: Transport {
-    func fetch(request: URLRequest,
-               completion: @escaping (Result<Data, Error>) -> Void)
+    func send(request: URLRequest,
+              completion: @escaping (Result<Data, Error>) -> Void)
     {
         self.dataTask(with: request) { (data, _, error) in
             if let error = error { completion(.failure(error)) }
@@ -79,27 +80,6 @@ extension URLSession: Transport {
 
 And then anything that requires a Transport can use a URLSession directly. No need for wrappers or adapters. It just works, even though URLSession is a Foundation type and Apple doesn't know anything about my Transport protocol. A few lines of code and it just works, without giving up any of the power of URLSession.
 
-*This is ever-so-slightly a lie. Right now [there's a bug](https://bugs.swift.org/browse/SR-10481) that will crash the Swift compiler if you try to do this. It only impacts a very specific situation, but it's the situation that this code relies on. So I do need an adapter for now. But I expect this to be fixed in the near future.*
-
-```swift
-// A wrapper around URLSession until SR-10481 is resolved
-class NetworkTransport: Transport {
-    static let shared = NetworkTransport()
-
-    let session: URLSession
-    init(session: URLSession = .shared) { self.session = session }
-
-    func fetch(request: URLRequest,
-               completion: @escaping (Result<Data, Error>) -> Void)
-    {
-        session.dataTask(with: request) { (data, _, error) in
-            if let error = error { completion(.failure(error)) }
-            else if let data = data { completion(.success(data)) }
-            }.resume()
-    }
-}
-```
-
 <style>
     .chl { color: yellow; } /* code highlight */
 </style>
@@ -108,23 +88,25 @@ With that in place, `APIClient` can use Transport rather than URLSession.
 
 <pre>
 final class APIClient {
+    let baseURL = URL(string: &quot;https://www.example.com&quot;)!
+
     <span class="chl">let transport: Transport</span>   
 
-    <span class="chl">init(transport: Transport = NetworkTransport.shared) {
+    <span class="chl">init(transport: Transport = URLSession.shared) {
         self.transport = transport
     }</span>
 
     func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type,
                                  id: Int,
                                  completion:
-        @escaping (Result&lt;Model, Error&gt;) -&amp;gt; Void)
+        @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
     {
         let urlRequest = URLRequest(url: baseURL
             .appendingPathComponent(Model.apiBase)
-            .appendingPathComponent(&amp;quot;\(id)&amp;quot;)
+            .appendingPathComponent(&quot;\(id)&quot;)
         )
 
-        <span class="chl">transport.fetch(request: urlRequest) { data in
+        <span class="chl">transport.send(request: urlRequest) { data in
             completion(Result {
                 return try JSONDecoder().decode(Model.self,
                                                 from: data.get())
@@ -144,16 +126,21 @@ final class AddHeaders: Transport
     let base: Transport
     var headers: [String: String]
 
-    func fetch(request: URLRequest,
+    init(base: Transport, headers: [String: String]) {
+        self.base = base
+        self.headers = headers
+    }
+
+    func send(request: URLRequest,
                completion: @escaping (Result<Data, Error>) -> Void)
     {
         var newRequest = request
         for (key, value) in headers { newRequest.addValue(value, forHTTPHeaderField: key) }
-        base.fetch(request: newRequest, completion: completion)
+        base.send(request: newRequest, completion: completion)
     }
 }
 
-let transport = AddHeaders(base: NetworkTransport.shared,
+let transport = AddHeaders(base: URLSession.shared,
                            headers: ["Authorization": "..."])
 ```
 

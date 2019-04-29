@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-29T11:39:29-04:00</updated>
+  <updated>2019-04-29T12:03:34-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -25,6 +25,7 @@
 <span class="p">}</span>
 
 <span class="kd">final</span> <span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">baseURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span>
     <span class="k">let</span> <span class="nv">session</span><span class="p">:</span> <span class="kt">URLSession</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span>
 
     <span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">model</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span>
@@ -66,8 +67,8 @@ The basic premise of a mock is to build a test object that mimics some other obj
 <p>So my goal isn’t to “mock” URLSession, but to abstract the functionality I need. What I want is to map a URLRequest to Data, asynchronously:<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Transport</span> <span class="p">{</span>
-    <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span>
-               <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+    <span class="kd">func</span> <span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span>
+              <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -76,8 +77,8 @@ The basic premise of a mock is to build a test object that mimics some other obj
 <p>Now comes the power of retroactive modeling. I can extend URLSession to be a Transport:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">URLSession</span><span class="p">:</span> <span class="kt">Transport</span> <span class="p">{</span>
-    <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span>
-               <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+    <span class="kd">func</span> <span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span>
+              <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">self</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">request</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
             <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span> <span class="nf">completion</span><span class="p">(</span><span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="p">))</span> <span class="p">}</span>
@@ -89,26 +90,6 @@ The basic premise of a mock is to build a test object that mimics some other obj
 
 <p>And then anything that requires a Transport can use a URLSession directly. No need for wrappers or adapters. It just works, even though URLSession is a Foundation type and Apple doesn’t know anything about my Transport protocol. A few lines of code and it just works, without giving up any of the power of URLSession.</p>
 
-<p><em>This is ever-so-slightly a lie. Right now <a href="https://bugs.swift.org/browse/SR-10481">there’s a bug</a> that will crash the Swift compiler if you try to do this. It only impacts a very specific situation, but it’s the situation that this code relies on. So I do need an adapter for now. But I expect this to be fixed in the near future.</em></p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A wrapper around URLSession until SR-10481 is resolved</span>
-<span class="kd">class</span> <span class="kt">NetworkTransport</span><span class="p">:</span> <span class="kt">Transport</span> <span class="p">{</span>
-    <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">NetworkTransport</span><span class="p">()</span>
-
-    <span class="k">let</span> <span class="nv">session</span><span class="p">:</span> <span class="kt">URLSession</span>
-    <span class="nf">init</span><span class="p">(</span><span class="nv">session</span><span class="p">:</span> <span class="kt">URLSession</span> <span class="o">=</span> <span class="o">.</span><span class="n">shared</span><span class="p">)</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span> <span class="p">}</span>
-
-    <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span>
-               <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">session</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">request</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
-            <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span> <span class="nf">completion</span><span class="p">(</span><span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="p">))</span> <span class="p">}</span>
-            <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="p">{</span> <span class="nf">completion</span><span class="p">(</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="p">}</span>
-            <span class="p">}</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
 <style>
     .chl { color: yellow; } /* code highlight */
 </style>
@@ -117,23 +98,25 @@ The basic premise of a mock is to build a test object that mimics some other obj
 
 <pre>
 final class APIClient {
+    let baseURL = URL(string: &quot;https://www.example.com&quot;)!
+
     <span class="chl">let transport: Transport</span>   
 
-    <span class="chl">init(transport: Transport = NetworkTransport.shared) {
+    <span class="chl">init(transport: Transport = URLSession.shared) {
         self.transport = transport
     }</span>
 
     func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type,
                                  id: Int,
                                  completion:
-        @escaping (Result&lt;Model, Error&gt;) -&amp;gt; Void)
+        @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
     {
         let urlRequest = URLRequest(url: baseURL
             .appendingPathComponent(Model.apiBase)
-            .appendingPathComponent(&amp;quot;\(id)&amp;quot;)
+            .appendingPathComponent(&quot;\(id)&quot;)
         )
 
-        <span class="chl">transport.fetch(request: urlRequest) { data in
+        <span class="chl">transport.send(request: urlRequest) { data in
             completion(Result {
                 return try JSONDecoder().decode(Model.self,
                                                 from: data.get())
@@ -152,16 +135,21 @@ final class APIClient {
     <span class="k">let</span> <span class="nv">base</span><span class="p">:</span> <span class="kt">Transport</span>
     <span class="k">var</span> <span class="nv">headers</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]</span>
 
-    <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span>
+    <span class="nf">init</span><span class="p">(</span><span class="nv">base</span><span class="p">:</span> <span class="kt">Transport</span><span class="p">,</span> <span class="nv">headers</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">,</span>
                <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">var</span> <span class="nv">newRequest</span> <span class="o">=</span> <span class="n">request</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">in</span> <span class="n">headers</span> <span class="p">{</span> <span class="n">newRequest</span><span class="o">.</span><span class="nf">addValue</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nv">forHTTPHeaderField</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span> <span class="p">}</span>
-        <span class="n">base</span><span class="o">.</span><span class="nf">fetch</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">newRequest</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">completion</span><span class="p">)</span>
+        <span class="n">base</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">newRequest</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">completion</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">let</span> <span class="nv">transport</span> <span class="o">=</span> <span class="kt">AddHeaders</span><span class="p">(</span><span class="nv">base</span><span class="p">:</span> <span class="kt">NetworkTransport</span><span class="o">.</span><span class="n">shared</span><span class="p">,</span>
+<span class="k">let</span> <span class="nv">transport</span> <span class="o">=</span> <span class="kt">AddHeaders</span><span class="p">(</span><span class="nv">base</span><span class="p">:</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="p">,</span>
                            <span class="nv">headers</span><span class="p">:</span> <span class="p">[</span><span class="s">"Authorization"</span><span class="p">:</span> <span class="s">"..."</span><span class="p">])</span>
 </code></pre></div></div>
 
