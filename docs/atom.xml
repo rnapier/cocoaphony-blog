@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-04-29T10:15:03-04:00</updated>
+  <updated>2019-04-29T11:17:36-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -235,7 +235,7 @@ How do I know this won’t go well? I’ll discuss it much more in depth later, 
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>I’m sure many of you have written code kind of like this many times. Construct an URLRequest. Fetch it. Parse it. Pass it to the completion handler. Now, what does the code for <code class="highlighter-rouge">fetchDocument</code> look like?</p>
+<p>I’m sure many of you have written code kind of like this many times. Construct a URLRequest. Fetch it. Parse it. Pass it to the completion handler. Now, what does the code for <code class="highlighter-rouge">fetchDocument</code> look like?</p>
 
 <style>
     .chl { color: yellow; } /* code highlight */

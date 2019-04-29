@@ -124,7 +124,7 @@ func fetchUser(id: Int,
 }
 ```
 
- I’m sure many of you have written code kind of like this many times. Construct an URLRequest. Fetch it. Parse it. Pass it to the completion handler. Now, what does the code for `fetchDocument` look like?
+ I’m sure many of you have written code kind of like this many times. Construct a URLRequest. Fetch it. Parse it. Pass it to the completion handler. Now, what does the code for `fetchDocument` look like?
 
 <style>
     .chl { color: yellow; } /* code highlight */
