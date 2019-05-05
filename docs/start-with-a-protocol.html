@@ -294,7 +294,7 @@ func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span> id: Int,
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="highlighter-rouge">apiBase</code>. <!-- (See [Protocols do not conform]() for more on the difference between "*requires* Decodable" and "*is* Decodable.") --> With that, I can finish writing <code class="highlighter-rouge">fetch</code>:</p>
+<p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="highlighter-rouge">apiBase</code>. (See <a href="/nonconformist">Protocols are nonconformists</a> for more on the difference between “<em>requires</em> Decodable” and “<em>is</em> Decodable.”) With that, I can finish writing <code class="highlighter-rouge">fetch</code>:</p>
 
 <pre>
 // Fetch any Fetchable type given an ID, and return it asynchronously

@@ -3,5 +3,6 @@
     <pages>
         <page name='Start With a Protocol'/>
         <page name='A Mockery of protocols'/>
+        <page name='Not a number'/>
     </pages>
 </playground>

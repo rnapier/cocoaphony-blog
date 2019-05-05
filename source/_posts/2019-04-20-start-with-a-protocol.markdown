@@ -223,7 +223,7 @@ protocol Fetchable: Decodable {
 }
 ```
 
-I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, `apiBase`. <!-- (See [Protocols do not conform]() for more on the difference between "*requires* Decodable" and "*is* Decodable.") --> With that, I can finish writing `fetch`:
+I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, `apiBase`. (See [Protocols are nonconformists]({% link _posts/2019-04-28-nonconformist.markdown %}) for more on the difference between "*requires* Decodable" and "*is* Decodable.") With that, I can finish writing `fetch`:
 
 <pre>
 // Fetch any Fetchable type given an ID, and return it asynchronously

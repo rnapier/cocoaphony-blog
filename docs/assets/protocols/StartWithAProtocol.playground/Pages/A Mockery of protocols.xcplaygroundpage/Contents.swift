@@ -1,5 +1,5 @@
-// Code for Protocols I: "Start with a protocol," he said
-// http://robnapier.net/start-with-a-protocol
+// Code for Protocols II: A Mockery of Protocols
+// http://robnapier.net/a-mockery-of-protocols
 
 import Foundation
 
