@@ -78,11 +78,6 @@ struct Document: Codable, Hashable {
 
 It's not a lot of code, but anytime I'm tempted to cut and paste, it's time to wonder if there's generic code hiding in there. After all, most of the model types in this system will probably have an ID.
 
-## First try: Protocols, in which the teacher, once again, becomes the student
-
-When I see code duplication, I often reach for a protocol so I can extract a generic algorithm. That's something protocols are very good at.
-
-
 ## A Real Identifier
 
 What I really want is for the model type to know its ID type, and the ID type to know its model type. If you remember the `APIClient.fetch` method, it takes a type and an identifier:
@@ -126,7 +121,7 @@ struct User: Codable, Hashable {
 ## Protocols drive algorithms
 
 
-<<<<<< HERE
+
 
 
 ```swift

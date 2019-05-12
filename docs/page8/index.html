@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Over the years I’ve travelled to China several times, and now I’m working with large group of developers in Suzhou, Hangzhou and Hefei. A few weeks &hellip;">
+  <meta name="description" content="Last year, I presented an approach to wrapping C++. Since then, I’ve been introduced to other approaches, particularly from gf who helped me better &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/wrapping-c-take-2-1">Wrapping C++ - Take 2, Part 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2010-06-09T02:39:04-04:00" pubdate data-updated="true">09 Jun 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Last year, I presented <a href="/wrapping-c-objc">an approach to wrapping C++</a>. Since then, I’ve been introduced to other approaches, particularly from gf who helped me better understand opaque objects. Since I do a lot of cross-language work, I’ve had some opportunity to play with and expand this, and so I’d like to update my C++ wrapping approach.</p>
+
+<p>First, to remind everyone of the problem: you have a C++ object that you want to consume in Objective-C. That’s easy in ObjC++, but if you make an ivar that references a C++ class, then the header file can only be included by ObjC++ classes. This quickly spreads .mm files throughout your project, creating all kinds of headaches. ObjC is a beautiful thing, and C++ is fine, but ObjC++ is a crazy land that should be carefully segregated from civilized code. So how do we do it?</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/wrapping-c-take-2-1">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -394,66 +434,6 @@ NSLog(@"%s", 1);
 <p>Of course, the clang static analyzer will probably help get rid of 90% of those errors anyway, so maybe the need for GC just went way down…. Have I mentioned recently how incredible clang really is? I desperately long for them to finish bringing it to Obj-C++ so I can use it.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/implementing-nscopying">Implementing NSCopying (or NSCopyObject() Considered Harmful)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2009-09-04T17:24:05-04:00" pubdate data-updated="true">04 Sep 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><code class="highlighter-rouge">NSCopying</code> is not always as simple to implement as you would think. Apple has a good <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmImplementCopy.html">write-up</a> discussing the complexities, but let me elaborate. Forgive some ranting digressions. It’s important to know how to work around the problems I’m going to discuss, but it’s also important to understand how insane it is to have to work around this issue.</p>
-
-<p>First, there’s the fairly obvious problem of deep versus shallow copies. If object <code class="highlighter-rouge">foo</code> has an instance variable <code class="highlighter-rouge">*bar</code>, should a copy of <code class="highlighter-rouge">foo</code> have a second pointer to <code class="highlighter-rouge">bar</code>, or should it have its own copy of whatever <code class="highlighter-rouge">bar</code> points to? There is no way to answer this question generally; it depends on the nature of the objects.</p>
-
-<p>Most of the time, this can be dealt with fairly easily by implementing the accessors with the correct behavior (retain versus copy), and you wind up with a <code class="highlighter-rouge">copyWithZone:</code> like this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone
-{
-    Product *copy = [[[self class] allocWithZone: zone] init];
-    [copy setProductName:[self productName]];
-    return copy;
-}
-</code></pre></div></div>
-
-<p>That works really well as long as your superclass doesn’t implement <code class="highlighter-rouge">NSCopying</code>, but if it does, you may not have enough information or access to cleanly copy it. Now you would think this would be easy:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone
-{
-    Product *copy = [super copy];
-    [copy setProductName:[self productName]];
-    return copy;
-}
-</code></pre></div></div>
-
-<p>But that may or may not work. If <code class="highlighter-rouge">super</code> implements <code class="highlighter-rouge">-copyWithZone:</code> as described above, then all is fine. But what if your superclass uses <code class="highlighter-rouge">NSCopyObject()</code>? Things go badly, and in ways very difficult to understand and debug. </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/implementing-nscopying">Read on &rarr;</a>
-    </footer>
   
 
 

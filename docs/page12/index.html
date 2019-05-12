@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I'm back into PandoraBoy development. Looks like Pandora changed something with their last UI update, and it's broken PB and maybe also Pandora.FM ( &hellip;">
+  <meta name="description" content="Neil Mix from Pandora contacted me today about the troubles I've had with the notification system. He showed me the code they use to text the API, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,39 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandora-notifications">Pandora Notifications</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-07-07T17:15:56-04:00" pubdate data-updated="true">07 Jul 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="post-body entry-content">Neil Mix from Pandora contacted me today about the troubles I've had with the notification system. He showed me the code they use to text the API, and using that code has fixed a ton of problems. Anything based on knowing the current track is fixed in the 0.5.2. That includes growl, console log entries and Applescript. I'll have it out shortly.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -389,43 +422,6 @@ I was incredibly skeptical from the headline. It read to me like “team builds 
 <p>If you want to make a private framework, you need to remember to set the install path for it to <span>@executable_path/../Frameworks</span>. Just copying it into your bundle isn’t good enough. Otherwise your app is going to think it’s in (~)/Library/Frameworks once you package it up and give it to other people.</p>
 
 <p>In related news, PandoraBoy 0.5.1<span>a</span> is now released.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/pandoraboy-051-released">PandoraBoy 0.5.1 Released</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2008-03-04T22:39:34-05:00" pubdate data-updated="true">04 Mar 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Yes it is true, a new version of PandoraBoy is up, 0.5.1. I haven’t put it into Sparkle yet, and probably will skip it because it only fixes a couple of things (most notably, paid accounts now work correctly). Technically there’s an entire full-screen mode in there now with a plug-in architecture and public framework, but I’ve disabled it because it’s still kind of flakey and doesn’t work very well. I’m going to focus for a while instead on some of the bugs that have been reported and get those cleaned up.</p>
-
-<p>Maybe I’ll play with the new version of ShortcutRecorder that just came out thanks to OmniGroup’s contributions (great company, great products). Hopefully I can get rid of my IB2 dependencies and finally move 100% into XCode3.</p>
-
-<p>And of course I’ve been promising improvements in Sparkle that will help PandoraBoy a little bit, and I more deeply need for my day job. I’ve been mostly working on those during what I consider “day job” hours, but right now core product features are far more pressing than automatic updates. And #1 on my list: collapse the current branch back down to trunk! Ah, subversion, thou viper. Linus was right. There’s no such thing as “CVS done right.” But in truth, it isn’t so terrible, it just isn’t so good either….</p>
 </div>
   
   

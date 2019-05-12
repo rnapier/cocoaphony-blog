@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="More hacking on station lists tonight. So far it’s been as easy as I hoped, once I created a reliable way to watch all Pandora traffic (through &hellip;">
+  <meta name="description" content="Have I mentioned recently how much I love Cocoa? Even when I hate Cocoa, I love working in it. And things that drive me nuts (like the lack of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,41 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/79">79</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2007-12-07T23:22:11-05:00" pubdate data-updated="true">07 Dec 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Have I mentioned recently how much I love Cocoa? Even when I hate Cocoa, I love working in it. And things that drive me nuts (like the lack of regexes) come along in due course (Leopard). I was listening to CocoaRadio today and there was a comment along these lines. Cocoa has been evolving for about 20 years now. Much of the core is carried over from NeXT. But rather than “showing its age” it keeps showing its wisdom, and those early guys thought it out well enough that Apple hasn’t had to start over again and again as Windows has with Win32 to MFC/WTL to .NET. For how unusual Objective-C is, it’s a constant rather than moving between C, C++, C#, and Java as the winds blow. (And the more I program in Objective-C, the more I enjoy it.)</p>
+
+<p>Tonight I added a station-changing menu to PandoraBoy. There’s still a lot to add to make it really useful (hotkey support and Applescript at least), but the core’s there, and it wasn’t hard. It forced me to simplify a slight duplication in the object model (PandoraControl and Controller were doing almost exactly the same work so I’ve merged them). That cleaned up a lot of redundant code. Even after merging the two objects, Controller is under 400 lines of code, so I don’t think I need to worry about splitting Controller back up some other way.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

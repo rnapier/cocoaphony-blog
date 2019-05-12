@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I’ll talk more about it later, but the absolute best way to learn iPhone is to learn Mac first. That’s how I teach my classes. The available Mac &hellip;">
+  <meta name="description" content="See Take 2 for an updated approach to this problem. When faced with mixing C++ and ObjC code, there are two main approaches. One is to just work in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/wrapping-c-objc">Wrapping C++ in ObjC</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2009-04-14T10:20:03-04:00" pubdate data-updated="true">14 Apr 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>See <a href="wrapping-c-take-2-1">Take 2</a> for an updated approach to this problem.</em></p>
+
+<p>When faced with mixing C++ and ObjC code, there are two main approaches. One is to just work in Objective-C++ through the entire project. I don’t like this approach. I find the mixing of ObjC and C++ classes very confusing, since they cannot be used interchangeably and require completely different memory management. The mix of class hierarchies and naming conventions lead to a lot of confusion when we introduce people to code that does this kind of mixing.</p>
+
+<p>My opinion is that ObjC and C++ have very different patterns, so it is important to pick one to be in charge and wrap the other. So if you basically have an C++ program than needs a little ObjC to talk to the UI, then wrap the ObjC in C++ objects. If you basically have an ObjC program that needs a C++ middleware, then wrap the C++ objects.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/wrapping-c-objc">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -415,39 +455,6 @@
   <div class="entry-content"><p>When faced with the need to return “not found” for something that normally returns an index or other value that would normally be unsigned (whether this is an error condition or a normal event), Cocoa offers the NSNotFound constant as an alternative to returning an illegal index like -1 (which forces you to change the index to an NSInteger, raising the likelihood of sign-based errors if there’s ever a long promotion).</p>
 
 <p>NSNotFound is 0x7fffffff, which is not -1 (0xffffffff), but is still very large  (~2 billion) and so should never be a real index for any sanely-sized spaces, and is more readable than -1. NSNotFound is a good constant to remember when these issues come up. Look at NSString -rangeOfString: for an example of its usage.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/pandora-notifications">Pandora Notifications</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2008-07-07T17:15:56-04:00" pubdate data-updated="true">07 Jul 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class="post-body entry-content">Neil Mix from Pandora contacted me today about the troubles I've had with the notification system. He showed me the code they use to text the API, and using that code has fixed a ton of problems. Anything based on knowing the current track is fixed in the 0.5.2. That includes growl, console log entries and Applescript. I'll have it out shortly.</div>
 </div>
   
   

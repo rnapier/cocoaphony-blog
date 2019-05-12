@@ -9,8 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="In the last section, I ended my little network stack at this point: // Something that can be fetched from the API
-protocol Fetchable: Decodable { &hellip;">
+  <meta name="description" content="This was supposed to be a quick sidebar, but it turned into a full-length article, so I’m calling it part 3. The original part 3, continuing the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -54,6 +53,48 @@ protocol Fetchable: Decodable { &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/existential-spelling">Protocols III: Existential Spelling</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2019-05-12T00:00:00-04:00" pubdate data-updated="true">12 May 2019</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>This was supposed to be a quick sidebar, but it turned into a full-length article, so I’m calling it part 3. The original part 3, continuing the network stack, is mostly done, but I wanted to explain this weird word “existentials” first, and it turned out longer than I’d expected. Blame Joe Groff; he’s written too much interesting stuff lately and I want to talk about it.</em></p>
+
+<p>If you’re interested in the future of generics in Swift, Joe Groff has a must-read post called <a href="https://forums.swift.org/t/improving-the-ui-of-generics/22814">Improving the UI of generics</a>. (You should also read the linked <a href="https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md">Generics Manifesto</a> for background.) In it, he touches on a common confusion in Swift. If you don’t understand what he’s talking about here, don’t worry. Explaining this paragraph is the point of this article.</p>
+
+<blockquote>
+  <p>We gave existential types an extremely lightweight spelling, just the bare protocol name, partially following the example of other languages like Java and C# where interfaces also serve as value-abstracted types, and partially out of a hope that they would “just work” the way people expect; if you want a type that can hold any type conforming to a protocol, just use the protocol as a type, and you don’t have to know what “existential” means or anything like that. In practice, for a number of reasons, this hasn’t worked out as smoothly as we had originally hoped. Although the syntax strongly suggests that the protocol as a constraint and the protocol as a type are one thing, in practice, they’re related but different things, and this manifests most confusingly in the “Protocol (the type) does not to conform to Protocol (the constraint)” error.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/existential-spelling">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -474,49 +515,6 @@ protocol Fetchable: Decodable { &hellip;">
   
     <footer>
       <a rel="full-article" href="/nsdata">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/type-erasure-in-stdlib">Type-erasure in Stdlib</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2015-10-06T19:05:13-04:00" pubdate data-updated="true">06 Oct 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When <a href="http://robnapier.net/erasure">last we talked about type erasure</a>, I described an easy way to build type erasures using closures. And I mentioned:</p>
-
-<blockquote>
-  <p>(While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p>
-</blockquote>
-
-<p>At the time I thought I’d pretty well nailed it down, but every time I dug into it I found another little thing I’d missed, and it never seemed to end. And with stdlib open sourcing soon, you’ll all just be able to read this yourselves, so why embarrass myself getting it all wrong? Over time I kind of hoped you all had forgotten that comment and planned to move on to other things. But then I was <a href="https://twitter.com/My_kl/status/650796108789219328">busted by Michael Welch</a>, and so I had to finish the spelunking and here you go.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/type-erasure-in-stdlib">Read on &rarr;</a>
     </footer>
   
 

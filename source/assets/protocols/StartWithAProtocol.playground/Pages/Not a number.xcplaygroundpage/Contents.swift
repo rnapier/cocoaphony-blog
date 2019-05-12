@@ -28,4 +28,3 @@ struct Document: Codable, Hashable {
     let id: ID
     let title: String
 }
-

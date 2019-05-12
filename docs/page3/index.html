@@ -9,8 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I had a bit of a throw-away line in
-Functional Wish Fulfillment: Kind of like map, but kind of different. And I tossed a call to map, unexplained, in &hellip;">
+  <meta name="description" content="In which our heroes create for themselves a convenience and discover a
+surprising thing. Last time we looked at the incredible little map function, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -54,6 +54,52 @@ Functional Wish Fulfillment: Kind of like map, but kind of different. And I toss
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/flatmap">Flattenin' Your Mappenin'</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2014-09-07T09:13:15-04:00" pubdate data-updated="true">07 Sep 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote>
+  <p>In which our heroes create for themselves a convenience and discover a
+surprising thing.</p>
+</blockquote>
+
+<p><a href="/maps">Last time</a> we looked at the incredible little <code class="highlighter-rouge">map</code> function, and saw
+how it could be used to simplify a lot of tedious for-loops while making our
+code more clear and less error-prone. This time, we’re going to see if we can
+solve a common problem that happens with mapping, nesting.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/flatmap">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -467,55 +513,6 @@ about Swift seem to misunderstand one or the other.</p>
   
     <footer>
       <a rel="full-article" href="/pinning-your-ssl-certs">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-truncating-passwords">RNCryptor: Truncating Passwords</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2013-12-30T21:30:11-05:00" pubdate data-updated="true">30 Dec 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to RNCryptor 2.2 when it comes out this week.</strong></p>
-
-<p>I hate it when I do stupid things. But then you all get to learn something, so luckily some good can come of my shame. Please learn something so this isn’t all for naught.</p>
-
-<p><a href="https://github.com/rnapier/RNCryptor/issues/77">Issue #77</a> in RNCryptor is one of those classic bugs. Here it is, as gently pointed out to me by <a href="https://github.com/arthurwalasek">Arthur Walasek</a>:</p>
-
-<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CCKeyDerivationPBKDF</span><span class="p">(</span><span class="n">keySettings</span><span class="p">.</span><span class="n">PBKDFAlgorithm</span><span class="p">,</span>      <span class="c1">// algorithm</span>
-                   <span class="n">password</span><span class="p">.</span><span class="n">UTF8String</span><span class="p">,</span> <span class="c1">// password</span>
-                   <span class="n">password</span><span class="p">.</span><span class="n">length</span><span class="p">,</span> <span class="c1">// passwordLength</span>
-                   <span class="p">...</span>
-</code></pre></div></div>
-
-<p>I have had this bug since I first wrote this code for iOS 5 PTL, and it’s horrible. The problem, if you haven’t seen it yet, is that <code class="highlighter-rouge">-length</code> returns the number of characters in <code class="highlighter-rouge">password</code>, not the number of bytes. In many languages you can get away with that, but not in multi-byte languages like Chinese.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-truncating-passwords">Read on &rarr;</a>
     </footer>
   
 

@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="No, I haven't forgotten about PandoraBoy, but I have been exceedingly busy of late. Of course it comes in the middle of my work on a large feature ( &hellip;">
+  <meta name="description" content="Yes it is true, a new version of PandoraBoy is up, 0.5.1. I haven’t put it into Sparkle yet, and probably will skip it because it only fixes a couple &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-051-released">PandoraBoy 0.5.1 Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-03-04T22:39:34-05:00" pubdate data-updated="true">04 Mar 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Yes it is true, a new version of PandoraBoy is up, 0.5.1. I haven’t put it into Sparkle yet, and probably will skip it because it only fixes a couple of things (most notably, paid accounts now work correctly). Technically there’s an entire full-screen mode in there now with a plug-in architecture and public framework, but I’ve disabled it because it’s still kind of flakey and doesn’t work very well. I’m going to focus for a while instead on some of the bugs that have been reported and get those cleaned up.</p>
+
+<p>Maybe I’ll play with the new version of ShortcutRecorder that just came out thanks to OmniGroup’s contributions (great company, great products). Hopefully I can get rid of my IB2 dependencies and finally move 100% into XCode3.</p>
+
+<p>And of course I’ve been promising improvements in Sparkle that will help PandoraBoy a little bit, and I more deeply need for my day job. I’ve been mostly working on those during what I consider “day job” hours, but right now core product features are far more pressing than automatic updates. And #1 on my list: collapse the current branch back down to trunk! Ah, subversion, thou viper. Linus was right. There’s no such thing as “CVS done right.” But in truth, it isn’t so terrible, it just isn’t so good either….</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -377,41 +414,6 @@
 <p>Moving over to Leopard on my primary box also meant spending a lot of time trying to get PandoraBoy happy. I’ve been having trouble with the Shortcut Recorder palette for a long time now where IB won’t load the palette. I think I’ve finally gotten it sane again. Definitely staying on Xcode 2.5 for now. I’ll wait for SR to get their Leopard IB3 support solid before I consider moving. I’ve had requests to get PB running on 10.3.9, and I’m not ready to try that in XCode3.</p>
 
 <p>Oh, and first impressions of moving to Leopard: wow, Leopard rocks.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/79">79</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2007-12-07T23:22:11-05:00" pubdate data-updated="true">07 Dec 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Have I mentioned recently how much I love Cocoa? Even when I hate Cocoa, I love working in it. And things that drive me nuts (like the lack of regexes) come along in due course (Leopard). I was listening to CocoaRadio today and there was a comment along these lines. Cocoa has been evolving for about 20 years now. Much of the core is carried over from NeXT. But rather than “showing its age” it keeps showing its wisdom, and those early guys thought it out well enough that Apple hasn’t had to start over again and again as Windows has with Win32 to MFC/WTL to .NET. For how unusual Objective-C is, it’s a constant rather than moving between C, C++, C#, and Java as the winds blow. (And the more I program in Objective-C, the more I enjoy it.)</p>
-
-<p>Tonight I added a station-changing menu to PandoraBoy. There’s still a lot to add to make it really useful (hotkey support and Applescript at least), but the core’s there, and it wasn’t hard. It forced me to simplify a slight duplication in the object model (PandoraControl and Controller were doing almost exactly the same work so I’ve merged them). That cleaned up a lot of redundant code. Even after merging the two objects, Controller is under 400 lines of code, so I don’t think I need to worry about splitting Controller back up some other way.</p>
 </div>
   
   

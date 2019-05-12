@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="After months of writing and rewriting, I am happy to finally announce RNCryptor 4 beta 1 in Swift. RNCryptor 4 is a complete rewrite of RNCryptor for &hellip;">
+  <meta name="description" content="When last we talked about type erasure, I described an easy way to build type erasures using closures. And I mentioned: (While this works exactly &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/type-erasure-in-stdlib">Type-erasure in Stdlib</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2015-10-06T19:05:13-04:00" pubdate data-updated="true">06 Oct 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When <a href="http://robnapier.net/erasure">last we talked about type erasure</a>, I described an easy way to build type erasures using closures. And I mentioned:</p>
+
+<blockquote>
+  <p>(While this works exactly like AnySequence, this isn’t how AnySequence is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p>
+</blockquote>
+
+<p>At the time I thought I’d pretty well nailed it down, but every time I dug into it I found another little thing I’d missed, and it never seemed to end. And with stdlib open sourcing soon, you’ll all just be able to read this yourselves, so why embarrass myself getting it all wrong? Over time I kind of hoped you all had forgotten that comment and planned to move on to other things. But then I was <a href="https://twitter.com/My_kl/status/650796108789219328">busted by Michael Welch</a>, and so I had to finish the spelunking and here you go.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/type-erasure-in-stdlib">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -414,52 +457,6 @@ hands-on, practical discussion of the Swiss Army knife of transform functions:
   
     <footer>
       <a rel="full-article" href="/reduction-in-force">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/flatmap">Flattenin' Your Mappenin'</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2014-09-07T09:13:15-04:00" pubdate data-updated="true">07 Sep 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote>
-  <p>In which our heroes create for themselves a convenience and discover a
-surprising thing.</p>
-</blockquote>
-
-<p><a href="/maps">Last time</a> we looked at the incredible little <code class="highlighter-rouge">map</code> function, and saw
-how it could be used to simplify a lot of tedious for-loops while making our
-code more clear and less error-prone. This time, we’re going to see if we can
-solve a common problem that happens with mapping, nesting.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/flatmap">Read on &rarr;</a>
     </footer>
   
 

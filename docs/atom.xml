@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-05-05T16:23:58-04:00</updated>
+  <updated>2019-05-12T12:20:23-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -12,6 +12,178 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Protocols III: Existential Spelling]]></title>
+    <link href="https://robnapier.net/existential-spelling"/>
+    <updated>2019-05-12T00:00:00-04:00</updated>
+    <id>https://robnapier.net/existential-spelling</id>
+    <content type="html"><![CDATA[<p><em>This was supposed to be a quick sidebar, but it turned into a full-length article, so I’m calling it part 3. The original part 3, continuing the network stack, is mostly done, but I wanted to explain this weird word “existentials” first, and it turned out longer than I’d expected. Blame Joe Groff; he’s written too much interesting stuff lately and I want to talk about it.</em></p>
+
+<p>If you’re interested in the future of generics in Swift, Joe Groff has a must-read post called <a href="https://forums.swift.org/t/improving-the-ui-of-generics/22814">Improving the UI of generics</a>. (You should also read the linked <a href="https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md">Generics Manifesto</a> for background.) In it, he touches on a common confusion in Swift. If you don’t understand what he’s talking about here, don’t worry. Explaining this paragraph is the point of this article.</p>
+
+<blockquote>
+  <p>We gave existential types an extremely lightweight spelling, just the bare protocol name, partially following the example of other languages like Java and C# where interfaces also serve as value-abstracted types, and partially out of a hope that they would “just work” the way people expect; if you want a type that can hold any type conforming to a protocol, just use the protocol as a type, and you don’t have to know what “existential” means or anything like that. In practice, for a number of reasons, this hasn’t worked out as smoothly as we had originally hoped. Although the syntax strongly suggests that the protocol as a constraint and the protocol as a type are one thing, in practice, they’re related but different things, and this manifests most confusingly in the “Protocol (the type) does not to conform to Protocol (the constraint)” error.
+<!-- more --></p>
+</blockquote>
+
+<h2 id="spelling">Spelling?</h2>
+
+<p>In programming languages, the “spelling” of something is the sequence of characters a programmer would type to represent a concept. This is often the most visible and argued-over part of a language. It’s also often a fairly shallow concern to the design, which is why it’s common to use intentionally bad “straw man” names to discuss a concept without getting bogged down in spelling. Consider the concept “true if <code class="highlighter-rouge">x</code>  or <code class="highlighter-rouge">y</code>, otherwise false.” Swift spells that  <code class="highlighter-rouge">x || y</code>. In <a href="https://en.wikipedia.org/wiki/Standard_ML">SML</a> the same concept is spelled <code class="highlighter-rouge">x orelse y</code>. But the spelling difference, the difference between the characters <code class="highlighter-rouge">||</code> and <code class="highlighter-rouge">orelse</code>, isn’t very important. It doesn’t tell you much about how the language works. A more interesting difference, at least to me, is that <code class="highlighter-rouge">||</code> is a <a href="https://github.com/apple/swift/blob/c2ecf6d9fb030e767f43bb85fc6ac862ec6fe493/stdlib/public/core/Bool.swift#L320-L323">stdlib function in Swift</a>, while <code class="highlighter-rouge">orelse</code> is hard-coded into the SML compiler, which would likely be true no matter how they were spelled.</p>
+
+<p>In English, some spellings have multiple meanings. The same thing happens in programming languages, and it happened in the <a href="https://robnapier.net/a-mockery-of-protocols">last article</a>:</p>
+
+<style>
+    .chl { color: yellow; } /* code highlight */
+</style>
+
+<pre>
+final class AddHeaders: <span class="chl">Transport</span>
+{
+    let base: <span class="chl">Transport</span>
+    ...
+}
+</pre>
+
+<p>The spelling “Transport” has two related, but distinct, meanings. The first refers to the <em>protocol</em> Transport. The second refers to the <em>existential of</em> Transport.</p>
+
+<h2 id="existential">Existential?</h2>
+
+<p>The “existential of a protocol” can mean several things, but here it refers as a compiler-generated box that holds a value that conforms to the protocol. To see why Swift needs this box, consider an Array of Transports:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// URLSession and TestTransport both conform to Transport</span>
+<span class="k">var</span> <span class="nv">transports</span><span class="p">:</span> <span class="p">[</span><span class="kt">Transport</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="p">,</span> <span class="kt">TestTransport</span><span class="p">(</span><span class="o">...</span><span class="p">)]</span>
+</code></pre></div></div>
+
+<p>Swift would like to store Arrays contiguously in memory. So for an Array of Ints, the storage looks like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+---+---+---+
+| 0 | 1 | 2 |
++---+---+---+
+</code></pre></div></div>
+
+<p>There are no pointers or indirection. The Ints are stored one after the other. To find the offset of index 2, you just have to multiply the size of an Int times two. That’s really fast and how you probably expect Arrays to work. Swift does the same thing for structs. It just lays them out field after field (there might be some padding, but that’s not important here).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct S {
+    let a: Int
+    let b: Int
+}
+
+++--------+--------++--------+--------++--------+--------++
+|| S[0].a | S[0].b || S[1].a | S[1].b || S[2].a | S[2].b ||
+++--------+--------++--------+--------++--------+--------++
+</code></pre></div></div>
+
+<p>Again, to find the offset of <code class="highlighter-rouge">S[2]</code>, Swift just has to multiply two times the size of S (which is the same as two Ints). But what happens in a “protocol-typed” Array like <code class="highlighter-rouge">[Transport]</code>? Each element might be a different size. What can Swift do?</p>
+
+<p>It makes a box that’s a fixed size (currently three machine words). If the type can fit in the box, then it’s stored in the box. If it can’t fit, then the compiler allocates some  space, copies the data there, and puts a pointer in the box. Reference types are already pointers, so it just puts the pointer in the box. In Swift, that box is called an <em>existential container</em>. The thing in the box is called a <em>witness</em>.</p>
+
+<p><em>See <a href="https://developer.apple.com/videos/play/wwdc2016/416/">WWDC 2016: Understanding Swift Performance</a> for more on the implementation details.</em></p>
+
+<h2 id="sure-but-existential">Sure, but “existential?”</h2>
+
+<p><em>This section is a bit more technical; feel free to skip it if you like.</em></p>
+
+<p>Why “existential?” Because the Transport protocol asserts that there <em>exists</em> some type that satisfies its requirements. By “some type,” I mean “in the universe of all possible types,” not “types that happen to be in your program.” That assertion may be wrong. It’s possible to define a protocol that nothing could ever conform to. For example:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Impossible</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="n">make</span><span class="o">&lt;</span><span class="kt">A</span><span class="o">&gt;</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">A</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>(If you don’t believe me, spend some time trying to implement <code class="highlighter-rouge">make</code>. You need to return an instance of <em>whatever</em> the caller requests.)</p>
+
+<p>An existential container is a placeholder box for some unknown type that satisfies the protocol. It’s possible there is no such type, or there may not be any such type in your program. Nothing can be done with it at runtime until a real, concrete value, a <em>witness</em>, is put in the box. The existence of a witness proves that such a type really does exist.</p>
+
+<p>This implicit box isn’t the only example of an existential in Swift. The “Any” types like AnySequence, AnyHashable, and AnyKeyPath often get called “type-erasers” because they hide the concrete type, but they’re also explicit existentials. <a href="https://forums.swift.org/t/improving-the-ui-of-generics/22814#heading--clarifying-existentials">In future Swift,</a> we may spell implicit existentials as <code class="highlighter-rouge">any Transport</code> to parallel the explicit spelling.</p>
+
+<p>While protocols create existential (“there exists”) types, generics create universal (“for all”) types. When you write <code class="highlighter-rouge">struct Array&lt;Element&gt; {...}</code>, that’s an assertion that “for all types (Element), there is another type (Array&lt;Element&gt;) with the following attributes….”</p>
+
+<p>Existentials and universals are “duals,” which means that one can be transformed into the other without losing its structure. So AnySequence is a universal type (generic) that’s equivalent to an explicit existential of Sequence (protocol). That’s why when you run into problems with protocols, your solution may be to convert it into generic structs (or vice versa). They solve the same problems in different ways with different trade-offs.</p>
+
+<h2 id="copy-values-or-code">Copy values or code?</h2>
+
+<p>If you have a function with a parameter whose type is a protocol, that really means it requires an existential of that protocol.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Transport</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="kd">func</span> <span class="nf">transmit</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="n">over</span> <span class="nv">transport</span><span class="p">:</span> <span class="kt">Transport</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>In order to call <code class="highlighter-rouge">transmit</code> with URLSession, Swift needs to copy the URLSession into an existential, and then pass that to <code class="highlighter-rouge">transmit</code>.</p>
+
+<p>What if you used a generic function instead?</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">transmit</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Transport</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="n">over</span> <span class="nv">transport</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>This says that the caller gets to decide the type of T. If they pass URLSession, then the compiler creates an implicit overload:</p>
+
+<pre>
+func transmit(data: Data, over transport: <span class="chl">URLSession</span>) { ... }
+</pre>
+
+<p>If somewhere else in the code they pass TestTransport, then the compiler creates another overload:</p>
+
+<pre>
+func transmit(data: Data, over transport: <span class="chl">TestTransport</span>) { ... }
+</pre>
+
+<p>The entire <code class="highlighter-rouge">transmit</code> function is (in principle) copied, just as if you’d written an overload <code class="highlighter-rouge">transmit</code> for each type. This is an over-simplification, and the compiler may not actually make all the copies, or it may generate an existential version instead (or in addition). It depends on a lot of things, including the optimization flags. But when you call a generic function, you should think of it as creating a new version of the function written specifically for the type you called it with.<sup id="fnref:performance"><a href="#fn:performance" class="footnote">1</a></sup></p>
+
+<ul>
+  <li>In an existential (protocol parameter) function, the parameters may need to be copied into an existential at <em>run-time</em>.</li>
+  <li>In a generic function, duplicate copies of the code may be generated at <em>compile-time</em>.</li>
+</ul>
+
+<p>This run-time/compile-time distinction is a key difference between existentials and generics. Existentials are containers that are filled at run-time. Generics are compile-time functions for generating new code.</p>
+
+<p>Existentials are used when you need to store heterogeneous values that are only known at run-time, for example in a heterogeneous collection.</p>
+
+<p>Generics are used to apply algorithms to types that are known at compile-time. Protocols constrain what types can be used with those generics.</p>
+
+<p>You don’t pass “a protocol value” to a function. You pass the existential of the protocol. Because Swift often converts concrete types into existentials for you, it’s easy to forget that they’re not the same thing. So when Swift doesn’t perform the conversion, it comes as a surprise, and we get the “can only be used as a generic constraint” (i.e. “as a protocol”) error.</p>
+
+<h2 id="what-if-we-made-things-more-generallyumexistential">What if we made things more generally…um…existential?</h2>
+
+<p>So couldn’t Swift just create an existential all the time, even for protocols with associated types (PATs)? Yes, but…it’s complicated. For the most common cases, yes, Swift could automatically create an <code class="highlighter-rouge">any Collection&lt;.Element == T&gt;</code><sup id="fnref:protocol-syntax"><a href="#fn:protocol-syntax" class="footnote">2</a></sup> implicit existential just like it currently has an <code class="highlighter-rouge">AnyCollection&lt;T&gt;</code> explicit existential. That idea is called <em>generalized existentials</em>, and I’m pretty certain Swift will add it eventually (maybe even soon). That’ll knock off several of protocols’ sharp edges for some of the most common cases.</p>
+
+<p><span class="pullquote-right" data-pullquote="Many protocol problems I see in the wild are really just design problems that have little to do with missing Swift features.">
+But it probably won’t solve as many problems as people expect. Many protocol problems I see in the wild are really just design problems that have little to do with missing Swift features. A generalized existential will get you past the compiler error, but in the process it may let you go much further down a wrong road.
+</span></p>
+
+<p>And there are many kinds of types that don’t lend themselves to automatically-generated existentials. The compiler can’t fulfill an <code class="highlighter-rouge">init</code> requirement or any <code class="highlighter-rouge">static</code> requirements on its own. It needs help from the programmer to determine what the default implementations are. It’s similar for protocols with a Self requirement. It may not always be possible to create a sensible default implementation. For protocols like Decodable that have no instance methods, an existential may not make sense at all.</p>
+
+<h2 id="why-you-gotta-talk-about-math-so-much">Why you gotta talk about math so much?</h2>
+
+<p>As Joe said, the hope was that existentials wouldn’t really matter. They’re created by the compiler, you can’t access them, and you can’t even refer to them directly in the language today. You’d think they’d be an implementation detail. But sometimes when you type the name of a protocol you mean the protocol and sometimes you mean the box, and sometimes that matters. We’d like to ignore reference counting, too, and mostly we can…except when we can’t.</p>
+
+<p>The point of a protocol is algorithms. Protocols express what a type must be able to do in order to be used in certain ways. Ideally, protocols should have a very small number of requirements, and enable a large number of extensions and generic functions. A good protocol is short, but shows up in a lot of <code class="highlighter-rouge">where</code> clauses and extensions. They’re fundamentally about compile-time type concerns. “I want to apply this algorithm to many different concrete types.”</p>
+
+<p>The point of an existential is heterogeneous collections, or “type-erasure” where you want to know less about the specific type and just use it according to an interface. They’re fundamentally about run-time values. “I want to assign values of many different concrete types to this variable.”</p>
+
+<p>They’re not unrelated, but they’re not the same thing. When I say <a href="https://robnapier.net/nonconformist">“protocols do not (generally) conform to protocols,”</a> I <em>really</em> mean “existentials do not (generally) conform to protocols.” And when you see “can only be used as a generic constraint,” what the compiler is really telling you is that protocols with associated types (PATs) don’t have an existential.</p>
+
+<h2 id="so-what-about-these-opaque-result-things">So what about these opaque result things?</h2>
+
+<p>My hope is that after reading all this, you’ll feel more comfortable reading <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0244-opaque-result-types.md">SE-244</a>, which adds opaque return types in Swift 5.1. I don’t expect opaque return types to be an important feature for most developers. Please don’t assume you need to rewrite your code to use them. The problems they solve impact stdlib much more than day-to-day app development in my opinion. Looking over my code, I haven’t found a single place I want to use one.</p>
+
+<p>The importance of SE-244 isn’t opaque return types. It’s that it lays the groundwork for the future of Swift generic code. If that interests you, then you definitely want to study it, and in particular get comfortable with <code class="highlighter-rouge">any P</code> (an existential) versus <code class="highlighter-rouge">some P</code> (an unknown but concrete type that conforms). Hopefully this article demystifies some of the terminology.</p>
+
+<p>Next time, back to the networking stack and hopefully some more practical concerns.</p>
+
+<hr />
+<div class="footnotes">
+  <ol>
+    <li id="fn:performance">
+      <p>All these “may” qualifiers are why you shouldn’t assume that protocols or generics are “better for performance” (for whatever meaning you’re attaching to “performance”). It depends on a lot of things. If your code is sensitive to the performance of generics or protocols, you need to profile it and look at what the compiler is actually generating. Do not take away from this discussion that “generics are faster” or “protocols create smaller binaries.” That might be true in certain cases, but it can also be the other way around. Write you code clearly and correctly, and say what you mean in types. The Swift compiler teams works very hard to make sure that kind of code will be performant. Don’t guess what the compiler will do. Test. <a href="#fnref:performance" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:protocol-syntax">
+      <p>For an introduction to that proposed syntax, see the <a href="https://forums.swift.org/t/protocol-assoctype-t-shorthand-for-combined-protocol-and-associated-type-constraints-without-naming-the-constrained-type/21217">Protocol&lt;.AssocType == T&gt; shorthand</a> forum thread. <a href="#fnref:protocol-syntax" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Protocols II: A Mockery of Protocols]]></title>
@@ -2160,479 +2332,6 @@ make you look smart.</p>
     </li>
     <li id="fn:leftright">
       <p>If you’re familiar with Haskell, you may know that <code class="highlighter-rouge">map</code> is usually implemented as a <code class="highlighter-rouge">foldr</code>, while this is a <code class="highlighter-rouge">foldl</code>. That’s just for performance. In Haskell, list prepending (<code class="highlighter-rouge">:</code>) is much faster than appending (<code class="highlighter-rouge">++</code>). In Swift, array appending is the faster operation. So <code class="highlighter-rouge">foldr</code> is common in Haskell, but isn’t even in Swift stdlib. Keep this in mind when translating Haskell algorithms to Swift. Haskell often walks lists backwards for performance reasons. It’s more natural in Swift to walk them forward. <a href="#fnref:leftright" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Flattenin' Your Mappenin']]></title>
-    <link href="https://robnapier.net/flatmap"/>
-    <updated>2014-09-07T09:13:15-04:00</updated>
-    <id>https://robnapier.net/flatmap</id>
-    <content type="html"><![CDATA[<blockquote>
-  <p>In which our heroes create for themselves a convenience and discover a
-surprising thing.</p>
-</blockquote>
-
-<p><a href="https://robnapier.net/maps">Last time</a> we looked at the incredible little <code class="highlighter-rouge">map</code> function, and saw
-how it could be used to simplify a lot of tedious for-loops while making our
-code more clear and less error-prone. This time, we’re going to see if we can
-solve a common problem that happens with mapping, nesting.</p>
-
-<!-- more -->
-
-<h2 id="when-we-left-our-heroes">When we left our heroes</h2>
-
-<p>First, a very quick recap on mapping. We can use <code class="highlighter-rouge">map</code> to transform an array of
-elements into an new array of different elements. For example, we can transform
-an array of strings into an array of string lengths in a variety of syntaxes:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let domains = ["apple.com", "google.com", "robnapier.net"]
-let lengths = domains.map { countElements($0) }
-let lengths = map(domains) { countElements($0) }
-let lengths = domains.map(countElements)
-let lengths = map(domains, countElements)
-</code></pre></div></div>
-
-<p>Or we could transform an array of strings into an array of URLs:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let urls = domains.map { NSURL(scheme: "http", host: $0, path: "/") }
-</code></pre></div></div>
-
-<p>We learned that we can map optionals and our custom
-<a href="https://gist.github.com/rnapier/42ef28d52ac92744730f">result</a> type.
-In both cases, successful values (<code class="highlighter-rouge">Some</code>, <code class="highlighter-rouge">Success</code>) are transformed with the
-function, while failing values (<code class="highlighter-rouge">None</code>, <code class="highlighter-rouge">nil</code>, <code class="highlighter-rouge">Failure</code>) are simply returned.
-In this way, mapping is very similar to optional chaining (<code class="highlighter-rouge">?.</code>).</p>
-
-<p>We discovered that the different <code class="highlighter-rouge">map</code> functions all have the same “shape”:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map(Array&lt;T&gt;, T -&gt; U) -&gt; Array&lt;U&gt;
-map(Optional&lt;T&gt;, T -&gt; U) -&gt; Optional&lt;U&gt;
-map(Result&lt;T&gt;, T -&gt; U) -&gt; Result&lt;U&gt;
-// or more generally:
-map(F&lt;T&gt;, T -&gt; U) -&gt; F&lt;U&gt;
-</code></pre></div></div>
-
-<p>Learning to see these shapes helps us find patterns we can reuse and combine.</p>
-
-<p>For more introduction, see
-<a href="https://robnapier.net/functional-wish-fulfillment">Functional Wish Fulfillment</a> and
-<a href="https://robnapier.net/maps">Maps…Wait, They Don’t Love You Like I Love You</a>.</p>
-
-<h2 id="boxes-in-boxes">Boxes in boxes</h2>
-
-<p>Let’s take a 
-<a href="https://gist.github.com/rnapier/e0d91580d613fb21a52b">simple example</a> to get
-ourselves started on a new problem. We have customers with some properties:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Customer {
-  let name: String
-  let emails: [String]
-}
-
-let customers = [
-  Customer(name: "Alice", emails: ["alice@example.com"]),
-  Customer(name: "Bob", emails: ["bob@example.org", "bobby@home.example"])
-]
-</code></pre></div></div>
-
-<p>Now we’d like a list of all our customer names for our upcoming report. Easy!</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let names = customers.map { $0.name }
-// ["Alice", "Bob"]
-</code></pre></div></div>
-
-<p>Perfect. Just what we want. Now, we also have had a major security issue and
-need to alert all of our users at all of their email addresses. Let’s grab
-those:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails = customers.map { $0.emails }
-// [["alice@example.com"], ["bob@example.org", "bobby@home.example"]]
-</code></pre></div></div>
-
-<p>Wait. That’s not quite what we meant. We wanted a list of email addresses, not a
-list-of-lists of email addresses. What are we going to do now? I wouldn’t be
-surprised if you’ve encountered this before and fixed it with some kind of
-“flatten” function that removes one layer of structure. It’s slightly surprising
-that Swift doesn’t have one of these built in, but it’s easy enough to
-make.<sup id="fnref:simpler"><a href="#fn:simpler" class="footnote">1</a></sup></p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(array: [[T]]) -&gt; [T] {
-  var result = [T]()
-  for subarray in array {
-    result.extend(subarray)
-  }
-  return result
-}
-</code></pre></div></div>
-
-<p>With that, let’s try again:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let flatEmails = flatten(customers.map { $0.emails })
-// ["alice@example.com", "bob@example.org", "bobby@home.example"]
-</code></pre></div></div>
-
-<p>Great. Well, pretty great. There are a few small annoyances. Throwing
-<code class="highlighter-rouge">flatten()</code> on the start is kind of tedious, especially if this is part of a
-chain of maps and filters. Consider if we wanted these to be URLs. We’d want to
-do this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails =
-  customers.map { $0.emails }
-  .flatten      // &lt;== this isn't possible
-  .map { NSURL(string:"mailto:\($0)") }
-</code></pre></div></div>
-
-<p>But that’s not really possible in Swift. You can’t easily add an Array extension
-for <code class="highlighter-rouge">flatten</code> because it only applies to arrays of arrays. Swift can’t apply
-extensions only to certain kinds of arrays. So we’re forced to do this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails =
-  flatten(customers.map { $0.emails })
-  .map { NSURL(string:"mailto:\($0)") }
-</code></pre></div></div>
-
-<p>That’s kind of ugly, and gets worse if the chain is long and has multiple points
-where flattening is needed.</p>
-
-<p>Like I said, this “map plus flatten” is pretty common, so maybe it’s worth
-making a little convenience method for it that we could stick on Array. Let’s
-call it <code class="highlighter-rouge">flatMap</code>:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
-  func flatMap&lt;U&gt;(transform: T -&gt; [U]) -&gt; [U] {
-    return flatten(self.map(transform))
-  }
-}
-</code></pre></div></div>
-
-<p>Just like it says on the tin. Apply the map. Flatten. Ta-da! And now we can
-call:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let flatMapEmails = customers.flatMap { $0.emails }
-// ["alice@example.com", "bob@example.org", "bobby@home.example"]
-</code></pre></div></div>
-
-<p>Just like we wanted.</p>
-
-<h2 id="flat-all-the-things">Flat all the things</h2>
-
-<p>Since we can map optionals and <code class="highlighter-rouge">Result</code>, can we flatten them too? Let’s look at
-the shape of <code class="highlighter-rouge">flatten</code> and how it might apply:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flatten(Array&lt;Array&lt;T&gt;&gt;) -&gt; Array&lt;T&gt;
-flatten(Optional&lt;Optional&lt;T&gt;&gt;) -&gt; Optional&lt;T&gt;
-flatten(Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt;
-</code></pre></div></div>
-
-<p>So we could flatten a <code class="highlighter-rouge">T??</code> to <code class="highlighter-rouge">T?</code> or a <code class="highlighter-rouge">Result&lt;Result&lt;T&gt;&gt;</code> to <code class="highlighter-rouge">Result&lt;T&gt;</code>.
-That makes sense and sounds useful.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(result: Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt; {
-  switch result {
-  case .Success(let box):
-    switch box.unbox {
-    case .Success(let nestedBox): return .Success(nestedBox)
-    case .Failure(let err):       return .Failure(err)
-    }
-  case .Failure(let err): return .Failure(err)
-  }
-}
-</code></pre></div></div>
-
-<p>And if we can map and flatten, then of course we can write <code class="highlighter-rouge">flatMap</code>:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Result {
-  func flatMap&lt;U&gt;(transform: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
-    return flatten(self.map(transform))
-  }
-}
-</code></pre></div></div>
-
-<h2 id="what-is-this-flatmap">What <em>is</em> this flatMap?</h2>
-
-<p>That was easy enough to do, but who cares? Why would you ever want to do that?</p>
-
-<p>Let’s go back to the shape of this function. It’s a method, so we put the type
-of <code class="highlighter-rouge">self</code> as the first parameter to get a function form. That makes it easier
-to compare shapes:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
-</code></pre></div></div>
-
-<p>That looks very familiar. Back in
-<a href="https://robnapier.net/functional-wish-fulfillment">Functional Wish Fulfillment</a> we developed a
-function called <code class="highlighter-rouge">continueWith</code> that let us chain together functions so that we’d
-get a success if they all succeeded, and a failure if any of them failed. Here’s
-what it looked like:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
-  switch x {
-  case .Success(let box): return f(box.unbox)
-  case .Failure(let err): return .Failure(err)
-  }
-}
-</code></pre></div></div>
-
-<p>Using that, we were able to turn our big, complicated JSON parser, full of
-conditional logic, into this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
-  return continueWith(asJSON(data)) {     // data is NSData
-    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
-      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
-        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
-          asPages($0)                     // $0 is [String]
-        } } } }                           // We return Result&lt;[Page]&gt;
-}
-</code></pre></div></div>
-
-<p>Let’s compare the shapes of these functions:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
-continueWith(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
-</code></pre></div></div>
-
-<p>Look familiar?</p>
-
-<p>In functional programming, when two generic functions have the same shape, you
-should have a strong suspicion that they are at least related. There may be
-some more basic function that they both derive from, or they may turn out to be
-the same thing.</p>
-
-<p>I’m not going to bore you with the fairly trivial (if slightly tedious) proof
-that <code class="highlighter-rouge">continueWith</code> and <code class="highlighter-rouge">flatMap</code> are in fact the same function. You can work it
-out on your own if you’re interested, or see
-<a href="https://gist.github.com/rnapier/b383d2542c9fabe913c9">my version in this gist</a>.
-But I will call out two facts: (1) they are the same function, and (2) it’s
-possible to <em>prove</em> it.</p>
-
-<h2 id="proving-the-program">Proving the program</h2>
-
-<p>I am not going to wander into the “programming is math” debate. It’s a silly
-argument. What is important, and should be incontrovertible, is that functional
-programming makes it easier to use well-established tools that are common among
-mathematicians. One of those tools is the proof. We use proofs all the time, we
-just don’t call them that. Every correct automatic refactoring is based on a
-proof that the code before the refactor is identical to the code after the
-refactor.</p>
-
-<p><span class="pullquote-right" data-pullquote="An optimizing compiler in a strongly typed language is essentially a giant proof engine."></span></p>
-
-<p>An optimizing compiler in a strongly typed language is essentially a giant
-proof engine. When you get errors like 
-<a href="http://stackoverflow.com/a/25645689/97337">“C is not convertible to Self,”</a>
-it means you asserted something that the compiler couldn’t prove. It may mean
-that you asserted something that isn’t true, or it may mean that the proof
-engine isn’t powerful enough to prove it, or it may even mean that the language
-isn’t powerful enough to express what you are trying to assert.</p>
-
-<p>&lt;/span&gt;</p>
-
-<p>Functional programming makes it is easier to apply proofs. In other words, it
-makes your code easier to refactor mechanically and easier to optimize
-performance. A key reason is the lack of mutable state. The more mutable state
-is tied up in something, the harder it is to prove that a dramatically different
-implementation behaves identically.</p>
-
-<p>Test cases are not the same thing as a proof. I can’t create enough test cases
-to be certain that every number divisible by 6 is also divisible by 2 and 3.
-It’d take an infinite number of test cases. But if I prove it, I don’t need any
-tests at all. The key to making that easy is ensuring that <code class="highlighter-rouge">isDivisibleBySix(n:
-Int) -&gt; Bool</code> relies on nothing but <code class="highlighter-rouge">n</code>. If there is no mutable state, if there
-are no side effects, if it’s just a function that takes a value and returns a
-value, then I can much more easily replace it with a different implementation
-and be confident it will behave the same.</p>
-
-<p>I don’t want to wander down this road too far. I’m not arguing that we don’t
-need tests, and I’m not arguing for proof-of-correctness as a general practice.
-I’m saying that if you understand the difference between test and proof, and
-write your code in a way to favors proofs, you will get better code, fewer
-tests, simpler refactoring, and safer performance optimizations. And step one
-of that is the elimination of mutable state.</p>
-
-<h2 id="a-method-to-our-functional-madness">A method to our functional madness</h2>
-
-<p>OK, back to more hands-on, practical concerns.</p>
-
-<p>We implemented <code class="highlighter-rouge">continueWith</code> as a function, but we implemented <code class="highlighter-rouge">flatMap</code> as an
-extension method on <code class="highlighter-rouge">Result</code>. Does that change anything? Here’s our
-function-based syntax:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
-  return continueWith(asJSON(data)) {     // data is NSData
-    continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
-      continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
-        continueWith(asStringList($0)) {  // $0 is JSON (AnyObject)
-          asPages($0)                     // $0 is [String]
-        } } } }                           // We return Result&lt;[Page]&gt;
-}
-</code></pre></div></div>
-
-<p>Using a method approach, here’s what we get:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
-  return asJSON(data)
-    .flatMap(asJSONArray)
-    .flatMap(secondElement)
-    .flatMap(asStringList)
-    .flatMap(asPages)
-}
-</code></pre></div></div>
-
-<p>Yeah, that’s definitely easier to read, understand, and modify. Swift syntax
-tends to favor chaining methods over chaining functions. That’s somewhat
-unfortunate. Functions are easier to reason about (prove) because they don’t
-contain an implicit <code class="highlighter-rouge">self</code> that might hide state. Functions in Swift are also
-much more flexible in how they can be made generic (type-parameterized). As we
-saw before, it’s not possible to write <code class="highlighter-rouge">flatten</code> as a method on a generic type.
-Overuse of methods can get us into really frustrating situations if we want to
-write really reusable code.</p>
-
-<p>But the syntax favors methods… mostly.</p>
-
-<p>Swift offers a very powerful way to chain together functions: operators.
-Operators are just functions that allow some syntax benefits:</p>
-
-<ul>
-  <li>They don’t require parentheses</li>
-  <li>They can be prefix (<code class="highlighter-rouge">!x</code>), infix (<code class="highlighter-rouge">x + y</code>) or postfix (<code class="highlighter-rouge">x++</code>)</li>
-</ul>
-
-<p>So what if we defined an operator for <code class="highlighter-rouge">flatMap</code>? We’ll call it <code class="highlighter-rouge">&gt;&gt;==</code> for
-reasons I’ll explain later.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>infix operator &gt;&gt;== {}
-func &gt;&gt;== &lt;T,U&gt;(x: Result&lt;T&gt;, f:T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
-  return x.flatMap(f)
-}
-</code></pre></div></div>
-
-<p>With that, here’s
-<a href="https://gist.github.com/rnapier/067156ac404cc42f17b6">our new parser</a>:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
-  return asJSON(data)
-    &gt;&gt;== asJSONArray
-    &gt;&gt;== secondElement
-    &gt;&gt;== asStringList
-    &gt;&gt;== asPages
-}
-</code></pre></div></div>
-
-<p>I think this reads very nicely, even nicer than the method version (though we
-can still improve it). Each line says “as long as it hasn’t failed, transform
-with….”</p>
-
-<p>Using operators like this can be dangerous. It’s easy to wind up with obscure
-symbol soup. The key is finding a small number of highly reusable operators that
-are used consistently. There’s a cost to forcing people to learn and memorize
-your operator; make sure it’s going to be used often enough to be worth it.</p>
-
-<p>That said, we all use operators every day, and they’re an important part of
-programming. There is no difference between <code class="highlighter-rouge">+</code> and <code class="highlighter-rouge">&gt;&gt;==</code> other than you
-learned one when you were a child. <code class="highlighter-rouge">+</code> is nothing more than an infix function:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>infix operator + { associativity left precedence 140 }
-func +(lhs: Float, rhs: Float) -&gt; Float
-func +(lhs: Int, rhs: Int) -&gt; Int
-...
-</code></pre></div></div>
-
-<p>We could just as well use a function called <code class="highlighter-rouge">add()</code> to do the same thing, but
-instead everyone memorizes this arbitrary symbol because it’s easier to use.
-That’s important. There is nothing more <em>meaningful</em> about <code class="highlighter-rouge">+</code>, <code class="highlighter-rouge">-</code>, and <code class="highlighter-rouge">*</code>
-versus <code class="highlighter-rouge">&gt;&gt;==</code>. They’re just symbols you’ve memorized. I’m suggesting you should
-memorize one more. Well, several. But you’ll learn them over time just as you
-learned <code class="highlighter-rouge">√</code>, <code class="highlighter-rouge">∫</code>, <code class="highlighter-rouge">∑</code>, and <code class="highlighter-rouge">∞</code> later than you learned <code class="highlighter-rouge">+</code> and <code class="highlighter-rouge">-</code>.</p>
-
-<p>That doesn’t mean you should go crazy with operators. In fact, I generally
-suggest you avoid creating new ones until you’ve thought quite a lot about it
-and looked into how other languages solve similar problems. But as we go along,
-I’m going to introduce several general-purpose operators that will make your
-code clearer and easier to write when used appropriately.</p>
-
-<h2 id="a-rose-by-any-other-name-would-be-confusing">A rose by any other name would be confusing</h2>
-
-<p>You might ask now what this function should be called. We started by calling it
-<code class="highlighter-rouge">continueWith</code>, but then it changed to <code class="highlighter-rouge">flatMap</code>, and then to <code class="highlighter-rouge">&gt;&gt;==</code>. I didn’t
-mention it here, but it’s also called <code class="highlighter-rouge">Bind</code> and <code class="highlighter-rouge">&gt;&gt;=</code>. Other Swift developers
-have called it
-<a href="http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics">»&gt;</a>
-and <a href="http://nomothetis.svbtle.com/the-culmination-i">»=-</a>. Its math name is a
-monadic bind. But what should we call it?</p>
-
-<p>I believe Swift programmers should call the function <code class="highlighter-rouge">flatMap</code> (as in Scala) and
-should use <code class="highlighter-rouge">&gt;&gt;==</code> as the operator (derived from Haskell). The operator should be
-pronounced “bind” or colloquially “and then.” <code class="highlighter-rouge">bind()</code> and <code class="highlighter-rouge">&gt;&gt;=</code> are existing
-functions in Swift, and it’s dangerous to overload things with completely
-different meanings (I’m looking at you, C++ <code class="highlighter-rouge">&lt;&lt;</code>). I think the operator should
-preserve as much of the “shape” as possible from Haskell’s, and I think <code class="highlighter-rouge">&gt;&gt;==</code>
-does that best.<sup id="fnref:type"><a href="#fn:type" class="footnote">2</a></sup></p>
-
-<p><span class="pullquote-right" data-pullquote="spend time looking at how other languages and other Swift developers have approached the same problem."></span></p>
-
-<p>That’s not really important, though. It’s just my suggestion, and others might
-reasonably disagree. The point is that before foisting a new operator on the
-world (or even your team), you should spend time looking at how other
-languages and other Swift developers have approached the same problem.
-Otherwise you cut yourself off from a lot of insight and you make it hard for
-others coming to your code. Maybe they won’t know Haskell or F# or Scala, but
-maybe they will. They definitely won’t know the operator you made up over lunch.
-Make sure it’s valuable enough to be worth teaching them.</p>
-
-<p>&lt;/span&gt;</p>
-
-<h2 id="maps-flat-maybe-brains-too">Maps flat, maybe brains too</h2>
-
-<p>If you’ve gotten this far, you’ve come a long way. It’s a lot to take in. Let me
-sum up where we are in our parser:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
-  return asJSON(data)
-    &gt;&gt;== asJSONArray
-    &gt;&gt;== secondElement
-    &gt;&gt;== asStringList
-    &gt;&gt;== asPages
-}
-</code></pre></div></div>
-
-<blockquote>
-  <p>Given some data, convert it to JSON and then to a JSON array and then take the
-second element and then convert that to a string list and then convert those to
-a list of pages and return the result.</p>
-</blockquote>
-
-<p>I think that captures our algorithm about as clearly as we can. Compare it to
-the <a href="https://gist.github.com/rnapier/9e8f92a1ce6be5c3d295">original version</a>. It
-handles errors without littering our code with error handling or requiring
-exceptions. It’s compact, but not dense. It’s easy to modify or extend. And each
-of the individual functions is about as simple as it could be and easy to unit
-test (or so simple that it literally can’t be wrong). There’s still more work to
-make it generic. Things like <code class="highlighter-rouge">secondElement</code> obviously don’t scale, and we’ll
-work on that in future posts. But the basic structure is quite nice I think.</p>
-
-<p>Until then, here are some take-aways:</p>
-
-<ul>
-  <li>Swift makes it easier to chain together methods than functions</li>
-  <li>…but methods are harder to reason about because of <code class="highlighter-rouge">self</code></li>
-  <li>Generic operators like <code class="highlighter-rouge">&gt;&gt;==</code> make it easy to chain together functions that peal away a small part of the problem while maintaining structure like error handling</li>
-  <li>…but new operators should be created with caution, founded in the lessons of history</li>
-</ul>
-
-<p>That’s enough for this time. This was a major turning point, but there are still
-a lot of things to cover. Until then, stop mutating. Evolve.</p>
-<div class="footnotes">
-  <ol>
-    <li id="fn:simpler">
-      <p>In a later post we’ll discuss how <code class="highlighter-rouge">flatten</code> is insanely simple to implement with <code class="highlighter-rouge">reduce</code>. The fact that its so simple is probably the reason they didn’t bother to add <code class="highlighter-rouge">flatten</code> to stdlib. But I’m guessing. <a href="#fnref:simpler" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:type">
-      <p>I also have found it easy to type. I tried <code class="highlighter-rouge">&gt;&gt;=-</code> for a while and kept getting <code class="highlighter-rouge">&gt;&gt;=0-</code> when I was typing fast. <a href="#fnref:type" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

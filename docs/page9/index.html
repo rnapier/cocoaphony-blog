@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I work on a lot of projects that share significant code between iPhone and Mac versions. This is the beauty of Cocoa. While working on these projects &hellip;">
+  <meta name="description" content="NSCopying is not always as simple to implement as you would think. Apple has a good write-up discussing the complexities, but let me elaborate. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/implementing-nscopying">Implementing NSCopying (or NSCopyObject() Considered Harmful)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2009-09-04T17:24:05-04:00" pubdate data-updated="true">04 Sep 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code class="highlighter-rouge">NSCopying</code> is not always as simple to implement as you would think. Apple has a good <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmImplementCopy.html">write-up</a> discussing the complexities, but let me elaborate. Forgive some ranting digressions. It’s important to know how to work around the problems I’m going to discuss, but it’s also important to understand how insane it is to have to work around this issue.</p>
+
+<p>First, there’s the fairly obvious problem of deep versus shallow copies. If object <code class="highlighter-rouge">foo</code> has an instance variable <code class="highlighter-rouge">*bar</code>, should a copy of <code class="highlighter-rouge">foo</code> have a second pointer to <code class="highlighter-rouge">bar</code>, or should it have its own copy of whatever <code class="highlighter-rouge">bar</code> points to? There is no way to answer this question generally; it depends on the nature of the objects.</p>
+
+<p>Most of the time, this can be dealt with fairly easily by implementing the accessors with the correct behavior (retain versus copy), and you wind up with a <code class="highlighter-rouge">copyWithZone:</code> like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone
+{
+    Product *copy = [[[self class] allocWithZone: zone] init];
+    [copy setProductName:[self productName]];
+    return copy;
+}
+</code></pre></div></div>
+
+<p>That works really well as long as your superclass doesn’t implement <code class="highlighter-rouge">NSCopying</code>, but if it does, you may not have enough information or access to cleanly copy it. Now you would think this would be easy:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone
+{
+    Product *copy = [super copy];
+    [copy setProductName:[self productName]];
+    return copy;
+}
+</code></pre></div></div>
+
+<p>But that may or may not work. If <code class="highlighter-rouge">super</code> implements <code class="highlighter-rouge">-copyWithZone:</code> as described above, then all is fine. But what if your superclass uses <code class="highlighter-rouge">NSCopyObject()</code>? Things go badly, and in ways very difficult to understand and debug. </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/implementing-nscopying">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -403,43 +463,6 @@
     <footer>
       <a rel="full-article" href="/obfuscating-cocoa">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/latest-news">Latest News</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2009-06-26T11:40:44-04:00" pubdate data-updated="true">26 Jun 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It’s been quiet here for a while. I’ve been spending most of my time working on <a href="http://xmppframework.googlecode.com">XMPPFramework</a>, an opensource framework that makes it easier to build XMPP clients for Mac and iPhone. I’ve been working on this nonstop for several weeks now in preparation for a demo based on this, so there hasn’t been a lot of time to post here. My code for that demo is done now, and I’m headed off on vacation for two weeks. So you should see more traffic here in July. I have quite a backlog of topics I just haven’t had time to really capture.</p>
-
-<p>If you’re interested in a less edited form of my Cocoa musings, I still answer questions at <a href="http://stackoverflow.com">Stack Overflow</a> (<a href="feed://stackoverflow.com/feeds/user/97337">feed</a>), and I’ve started experimenting with <a href="https://twitter.com/cocoaphony">Twitter</a>, though I’m not sure yet how much I like tweeting.</p>
-
-<p>See you all in July!</p>
-</div>
-  
   
 
 
