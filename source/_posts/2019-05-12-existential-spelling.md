@@ -32,7 +32,7 @@ The spelling "Transport" has two related, but distinct, meanings. The first refe
 
 ## Existential?
 
-The "existential of a protocol" can mean several things, but here it refers as a compiler-generated box that holds a value that conforms to the protocol. To see why Swift needs this box, consider an Array of Transports:
+The "existential of a protocol" can mean several things, but here it refers to a compiler-generated box that holds a value that conforms to the protocol. To see why Swift needs this box, consider an Array of Transports:
 
 ```swift
 // URLSession and TestTransport both conform to Transport

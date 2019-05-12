@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-05-12T12:21:14-04:00</updated>
+  <updated>2019-05-12T12:52:24-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -49,7 +49,7 @@ final class AddHeaders: <span class="chl">Transport</span>
 
 <h2 id="existential">Existential?</h2>
 
-<p>The “existential of a protocol” can mean several things, but here it refers as a compiler-generated box that holds a value that conforms to the protocol. To see why Swift needs this box, consider an Array of Transports:</p>
+<p>The “existential of a protocol” can mean several things, but here it refers to a compiler-generated box that holds a value that conforms to the protocol. To see why Swift needs this box, consider an Array of Transports:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// URLSession and TestTransport both conform to Transport</span>
 <span class="k">var</span> <span class="nv">transports</span><span class="p">:</span> <span class="p">[</span><span class="kt">Transport</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="p">,</span> <span class="kt">TestTransport</span><span class="p">(</span><span class="o">...</span><span class="p">)]</span>
