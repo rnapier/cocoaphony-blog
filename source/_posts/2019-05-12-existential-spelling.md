@@ -62,7 +62,7 @@ struct S {
 
 Again, to find the offset of `S[2]`, Swift just has to multiply two times the size of S (which is the same as two Ints). But what happens in a "protocol-typed" Array like `[Transport]`? Each element might be a different size. What can Swift do?
 
-It makes a box that's a fixed size (currently three machine words). If the type can fit in the box, then it's stored in the box. If it can't fit, then the compiler allocates some  space, copies the data there, and puts a pointer in the box. Reference types are already pointers, so it just puts the pointer in the box. In Swift, that box is called an *existential container*. The thing in the box is called a *witness*.
+It makes a box that's a fixed size ([currently five machine words, with three for storage](https://twitter.com/johannesweiss/status/1127858044640141312)). If the type can fit in the box, then it's stored in the box. If it can't fit, then the compiler allocates some  space, copies the data there, and puts a pointer in the box. Reference types are already pointers, so it just puts the pointer in the box. In Swift, that box is called an *existential container*. The thing in the box is called a *witness*.
 
 *See [WWDC 2016: Understanding Swift Performance](https://developer.apple.com/videos/play/wwdc2016/416/) for more on the implementation details.*
 

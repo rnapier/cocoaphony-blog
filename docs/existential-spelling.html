@@ -134,7 +134,7 @@ final class AddHeaders: <span class="chl">Transport</span>
 
 <p>Again, to find the offset of <code class="highlighter-rouge">S[2]</code>, Swift just has to multiply two times the size of S (which is the same as two Ints). But what happens in a “protocol-typed” Array like <code class="highlighter-rouge">[Transport]</code>? Each element might be a different size. What can Swift do?</p>
 
-<p>It makes a box that’s a fixed size (currently three machine words). If the type can fit in the box, then it’s stored in the box. If it can’t fit, then the compiler allocates some  space, copies the data there, and puts a pointer in the box. Reference types are already pointers, so it just puts the pointer in the box. In Swift, that box is called an <em>existential container</em>. The thing in the box is called a <em>witness</em>.</p>
+<p>It makes a box that’s a fixed size (<a href="https://twitter.com/johannesweiss/status/1127858044640141312">currently five machine words, with three for storage</a>). If the type can fit in the box, then it’s stored in the box. If it can’t fit, then the compiler allocates some  space, copies the data there, and puts a pointer in the box. Reference types are already pointers, so it just puts the pointer in the box. In Swift, that box is called an <em>existential container</em>. The thing in the box is called a <em>witness</em>.</p>
 
 <p><em>See <a href="https://developer.apple.com/videos/play/wwdc2016/416/">WWDC 2016: Understanding Swift Performance</a> for more on the implementation details.</em></p>
 
