@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-05-27T16:28:15-04:00</updated>
+  <updated>2019-05-27T17:20:22-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -310,6 +310,8 @@ struct User: Codable, Hashable {
 <p>Generic code is hard. There are trade-offs. Some things are hard because Swift is still evolving. And some things are hard because generic code is just hard. Build simply and concretely, and extract solutions as you discover problems. Don’t invent problems for yourself. “It isn’t generic enough” is not a problem. Make sure your generic code is solving a problem you really have, and put it off as long as you can get away with. You’ll probably have to redesign it anyway.</p>
 
 <p>Next time I’ll move beyond fetching models. There are so many other things an API can do. What would that look like?</p>
+
+<p><a href="https://robnapier.net/assets/protocols/StartWithAProtocol.zip">Swift Playground</a></p>
 ]]></content>
   </entry>
   

@@ -305,3 +305,5 @@ I'll now remind you that stdlib's Collection protocol required [a pretty major o
 Generic code is hard. There are trade-offs. Some things are hard because Swift is still evolving. And some things are hard because generic code is just hard. Build simply and concretely, and extract solutions as you discover problems. Don't invent problems for yourself. "It isn't generic enough" is not a problem. Make sure your generic code is solving a problem you really have, and put it off as long as you can get away with. You'll probably have to redesign it anyway.
 
 Next time I'll move beyond fetching models. There are so many other things an API can do. What would that look like?
+
+[Swift Playground](/assets/protocols/StartWithAProtocol.zip)
