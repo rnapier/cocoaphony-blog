@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="When last we talked about type erasure, I described an easy way to build type erasures using closures. And I mentioned: (While this works exactly &hellip;">
+  <meta name="description" content="Or… “How I learned to stop worrying, and love Foundation.” Forgive me, NSData. I was running around with that flashy [UInt8], acting like you didn’t &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/nsdata">NSData, My Old Friend</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2015-10-07T20:27:00-04:00" pubdate data-updated="true">07 Oct 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="or-how-i-learned-to-stop-worrying-and-love-foundation">Or… “How I learned to stop worrying, and love Foundation.”</h2>
+
+<blockquote>
+  <p>Forgive me, NSData. I was running around with that flashy [UInt8], acting like you didn’t have everything I need. I’ve learned my lesson.</p>
+
+  <p>— Rob Napier (@cocoaphony) <a href="https://twitter.com/cocoaphony/status/648514927678910464">September 28, 2015</a></p>
+</blockquote>
+
+<p>I did a lot of writing and rewriting of the <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">Swift version of RNCryptor</a>. I struggled especially with what type to use for data. I gravitated quickly to <code class="highlighter-rouge">[UInt8]</code> with all its apparent Swiftiness. But in the end, after many iterations, I refactored back to <code class="highlighter-rouge">NSData</code>, and I’m really glad I did.</p>
+
+<p>This is the story of why.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/nsdata">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -411,52 +458,6 @@ you do?
   
     <footer>
       <a rel="full-article" href="/go-is-a-shop-built-jig">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/reduction-in-force">Reduction in Force</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2014-09-14T20:14:00-04:00" pubdate data-updated="true">14 Sep 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Our last <a href="/flatmap">talk about »==</a> was full of twists and turns, some
-philosophy, surprising connections, and a radical new operator. It was a lot to
-absorb, and you may have to play with it some in your own code before you really
-know what it’s about. That’s ok.</p>
-
-<p>Let’s take a little break and talk about a handy functional tool built into
-Swift stdlib. I promise no big reveals, no new operators, no fancy types; just
-hands-on, practical discussion of the Swiss Army knife of transform functions:
-<code class="highlighter-rouge">reduce</code>.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/reduction-in-force">Read on &rarr;</a>
     </footer>
   
 

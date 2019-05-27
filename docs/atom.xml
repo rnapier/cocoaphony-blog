@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-05-13T09:21:58-04:00</updated>
+  <updated>2019-05-27T16:28:15-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -12,6 +12,306 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Protocols IV: That's Not a Number]]></title>
+    <link href="https://robnapier.net/thats-not-a-number"/>
+    <updated>2019-05-27T00:00:00-04:00</updated>
+    <id>https://robnapier.net/thats-not-a-number</id>
+    <content type="html"><![CDATA[<p>So far in this series, I’ve <a href="https://robnapier.net/start-with-a-protocol">created a simple APIClient</a> that can fetch any Fetchable type and decode it from a specific API, and then <a href="https://robnapier.net/a-mockery-of-protocols">extracted a Transport protocol</a> to abstract away the network layer. In this part, I’ll reconsider the top of the stack, the models, and see if I can make those more flexible.
+<!-- more --></p>
+
+<p>The current models are User and Document:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="kt">Document</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>But now the server API is changing. Document IDs will be Strings, not Ints. (True story.) But really, IDs never really <em>were</em> Ints. I mean, IDs aren’t <em>numbers</em>. What would it mean to add two IDs together? Or divide them? How can I pretend that an ID is a kind of number if most number-like operations would be nonsense? The current design allows me to pass document IDs when I mean user IDs. It even lets me pass random integers when I mean an ID. That can’t be right. IDs are their own thing. They want a type.</p>
+
+<p>As usual, I’ll start very concretely with User and see if anything generic develops. The first step is to lift the ID into its own type.</p>
+
+<style>
+    .chl { color: yellow; } /* code highlight */
+</style>
+
+<pre>
+struct User: Codable, Hashable {
+    <span class="chl">struct ID: Codable, Hashable { 
+        let value: Int 
+    }
+    let id: ID</span>
+    let name: String
+}
+</pre>
+
+<p>So now creating a User looks like this:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">user</span> <span class="o">=</span> <span class="kt">User</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">1</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Alice"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>That’s ok, but I don’t like the <code class="highlighter-rouge">value:</code> label. It violates one of the principles of the <a href="https://swift.org/documentation/api-design-guidelines/#argument-labels">API Design Guidelines</a>:</p>
+
+<blockquote>
+  <p>In initializers that perform value preserving type conversions, omit the first argument label, e.g. <code class="highlighter-rouge">Int64(someUInt32)</code>.</p>
+</blockquote>
+
+<p>To comply, I should I add another initializer.</p>
+
+<pre>
+struct User: Codable, Hashable {
+    struct ID: Codable, Hashable { 
+        let value: Int 
+        <span class="chl">init(_ value: Int) { self.value = value }</span>
+    }
+    let id: ID
+    let name: String
+}
+
+let user = User(id: <span class="chl">User.ID(1)</span>, name: "Alice")
+</pre>
+
+<p>Much better. Document will be almost exactly the same.</p>
+
+<pre>
+struct Document: Codable, Hashable {
+    struct ID: Codable, Hashable {
+        let value: <span class="chl">String</span>
+        init(_ value: <span class="chl">String</span>) { self.value = value }
+    }
+    let id: ID
+    let title: String
+}
+</pre>
+
+<p>It’s not a lot of code, but anytime I’m tempted to cut and paste, it’s time to wonder if there’s generic code hiding in there. After all, most of the model types in this system will probably have an ID.</p>
+
+<h2 id="maybe-a-protocol">Maybe a protocol?</h2>
+
+<p>When I see code duplication, I often reach first for a protocol so I can extract a generic algorithm. That’s something protocols are very good at. In the case of ID, there are two duplicated concepts: identifiers conform to Codable and Hashable, and identifiers have a “no label” initializer.</p>
+
+<p><span class="pullquote-right" data-pullquote="It&#8217;s important to focus on the duplication of concepts, not keystrokes.">
+It’s important to focus on the duplication of concepts, not keystrokes. <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> doesn’t mean “never type the same letters twice.” The point is to extract things that will <em>vary together</em>. I don’t want to capture “types that include the characters <code class="highlighter-rouge">: Codable, Hashable</code> and <code class="highlighter-rouge">init(_...</code>.” I want to capture “things that behave as identifiers.” So I’m going to capture that concept as Identifier:
+</span></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Identifier</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="kd">associatedtype</span> <span class="kt">Value</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span>
+    <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="nf">init</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">Identifier</span> <span class="p">{</span>
+    <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">)</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">value</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>With that, User.ID is simplified to:</p>
+
+<pre>
+struct User: Codable, Hashable {
+    <span class="chl">struct ID: Identifier { let value: Int }</span>
+    let id: ID
+    let name: String
+}
+</pre>
+
+<p>To use it, <code class="highlighter-rouge">APIClient.fetch</code> needs to accept an ID type rather than an Int:</p>
+
+<pre>
+func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type, <span class="chl">id: Model.ID</span>,
+                             completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
+</pre>
+
+<p>And of course Fetchable needs to add an ID type:</p>
+
+<pre>
+protocol Fetchable: Decodable {
+    <span class="chl">associatedtype ID: Identifier</span>
+    static var apiBase: String { get }  // The part of the URL for this fetchable type
+}
+</pre>
+
+<p>Wait a minute… There’s nothing “of course” about that last change. Fetchable used to be a simple protocol. Now it’s a PAT (protocol with associated type). That’s a big change in Swift. Whenever you find yourself typing <code class="highlighter-rouge">associatedtype</code>, you need to stop for a moment and think “would I ever want to put this in an Array?” Once you put an associated type on a protocol in Swift today, it’s no longer a “thing.” It’s only a constraint that can be used for extensions and generic functions. It can’t put put in a variable, or be passed to a function, or in any other way be treated as a value.</p>
+
+<p>Yes, someday <a href="https://robnapier.net/existential-spelling">generalized existentials</a> will improve this in some cases. But before you pine for those days, or reach for a <a href="https://robnapier.net/erasure">type-eraser</a>, it’s time to think harder about the protocol.</p>
+
+<h2 id="whats-the-next-line-of-code">What’s the next line of code?</h2>
+
+<p>I want to roll back to the Identifier protocol and ask that question, “would I ever want to put an Identifier in an Array?” I’ve used this protocol in production projects for a long time now, and the answer so far has been no. It just hasn’t come up. As I wrote this article, I tried to invent use cases that needed an Array of Identifiers, and each time the example kind of fell apart. I was always forcing it. But it’s worth walking through the thought process anyway.</p>
+
+<p>If I try to create an Array of Identifiers today, it spits out that infamous error:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">ids</span><span class="p">:</span> <span class="p">[</span><span class="kt">Identifier</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="kt">Document</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="s">"password"</span><span class="p">)]</span>
+<span class="c1">// Protocol 'Identifier' can only be used as a generic constraint because it has Self or associated type requirements</span>
+</code></pre></div></div>
+
+<p>And this it the point where you cry out “generalized existential!” But that wouldn’t actually change anything. Let’s just imagine that we have a generalized existential or I’ve written an AnyIdentifier type-eraser. Eventually I’m going to wind up with some loop over <code class="highlighter-rouge">ids</code>:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">id</span> <span class="k">in</span> <span class="n">ids</span> <span class="p">{</span>
+    <span class="c1">// ??? the only property is .value, which is an unknown type ???</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>I call this the “what now?” problem. The only thing I can do with <code class="highlighter-rouge">id</code> is get its value, because that’s the only thing in the protocol. But each ID can have a different value type. So what can I do with it? Even with the fabled generalized existential, the type of <code class="highlighter-rouge">.value</code> would have to be Any. What else could it be? I can’t call <code class="highlighter-rouge">fetch</code> with that. I don’t even know the Model type.</p>
+
+<p><span class="pullquote-right" data-pullquote="If a type is solving your problems, it&#8217;s not wrong.">
+“I don’t even know the Model type.” As I said, I’ve used this protocol in several projects and I’ve never needed a list of Identifiers, but as soon as I started writing this article, I realized how weird it is that an Identifier doesn’t know what type it identifies. Originally I was going to just rewrite this article to ignore it, but these kinds of…mistakes?…are important to explore. I hesitate to call it a mistake, because it’s never mattered in any shipping software I’ve worked on. If a type is solving your problems, it’s not wrong. But maybe it could be better.
+</span></p>
+
+<h2 id="when-you-think-about-it-everythings-a-function">When you think about it, everything’s a function.</h2>
+
+<p>Before I make it better, I want to show how to solve a “what now?” problem <em>without</em> changing Identifier. I know that sounds a littles strange, but sometimes you inherit types that you can’t easily change, and it’s good to have lots of tools in your belt that don’t require rewriting half your project every time something is less than ideal. So let me walk through an example where you think you want to use an Array of Identifiers, but don’t.</p>
+
+<p>Let’s say that once an hour I want to refresh all the model objects by re-fetching them. So I build a list of Identifiers to refresh, and get the “can only be used as a generic constraint” error, and now have to decide what to do. The answer is to look again at what I really want. I don’t want a list of <em>Identifiers</em>. I want a list of <em>refresh requests</em>. A refresh request is a future action, and a future action is closure. I typically like to wrap that closure into a type. Maybe something specialized to this problem like:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">RefreshRequest</span> <span class="p">{</span>
+    <span class="c1">// The delayed action to perform.</span>
+    <span class="k">let</span> <span class="nv">perform</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+
+    <span class="kd">init</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
+                           <span class="n">with</span> <span class="nv">client</span><span class="p">:</span> <span class="kt">APIClient</span> <span class="o">=</span> <span class="kt">APIClient</span><span class="o">.</span><span class="n">shared</span><span class="p">,</span>
+                           <span class="nv">updateHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>    <span class="c1">// On success</span>
+                           <span class="nv">errorHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="o">=</span> <span class="n">logError</span><span class="p">)</span> <span class="c1">// On failure, with a default</span>
+    <span class="p">{</span>
+        <span class="c1">// Smash together updateHandler and errorHandler into a single () -&gt; Void.</span>
+        <span class="n">perform</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">client</span><span class="o">.</span><span class="nf">fetch</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">switch</span> <span class="nv">$0</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">model</span><span class="p">):</span> <span class="nf">updateHandler</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span> <span class="nf">errorHandler</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Just a helper so errorHandler can have a default value</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="n">logError</span><span class="o">&lt;</span><span class="kt">ID</span><span class="p">:</span> <span class="kt">Identifier</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">ID</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Failure fetching </span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">requests</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="kt">RefreshRequest</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">userID</span><span class="p">,</span> <span class="nv">updateHandler</span><span class="p">:</span> <span class="p">{</span> <span class="n">users</span><span class="p">[</span><span class="nv">$0</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$0</span> <span class="p">}),</span>
+    <span class="kt">RefreshRequest</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">documentID</span><span class="p">,</span> <span class="nv">updateHandler</span><span class="p">:</span> <span class="p">{</span> <span class="n">documents</span><span class="p">[</span><span class="nv">$0</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$0</span> <span class="p">}),</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p><span class="pullquote-right" data-pullquote="You don&#8217;t need to keep track of parameters (and their types) if all you need is the function itself.">
+The point of all of this isn’t this specific data structure. It’s that <code class="highlighter-rouge">() -&gt; Void</code> is an incredibly powerful and flexible type, and you can construct it from all kinds of other functions. It’s another case of “common currency.” If you want a delayed action, that’s just a function. A lot of complicated generic code comes from trying to keep track of all the parameters to a generic function you intend to call later. You don’t need to keep track of parameters (and their types) if all you need is the function itself. This is the heart of <em>type-erasure</em> rather than focusing on <em>type-erasers</em>. It’s hiding types I don’t care about any more, like Model. Note in this example how two generic closures that rely on Model (<code class="highlighter-rouge">updateHandler</code> and <code class="highlighter-rouge">errorHandler</code>) are combined into a single <code class="highlighter-rouge">() -&gt; Void</code>, non-generic closure that relies on nothing. This is very common technique, and it’ll come up again in this series.
+</span></p>
+
+<p>There are more improvements I could make here. The basic closure <code class="highlighter-rouge">{ someModel[$0.id] = $0 }</code> is going to be duplicated a lot and I could fix that. But I’m going to leave it for now and focus on a better identifier.</p>
+
+<h2 id="a-real-identifier">A Real Identifier</h2>
+
+<p>What I really want is the model type to know its ID type, and the ID type to know its model type. If you remember the <code class="highlighter-rouge">APIClient.fetch</code> method, it takes both a type and an identifier:</p>
+
+<pre>
+func fetch&lt;Model: Fetchable&gt;(_ model: <span class="chl">Model.Type</span>, id: <span class="chl">Model.ID</span>,
+                             completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
+</pre>
+
+<p>This creates awkward repetition in the API:</p>
+
+<pre>
+client.fetch(<span class="chl">User</span>.self, id: <span class="chl">User</span>.ID(1), completion: { print($0)} )
+</pre>
+
+<p>I could add an extra “Model” associated type to the Identifier protocol, but it gets a bit messy. Some of it is just Swift syntax (<code class="highlighter-rouge">where</code> clauses and the like), but it really comes down to Identifier not being a very good protocol. Look at the implementations:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">:</span> <span class="kt">Identifier</span> <span class="p">{</span> <span class="k">let</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">}</span>
+<span class="kd">struct</span> <span class="kt">Document</span><span class="o">.</span><span class="kt">ID</span><span class="p">:</span> <span class="kt">Identifier</span> <span class="p">{</span> <span class="k">let</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">String</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p><span class="pullquote-right" data-pullquote="If every instance of a protocol conforms in exactly the same way, it should probably be a generic struct.">
+If you think about any other implementations, they’re going to be almost identical: a struct with a single property called <code class="highlighter-rouge">value</code>. It’s hard to imagine any other way you’d want to implement this protocol. If every instance of a protocol conforms in exactly the same way, it should probably be a generic struct.
+</span></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// An identifier (of some Value type) that applies to a specific Model type</span>
+<span class="kd">struct</span> <span class="kt">Identifier</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Value</span><span class="o">&gt;</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="k">where</span> <span class="kt">Value</span><span class="p">:</span> <span class="kt">Codable</span> <span class="o">&amp;</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span>
+    <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">)</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Identifier has two type parameters. The Model is the type this identifier applies to. The Value is the kind of identifier it requires (Int, UInt64, String, etc). The Model isn’t actually used anywhere, but it means that <code class="highlighter-rouge">Identifier&lt;User, Int&gt;</code> and <code class="highlighter-rouge">Identifier&lt;Document, Int&gt;</code> are completely different types and can’t be mixed up.</p>
+
+<p>So User becomes:</p>
+
+<pre>
+struct User: Codable, Hashable {
+    <span class="chl">let id: Identifier&lt;User, Int&gt;</span>
+    let name: String
+}
+</pre>
+
+<p>That’s ok, but it’d be nicer to typealias it so I can refer to User.ID as a type:</p>
+
+<pre>
+struct User: Codable, Hashable {
+    <span class="chl">typealias ID = Identifier&lt;User, Int&gt;
+    let id: ID</span>
+    let name: String
+}
+</pre>
+
+<p>And it can be even a little nicer if I extract a protocol, and apply it to Fetchable:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Something identified with an Identifier</span>
+<span class="kd">protocol</span> <span class="kt">Identified</span> <span class="p">{</span>
+    <span class="kd">associatedtype</span> <span class="kt">IDType</span><span class="p">:</span> <span class="kt">Codable</span> <span class="o">&amp;</span> <span class="kt">Hashable</span>
+    <span class="kd">typealias</span> <span class="kt">ID</span> <span class="o">=</span> <span class="kt">Identifier</span><span class="o">&lt;</span><span class="k">Self</span><span class="p">,</span> <span class="kt">IDType</span><span class="o">&gt;</span>
+    <span class="k">var</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">ID</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Any model type, just to simplify the signatures</span>
+<span class="kd">protocol</span> <span class="kt">ModelType</span><span class="p">:</span> <span class="kt">Identified</span><span class="p">,</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{}</span>
+
+<span class="c1">// Something that can be fetched from the API by ID</span>
+<span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Identified</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>  <span class="c1">// The part of the URL for this fetchable type</span>
+<span class="p">}</span>
+
+<span class="c1">// User model object</span>
+<span class="kd">struct</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">ModelType</span> <span class="p">{</span>
+    <span class="kd">typealias</span> <span class="kt">IDType</span> <span class="o">=</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">ID</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">Fetchable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"user"</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And finally, <code class="highlighter-rouge">fetch</code> doesn’t need any type parameters. The only thing that could be fetched with a User.ID is a User:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
+                             <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+
+<span class="n">client</span><span class="o">.</span><span class="nf">fetch</span><span class="p">(</span><span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="nv">$0</span><span class="p">)}</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="trials-and-witnesses">Trials and Witnesses</h2>
+
+<p>There are a lot of people who are a lot better than I am at this, and I’m sure they would have built this (or something better!) all at once on the first try. But I’m not bad at this stuff, and this is how it usually works for me. I want to stress that I’ve shipped the protocol version of Identifier successfully in several products, and have never run into a case where I actually wanted a more powerful Identifier that knew its Model. It’s just that by playing around (and thinking a lot about <a href="https://twitter.com/mbrandonw">Brandon Williams’</a> excellent <a href="https://www.youtube.com/watch?v=3BVkbWXcFS4">Protocol Witnesses</a> talk) I discovered another approach.</p>
+
+<p>Of course I’ve never actually shipped this Identified protocol. Maybe I’m wrong. Maybe it has quirks when you try to use it in real code. Maybe it turns out to awkward or limited for some reason. I won’t know until I ship it in a production project.</p>
+
+<p>I’ll now remind you that stdlib’s Collection protocol required <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0065-collections-move-indices.md">a pretty major overhaul</a> in Swift 3, and tweaks in <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0191-eliminate-indexdistance.md">Swift 4.1</a> and <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0232-remove-customization-points.md">Swift 5</a>. The stdlib team is <em>definitely</em> better at this than I am, and Collection is probably the most foundational and carefully considered protocol in Swift. And still, it’s hard to get it right on the first try. (For another major example, see the four iterations of <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0104-improved-integers.md">Protocol-oriented integers</a>.)</p>
+
+<p>Generic code is hard. There are trade-offs. Some things are hard because Swift is still evolving. And some things are hard because generic code is just hard. Build simply and concretely, and extract solutions as you discover problems. Don’t invent problems for yourself. “It isn’t generic enough” is not a problem. Make sure your generic code is solving a problem you really have, and put it off as long as you can get away with. You’ll probably have to redesign it anyway.</p>
+
+<p>Next time I’ll move beyond fetching models. There are so many other things an API can do. What would that look like?</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Protocols III: Existential Spelling]]></title>
@@ -2066,272 +2366,6 @@ discover how to build great things with it.</p>
   <ol>
     <li id="fn:swift">
       <p>The underlying issue here isn’t that I chose to use special operators out of LlamaKit. I could have written the Swift code in <a href="https://gist.github.com/rnapier/27ba98c827c9d7798879">the same style as the Go code</a> or in <a href="https://gist.github.com/rnapier/4a48b24024ff969f2e94">traditional ObjC style</a>. The point is that there are lots of ways you could do it, and lots of ways different Swift developers will <em>choose</em> to do it because the language is very flexible and there is no obvious “Swift way.” <a href="#fnref:swift" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Reduction in Force]]></title>
-    <link href="https://robnapier.net/reduction-in-force"/>
-    <updated>2014-09-14T20:14:00-04:00</updated>
-    <id>https://robnapier.net/reduction-in-force</id>
-    <content type="html"><![CDATA[<p>Our last <a href="https://robnapier.net/flatmap">talk about »==</a> was full of twists and turns, some
-philosophy, surprising connections, and a radical new operator. It was a lot to
-absorb, and you may have to play with it some in your own code before you really
-know what it’s about. That’s ok.</p>
-
-<p>Let’s take a little break and talk about a handy functional tool built into
-Swift stdlib. I promise no big reveals, no new operators, no fancy types; just
-hands-on, practical discussion of the Swiss Army knife of transform functions:
-<code class="highlighter-rouge">reduce</code>.</p>
-
-<!-- more -->
-
-<p>Reducing is almost easier to show than to explain. Let’s start with a trivial
-example. You have an array of numbers and you want to know the sum. We might say
-you want to “reduce” a <code class="highlighter-rouge">[Int]</code> to a single <code class="highlighter-rouge">Int</code>. <code class="highlighter-rouge">reduce</code> takes a sequence, an
-intial value, and a “combining” function like this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let xs = [1,2,3,4,5]
-let sum = reduce(xs, 0) { accumulator, value in accumulator + value }
-// ==&gt; 15
-</code></pre></div></div>
-
-<p>The most interesting part is the combining function. It is passed a “value so
-far” and a “next value from the list” and it needs to return the result of
-combining them. Its signature looks like this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(U, T) -&gt; U
-</code></pre></div></div>
-
-<p>So it doesn’t have to return the same kind of thing as is in the list, but it
-often does. In our example, since we want the sum, we just add the two values.
-We could just as easily reduce the list to its product:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let product = reduce(xs, 1) { accumulator, value in accumulator * value }
-// ==&gt; 120
-</code></pre></div></div>
-
-<p>I’m spelling out parameters to make it clear exactly what is being passed to
-the combining function, but we can of course use Swift shortcuts for this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = reduce(xs, 0) { $0 + $1 }
-</code></pre></div></div>
-
-<p>Or we can go futher, and shorten it to:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = reduce(xs, 0, +)
-</code></pre></div></div>
-
-<p>What’s up with that? <a href="https://robnapier.net/flatmap">I told you before</a>, <code class="highlighter-rouge">+</code> is just a function:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func +(lhs: Float, rhs: Float) -&gt; Float
-</code></pre></div></div>
-
-<p>And it’s in the form <code class="highlighter-rouge">(T, T) -&gt; T</code>, which is just a special case of <code class="highlighter-rouge">(U, T) -&gt;
-U</code>. So that’s fine, and we can pass it as the combining function.</p>
-
-<p>There’s also a method form that can be convenient:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = xs.reduce(0, combine: +)
-</code></pre></div></div>
-
-<p>We can think of that as “take the list of x values, and add them, starting with
-zero.”</p>
-
-<h3 id="a-note-on-origami-and-names">A note on origami and names</h3>
-
-<p>Another common name for this function is “fold.” Sometimes, in other languages,
-you’ll see “fold left” or “fold right.” Swift’s “reduce” is the same as “fold
-left.” <strike>(A right fold starts at the end of the list and goes 
-backwards.</strike><sup id="fnref:lazy"><a href="#fn:lazy" class="footnote">1</a></sup>) You may also see it called “aggregate” or
-“accumulate” or “inject.” They’re all pretty much the same function.</p>
-
-<h2 id="finding-a-starting-point">Finding a starting point</h2>
-
-<p>OK, so we can add and multiply stuff. What else you got? We can get minimums and
-maximums. Let’s implement stdlib’s <code class="highlighter-rouge">minElement</code> for arrays with
-<code class="highlighter-rouge">reduce</code>.<sup id="fnref:array"><a href="#fn:array" class="footnote">2</a></sup></p>
-
-<p>Reducing requires an initial value. So, what should it be? For types that have a
-known minimum (like <code class="highlighter-rouge">Int.min</code>), you might be tempted to use it. But that’s not
-very flexible, and some orderable types don’t have an obvious minimum. For
-example, what if we implemened a <code class="highlighter-rouge">BigNum</code> type that supported arbitrarily large
-or small values?</p>
-
-<p>A common solution is to treat the first element as the initial value, and then
-reduce the rest:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
-  return dropFirst(xs).reduce(xs[0], combine: min)
-}
-</code></pre></div></div>
-
-<p>That’s a reusable pattern, so we could, if we wanted to, extract it:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
-  func reduce1(combine: (T, T) -&gt; T) -&gt; T {
-    return dropFirst(self).reduce(self[0], combine: combine)
-  }
-}
-
-func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
-  return xs.reduce1(min)
-}
-</code></pre></div></div>
-
-<p>Notice that <code class="highlighter-rouge">reduce1</code> requires a combining function that takes and returns the
-same type. It’s worth taking a moment and thinking about why that has to be
-true.</p>
-
-<p>Of course, <code class="highlighter-rouge">reduce1</code> crashes if the array is empty. What if we wanted to get
-back an <code class="highlighter-rouge">Int?</code> to guard against that? Here’s one way we could do it:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func safeMinElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T? {
-  return xs.reduce(nil) { m, x in min(m ?? x, x) }
-}
-</code></pre></div></div>
-
-<p>So we start with <code class="highlighter-rouge">nil</code>, and for each element if the current minimum is <code class="highlighter-rouge">nil</code>, we
-take whatever was passed in, and otherwise we take the minimum. Notice how we
-rely on Swift’s habit of promiting anything into an optional when required.
-Let’s us be pretty <strike>sloppy</strike> expressive.</p>
-
-<h2 id="beyond-math">Beyond math</h2>
-
-<p>The combining function <code class="highlighter-rouge">(U, T) -&gt; U</code> says nothing about numbers. We can reduce
-anything we can imagine. We could join strings just as easily.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func join(elements: [String]) -&gt; String {
-  return elements.reduce("", +)
-}
-</code></pre></div></div>
-
-<p>Or, <a href="https://robnapier.net/flatmap#fn:1">as promised</a>, here’s <code class="highlighter-rouge">flatten</code>, which takes a nested array
-and removes one level of structure:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(xs: [[T]]) -&gt; [T] {
-  return xs.reduce([], +)
-}
-</code></pre></div></div>
-
-<p>Told you it was simple. Notice how summing numbers, joining strings, and
-flattening arrays all have the same implementation, differing only in their
-initial value? That’s another thing worth thinking about for a while, but it’s
-too much theory for this post. (If you want to research it, the magic search
-term you want is <em>monoid</em>.)</p>
-
-<p>Mapping an array is just a special case of reducing:<sup id="fnref:leftright"><a href="#fn:leftright" class="footnote">3</a></sup></p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(xs: [T], f: T -&gt; U) -&gt; [U] {
-  return xs.reduce([]) { $0 + [f($1)] }
-}
-</code></pre></div></div>
-
-<p>So is filtering:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func filter&lt;T&gt;(xs: [T], includeElement: T -&gt; Bool) -&gt; [T] {
-  return xs.reduce([]) { filtered, x in includeElement(x) ? filtered + [x] : filtered }
-}
-</code></pre></div></div>
-
-<p>FlatMap:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatMap&lt;T, U&gt;(xs: [T], f: T -&gt; [U]) -&gt; [U] {
-  return xs.reduce([]) { $0 + f($1) }
-}
-</code></pre></div></div>
-
-<p>Reverse:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverse&lt;T&gt;(xs: [T]) -&gt; [T] {
-  return reduce(xs, []) { [$1] + $0 }
-}
-</code></pre></div></div>
-
-<p>Even counting!</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func countElements&lt;T&gt;(xs: [T]) -&gt; Int {
-  return reduce(xs, 0) { c, _ in c + 1 }
-}
-</code></pre></div></div>
-
-<p>You can do a lot of stuff this way. It’s particularly useful when you find
-yourself declaring a <code class="highlighter-rouge">var</code> just so you can initialize it with a loop. Any time
-you find yourself using <code class="highlighter-rouge">var</code> inside a function, consider whether this is better
-done with something else (<code class="highlighter-rouge">map</code>, <code class="highlighter-rouge">filter</code>, <code class="highlighter-rouge">reduce</code>, etc). Usually the answer is
-yes.</p>
-
-<h2 id="from-whence-would-you-return">From whence would you return?</h2>
-
-<p>How about <code class="highlighter-rouge">contains</code>?</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func contains&lt;T: Equatable&gt;(xs: [T], find: T) -&gt; Bool {
-  return xs.reduce(false) { found, x in found || find == x }
-}
-</code></pre></div></div>
-
-<p>Hmmm…. It works, but it’s a poor choice in my opinion. <code class="highlighter-rouge">reduce</code> computes over
-the full list, so this is wasting a lot of effort checking values that aren’t
-needed. A good way to think about it is how you would expect this function to
-behave if the sequence were infinite. If you would never expect the function to
-return (like for <code class="highlighter-rouge">sum</code>), then <code class="highlighter-rouge">reduce</code> is proably a good fit. If you might
-expect it to return anyway (like for <code class="highlighter-rouge">contains</code>), then <code class="highlighter-rouge">reduce</code> is probably the
-wrong tool.</p>
-
-<p>Another good way to think about it is whether you would include a <code class="highlighter-rouge">return</code> or
-<code class="highlighter-rouge">break</code> in your for-loop (or just use a while-loop). If so, your problem
-probably doesn’t match <code class="highlighter-rouge">reduce</code> well.</p>
-
-<p>To make it more clear, let’s see how <code class="highlighter-rouge">reduce</code> can be implemented:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reduce&lt;T, U&gt;(xs: [T], initial: U, combine: (U, T) -&gt; U) -&gt; U {
-  var result = initial
-  for x in xs {
-    result = combine(result, x)
-  }
-  return result
-}
-</code></pre></div></div>
-
-<p>If your problem can be “reduced” to this, then <code class="highlighter-rouge">reduce</code> may be a good choice. If
-you need to stop the for-in loop, then you’ll probably want another tool like
-<code class="highlighter-rouge">find</code>.</p>
-
-<h2 id="so-doctor-should-i-reduce">So doctor, should I reduce?</h2>
-
-<p>I’ve given a bunch of examples here to show how powerful and flexible <code class="highlighter-rouge">reduce</code>
-is. I want to get your imagination going a little bit and give you some ideas on
-how to use this function to solve a wide range of problem. But just because you
-<em>can</em> write <code class="highlighter-rouge">map</code> in terms of <code class="highlighter-rouge">reduce</code> doesn’t mean you <em>should</em>.</p>
-
-<p>Most of the time if your result is an array, mapping and filtering are the right
-tools. If you’re taking an array and deriving a single value, then <code class="highlighter-rouge">reduce</code> (or
-<code class="highlighter-rouge">find</code>) is often the best tool. But if you have a complex combination of mapping
-and filtering, then a single <code class="highlighter-rouge">reduce</code> may simplify that and also speed it up.</p>
-
-<p>Reducing is a quite popular operation in functional languages. In fact, a lot of
-people (including your humble author) spend a lot of time trying to solve
-complicated problems with a single, elegant reduce. When I started this blog
-post, I got about half-way through implementing sorting that way when I realized
-I needed to stop. Reduce is the kind of function that makes people try to be
-clever, much like regular expressions. Resist the temptation, at least in your
-production code. Use the tools that make your code clear, not the tools that
-make you look smart.</p>
-
-<p>But with that in mind, reduce your problems away!</p>
-<div class="footnotes">
-  <ol>
-    <li id="fn:lazy">
-      <p>UPDATE: After some <a href="https://twitter.com/cocoaphony/status/511339551915511808">helpful discussion</a> with @TacticalGrace and @pyrtsa, I’ve decided this description of fold right is too misleading. I usually favor simple-but-slightly-wrong explanations over more-correct-but-requires-lots-of-background-to-understand-and-is-still-slightly-wrong, but in this case, “goes backwards” really confuses how foldr is commonly used. We don’t have foldr in Swift, so I’m not going to dig into it here in a footnote; I’ll leave it to your <a href="https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29">exploration</a>. <a href="#fnref:lazy" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:array">
-      <p>In this post, and in many of my posts, I will focus on Array implementations rather than the more general Sequence. That’s because Sequence (and Collection) can introduce a lot of complexity and obscure the key points being discussed. Some of their complexity is due to the nature of type constraints, and some is due to quirks about Swift that will likely improve. I’ve chosen to dodge all of that and focus on the most common and simplest case: Arrays. <a href="#fnref:array" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:leftright">
-      <p>If you’re familiar with Haskell, you may know that <code class="highlighter-rouge">map</code> is usually implemented as a <code class="highlighter-rouge">foldr</code>, while this is a <code class="highlighter-rouge">foldl</code>. That’s just for performance. In Haskell, list prepending (<code class="highlighter-rouge">:</code>) is much faster than appending (<code class="highlighter-rouge">++</code>). In Swift, array appending is the faster operation. So <code class="highlighter-rouge">foldr</code> is common in Haskell, but isn’t even in Swift stdlib. Keep this in mind when translating Haskell algorithms to Swift. Haskell often walks lists backwards for performance reasons. It’s more natural in Swift to walk them forward. <a href="#fnref:leftright" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

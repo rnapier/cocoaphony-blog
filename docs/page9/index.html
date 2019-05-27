@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="NSCopying is not always as simple to implement as you would think. Apple has a good write-up discussing the complexities, but let me elaborate. &hellip;">
+  <meta name="description" content="The long-lasting power of Snow Leopard from The Yankee Group. Ever since I first saw GCD at WWDC, I’ve been amazed by it and eager to give it a real &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/gcd-iphone-long-batter">GCD + iPhone</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2009-09-14T09:14:51-04:00" pubdate data-updated="true">14 Sep 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blogs.yankeegroup.com/2009/08/26/the-long-lasting-power-of-snow-leopard/">The long-lasting power of Snow Leopard</a> from The Yankee Group.</p>
+
+<p>Ever since I first saw GCD at WWDC, I’ve been amazed by it and eager to give it a real spin. But since the vast majority of my work is in low-level libraries that run on both Mac and iPhone, GCD is closed to me (as is garbage collection; more on that later). I’ve said that multi-core would come to mobile devices because everything will come to mobile devices (laptops are the new desktops, and mobile is the new laptop). And for the iPhone, multi-core also makes a lot of sense by allowing Apple to dedicate a core to its own use during important functions like phone calls. But Carl Howe makes an even more compelling argument for mobile multi-core: better battery life.</p>
+
+<p>With multi-core comes another strong possibility: garbage collection. The availability of a second core makes this more likely on iPhone. Yes, memory is tighter, but ever-growing. And GC will likely do a better job of reclaiming memory faster than much of the leaky programs I see from novice programmers. But to do it well, I think a second core is a real must. I’ve grown good at memory management over the years, and it’s hard for me to write GC Cocoa because it “feels wrong.” But I think I could get used to it…. And it would help alleviate the biggest class of coding error I see in Cocoa programs.</p>
+
+<p>Of course, the clang static analyzer will probably help get rid of 90% of those errors anyway, so maybe the need for GC just went way down…. Have I mentioned recently how incredible clang really is? I desperately long for them to finish bringing it to Obj-C++ so I can use it.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -421,47 +460,6 @@
   
     <footer>
       <a rel="full-article" href="/understanding-systemprofiler">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/obfuscating-cocoa">Obfuscating Cocoa</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2009-06-26T14:28:27-04:00" pubdate data-updated="true">26 Jun 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><i>We recently had a discussion on cocoa-students (the excellent list for Big Nerd Ranch alumni; yet another reason to go to BNR classes) about protecting Cocoa programs from reverse engineering, mostly around some anti-copying code. I had some thoughts on the subject since I happen to have a background in anti-counterfeiting.</i></p>
-
-<p>Cocoa is a reverse-engineer’s dream. Spend some time at <a href="http://www.culater.net/wiki/moin.cgi/CocoaReverseEngineering">culater</a> before dreaming you can really protect a Cocoa program. Objective-C is meant to be highly readable both in source and at run time. Obfuscation is not in its nature. This only points out Objective-C’s particular difficulties in this area; it is not to suggest C or C++ will save you. They’re just not quite as trivial as Objective-C.</p>
-
-<p>That said, the world of obfuscation falls into three big camps: you can try to deal with 70% of your problem, 75% of your problem or 90% of your problem.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/obfuscating-cocoa">Read on &rarr;</a>
     </footer>
   
 

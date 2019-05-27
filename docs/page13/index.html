@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Yes it is true, a new version of PandoraBoy is up, 0.5.1. I haven’t put it into Sparkle yet, and probably will skip it because it only fixes a couple &hellip;">
+  <meta name="description" content="To all you aspiring Cocoa developers…. If you want to make a private framework, you need to remember to set the install path for it to @ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/private-frameworks-install-path">Private Frameworks' Install Path</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-03-05T10:03:30-05:00" pubdate data-updated="true">05 Mar 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>To all you aspiring Cocoa developers….</p>
+
+<p>If you want to make a private framework, you need to remember to set the install path for it to <span>@executable_path/../Frameworks</span>. Just copying it into your bundle isn’t good enough. Otherwise your app is going to think it’s in (~)/Library/Frameworks once you package it up and give it to other people.</p>
+
+<p>In related news, PandoraBoy 0.5.1<span>a</span> is now released.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -375,45 +412,6 @@
 <p>Well, at least I finally fixed that stupid “thumbs-up in the lower left of the Pandora window” bug that’s been driving me crazy for so long. Check for nil returns people!</p>
 
 <p>I’m still trying to understand how Pandora manages skip tracking. I’m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don’t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they’re storing it in Flash local storage. I swear they didn’t used to keep track of skips if you switched stations and then switched back, but then they also didn’t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/81">81</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2007-12-15T12:09:48-05:00" pubdate data-updated="true">15 Dec 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I’m switching jobs over this weekend from information security to Mac development. In the process, I’m also moving mostly to work-from-home, taking over a corner of my wife’s workrooms and turning it into a decent home office/lab. In the process of copying huge files around, I think I pushed my Linksys over the edge and it stopped talking on its WAN (PPPoE) port. In my researching trying to fix it, I learned that the Westell modems that Bellsouth gives you for FastAccess are in fact full routers. And actually I’d say it’s a bit nicer router than the Linksys. So project #3 in the the “get ready for new job” turned out to be “completely reorganize home network.” I like the new setup, though. I can get to the Westell directly now (192.168.1.254) for diagnostics. And the Westell has a nice NAT setup system.</p>
-
-<p>On the annoying front, for some reason my Microsoft Laser Mouse 6000 which has worked so well for me for so long at the office, now doesn’t reliably click. Moving it works fine, it just doesn’t always recognize clicking. It’s driving me nuts. I’m wondering what the change is. I’m on Leopard now, which might impact it. Just not certain.</p>
-
-<p>Moving over to Leopard on my primary box also meant spending a lot of time trying to get PandoraBoy happy. I’ve been having trouble with the Shortcut Recorder palette for a long time now where IB won’t load the palette. I think I’ve finally gotten it sane again. Definitely staying on Xcode 2.5 for now. I’ll wait for SR to get their Leopard IB3 support solid before I consider moving. I’ve had requests to get PB running on 10.3.9, and I’m not ready to try that in XCode3.</p>
-
-<p>Oh, and first impressions of moving to Leopard: wow, Leopard rocks.</p>
 </div>
   
   

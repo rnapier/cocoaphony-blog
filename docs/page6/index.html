@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="[If you want the answer to last time’s homework, skip to the end.] So you want to hand-calculate Bézier curves. Good for you. It comes up more often &hellip;">
+  <meta name="description" content="When last we looked at Bézier curve calculations, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/faster-bezier">Even Faster Bezier</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2012-03-06T12:53:40-05:00" pubdate data-updated="true">06 Mar 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When <a href="/fast-bezier-intro">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That’s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code class="highlighter-rouge">-Os</code> optimized function. But we’re just getting warmed up. We haven’t yet gotten half of the performance available.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/faster-bezier">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -389,41 +427,6 @@
 
 
   <div class="entry-content"><p>I went out to <a href="http://trianglecocoa.com/">NSCoder RTP</a> for the first time last night and met up with <a href="http://jsh.in">Josh Johnson</a>, who has been interested in taking up PandoraBoy development. So expect some changes coming up. Probably a move to github. Probably dropping 10.5 support soon. And who knows, it might even really work again.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/pandoraboy-maintainer">Looking for a PandoraBoy Maintainer</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2011-07-26T19:35:56-04:00" pubdate data-updated="true">26 Jul 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The whole reason I learned Cocoa in the first place was so I could work on <a href="http://code.google.com/p/pandoraboy/">PandoraBoy</a>. It’s a great project, but I haven’t really worked on it in quite some time. As Pandora changes, PandoraBoy becomes more and more broken. I barely have time to look at the patches that have been sent it, let alone apply them. My life has moved onto many other projects.</p>
-
-<p>I’m actively looking for a new maintainer. It’s a good project, and the code base is in decent repair, though I don’t know if it builds with Xcode 4. The system basically works, but there’s a long list of things that could be improved, and some things that are now downright broken. If you’re interested, let me know and I’ll help hand it off. I took it over when I knew next to nothing about Macs. It’s a great place to learn.</p>
 </div>
   
   

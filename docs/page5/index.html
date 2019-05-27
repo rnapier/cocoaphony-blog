@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I have brought the RNCryptor async branch to master. This is a major change in API, but I believe much more flexible. I’ve stripped the API down &hellip;">
+  <meta name="description" content="Several months ago, I received a request to port my RNCryptor module to Titanium. I’ve never been a fan of the JavaScript wrappers for iOS and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/rncryptor-titanium">RNCryptor and My Titanium Experiment</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2012-08-21T10:13:18-04:00" pubdate data-updated="true">21 Aug 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Several months ago, I received a request to port my <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> module to <a href="http://www.appcelerator.com">Titanium</a>. I’ve never been a fan of the JavaScript wrappers for iOS and Android. My belief and experience is that they’re far more trouble than their worth. But the goal of RNCryptor was always to help people use AES correctly, and that’s as important in JavaScript as it is in Objective-C. So I wrapped up RNCyptor into a Titanium module and stuck it on the <a href="https://marketplace.appcelerator.com">Appcelerator Marketplace</a>. Though RNCryptor is free, the pain of wrapping it into JavaScript led me to charge $10 for the Titanium version.</p>
+
+<p>The pain of maintaining this thing has gotten to be too much, though. I’m releasing it today on <a href="https://github.com/rnapier/Cryptor-titanium">GitHub</a> in its current form, which is based on the older, synchronous form of RNCryptor. I may not have updated all the license text yet; if I miss any, it is under the MIT license. Thanks to those who purchased Cryptor-Titanium during its commercial life. Anyone who is interested in continuing development, please contact me (or submit a pull request).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/rncryptor-titanium">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -407,44 +447,6 @@
 <p><a href="/assets/Building-a-Core-Foundation.pdf">Building a Core Foundation Presentation</a></p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/faster-bezier">Even Faster Bezier</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2012-03-06T12:53:40-05:00" pubdate data-updated="true">06 Mar 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When <a href="/fast-bezier-intro">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That’s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code class="highlighter-rouge">-Os</code> optimized function. But we’re just getting warmed up. We haven’t yet gotten half of the performance available.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/faster-bezier">Read on &rarr;</a>
-    </footer>
   
 
 

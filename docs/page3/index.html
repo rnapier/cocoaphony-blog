@@ -9,8 +9,9 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="In which our heroes create for themselves a convenience and discover a
-surprising thing. Last time we looked at the incredible little map function, &hellip;">
+  <meta name="description" content="Our last talk about »== was full of twists and turns, some
+philosophy, surprising connections, and a radical new operator. It was a lot to
+absorb, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -54,6 +55,52 @@ surprising thing. Last time we looked at the incredible little map function, &he
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/reduction-in-force">Reduction in Force</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2014-09-14T20:14:00-04:00" pubdate data-updated="true">14 Sep 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Our last <a href="/flatmap">talk about »==</a> was full of twists and turns, some
+philosophy, surprising connections, and a radical new operator. It was a lot to
+absorb, and you may have to play with it some in your own code before you really
+know what it’s about. That’s ok.</p>
+
+<p>Let’s take a little break and talk about a handy functional tool built into
+Swift stdlib. I promise no big reveals, no new operators, no fancy types; just
+hands-on, practical discussion of the Swiss Army knife of transform functions:
+<code class="highlighter-rouge">reduce</code>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/reduction-in-force">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -473,47 +520,6 @@ about Swift seem to misunderstand one or the other.</p>
 <p>More later, but right now I’m more interested in this talk on software ethics, so I’m going to get back to listening.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/pinning-your-ssl-certs">Pinning Your SSL Certs</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2014-01-01T15:10:08-05:00" pubdate data-updated="true">01 Jan 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
-
-<p>If your app uses SSL to communicate with your server (and it should), you generally don’t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there’s certainly no reason to trust the over 200 certificates in iOS 7’s root store.</p>
-
-<p>The practice of trusting only your own certificate is called “pinning,” and I’ve discussed it several times at conferences. I then say something like, “It’s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:”
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/pinning-your-ssl-certs">Read on &rarr;</a>
-    </footer>
   
 
 

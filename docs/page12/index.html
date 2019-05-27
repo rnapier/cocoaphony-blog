@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Neil Mix from Pandora contacted me today about the troubles I've had with the notification system. He showed me the code they use to text the API, &hellip;">
+  <meta name="description" content="When faced with the need to return “not found” for something that normally returns an index or other value that would normally be unsigned (whether &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,41 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/nsnotfound">NSNotFound</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-11-17T10:22:52-05:00" pubdate data-updated="true">17 Nov 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When faced with the need to return “not found” for something that normally returns an index or other value that would normally be unsigned (whether this is an error condition or a normal event), Cocoa offers the NSNotFound constant as an alternative to returning an illegal index like -1 (which forces you to change the index to an NSInteger, raising the likelihood of sign-based errors if there’s ever a long promotion).</p>
+
+<p>NSNotFound is 0x7fffffff, which is not -1 (0xffffffff), but is still very large  (~2 billion) and so should never be a real index for any sanely-sized spaces, and is more readable than -1. NSNotFound is a good constant to remember when these issues come up. Look at NSString -rangeOfString: for an example of its usage.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -387,43 +422,6 @@ I was incredibly skeptical from the headline. It read to me like “team builds 
     <footer>
       <a rel="full-article" href="/learning-cocoa">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/private-frameworks-install-path">Private Frameworks' Install Path</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2008-03-05T10:03:30-05:00" pubdate data-updated="true">05 Mar 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>To all you aspiring Cocoa developers….</p>
-
-<p>If you want to make a private framework, you need to remember to set the install path for it to <span>@executable_path/../Frameworks</span>. Just copying it into your bundle isn’t good enough. Otherwise your app is going to think it’s in (~)/Library/Frameworks once you package it up and give it to other people.</p>
-
-<p>In related news, PandoraBoy 0.5.1<span>a</span> is now released.</p>
-</div>
-  
   
 
 

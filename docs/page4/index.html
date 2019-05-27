@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Summary: If there is any chance that your RNCryptor passwords include multi-byte characters (Chinese, for example), you really need to upgrade to &hellip;">
+  <meta name="description" content="Short version: If you want to pin your SSL certs easily, go get RNPinnedCertValidator. If your app uses SSL to communicate with your server (and it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pinning-your-ssl-certs">Pinning Your SSL Certs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2014-01-01T15:10:08-05:00" pubdate data-updated="true">01 Jan 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Short version: If you want to pin your SSL certs easily, go get <a href="https://github.com/rnapier/RNPinnedCertValidator">RNPinnedCertValidator</a>.</em></p>
+
+<p>If your app uses SSL to communicate with your server (and it should), you generally don’t need to trust <a href="http://support.apple.com/kb/HT5012">every certificate that Apple trusts</a>. You should just trust the specific certificate of your server, or maybe your own root signing certificate. But there’s certainly no reason to trust the over 200 certificates in iOS 7’s root store.</p>
+
+<p>The practice of trusting only your own certificate is called “pinning,” and I’ve discussed it several times at conferences. I then say something like, “It’s easy. <a href="https://github.com/rnapier/practical-security/blob/master/SelfCert/SelfCert/Connection.m">You just do this</a>:”
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/pinning-your-ssl-certs">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -424,46 +465,6 @@ how you would calculate good lengths for other assumptions.</p>
   <div class="entry-content"><p>I’ve posted a new errata on the iosptl site about <a href="http://iosptl.com/posts/new-prf-functions-for-pbkdf2/">PBKDF2 and SHA-1 versus SHA-2</a>. If you’re using CommonCryptor (and particularly CommonKeyDerivation), you may be interested.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-titanium">RNCryptor and My Titanium Experiment</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2012-08-21T10:13:18-04:00" pubdate data-updated="true">21 Aug 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Several months ago, I received a request to port my <a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> module to <a href="http://www.appcelerator.com">Titanium</a>. I’ve never been a fan of the JavaScript wrappers for iOS and Android. My belief and experience is that they’re far more trouble than their worth. But the goal of RNCryptor was always to help people use AES correctly, and that’s as important in JavaScript as it is in Objective-C. So I wrapped up RNCyptor into a Titanium module and stuck it on the <a href="https://marketplace.appcelerator.com">Appcelerator Marketplace</a>. Though RNCryptor is free, the pain of wrapping it into JavaScript led me to charge $10 for the Titanium version.</p>
-
-<p>The pain of maintaining this thing has gotten to be too much, though. I’m releasing it today on <a href="https://github.com/rnapier/Cryptor-titanium">GitHub</a> in its current form, which is based on the older, synchronous form of RNCryptor. I may not have updated all the license text yet; if I miss any, it is under the MIT license. Thanks to those who purchased Cryptor-Titanium during its commercial life. Anyone who is interested in continuing development, please contact me (or submit a pull request).</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-titanium">Read on &rarr;</a>
-    </footer>
   
 
 

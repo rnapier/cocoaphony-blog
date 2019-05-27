@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Protocols IV: That's Not a Number - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="So far in this series, I’ve created a simple APIClient that can fetch any Fetchable type and decode it from a specific API, and then extracted a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="https://robnapier.net/thats-not-a-number">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Protocols IV: That's Not a Number</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2019-05-27T00:00:00-04:00" pubdate data-updated="true">27 May 2019</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>So far in this series, I’ve <a href="/start-with-a-protocol">created a simple APIClient</a> that can fetch any Fetchable type and decode it from a specific API, and then <a href="/a-mockery-of-protocols">extracted a Transport protocol</a> to abstract away the network layer. In this part, I’ll reconsider the top of the stack, the models, and see if I can make those more flexible.
+<!-- more --></p>
+
+<p>The current models are User and Document:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="kt">Document</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>But now the server API is changing. Document IDs will be Strings, not Ints. (True story.) But really, IDs never really <em>were</em> Ints. I mean, IDs aren’t <em>numbers</em>. What would it mean to add two IDs together? Or divide them? How can I pretend that an ID is a kind of number if most number-like operations would be nonsense? The current design allows me to pass document IDs when I mean user IDs. It even lets me pass random integers when I mean an ID. That can’t be right. IDs are their own thing. They want a type.</p>
+
+<p>As usual, I’ll start very concretely with User and see if anything generic develops. The first step is to lift the ID into its own type.</p>
+
+<style>
+    .chl { color: yellow; } /* code highlight */
+</style>
+
+<pre>
+struct User: Codable, Hashable {
+    <span class="chl">struct ID: Codable, Hashable { 
+        let value: Int 
+    }
+    let id: ID</span>
+    let name: String
+}
+</pre>
+
+<p>So now creating a User looks like this:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">user</span> <span class="o">=</span> <span class="kt">User</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">1</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Alice"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>That’s ok, but I don’t like the <code class="highlighter-rouge">value:</code> label. It violates one of the principles of the <a href="https://swift.org/documentation/api-design-guidelines/#argument-labels">API Design Guidelines</a>:</p>
+
+<blockquote>
+  <p>In initializers that perform value preserving type conversions, omit the first argument label, e.g. <code class="highlighter-rouge">Int64(someUInt32)</code>.</p>
+</blockquote>
+
+<p>To comply, I should I add another initializer.</p>
+
+<pre>
+struct User: Codable, Hashable {
+    struct ID: Codable, Hashable { 
+        let value: Int 
+        <span class="chl">init(_ value: Int) { self.value = value }</span>
+    }
+    let id: ID
+    let name: String
+}
+
+let user = User(id: <span class="chl">User.ID(1)</span>, name: "Alice")
+</pre>
+
+<p>Much better. Document will be almost exactly the same.</p>
+
+<pre>
+struct Document: Codable, Hashable {
+    struct ID: Codable, Hashable {
+        let value: <span class="chl">String</span>
+        init(_ value: <span class="chl">String</span>) { self.value = value }
+    }
+    let id: ID
+    let title: String
+}
+</pre>
+
+<p>It’s not a lot of code, but anytime I’m tempted to cut and paste, it’s time to wonder if there’s generic code hiding in there. After all, most of the model types in this system will probably have an ID.</p>
+
+<h2 id="maybe-a-protocol">Maybe a protocol?</h2>
+
+<p>When I see code duplication, I often reach first for a protocol so I can extract a generic algorithm. That’s something protocols are very good at. In the case of ID, there are two duplicated concepts: identifiers conform to Codable and Hashable, and identifiers have a “no label” initializer.</p>
+
+<p><span class="pullquote-right" data-pullquote="It&#8217;s important to focus on the duplication of concepts, not keystrokes.">
+It’s important to focus on the duplication of concepts, not keystrokes. <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> doesn’t mean “never type the same letters twice.” The point is to extract things that will <em>vary together</em>. I don’t want to capture “types that include the characters <code class="highlighter-rouge">: Codable, Hashable</code> and <code class="highlighter-rouge">init(_...</code>.” I want to capture “things that behave as identifiers.” So I’m going to capture that concept as Identifier:
+</span></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Identifier</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="kd">associatedtype</span> <span class="kt">Value</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span>
+    <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="nf">init</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">Identifier</span> <span class="p">{</span>
+    <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">)</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">value</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>With that, User.ID is simplified to:</p>
+
+<pre>
+struct User: Codable, Hashable {
+    <span class="chl">struct ID: Identifier { let value: Int }</span>
+    let id: ID
+    let name: String
+}
+</pre>
+
+<p>To use it, <code class="highlighter-rouge">APIClient.fetch</code> needs to accept an ID type rather than an Int:</p>
+
+<pre>
+func fetch&lt;Model: Fetchable&gt;(_ model: Model.Type, <span class="chl">id: Model.ID</span>,
+                             completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
+</pre>
+
+<p>And of course Fetchable needs to add an ID type:</p>
+
+<pre>
+protocol Fetchable: Decodable {
+    <span class="chl">associatedtype ID: Identifier</span>
+    static var apiBase: String { get }  // The part of the URL for this fetchable type
+}
+</pre>
+
+<p>Wait a minute… There’s nothing “of course” about that last change. Fetchable used to be a simple protocol. Now it’s a PAT (protocol with associated type). That’s a big change in Swift. Whenever you find yourself typing <code class="highlighter-rouge">associatedtype</code>, you need to stop for a moment and think “would I ever want to put this in an Array?” Once you put an associated type on a protocol in Swift today, it’s no longer a “thing.” It’s only a constraint that can be used for extensions and generic functions. It can’t put put in a variable, or be passed to a function, or in any other way be treated as a value.</p>
+
+<p>Yes, someday <a href="/existential-spelling">generalized existentials</a> will improve this in some cases. But before you pine for those days, or reach for a <a href="/erasure">type-eraser</a>, it’s time to think harder about the protocol.</p>
+
+<h2 id="whats-the-next-line-of-code">What’s the next line of code?</h2>
+
+<p>I want to roll back to the Identifier protocol and ask that question, “would I ever want to put an Identifier in an Array?” I’ve used this protocol in production projects for a long time now, and the answer so far has been no. It just hasn’t come up. As I wrote this article, I tried to invent use cases that needed an Array of Identifiers, and each time the example kind of fell apart. I was always forcing it. But it’s worth walking through the thought process anyway.</p>
+
+<p>If I try to create an Array of Identifiers today, it spits out that infamous error:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">ids</span><span class="p">:</span> <span class="p">[</span><span class="kt">Identifier</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="kt">Document</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="s">"password"</span><span class="p">)]</span>
+<span class="c1">// Protocol 'Identifier' can only be used as a generic constraint because it has Self or associated type requirements</span>
+</code></pre></div></div>
+
+<p>And this it the point where you cry out “generalized existential!” But that wouldn’t actually change anything. Let’s just imagine that we have a generalized existential or I’ve written an AnyIdentifier type-eraser. Eventually I’m going to wind up with some loop over <code class="highlighter-rouge">ids</code>:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">id</span> <span class="k">in</span> <span class="n">ids</span> <span class="p">{</span>
+    <span class="c1">// ??? the only property is .value, which is an unknown type ???</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>I call this the “what now?” problem. The only thing I can do with <code class="highlighter-rouge">id</code> is get its value, because that’s the only thing in the protocol. But each ID can have a different value type. So what can I do with it? Even with the fabled generalized existential, the type of <code class="highlighter-rouge">.value</code> would have to be Any. What else could it be? I can’t call <code class="highlighter-rouge">fetch</code> with that. I don’t even know the Model type.</p>
+
+<p><span class="pullquote-right" data-pullquote="If a type is solving your problems, it&#8217;s not wrong.">
+“I don’t even know the Model type.” As I said, I’ve used this protocol in several projects and I’ve never needed a list of Identifiers, but as soon as I started writing this article, I realized how weird it is that an Identifier doesn’t know what type it identifies. Originally I was going to just rewrite this article to ignore it, but these kinds of…mistakes?…are important to explore. I hesitate to call it a mistake, because it’s never mattered in any shipping software I’ve worked on. If a type is solving your problems, it’s not wrong. But maybe it could be better.
+</span></p>
+
+<h2 id="when-you-think-about-it-everythings-a-function">When you think about it, everything’s a function.</h2>
+
+<p>Before I make it better, I want to show how to solve a “what now?” problem <em>without</em> changing Identifier. I know that sounds a littles strange, but sometimes you inherit types that you can’t easily change, and it’s good to have lots of tools in your belt that don’t require rewriting half your project every time something is less than ideal. So let me walk through an example where you think you want to use an Array of Identifiers, but don’t.</p>
+
+<p>Let’s say that once an hour I want to refresh all the model objects by re-fetching them. So I build a list of Identifiers to refresh, and get the “can only be used as a generic constraint” error, and now have to decide what to do. The answer is to look again at what I really want. I don’t want a list of <em>Identifiers</em>. I want a list of <em>refresh requests</em>. A refresh request is a future action, and a future action is closure. I typically like to wrap that closure into a type. Maybe something specialized to this problem like:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">RefreshRequest</span> <span class="p">{</span>
+    <span class="c1">// The delayed action to perform.</span>
+    <span class="k">let</span> <span class="nv">perform</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+
+    <span class="kd">init</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
+                           <span class="n">with</span> <span class="nv">client</span><span class="p">:</span> <span class="kt">APIClient</span> <span class="o">=</span> <span class="kt">APIClient</span><span class="o">.</span><span class="n">shared</span><span class="p">,</span>
+                           <span class="nv">updateHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>    <span class="c1">// On success</span>
+                           <span class="nv">errorHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="o">=</span> <span class="n">logError</span><span class="p">)</span> <span class="c1">// On failure, with a default</span>
+    <span class="p">{</span>
+        <span class="c1">// Smash together updateHandler and errorHandler into a single () -&gt; Void.</span>
+        <span class="n">perform</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">client</span><span class="o">.</span><span class="nf">fetch</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">switch</span> <span class="nv">$0</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">model</span><span class="p">):</span> <span class="nf">updateHandler</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span> <span class="nf">errorHandler</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Just a helper so errorHandler can have a default value</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="n">logError</span><span class="o">&lt;</span><span class="kt">ID</span><span class="p">:</span> <span class="kt">Identifier</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">ID</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Failure fetching </span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">requests</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="kt">RefreshRequest</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">userID</span><span class="p">,</span> <span class="nv">updateHandler</span><span class="p">:</span> <span class="p">{</span> <span class="n">users</span><span class="p">[</span><span class="nv">$0</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$0</span> <span class="p">}),</span>
+    <span class="kt">RefreshRequest</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">documentID</span><span class="p">,</span> <span class="nv">updateHandler</span><span class="p">:</span> <span class="p">{</span> <span class="n">documents</span><span class="p">[</span><span class="nv">$0</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$0</span> <span class="p">}),</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p><span class="pullquote-right" data-pullquote="You don&#8217;t need to keep track of parameters (and their types) if all you need is the function itself.">
+The point of all of this isn’t this specific data structure. It’s that <code class="highlighter-rouge">() -&gt; Void</code> is an incredibly powerful and flexible type, and you can construct it from all kinds of other functions. It’s another case of “common currency.” If you want a delayed action, that’s just a function. A lot of complicated generic code comes from trying to keep track of all the parameters to a generic function you intend to call later. You don’t need to keep track of parameters (and their types) if all you need is the function itself. This is the heart of <em>type-erasure</em> rather than focusing on <em>type-erasers</em>. It’s hiding types I don’t care about any more, like Model. Note in this example how two generic closures that rely on Model (<code class="highlighter-rouge">updateHandler</code> and <code class="highlighter-rouge">errorHandler</code>) are combined into a single <code class="highlighter-rouge">() -&gt; Void</code>, non-generic closure that relies on nothing. This is very common technique, and it’ll come up again in this series.
+</span></p>
+
+<p>There are more improvements I could make here. The basic closure <code class="highlighter-rouge">{ someModel[$0.id] = $0 }</code> is going to be duplicated a lot and I could fix that. But I’m going to leave it for now and focus on a better identifier.</p>
+
+<h2 id="a-real-identifier">A Real Identifier</h2>
+
+<p>What I really want is the model type to know its ID type, and the ID type to know its model type. If you remember the <code class="highlighter-rouge">APIClient.fetch</code> method, it takes both a type and an identifier:</p>
+
+<pre>
+func fetch&lt;Model: Fetchable&gt;(_ model: <span class="chl">Model.Type</span>, id: <span class="chl">Model.ID</span>,
+                             completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
+</pre>
+
+<p>This creates awkward repetition in the API:</p>
+
+<pre>
+client.fetch(<span class="chl">User</span>.self, id: <span class="chl">User</span>.ID(1), completion: { print($0)} )
+</pre>
+
+<p>I could add an extra “Model” associated type to the Identifier protocol, but it gets a bit messy. Some of it is just Swift syntax (<code class="highlighter-rouge">where</code> clauses and the like), but it really comes down to Identifier not being a very good protocol. Look at the implementations:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">:</span> <span class="kt">Identifier</span> <span class="p">{</span> <span class="k">let</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">}</span>
+<span class="kd">struct</span> <span class="kt">Document</span><span class="o">.</span><span class="kt">ID</span><span class="p">:</span> <span class="kt">Identifier</span> <span class="p">{</span> <span class="k">let</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">String</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p><span class="pullquote-right" data-pullquote="If every instance of a protocol conforms in exactly the same way, it should probably be a generic struct.">
+If you think about any other implementations, they’re going to be almost identical: a struct with a single property called <code class="highlighter-rouge">value</code>. It’s hard to imagine any other way you’d want to implement this protocol. If every instance of a protocol conforms in exactly the same way, it should probably be a generic struct.
+</span></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// An identifier (of some Value type) that applies to a specific Model type</span>
+<span class="kd">struct</span> <span class="kt">Identifier</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Value</span><span class="o">&gt;</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="k">where</span> <span class="kt">Value</span><span class="p">:</span> <span class="kt">Codable</span> <span class="o">&amp;</span> <span class="kt">Hashable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span>
+    <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">)</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Identifier has two type parameters. The Model is the type this identifier applies to. The Value is the kind of identifier it requires (Int, UInt64, String, etc). The Model isn’t actually used anywhere, but it means that <code class="highlighter-rouge">Identifier&lt;User, Int&gt;</code> and <code class="highlighter-rouge">Identifier&lt;Document, Int&gt;</code> are completely different types and can’t be mixed up.</p>
+
+<p>So User becomes:</p>
+
+<pre>
+struct User: Codable, Hashable {
+    <span class="chl">let id: Identifier&lt;User, Int&gt;</span>
+    let name: String
+}
+</pre>
+
+<p>That’s ok, but it’d be nicer to typealias it so I can refer to User.ID as a type:</p>
+
+<pre>
+struct User: Codable, Hashable {
+    <span class="chl">typealias ID = Identifier&lt;User, Int&gt;
+    let id: ID</span>
+    let name: String
+}
+</pre>
+
+<p>And it can be even a little nicer if I extract a protocol, and apply it to Fetchable:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Something identified with an Identifier</span>
+<span class="kd">protocol</span> <span class="kt">Identified</span> <span class="p">{</span>
+    <span class="kd">associatedtype</span> <span class="kt">IDType</span><span class="p">:</span> <span class="kt">Codable</span> <span class="o">&amp;</span> <span class="kt">Hashable</span>
+    <span class="kd">typealias</span> <span class="kt">ID</span> <span class="o">=</span> <span class="kt">Identifier</span><span class="o">&lt;</span><span class="k">Self</span><span class="p">,</span> <span class="kt">IDType</span><span class="o">&gt;</span>
+    <span class="k">var</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">ID</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Any model type, just to simplify the signatures</span>
+<span class="kd">protocol</span> <span class="kt">ModelType</span><span class="p">:</span> <span class="kt">Identified</span><span class="p">,</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{}</span>
+
+<span class="c1">// Something that can be fetched from the API by ID</span>
+<span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Identified</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>  <span class="c1">// The part of the URL for this fetchable type</span>
+<span class="p">}</span>
+
+<span class="c1">// User model object</span>
+<span class="kd">struct</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">ModelType</span> <span class="p">{</span>
+    <span class="kd">typealias</span> <span class="kt">IDType</span> <span class="o">=</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">ID</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">Fetchable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"user"</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And finally, <code class="highlighter-rouge">fetch</code> doesn’t need any type parameters. The only thing that could be fetched with a User.ID is a User:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
+                             <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+
+<span class="n">client</span><span class="o">.</span><span class="nf">fetch</span><span class="p">(</span><span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="nv">$0</span><span class="p">)}</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="trials-and-witnesses">Trials and Witnesses</h2>
+
+<p>There are a lot of people who are a lot better than I am at this, and I’m sure they would have built this (or something better!) all at once on the first try. But I’m not bad at this stuff, and this is how it usually works for me. I want to stress that I’ve shipped the protocol version of Identifier successfully in several products, and have never run into a case where I actually wanted a more powerful Identifier that knew its Model. It’s just that by playing around (and thinking a lot about <a href="https://twitter.com/mbrandonw">Brandon Williams’</a> excellent <a href="https://www.youtube.com/watch?v=3BVkbWXcFS4">Protocol Witnesses</a> talk) I discovered another approach.</p>
+
+<p>Of course I’ve never actually shipped this Identified protocol. Maybe I’m wrong. Maybe it has quirks when you try to use it in real code. Maybe it turns out to awkward or limited for some reason. I won’t know until I ship it in a production project.</p>
+
+<p>I’ll now remind you that stdlib’s Collection protocol required <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0065-collections-move-indices.md">a pretty major overhaul</a> in Swift 3, and tweaks in <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0191-eliminate-indexdistance.md">Swift 4.1</a> and <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0232-remove-customization-points.md">Swift 5</a>. The stdlib team is <em>definitely</em> better at this than I am, and Collection is probably the most foundational and carefully considered protocol in Swift. And still, it’s hard to get it right on the first try. (For another major example, see the four iterations of <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0104-improved-integers.md">Protocol-oriented integers</a>.)</p>
+
+<p>Generic code is hard. There are trade-offs. Some things are hard because Swift is still evolving. And some things are hard because generic code is just hard. Build simply and concretely, and extract solutions as you discover problems. Don’t invent problems for yourself. “It isn’t generic enough” is not a problem. Make sure your generic code is solving a problem you really have, and put it off as long as you can get away with. You’ll probably have to redesign it anyway.</p>
+
+<p>Next time I’ll move beyond fetching models. There are so many other things an API can do. What would that look like?</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+
+
+
+
+
+
+
+<time datetime="2019-05-27T00:00:00-04:00" pubdate data-updated="true">27 May 2019</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/existential-spelling" title="Previous Post: Protocols III: Existential Spelling">&laquo; Protocols III: Existential Spelling</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+<!-- Fathom - simple website analytics - https://usefathom.com -->
+<script>
+(function(f, a, t, h, o, m){
+a[h]=a[h]||function(){
+    (a[h].q=a[h].q||[]).push(arguments)
+};
+o=f.createElement('script'),
+m=f.getElementsByTagName('script')[0];
+o.async=1; o.src=t; o.id='fathom-script';
+m.parentNode.insertBefore(o,m)
+})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'MSRAZWIU');
+fathom('trackPageview');
+</script>
+<!-- / Fathom -->
+
+
+
+
+</body>
+</html>
