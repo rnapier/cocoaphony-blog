@@ -228,9 +228,20 @@ If you think about any other implementations, they're going to be almost identic
 
 ```swift
 // An identifier (of some Value type) that applies to a specific Model type
-struct Identifier<Model, Value>: Codable, Hashable where Value: Codable & Hashable {
+struct Identifier<Model, Value>: Hashable where Value: Codable & Hashable {
     let value: Value
     init(_ value: Value) { self.value = value }
+}
+
+extension Identifier: Codable {
+    init(from decoder: Decoder) throws {
+        self.init(try decoder.singleValueContainer().decode(Value.self))
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(value)
+    }
 }
 ```
 
@@ -259,22 +270,19 @@ And it can be even a little nicer if I extract a protocol, and apply it to Fetch
 
 ```swift
 // Something identified with an Identifier
-protocol Identified {
+protocol Identified: Codable {
     associatedtype IDType: Codable & Hashable
     typealias ID = Identifier<Self, IDType>
     var id: ID { get }
 }
 
-// Any model type, just to simplify the signatures
-protocol ModelType: Identified, Codable, Hashable {}
-
 // Something that can be fetched from the API by ID
-protocol Fetchable: ModelType {
+protocol Fetchable: Identified {
     static var apiBase: String { get }  // The part of the URL for this fetchable type
 }
 
 // User model object
-struct User: ModelType {
+struct User: Identified {
     typealias IDType = Int
     let id: ID
     let name: String

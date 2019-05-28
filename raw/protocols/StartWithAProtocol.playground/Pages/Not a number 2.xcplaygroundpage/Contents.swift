@@ -3,23 +3,32 @@
 
 import Foundation
 
-struct Identifier<Model, Value>: Codable, Hashable
-where Value: Codable & Hashable {
+// An identifier (of some Value type) that applies to a specific Model type
+struct Identifier<Model, Value>: Hashable where Value: Codable & Hashable {
     let value: Value
     init(_ value: Value) { self.value = value }
 }
 
+extension Identifier: Codable {
+    init(from decoder: Decoder) throws {
+        self.init(try decoder.singleValueContainer().decode(Value.self))
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(value)
+    }
+}
+
 // Something identified with an Identifier
-protocol Identified {
+protocol Identified: Codable {
     associatedtype IDType: Codable & Hashable
     typealias ID = Identifier<Self, IDType>
     var id: ID { get }
 }
 
-protocol ModelType: Identified, Codable, Hashable {}
-
 // User model object
-struct User: ModelType {
+struct User: Identified {
     typealias IDType = Int
     let id: ID
     let name: String
@@ -28,7 +37,7 @@ struct User: ModelType {
 let user = User(id: User.ID(1), name: "Alice")
 
 // Document model object
-struct Document: ModelType {
+struct Document: Identified {
     typealias ID = Identifier<Document, String>
     let id: ID
     let title: String
