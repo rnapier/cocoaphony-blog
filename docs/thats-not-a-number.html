@@ -225,7 +225,7 @@ protocol Fetchable: Decodable {
 
 <h2 id="when-you-think-about-it-everythings-a-function">When you think about it, everything’s a function.</h2>
 
-<p>Before I make it better, I want to show how to solve a “what now?” problem <em>without</em> changing Identifier. I know that sounds a littles strange, but sometimes you inherit types that you can’t easily change, and it’s good to have lots of tools in your belt that don’t require rewriting half your project every time something is less than ideal. So let me walk through an example where you think you want to use an Array of Identifiers, but don’t.</p>
+<p>Before I make it better, I want to show how to solve a “what now?” problem <em>without</em> changing Identifier. I know that sounds a little strange, but sometimes you inherit types that you can’t easily change, and it’s good to have lots of tools in your belt that don’t require rewriting half your project every time something is less than ideal. So let me walk through an example where you think you want to use an Array of Identifiers, but don’t.</p>
 
 <p>Let’s say that once an hour I want to refresh all the model objects by re-fetching them. So I build a list of Identifiers to refresh, and get the “can only be used as a generic constraint” error, and now have to decide what to do. The answer is to look again at what I really want. I don’t want a list of <em>Identifiers</em>. I want a list of <em>refresh requests</em>. A refresh request is a future action, and a future action is closure. I typically like to wrap that closure into a type. Maybe something specialized to this problem like:</p>
 

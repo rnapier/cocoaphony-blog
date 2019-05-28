@@ -155,7 +155,7 @@ I call this the "what now?" problem. The only thing I can do with `id` is get it
 
 ## When you think about it, everything's a function.
 
-Before I make it better, I want to show how to solve a "what now?" problem *without* changing Identifier. I know that sounds a littles strange, but sometimes you inherit types that you can't easily change, and it's good to have lots of tools in your belt that don't require rewriting half your project every time something is less than ideal. So let me walk through an example where you think you want to use an Array of Identifiers, but don't.
+Before I make it better, I want to show how to solve a "what now?" problem *without* changing Identifier. I know that sounds a little strange, but sometimes you inherit types that you can't easily change, and it's good to have lots of tools in your belt that don't require rewriting half your project every time something is less than ideal. So let me walk through an example where you think you want to use an Array of Identifiers, but don't.
 
 Let's say that once an hour I want to refresh all the model objects by re-fetching them. So I build a list of Identifiers to refresh, and get the "can only be used as a generic constraint" error, and now have to decide what to do. The answer is to look again at what I really want. I don't want a list of *Identifiers*. I want a list of *refresh requests*. A refresh request is a future action, and a future action is closure. I typically like to wrap that closure into a type. Maybe something specialized to this problem like:
 
