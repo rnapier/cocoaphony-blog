@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-05-28T09:50:35-04:00</updated>
+  <updated>2019-05-28T09:53:25-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -235,12 +235,12 @@ If you think about any other implementations, they’re going to be almost ident
 </span></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// An identifier (of some Value type) that applies to a specific Model type</span>
-<span class="kd">struct</span> <span class="kt">Identifier</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Value</span><span class="o">&gt;</span><span class="p">:</span> <span class="kt">Hashable</span> <span class="k">where</span> <span class="kt">Value</span><span class="p">:</span> <span class="kt">Codable</span> <span class="o">&amp;</span> <span class="kt">Hashable</span> <span class="p">{</span>
+<span class="kd">struct</span> <span class="kt">Identifier</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Value</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">Value</span><span class="p">:</span> <span class="kt">Codable</span> <span class="o">&amp;</span> <span class="kt">Hashable</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span>
     <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">)</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">extension</span> <span class="kt">Identifier</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+<span class="kd">extension</span> <span class="kt">Identifier</span><span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{</span>
     <span class="nf">init</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
         <span class="k">self</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="k">try</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">singleValueContainer</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Value</span><span class="o">.</span><span class="k">self</span><span class="p">))</span>
     <span class="p">}</span>

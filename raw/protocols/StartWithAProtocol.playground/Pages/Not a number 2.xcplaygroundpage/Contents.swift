@@ -4,12 +4,12 @@
 import Foundation
 
 // An identifier (of some Value type) that applies to a specific Model type
-struct Identifier<Model, Value>: Hashable where Value: Codable & Hashable {
+struct Identifier<Model, Value> where Value: Codable & Hashable {
     let value: Value
     init(_ value: Value) { self.value = value }
 }
 
-extension Identifier: Codable {
+extension Identifier: Codable, Hashable {
     init(from decoder: Decoder) throws {
         self.init(try decoder.singleValueContainer().decode(Value.self))
     }
