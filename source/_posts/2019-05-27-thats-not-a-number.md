@@ -269,7 +269,7 @@ protocol Identified {
 protocol ModelType: Identified, Codable, Hashable {}
 
 // Something that can be fetched from the API by ID
-protocol Fetchable: Identified {
+protocol Fetchable: ModelType {
     static var apiBase: String { get }  // The part of the URL for this fetchable type
 }
 

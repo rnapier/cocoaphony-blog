@@ -333,7 +333,7 @@ struct User: Codable, Hashable {
 <span class="kd">protocol</span> <span class="kt">ModelType</span><span class="p">:</span> <span class="kt">Identified</span><span class="p">,</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span> <span class="p">{}</span>
 
 <span class="c1">// Something that can be fetched from the API by ID</span>
-<span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">Identified</span> <span class="p">{</span>
+<span class="kd">protocol</span> <span class="kt">Fetchable</span><span class="p">:</span> <span class="kt">ModelType</span> <span class="p">{</span>
     <span class="kd">static</span> <span class="k">var</span> <span class="nv">apiBase</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>  <span class="c1">// The part of the URL for this fetchable type</span>
 <span class="p">}</span>
 
