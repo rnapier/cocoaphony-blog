@@ -111,14 +111,14 @@ system_profiler:
 
 <p>We see it’s in Cocoa. Nice, we can use <a href="http://www.codethecode.com/projects/class-dump/">class-dump</a> on it. And we see a bunch of public and private frameworks in there. We won’t go into all of those here. But you can tear them apart using the same techniques we’re going to use on DiskManagement:</p>
 
-<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">class</span><span class="o">-</span><span class="n">dump</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">PrivateFrameworks</span><span class="o">/</span><span class="n">DiskManagement</span><span class="p">.</span><span class="n">framework</span><span class="o">/</span><span class="n">Versions</span><span class="o">/</span><span class="n">A</span><span class="o">/</span><span class="n">DiskManagement</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">class</span><span class="k">-</span><span class="n">dump</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">PrivateFrameworks</span><span class="o">/</span><span class="n">DiskManagement</span><span class="p">.</span><span class="n">framework</span><span class="o">/</span><span class="n">Versions</span><span class="o">/</span><span class="n">A</span><span class="o">/</span><span class="n">DiskManagement</span>
 <span class="p">...</span>
 <span class="k">@interface</span> <span class="nc">DMManager</span> <span class="p">:</span> <span class="nc">NSObject</span>
 <span class="p">{</span>
     <span class="n">id</span> <span class="n">_instPriv</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="o">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">systemResourcesSufficient</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">systemResourcesSufficient</span><span class="p">;</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">systemAtMountPoint</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span> <span class="nf">lowVersion</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">fp12</span> <span class="nf">lowInclusive</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">fp16</span> <span class="nf">highVersion</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">fp20</span> <span class="nf">highInclusive</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">fp24</span><span class="p">;</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">sharedManager</span><span class="p">;</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">sharedManagerWithoutAuthentication</span><span class="p">;</span>
@@ -159,7 +159,7 @@ system_profiler:
 
 <p>So we see all the frameworks it uses, and hey, /System/Library/SystemProfiler sure looks interesting. I wonder what we might do with that?</p>
 
-<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">class</span><span class="o">-</span><span class="n">dump</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">SystemProfiler</span><span class="o">/</span><span class="n">SPNetworkReporter</span><span class="p">.</span><span class="n">spreporter</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">MacOS</span><span class="o">/</span><span class="n">SPNetworkReporter</span>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">class</span><span class="k">-</span><span class="n">dump</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">SystemProfiler</span><span class="o">/</span><span class="n">SPNetworkReporter</span><span class="p">.</span><span class="n">spreporter</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">MacOS</span><span class="o">/</span><span class="n">SPNetworkReporter</span>
 <span class="k">struct</span> <span class="n">__SCDynamicStore</span><span class="p">;</span>
 <span class="p">...</span>
 <span class="k">@interface</span> <span class="nc">SPNetworkReporter</span> <span class="p">:</span> <span class="nc">SPReporter</span>
@@ -168,7 +168,7 @@ system_profiler:
     <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">_localizedServiceNames</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">_hardwareDictionaryForInterface</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">fp8</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_hardwareDictionaryForInterface</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_proxyDictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_ipv4DictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">_ipv6DictionaryForServiceID</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">fp8</span><span class="p">;</span>

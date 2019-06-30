@@ -101,7 +101,7 @@ I’m going to assume you know enough Applescript to have written this:</p>
         </span><span class="k">tell</span><span class="w"> </span><span class="na">content</span><span class="w">
             </span><span class="nb">make</span><span class="w"> </span><span class="nb">new</span><span class="w"> </span><span class="nb">attachment</span><span class="w"> </span><span class="nv">with</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="p">{</span><span class="nv">filename</span><span class="p">:</span><span class="s2">"/etc/hosts"</span><span class="p">}</span><span class="w"> </span><span class="se">¬
 </span><span class="w">                </span><span class="nb">at</span><span class="w"> </span><span class="nb">after</span><span class="w"> </span><span class="nb">last</span><span class="w"> </span><span class="nb">paragraph</span><span class="w">
-            </span><span class="k">set</span><span class="w"> </span><span class="na">visible</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">true</span><span class="w">
+            </span><span class="k">set</span><span class="w"> </span><span class="na">visible</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nb">true</span><span class="w">
         </span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
     </span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
     </span><span class="nb">activate</span><span class="w">
@@ -187,7 +187,7 @@ I’m going to assume you know enough Applescript to have written this:</p>
 
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MailOutgoingMessage</span> <span class="o">*</span><span class="n">mailMessage</span> <span class="o">=</span>
     <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"outgoing message"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
-        <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+        <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
             <span class="s">@"Test outgoing"</span><span class="p">,</span> <span class="s">@"subject"</span><span class="p">,</span>
             <span class="s">@"Test body</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="s">@"content"</span><span class="p">,</span>
             <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
@@ -204,7 +204,7 @@ I’m going to assume you know enough Applescript to have written this:</p>
 <p>You should be able to guess the code for this one:</p>
 
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MailToRecipient</span> <span class="o">*</span><span class="n">recipient</span> <span class="o">=</span> <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"to recipient"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span> 
-    <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+    <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
                     <span class="s">@"Rob Napier"</span><span class="p">,</span> <span class="s">@"name"</span><span class="p">,</span>
                     <span class="s">@"sb@robnapier.net"</span><span class="p">,</span> <span class="s">@"address"</span><span class="p">,</span>
                     <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
@@ -219,7 +219,7 @@ I’m going to assume you know enough Applescript to have written this:</p>
 </span></code></pre></div></div>
 <p>==&gt;</p>
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MailAttachment</span> <span class="o">*</span><span class="n">attachment</span> <span class="o">=</span> <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"attachment"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
-    <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+    <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
         <span class="s">@"/etc/hosts"</span><span class="p">,</span> <span class="s">@"filename"</span><span class="p">,</span>
         <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
 <span class="p">[[[</span><span class="n">mailMessage</span> <span class="nf">content</span><span class="p">]</span> <span class="nf">paragraphs</span><span class="p">]</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">attachment</span><span class="p">];</span>
@@ -227,7 +227,7 @@ I’m going to assume you know enough Applescript to have written this:</p>
 
 <p>Those really are the complicated ones (and they aren’t bad at all once you see how to read them). After that, everything should be obvious:</p>
 
-<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">        </span><span class="k">set</span><span class="w"> </span><span class="na">visible</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">true</span><span class="w">
+<div class="language-applescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">        </span><span class="k">set</span><span class="w"> </span><span class="na">visible</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">theMessage</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nb">true</span><span class="w">
     </span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
 </span><span class="k">end</span><span class="w"> </span><span class="k">tell</span><span class="w">
 </span><span class="nb">activate</span><span class="w">
@@ -248,7 +248,7 @@ I’m going to assume you know enough Applescript to have written this:</p>
         <span class="p">[</span><span class="n">SBApplication</span> <span class="nf">applicationWithBundleIdentifier</span><span class="p">:</span><span class="s">@"com.apple.mail"</span><span class="p">];</span>
     <span class="n">MailOutgoingMessage</span> <span class="o">*</span><span class="n">mailMessage</span> <span class="o">=</span>
         <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"outgoing message"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
-            <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+            <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
                     <span class="s">@"Test outgoing"</span><span class="p">,</span> <span class="s">@"subject"</span><span class="p">,</span>
                     <span class="s">@"Test body</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="s">@"content"</span><span class="p">,</span>
                     <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
@@ -256,7 +256,7 @@ I’m going to assume you know enough Applescript to have written this:</p>
 
     <span class="n">MailToRecipient</span> <span class="o">*</span><span class="n">recipient</span> <span class="o">=</span>
         <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"to recipient"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
-            <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+            <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
                     <span class="s">@"Rob Napier"</span><span class="p">,</span> <span class="s">@"name"</span><span class="p">,</span>
                     <span class="s">@"sb@robnapier.net"</span><span class="p">,</span> <span class="s">@"address"</span><span class="p">,</span>
                     <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
@@ -264,7 +264,7 @@ I’m going to assume you know enough Applescript to have written this:</p>
 
     <span class="n">MailAttachment</span> <span class="o">*</span><span class="n">attachment</span> <span class="o">=</span>
         <span class="p">[[[[</span><span class="n">mail</span> <span class="nf">classForScriptingClass</span><span class="p">:</span><span class="s">@"attachment"</span><span class="p">]</span> <span class="nf">alloc</span><span class="p">]</span>
-            <span class="nf">initWithProperties</span><span class="p">:[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
+            <span class="nl">initWithProperties:</span><span class="p">[</span><span class="n">NSDictionary</span> <span class="nf">dictionaryWithObjectsAndKeys</span><span class="p">:</span>
                     <span class="s">@"/etc/hosts"</span><span class="p">,</span> <span class="s">@"filename"</span><span class="p">,</span>
                     <span class="nb">nil</span><span class="p">]]</span> <span class="nf">autorelease</span><span class="p">];</span>
     <span class="p">[[[</span><span class="n">mailMessage</span> <span class="nf">content</span><span class="p">]</span> <span class="nf">paragraphs</span><span class="p">]</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">attachment</span><span class="p">];</span>

@@ -85,10 +85,10 @@
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
     <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
     <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="nf">mainBundle</span><span class="p">]</span> <span class="nf">pathForResource</span><span class="p">:</span><span class="s">@"www.google.com"</span>
-                                                     <span class="nf">ofType</span><span class="p">:</span><span class="s">@"cer"</span><span class="p">];</span>
+                                                     <span class="nl">ofType:</span><span class="s">@"cer"</span><span class="p">];</span>
     <span class="n">NSData</span> <span class="o">*</span><span class="n">certData</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSData</span> <span class="nf">dataWithContentsOfFile</span><span class="p">:</span><span class="n">path</span>
-                                              <span class="nf">options</span><span class="p">:</span><span class="mi">0</span>
-                                                <span class="n">error</span><span class="o">:&amp;</span><span class="n">error</span><span class="p">];</span>
+                                              <span class="nl">options:</span><span class="mi">0</span>
+                                                <span class="nl">error:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">certData</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// Handle error reading</span>
@@ -104,8 +104,8 @@
     <span class="n">self</span><span class="p">.</span><span class="n">anchors</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSArray</span> <span class="nf">arrayWithObject</span><span class="p">:</span><span class="n">CFBridgingRelease</span><span class="p">(</span><span class="n">certificate</span><span class="p">)];</span>
 <span class="p">...</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">connection</span><span class="o">:</span><span class="p">(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="n">connection</span>
-<span class="n">willSendRequestForAuthenticationChallenge</span><span class="o">:</span><span class="p">(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="n">challenge</span> <span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">connection</span><span class="p">:(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="nv">connection</span>
+<span class="nf">willSendRequestForAuthenticationChallenge</span><span class="p">:(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="nv">challenge</span> <span class="p">{</span>
 
   <span class="n">SecTrustRef</span> <span class="n">trust</span> <span class="o">=</span> <span class="n">challenge</span><span class="p">.</span><span class="n">protectionSpace</span><span class="p">.</span><span class="n">serverTrust</span><span class="p">;</span>
   
@@ -132,7 +132,7 @@
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">connection</span><span class="p">:(</span><span class="n">NSURLConnection</span> <span class="o">*</span><span class="p">)</span><span class="nv">connection</span>
 <span class="nf">willSendRequestForAuthenticationChallenge</span><span class="p">:(</span><span class="n">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="nv">challenge</span> <span class="p">{</span>
   <span class="n">NSString</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="nf">mainBundle</span><span class="p">]</span> <span class="nf">pathForResource</span><span class="p">:</span><span class="s">@"mycert"</span>
-                                                   <span class="nf">ofType</span><span class="p">:</span><span class="s">@"cer"</span><span class="p">];</span>
+                                                   <span class="nl">ofType:</span><span class="s">@"cer"</span><span class="p">];</span>
   <span class="n">RNPinnedCertValidator</span> <span class="o">*</span><span class="n">validator</span> <span class="o">=</span> <span class="p">[[</span><span class="n">RNPinnedCertValidator</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCertificatePath</span><span class="p">:</span><span class="n">path</span><span class="p">];</span>
   <span class="p">[</span><span class="n">validator</span> <span class="nf">validateChallenge</span><span class="p">:</span><span class="n">challenge</span><span class="p">];</span>
 <span class="p">}</span>
