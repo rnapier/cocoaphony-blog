@@ -1,0 +1,2 @@
+#!/bin/sh
+bundle exec jekyll server --watch --incremental --drafts --livereload --open-url --strict_front_matter --destination /tmp

@@ -1,4 +1,4 @@
-// Code for Protocols III: That's not a number
+// Code for Protocols IV: That's not a number
 // http://robnapier.net/thats-not-a-number
 
 import Foundation
