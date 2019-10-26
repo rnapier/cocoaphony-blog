@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-10-26T17:03:01-04:00</updated>
+  <updated>2019-10-26T17:04:39-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -12,6 +12,225 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Protocols v: At Your Request]]></title>
+    <link href="https://robnapier.net/at-your-request"/>
+    <updated>2019-10-26T17:04:00-04:00</updated>
+    <id>https://robnapier.net/at-your-request</id>
+    <content type="html"><![CDATA[<p>So, back to our <a href="https://robnapier.net/start-with-a-protocol">APIClient</a>. When last <a href="https://robnapier.net/thats-not-a-number">I left off</a>, I had the following client code:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">APIClient</span><span class="p">()</span>
+    <span class="k">let</span> <span class="nv">baseURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span>
+    <span class="k">let</span> <span class="nv">transport</span><span class="p">:</span> <span class="kt">Transport</span>
+
+    <span class="nf">init</span><span class="p">(</span><span class="nv">transport</span><span class="p">:</span> <span class="kt">Transport</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="p">)</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">transport</span> <span class="p">}</span>
+
+    <span class="c1">// Fetch any Fetchable type given an ID, and return it asynchronously</span>
+    <span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
+                                 <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Construct the URLRequest</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">baseURL</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="n">apiBase</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="c1">// Send it to the transport</span>
+        <span class="n">transport</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">urlRequest</span><span class="p">)</span> <span class="p">{</span> <span class="n">data</span> <span class="k">in</span>
+            <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="kt">Result</span> <span class="p">{</span> <span class="k">try</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="nf">get</span><span class="p">())</span> <span class="p">}</span>
+            <span class="nf">completion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This <code class="highlighter-rouge">fetch</code> method is great for getting a model by ID, but I have other things I want to do. For example, I’d like to periodically POST to /keepalive and return if there’s an error. That’s really similar, but kind of different.
+<!-- more --></p>
+
+<pre style="float: left; width: 45%; min-width: 450px">
+// GET /&lt;model&gt;/&lt;id&gt; -&gt; Model
+func fetch&lt;Model: Fetchable&gt;(
+    _ id: Model.ID,
+    completion: @escaping (Result&lt;Model, Error&gt;) -&gt; Void)
+{<span style="color: yellow;">
+    let urlRequest = URLRequest(url: baseURL
+        .appendingPathComponent(Model.apiBase)
+        .appendingPathComponent(&quot;\(id)&quot;)
+    )</span>
+
+    transport.fetch(request: urlRequest) {<span style="color: cyan">
+        data in
+        completion(Result {
+            let decoder = JSONDecoder()
+            return try decoder.decode(
+                Model.self,
+                from: data.get())
+        })</span>
+    }
+}
+</pre>
+
+<pre style="width: 45%;">
+// POST /keepalive -&gt; Error?
+func keepAlive(
+    completion: @escaping (Error?) -&gt; Void)
+{<span style="color: yellow;">
+    var urlRequest = URLRequest(url: baseURL
+        .appendingPathComponent("keepalive")
+    )
+    urlRequest.httpMethod = "POST"</span>
+
+    transport.send(request: urlRequest) {<span style="color: cyan">
+        switch $0 {
+        case .success: completion(nil)
+        case .failure(let error): 
+             completion(error)
+        }</span>
+    }
+}
+</pre>
+
+<div style="clear: both;"></div>
+
+<p>Both basically follow this pattern of build an URL request, pass it to transport, and then deal with the result. I know it’s just one line that exactly duplicates, but the structure is still really similar, and it feels we could pull this apart. The problem is that <code class="highlighter-rouge">fetch</code> is doing too much.</p>
+
+<p>So maybe we pull out the part that changes and call it Request. But what should Request be? So often, I see people jump to a PAT (protocol with associated type) like this:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This is a bad idea</span>
+<span class="kd">protocol</span> <span class="kt">Request</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">urlRequest</span><span class="p">:</span> <span class="kt">URLRequest</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="kd">associatedtype</span> <span class="kt">Response</span>
+    <span class="k">var</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Response</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So what’s the question we ask whenever we make a PAT? Would I ever want an array of these? I think we would definitely want an array of requests. A list of pending requests. Chaining requests together. Requests that should be retried. We definitely want an array of requests. This is a great example where someone might come along as say, if only we had <a href="https://robnapier.net/existential-spelling">generalized existentials</a> then everything would be wonderful. No. That wouldn’t fix anything. The problem is this treats a PAT like a generic, which isn’t the right way to think about it.</p>
+
+<h3 id="pats-are-not-generic-protocols-or-at-least-not-in-the-way-youre-thinking">PATs are not “generic protocols” (or at least not in the way you’re thinking)</h3>
+
+<p>Generics and PATs are very different things that solve very different problems. Generics are type-parameterization. That means that the types are being passed as parameters to the function. They’re passed at compile time, but they’re still passed by the caller. When you say <code class="highlighter-rouge">Array&lt;Int&gt;</code>, you, the caller, get to decide what kinds of elements Array holds. In <code class="highlighter-rouge">Array&lt;Int&gt;(repeating: 0, count: 10)
+</code>, Int is just as much a parameter as 0 and 10. It’s just a different kind of parameter.</p>
+
+<p>PATs aren’t like that. Their associated types are not parameters passed by the caller. They’re hooks provided by the implementor of the conforming type (or whoever wrote the conforming extension). When you conform a type to a PAT, you have to provide a mapping of stuff that algorithms need to stuff this type has. Collection requires an Index type in order to implement subscripts (among other things). Set says “here’s my Set.Index type that Collection algorithms should use when you need an Index type.” Array says “please use Int as my Index for those algorithms.” As the consumer of Set or Array, you can’t change those choices. You can’t say “I want an Array indexed by Character.” That’s not up to you. It’s not a type parameter.</p>
+
+<p>The point of a PAT is to allow algorithms to use the type. If you’re thinking about storage (like putting things in an Array) rather than algorithms, you probably do not want a PAT.</p>
+
+<h3 id="first-use-it-then-build-it">First use it, then build it</h3>
+
+<p>Rather than focusing first on how to construct a Request, let’s focus on how we’d like to <em>use</em> one. I wish something would just know all the stuff I needed to send to the transport….</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">send</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">transport</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">urlRequest</span><span class="p">,</span>
+                       <span class="nv">completion</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">completion</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is a kind of <a href="https://robnapier.net/functional-wish-fulfillment">“wish driven development.”</a> We “wish” there were some type that could handle the URLRequest and completion handler for us, we pretend it exists, write the code that uses it, and then make it a reality. And the reality couldn’t be simpler:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Request</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">urlRequest</span><span class="p">:</span> <span class="kt">URLRequest</span>
+    <span class="k">let</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>OK, that’s simple, but that’s still not quite what we want. There’s no model information in there. I want to create Requests that know about model types, like this:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="kt">Request</span><span class="o">.</span><span class="nf">fetching</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="nv">$0</span><span class="p">)}</span> <span class="p">))</span>
+</code></pre></div></div>
+
+<p>So I want to put User.ID into a system and get User back out in the completion handler, but the system (Request) only understands Data. That means we’re making a type eraser. We’re hiding a type (User) inside Request. How? With one of the simplest type erasers you can have: a generic function or closure. Basically, we just take <code class="highlighter-rouge">fetch</code> and wrap it into a closure. Here’s <code class="highlighter-rouge">fetch</code>:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
+                                 <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Construct the URLRequest</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">baseURL</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="n">apiBase</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="c1">// Send it to the transport</span>
+        <span class="n">transport</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">urlRequest</span><span class="p">)</span> <span class="p">{</span> <span class="n">data</span> <span class="k">in</span>
+            <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="kt">Result</span> <span class="p">{</span> <span class="k">try</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="nf">get</span><span class="p">())</span> <span class="p">}</span>
+            <span class="nf">completion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And here’s <code class="highlighter-rouge">fetching</code>:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Request</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">baseURL</span><span class="p">:</span> <span class="kt">URL</span> <span class="p">{</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span> <span class="p">}</span>
+
+    <span class="c1">// GET /&lt;model&gt;/&lt;id&gt; -&gt; Model</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="n">fetching</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
+                                           <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Request</span>
+    <span class="p">{</span>
+        <span class="c1">// Construct the URLRequest</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">baseURL</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="n">apiBase</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="k">self</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">urlRequest</span><span class="p">:</span> <span class="n">urlRequest</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// Here's the closure that hides (erases) Model</span>
+            <span class="n">data</span> <span class="k">in</span>
+            <span class="nf">completion</span><span class="p">(</span><span class="kt">Result</span> <span class="p">{</span>
+                <span class="k">let</span> <span class="nv">decoder</span> <span class="o">=</span> <span class="kt">JSONDecoder</span><span class="p">()</span>
+                <span class="k">return</span> <span class="k">try</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="nf">get</span><span class="p">())</span>
+            <span class="p">})</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">fetching</code> is a generic method, but it returns a non-generic Request struct. This kind of generic-&gt;non-generic conversion is an incredibly powerful way to simplify your system and keep generics from spiraling out of control.</p>
+
+<p>You may ask “why a static <code class="highlighter-rouge">fetching</code> method rather than creating an <code class="highlighter-rouge">init(fetching:completion)</code> extension” For this one, <code class="highlighter-rouge">init</code> would probably be fine, but as you think about other kinds of Requests, especially ones with no parameters, it would get messy. For example, it’s hard to build a nice <code class="highlighter-rouge">init</code> for /keepalive. (This isn’t a deep design point; it’s just a stylistic choice. You might prefer <code class="highlighter-rouge">init(keepAliveWithCompletion:)</code>, and that’s up to you.)</p>
+
+<p>In any case, this is how I’d build the /keepalive handler:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Request</span> <span class="p">{</span>
+    <span class="c1">// POST /keepalive -&gt; Error?</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">keepAlive</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Request</span>
+    <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">baseURL</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"keepalive"</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">urlRequest</span><span class="o">.</span><span class="n">httpMethod</span> <span class="o">=</span> <span class="s">"POST"</span>
+
+        <span class="k">return</span> <span class="k">self</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">urlRequest</span><span class="p">:</span> <span class="n">urlRequest</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="nv">$0</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">success</span><span class="p">:</span> <span class="nf">completion</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span> <span class="nf">completion</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="wrapping-up-the-network-stack">Wrapping up the network stack</h2>
+
+<p>This is the end of my discussion of this little network stack (though not the end of my discussion of generics). It’s not designed to be a “real” network stack. I don’t expect anyone to use this directly as described. I build stacks based on these principles all the time, but I’ve never had one look exactly like this. They’re each quite specialized to their particular API, and the particular needs of the app. The goal here wasn’t to create a general purpose library to solve all networking problems. The goal was to show how you would extract generic code tailored to a problem. Your API is probably different, and you’ll probably build your solution in a different way. Don’t feel you have to use a Transport and an APIClient and a Request. (Though maybe you should use Transport… :D)</p>
+
+<p>If you want to build a general purpose library around this, I suggest you first build small, custom libraries around several APIs that are very different from each other. Then look for the abstractions. Abstracting too soon, before you really understand the problem, is the most common cause of generic headaches.</p>
+
+<p>There is no such thing as “as generic as possible.” Generic code is abstraction, and abstraction is choices. Choosing to make things flexible in one direction often makes it harder to be flexible in another. I have a long list of code bases where we needed more flexibility, and the first step was to rip out all the “flexible” code that made the wrong assumptions about what kind of flexibility would be needed and was never actually used.</p>
+
+<blockquote>
+  <p>Write concrete code first. Then work out the generics.</p>
+</blockquote>
+
+<p>If you stick to that, it’ll probably work out ok.</p>
+
+<p><a href="https://robnapier.net/assets/protocols/StartWithAProtocol.zip">Swift Playground</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Protocols IV: That's Not a Number]]></title>
@@ -2264,118 +2483,6 @@ discover how to build great things with it.</p>
     </li>
     <li id="fn:production">
       <p>I also apply some of these things to larger, more production apps, but I have to be more careful and don’t have the time or risk tolerance to experiment as much. That’s why I like having a non-trivial toy app. <a href="#fnref:production" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Go Is a Shop-built Jig]]></title>
-    <link href="https://robnapier.net/go-is-a-shop-built-jig"/>
-    <updated>2014-09-17T15:50:00-04:00</updated>
-    <id>https://robnapier.net/go-is-a-shop-built-jig</id>
-    <content type="html"><![CDATA[<p><a href="https://al3x.net/about.html">Alex Payne</a> wrote an excellent essay called <a href="https://al3x.net/2014/09/16/thoughts-on-five-years-of-emerging-languages.html">Thoughts on Five Years of Emerging Languages</a>. It called to mind something I wrote a while ago for a limited audience that I never got around to turning into a public form. Thanks to <a href="https://twitter.com/TacticalGrace">Manuel Chakravarty</a> for the link and the inspiration.</p>
-
-<p>For those who read my blog for Cocoa (and recently Swift) discussion, you may be surprised that most of my professional work right now is in Go, C, and C++ (in that order). So I thought I might take a moment to discuss Go.</p>
-
-<p>First, it’s important to say that I really like Go. I didn’t think I would. I’m a language snob at heart. Before Swift, I’d been spending a lot of time on the <a href="http://learnyouahaskell.com">functional</a> side of the <a href="http://www.scala-lang.org">street</a> with a brief dallience with <a href="http://akka.io">actors</a>. I was just about to do deeper <a href="http://clojure.org">into the parens</a>, when I wound up taking a side trip into Google-land and Go. I’d dipped my toe into the water once before and been turned off by what seemed to be the sloppiness of the language. How variables are declared bugged me (turns out it <a href="http://gophercon.sourcegraph.com/post/83845316771/panel-discussion-with-go-team-members">bugs the lead language designer</a>, too). The multiple return types of <code class="highlighter-rouge">range</code> bugged me. <a href="http://blog.golang.org/strings">Strings switching between code points and bytes</a> bugged me. The fact that Go can’t implement its own <code class="highlighter-rouge">append()</code> harkened back to funky Perl magic. Go just seemed sloppy and under-considered.</p>
-
-<!-- more -->
-
-<p>But a coworker made a joke about rewriting an important service in Go, and after laughing about it, I thought I’d at least take another look. It turned out to be a great fit. Go’s bread-and-butter is concurrent network services, which is what we wanted to solve. So I dug a bit more.</p>
-
-<ul>
-  <li>Very cross-platform out of the box.
-    <ul>
-      <li>Not “sort-of cross-platform as long as it’s unix” like C/C++. Real-world Windows support is pretty good. No wchar/tchar/char madness.</li>
-    </ul>
-  </li>
-  <li>Built-in cross-platform networking support that integrates with the native stack.</li>
-  <li>Native binaries. No need to ship a separate interpreter, runtime, or VM.</li>
-  <li>Handles concurrency very well.</li>
-  <li>Pretty easy to pick up for C programmers</li>
-</ul>
-
-<p>It was a good fit. I went ahead and reworked the system in Go. I’ve been very happy with the results so far.</p>
-
-<p><span class="pullquote-right" data-pullquote="Go feels under-engineered because it only solves real problems."></span></p>
-
-<p>So what have I learned by actually building something? Go feels under-engineered because it only solves real problems. If you’ve ever worked in a wood shop, you’ve probably made a jig at some point. They’re little pieces of wood that help you hold plywood while you cut it, or spacers that tell you where to put the guide bar for a specific tool, or hold-downs that keep a board in place while you’re working on it. They’re not always pretty. They often solve hyper-specific problems and work only with your specific tools. And when you look at ones that have been used a lot, they sometimes seem a little weird. There might be a random cutout in the middle. Or some little piece that sticks off at an angle. Or the corner might be missing a piece. And when you compare them to “real” tools, “general” tools like you’d buy from a catalog, they’re pretty homey or homely depending on how you’re thinking about it.</p>
-
-<p>&lt;/span&gt;</p>
-
-<p>But when you use one of them in your shop, you learn that the random cutout is because you store it against the wall and it would block the light switch otherwise. And if you put your hand on that little extra piece that sticks out, then the board won’t fall at the end of the cut. And the corner… well the corner is where you messed up when you were first making it and it’s kind of ugly, but it never actually matters when you use it. And that’s Go. Not a single thing I mentioned in the first paragraph has actually come up as a problem. Its really good at solving the problems that it solves, which happen to be very common problems for people who need to ship software, especially networking software.</p>
-
-<p>Probably the biggest complaint people have with Go is the lack of generics. And I did run into that in just the first couple of weeks of work on my project, and I wound up with a bunch of duplicated code to work around it. And then, when it was all working, I refactored out the duplicated code. And I refactored again. And in the end, the whole thing was simpler and shorter than what I would have done with generics. So again, in the end, Go turned out to be a language for solving real problems rather than a language filled with beautiful tools, and so you build real solutions rather than finding excuses to use your beautiful tools. Don’t try to make Go what it isn’t. If you’re trying to solve abstract CS problems in their most generalized forms, then you may find it frustrating. But if you’re trying to solve specific, practical problems in the forms professional developers typically encounter, Go is quite nice.</p>
-
-<p>I recently wrote some Go code that looked basically like this:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func (f *Frobulator) frobulate() error {
-  if f.thingsToFrobulate &gt; 0 {
-    var err error
-
-    if err = logit(FrobulatingMessage); err != nil {
-      return err
-    }
-
-    if err = f.cleanupOldest(); err != nil {
-      return err
-    }
-
-    var youngest Frobable
-    if youngest, err = f.processOld(); err != nil {
-      return err
-    }
-
-    if err = f.doNewThing(youngest); err != nil {
-      return err
-    }
-  }
-
-  return f.cleanup()
-}
-</code></pre></div></div>
-
-<p>There’s a lot of boilerplate duplication there with some “almost the same, but kinda different” stuff in the middle that feels awkward.</p>
-
-<p>If I were writing this in Swift with my <a href="https://github.com/LlamaKit/LlamaKit">LlamaKit</a> bells-and-functional-whistles, I might write it as:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func frobulate() -&gt; Result&lt;Void&gt; {
-  var result = success(())
-  if self.thingsToFrobulate &gt; 0 {
-    result = logit(FrobulatingMessage)
-      &gt;&gt;== self.cleanupOldest
-      &gt;&gt;== self.processOld
-      &gt;&gt;== self.doNewThing
-  }
-  return result &gt;&gt;== self.cleanup
-}
-</code></pre></div></div>
-
-<p>The Swift+LlamaKit version is half as long, and almost every line is focused on the task at hand. It feels much more elegant. There is far less duplication. But there’s a pretty big story in how these two functions were written.</p>
-
-<p>When writing the Swift function, I found myself spending a lot of time thinking about how to write it. Should I use <code class="highlighter-rouge">&gt;&gt;==</code> or <code class="highlighter-rouge">.flatMap()</code>? Should I use my custom <code class="highlighter-rouge">Result</code> here at all, or should I stick to standard Swift and return <code class="highlighter-rouge">NSError?</code>, or maybe <code class="highlighter-rouge">Bool</code> with an <code class="highlighter-rouge">NSErrorPtr</code>? This was my first time using <code class="highlighter-rouge">Result&lt;Void&gt;</code>, and I started asking myself if I should create a typealias for that and maybe a helper function for the slightly strange looking <code class="highlighter-rouge">success(())</code>. The <code class="highlighter-rouge">var</code> bothered me. It always feels like a hack in FP, like you’re not smart enough to do it right. I wrote a different version that didn’t have a <code class="highlighter-rouge">var</code>. That duplicated <code class="highlighter-rouge">self.cleanup</code> in two places. So I started working on a new function that would let me include the conditional in the functional composition. I made and re-made a lot of choices. <sup id="fnref:swift"><a href="#fn:swift" class="footnote">1</a></sup></p>
-
-<p><span class="pullquote-right" data-pullquote="When writing the Go function, I started at the top and typed until I got to the bottom."></span></p>
-
-<p>When writing the Go function, I started at the top and typed until I got to the bottom. And that was it. There aren’t very many ways to write this function in Go. I expect that most Go programmers, given the same set of helper functions, would have written it almost identically. Because of gofmt, I don’t even make formatting decisions.</p>
-
-<p>&lt;/span&gt;</p>
-
-<p>I could probably spend another hour polishing my dozen-line Swift function and building generic tools to make it easier in the future for people (at least those who use my toolkits) to write this kind of code beautifully.</p>
-
-<p>Or I could write it in Go in about 2 minutes and move onto fixing the next bug in the backlog.</p>
-
-<p>I admit, I would rather spend my time writing generic, elegant functions that help developers think deeply and correctly about their programs. Like Alex, falling back on for-loops and mutable state makes me feel like a bad programmer. But there is a certain tension between all that and shipping things today.</p>
-
-<p>Did I mention Go compiles <em>really fast</em>?</p>
-
-<p>But late at night, when it’s my own time for my own projects, it’s Swift I’d rather work in.</p>
-<div class="footnotes">
-  <ol>
-    <li id="fn:swift">
-      <p>The underlying issue here isn’t that I chose to use special operators out of LlamaKit. I could have written the Swift code in <a href="https://gist.github.com/rnapier/27ba98c827c9d7798879">the same style as the Go code</a> or in <a href="https://gist.github.com/rnapier/4a48b24024ff969f2e94">traditional ObjC style</a>. The point is that there are lots of ways you could do it, and lots of ways different Swift developers will <em>choose</em> to do it because the language is very flexible and there is no obvious “Swift way.” <a href="#fnref:swift" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

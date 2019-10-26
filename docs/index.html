@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="So far in this series, I’ve created a simple APIClient that can fetch any Fetchable type and decode it from a specific API, and then extracted a &hellip;">
+  <meta name="description" content="So, back to our APIClient. When last I left off, I had the following client code: final class APIClient { static let shared = APIClient() let baseURL &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,71 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/at-your-request">Protocols v: At Your Request</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2019-10-26T17:04:00-04:00" pubdate data-updated="true">26 Oct 2019</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So, back to our <a href="/start-with-a-protocol">APIClient</a>. When last <a href="/thats-not-a-number">I left off</a>, I had the following client code:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">APIClient</span><span class="p">()</span>
+    <span class="k">let</span> <span class="nv">baseURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span>
+    <span class="k">let</span> <span class="nv">transport</span><span class="p">:</span> <span class="kt">Transport</span>
+
+    <span class="nf">init</span><span class="p">(</span><span class="nv">transport</span><span class="p">:</span> <span class="kt">Transport</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="p">)</span> <span class="p">{</span> <span class="k">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">transport</span> <span class="p">}</span>
+
+    <span class="c1">// Fetch any Fetchable type given an ID, and return it asynchronously</span>
+    <span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
+                                 <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Construct the URLRequest</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">baseURL</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="n">apiBase</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">appendingPathComponent</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">id</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">urlRequest</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="c1">// Send it to the transport</span>
+        <span class="n">transport</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="nv">request</span><span class="p">:</span> <span class="n">urlRequest</span><span class="p">)</span> <span class="p">{</span> <span class="n">data</span> <span class="k">in</span>
+            <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="kt">Result</span> <span class="p">{</span> <span class="k">try</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Model</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="nf">get</span><span class="p">())</span> <span class="p">}</span>
+            <span class="nf">completion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This <code class="highlighter-rouge">fetch</code> method is great for getting a model by ID, but I have other things I want to do. For example, I’d like to periodically POST to /keepalive and return if there’s an error. That’s really similar, but kind of different.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/at-your-request">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -467,45 +532,6 @@
     <footer>
       <a rel="full-article" href="/copying">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/inspiration">Inspiration</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2016-08-26T15:46:27-04:00" pubdate data-updated="true">26 Aug 2016</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As a speaker, writer, and member of our community, <a href="http://dimsumthinking.com">Daniel Steinberg</a> is my inspiration. That’s not a secret. If you and I have spent much time talking after a conference, I’ve probably mentioned it. It’s not the sort of thing you usually say to someone, and I don’t think I ever have, but I’ve learned a lot from his speaking style, and I constantly try to live up to his standard of kindness. I’m not by nature very kind, so if you see me behaving that way, I’m likely trying to do what I think Daniel might.</p>
-
-<p>This isn’t to say we’re close. We see each other at conferences. We email and tweet. We’re members of a community. So of course I have some idealized picture of him in my mind, without all the this and that of a real person. Even so, he inspires me. When my wife, Janet, and I talk about what’s ahead for our future, we always talk about Daniel and his wife, Kim. I’ve seen them at conferences, traveling together, independent but a team, and I think, hey, we could pull that off when the kids go to school. And Janet and I talk about how to make that work. And we know we only have the shallowest understanding of their real lives, but they inspire us.</p>
-
-<p>Kim died this week. I didn’t know her well. We’d met, and she was nice to me. She and Daniel always seemed so “together” even when they were apart most of the day. Hearing the news unmoored me and scared me and made me think about myself and my family and my plans. And then my heart broke for Daniel.</p>
-
-<p>I’m not kind by nature. But I’m part of a community that is, and part of that is Daniel’s influence on us. <a href="https://twitter.com/designatednerd">Ellen Shapiro</a> has been kind and <a href="http://support.smiletrain.org/site/RedirectHandler?type=goto&amp;key=ios-for-kim">set up a fund</a> to let us support SmileTrain, where Daniel and his daughter Maggie have asked us to give in Kim’s name. I had never heard of SmileTrain, but it is so perfect. It is kind. And it is practical. It is literally the gift of a smile. It is Daniel and Kim.</p>
-</div>
-  
   
 
 

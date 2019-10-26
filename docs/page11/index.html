@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Now and then I teach Mac and iPhone courses, and several people have asked me to detail my syllabus, and provide some other pointers on how to get &hellip;">
+  <meta name="description" content="Summary: If you want a real understanding of Cocoa and Cocoa Touch, this book is too recipe-based to give you that. If you really want recipes, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/review-iphone-developers-cookbook">Review of <i>iPhone Developer's Cookbook</i></a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2009-04-27T10:17:47-04:00" pubdate data-updated="true">27 Apr 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Summary: If you want a real understanding of Cocoa and Cocoa Touch, this book is too recipe-based to give you that. If you really want recipes, consider Apple’s <a href="http://developer.apple.com/iphone/library/navigation/SampleCode.html">Sample Code</a>.
+</em></p>
+
+<p>I haven’t been thrilled with the first crop of iPhone development books that hit the market. This shouldn’t be surprising. It’s a new platform and, as with the first AppStore apps, the pressure to be first to market fights the authors’ desire to provide the best possible product.</p>
+
+<p>I was specifically asked about <a href="http://www.amazon.com/gp/product/0321555457?ie=UTF8&amp;tag=cocoaphony-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321555457" rel="nofollow">iPhone Developer’s Cookbook: Building Applications with the iPhone SDK</a> by Erica Sadun. My biggest concern is that it’s a cookbook based on “recipes” to do this or that. This is often exactly the problem with how people learn Mac and iPhone development. They think that it’s just Java or C++ with a different syntax and if they learn where the brackets go, then they’ll be a Cocoa developer. </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/review-iphone-developers-cookbook">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -414,53 +455,6 @@
   
     <footer>
       <a rel="full-article" href="/three-magic-words">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/thoughts-nsnotifications">Some Thoughts on NSNotifications</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2008-11-19T11:35:55-05:00" pubdate data-updated="true">19 Nov 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>Unregistering</h3>
-<p>Because these bugs are very hard to track down and very easy to avoid, I’d like to direct everyone’s attention to how to properly unregister for notifications.</p>
-
-<p>If your object uses NSNotificationCenter ever, you must add the following to -dealloc:</p>
-
-<pre lang="objc">[[NSNotificationCenter defaultCenter] removeObserver:self];</pre>
-
-<p>This removes you from all notifications. If you fail to do this, and you are dealloc’ed, and a notification you were observing is later posted, the application will crash with a bizarre access violation deep in NSNotificationCenter when it tries to post to an object (you) which no longer exists. It is tricky to figure out even what notification is being passed in these cases.</p>
-
-<p>If you are not observing anything, then -removeObserver: does nothing, so it is not dangerous to call. There is a slight performance cost, especially for objects that are alloc’ed and dealloc’ed a lot, so there’s no reason to add it to objects that do nothing with notifications, but I recommend better safe than sorry in most cases.</p>
-
-<p>This advice does not apply to KVO observations, which are a completely different animal. </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/thoughts-nsnotifications">Read on &rarr;</a>
     </footer>
   
 

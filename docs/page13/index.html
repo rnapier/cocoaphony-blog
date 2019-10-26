@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="To all you aspiring Cocoa developers…. If you want to make a private framework, you need to remember to set the install path for it to @ &hellip;">
+  <meta name="description" content="It’s a lazy day for me. That means I’ll probably hack stuff all day. One of my best friends in the world just sent me a note asking for a good Cocoa &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/learning-cocoa">Learning Cocoa</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-03-08T10:59:43-05:00" pubdate data-updated="true">08 Mar 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It’s a lazy day for me. That means I’ll probably hack stuff all day.</p>
+
+<p>One of my best friends in the world just sent me a note asking for a good Cocoa reference. I thought I’d pass on the same advice I gave him:</p>
+
+<p>This is <strong>the</strong> book on learning Cocoa:</p>
+
+<p><a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&amp;tag=cocoaphony-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&amp;l=as2&amp;o=1&amp;a=0321503619" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> by Aaron Hillegass</p>
+
+<p>Third edition is supposed to come out this summer. I’ve read the proofs of the 3rd edition, and it does add some good stuff, but if you’re anxious to get started, I’d get 2nd edition and get started.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/learning-cocoa">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -375,43 +419,6 @@
   <div class="entry-content"><p>PB 0.5 is in my final testing. Just going to let it run a few hours before I post it on Monday. Adds station changing (finally) from menu, applescript or hotkeys. It’s actually a much larger change than it looks. There was a lot of under-the-covers restructuring while I got that working.</p>
 
 <p>Next plans: either investigate how to masquerade as iTunes (so that stuff that works with iTunes will transparently work with PandoraBoy), or work on some eye-candy features (full-screen mode, floating semi-transparent windows, etc.)</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/83">83</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2007-12-15T17:53:09-05:00" pubdate data-updated="true">15 Dec 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Why is it when I want to test PandoraBoy with an album that has no artwork available, suddenly Pandora becomes so good at having every piece of artwork on every track for 7 different stations until I run out of hourly skips?</p>
-
-<p>Well, at least I finally fixed that stupid “thumbs-up in the lower left of the Pandora window” bug that’s been driving me crazy for so long. Check for nil returns people!</p>
-
-<p>I’m still trying to understand how Pandora manages skip tracking. I’m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don’t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they’re storing it in Flash local storage. I swear they didn’t used to keep track of skips if you switched stations and then switched back, but then they also didn’t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
 </div>
   
   

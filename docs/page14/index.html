@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I’m switching jobs over this weekend from information security to Mac development. In the process, I’m also moving mostly to work-from-home, taking &hellip;">
+  <meta name="description" content="Why is it when I want to test PandoraBoy with an album that has no artwork available, suddenly Pandora becomes so good at having every piece of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/83">83</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2007-12-15T17:53:09-05:00" pubdate data-updated="true">15 Dec 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Why is it when I want to test PandoraBoy with an album that has no artwork available, suddenly Pandora becomes so good at having every piece of artwork on every track for 7 different stations until I run out of hourly skips?</p>
+
+<p>Well, at least I finally fixed that stupid “thumbs-up in the lower left of the Pandora window” bug that’s been driving me crazy for so long. Check for nil returns people!</p>
+
+<p>I’m still trying to understand how Pandora manages skip tracking. I’m not planning on circumventing it, I just want to mark skipped tracks in the track listing (Cmd-T). Skips don’t seem to generate traffic back to the server or unique API events, so it seems that the client keeps track of skip counts. But it also seems persistent across Pandora restart, so I guess they’re storing it in Flash local storage. I swear they didn’t used to keep track of skips if you switched stations and then switched back, but then they also didn’t used to keep track of your place in the song when you switched stations. Curiouser and curiouser.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

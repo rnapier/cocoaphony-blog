@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="The whole reason I learned Cocoa in the first place was so I could work on PandoraBoy. It’s a great project, but I haven’t really worked on it in &hellip;">
+  <meta name="description" content="I went out to NSCoder RTP for the first time last night and met up with Josh Johnson, who has been interested in taking up PandoraBoy development. So &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,39 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/a-pandoraboy-maintainer-emerges">A PandoraBoy Maintainer Emerges</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2011-08-03T08:54:19-04:00" pubdate data-updated="true">03 Aug 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I went out to <a href="http://trianglecocoa.com/">NSCoder RTP</a> for the first time last night and met up with <a href="http://jsh.in">Josh Johnson</a>, who has been interested in taking up PandoraBoy development. So expect some changes coming up. Probably a move to github. Probably dropping 10.5 support soon. And who knows, it might even really work again.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -382,47 +415,6 @@
   <div class="entry-content"><p>Just a reminder, because the template doesn’t seem to set this up correctly. To build an Address Book action plugin for 10.6, you need to compile for x86_64 or it will silently not show up. If you plan to support 10.5, you’ll need i386 as well. The template seems to build 32-bit universal (i386, ppc) by default.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/hijacking-methodexchangeimplementations">Hijacking With method_exchangeImplementations()</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2010-07-07T18:17:25-04:00" pubdate data-updated="true">07 Jul 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>Based on a <a href="http://stackoverflow.com/questions/1929740/is-there-a-way-to-retrieve-every-responder-that-has-handled-a-uitouch">discussion</a> from StackOverflow.</em></p>
-
-<p>Sometimes you want to inject some logic into a method you don’t control. The most common sane reason to do this is for debugging or profiling. For instance, you might want to log every time the various <code class="highlighter-rouge">NSNotificationCenter</code> methods are called so you can determine if that’s a performance bottleneck. (As I discovered myself, if you have thousands of notification observations in your system, it can be a serious performance problem.)</p>
-
-<p>In most OOP languages your only option would be to subclass the object you want to instrument and then arrange for every instance of that object to be your subclass. In many cases that’s either very difficult or outright impossible, particularly if the object is used internally by a system framework. But Objective-C is highly dynamic, and message dispatching is resolved at runtime. You can modify how it works.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/hijacking-methodexchangeimplementations">Read on &rarr;</a>
-    </footer>
   
 
 

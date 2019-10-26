@@ -9,7 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="When faced with the need to return “not found” for something that normally returns an index or other value that would normally be unsigned (whether &hellip;">
+  <meta name="description" content="Unregistering
+Because these bugs are very hard to track down and very easy to avoid, I’d like to direct everyone’s attention to how to properly &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +54,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/thoughts-nsnotifications">Some Thoughts on NSNotifications</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-11-19T11:35:55-05:00" pubdate data-updated="true">19 Nov 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Unregistering</h3>
+<p>Because these bugs are very hard to track down and very easy to avoid, I’d like to direct everyone’s attention to how to properly unregister for notifications.</p>
+
+<p>If your object uses NSNotificationCenter ever, you must add the following to -dealloc:</p>
+
+<pre lang="objc">[[NSNotificationCenter defaultCenter] removeObserver:self];</pre>
+
+<p>This removes you from all notifications. If you fail to do this, and you are dealloc’ed, and a notification you were observing is later posted, the application will crash with a bizarre access violation deep in NSNotificationCenter when it tries to post to an object (you) which no longer exists. It is tricky to figure out even what notification is being passed in these cases.</p>
+
+<p>If you are not observing anything, then -removeObserver: does nothing, so it is not dangerous to call. There is a slight performance cost, especially for objects that are alloc’ed and dealloc’ed a lot, so there’s no reason to add it to objects that do nothing with notifications, but I recommend better safe than sorry in most cases.</p>
+
+<p>This advice does not apply to KVO observations, which are a completely different animal. </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/thoughts-nsnotifications">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -377,50 +425,6 @@ I was incredibly skeptical from the headline. It read to me like “team builds 
   
     <footer>
       <a rel="full-article" href="/garbage-collection">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/learning-cocoa">Learning Cocoa</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2008-03-08T10:59:43-05:00" pubdate data-updated="true">08 Mar 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It’s a lazy day for me. That means I’ll probably hack stuff all day.</p>
-
-<p>One of my best friends in the world just sent me a note asking for a good Cocoa reference. I thought I’d pass on the same advice I gave him:</p>
-
-<p>This is <strong>the</strong> book on learning Cocoa:</p>
-
-<p><a href="http://www.amazon.com/gp/product/0321503619?ie=UTF8&amp;tag=cocoaphony-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321503619">Cocoa Programming for Mac OS X</a><img src="http://www.assoc-amazon.com/e/ir?t=cocoaphony-20&amp;l=as2&amp;o=1&amp;a=0321503619" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> by Aaron Hillegass</p>
-
-<p>Third edition is supposed to come out this summer. I’ve read the proofs of the 3rd edition, and it does add some good stuff, but if you’re anxious to get started, I’d get 2nd edition and get started.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/learning-cocoa">Read on &rarr;</a>
     </footer>
   
 
