@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-10-28T13:03:31-04:00</updated>
+  <updated>2019-10-28T13:16:40-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -18,7 +18,7 @@
     <link href="https://robnapier.net/never"/>
     <updated>2019-10-28T13:02:00-04:00</updated>
     <id>https://robnapier.net/never</id>
-    <content type="html"><![CDATA[<p>Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types! We say what things are, and the compiler enforces it for us. But then you see some piece of code like thi:</p>
+    <content type="html"><![CDATA[<p>Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types! We say what things are, and the compiler enforces it for us. But then you see some piece of code like this:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
     <span class="nf">fatalError</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span>
