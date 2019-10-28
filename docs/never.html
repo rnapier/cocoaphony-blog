@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Littlest Type - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="https://robnapier.net/never">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <!-- <script src="/javascripts/modernizr-2.0.js"></script> -->
+  <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+  <!-- <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script> -->
+  <!-- <script src="/javascripts/octopress.js" type="text/javascript"></script> -->
+  
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Littlest Type</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2019-10-28T13:02:00-04:00" pubdate data-updated="true">28 Oct 2019</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types! We say what things are, and the compiler enforces it for us. But then you see some piece of code like thi:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">fatalError</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>That’s legal Swift. I don’t think many would find that surprising. Of course that’s legal, right? But it <em>is</em> surprising. <code class="highlighter-rouge">addOne</code> claims to be a function that accepts an Int and returns an Int. It does accept an Int, but…<em>it doesn’t return an Int</em>.</p>
+
+<p>“Don’t be silly, Rob. It crashes. It can’t return an Int if it crashes.”</p>
+
+<p>Well, yeah. But it promised to return an Int. It didn’t promise to “return an Int or crash,” did it? The whole point of strong types was that the compiler would enforce our promises, and the compiler doesn’t bat an eye at this code.</p>
+
+<p>“The compiler can’t possibly know everything that might crash.”</p>
+
+<p>I’m not ready to concede that, but even so, the compiler clearly can see that this function doesn’t return an Int. There’s no <code class="highlighter-rouge">return intValue</code> anywhere. This should prick our ears a bit. Something is strange here. Is it just compiler magic, or is there something deeper?</p>
+
+<p>Hint: There’s something deeper.
+<!-- more --></p>
+
+<h3 id="staring-into-the-void">Staring into the Void</h3>
+
+<p>Let’s take a step back and think about another thing that should surprise us.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">squidPrinter</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"🦑"</span><span class="p">)</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>So, <code class="highlighter-rouge">printSquid</code> is a closure that takes no parameters and returns…what?</p>
+
+<p>You might be tempted to say “nothing.” But that’s not what the code says. It says it returns Void. What’s Void?</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">()</span>
+</code></pre></div></div>
+
+<p>Void is a real thing. It’s the type of the empty tuple. It’s not “nothing.” In Swift, the type <code class="highlighter-rouge">()</code> and the value <code class="highlighter-rouge">()</code> happen to have the same spelling. When we mean <code class="highlighter-rouge">()</code> as a return type, we traditionally write it using the typealias Void. But <code class="highlighter-rouge">() -&gt; ()</code> is exactly the same thing as <code class="highlighter-rouge">() -&gt; Void</code>. Why “Void?” Because Swift has ObjC roots, and ObjC is C-like, and in C there are <code class="highlighter-rouge">void</code> functions that literally return nothing.</p>
+
+<p>In Swift, every function returns something. There are functions that return <code class="highlighter-rouge">()</code>, and there’s some syntactic sugar that inserts <code class="highlighter-rouge">-&gt; Void</code> and <code class="highlighter-rouge">return ()</code> for you in some cases. But you’re free to include them if you like (it’s not particularly idiomatic Swift, but it’s legal).</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">{}</span>
+<span class="kd">func</span> <span class="nf">g</span><span class="p">()</span> <span class="p">{</span> <span class="nf">return</span> <span class="p">()</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>And functions like <code class="highlighter-rouge">print</code> that seem to have no return value, really do return Void:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">printResult</span><span class="p">:</span> <span class="kt">Void</span> <span class="o">=</span> <span class="nf">print</span><span class="p">(</span><span class="s">"🦑"</span><span class="p">)</span> <span class="c1">// 🦑</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">printResult</span><span class="p">)</span>                  <span class="c1">// ()</span>
+</code></pre></div></div>
+
+<p>If we don’t add the <code class="highlighter-rouge">: Void</code> here, the compiler will emit a warning because you usually don’t want Void values, but they’re totally legal.</p>
+
+<h3 id="the-measure-of-a-type">The measure of a type</h3>
+
+<p>Each type has a set of values that are part of that type. Some types have an enormous number of values. Int has around 18 quintillion values. String has even more. And some types have very few values. Most enums have just a handful of possible values. Bool has just 2. A lot of the power of strong types is that we can create <em>small</em> types; types that can only hold exactly the value that are legal for our program.</p>
+
+<p>How small can a type get?</p>
+
+<p>Void has just one value. So that’s pretty small. In most languages that have this type, it’s called Unit. The one-value type.</p>
+
+<p>Can they get smaller?</p>
+
+<h3 id="not-a-value-in-sight">Not a value in sight</h3>
+
+<p>It’s time to get back to the original example:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">fatalError</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Looking at <code class="highlighter-rouge">fatalError</code>, it feels a lot like <code class="highlighter-rouge">print</code>. The syntax is similar. But we can’t just throw <code class="highlighter-rouge">print</code> into places <code class="highlighter-rouge">fatalError</code> goes:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span> <span class="c1">// Cannot convert return expression of type '()' to return type 'Int'</span>
+    <span class="o">^^^^^</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>How does the compiler know we’re allowed to use <code class="highlighter-rouge">fatalError</code> here, but not <code class="highlighter-rouge">print</code>? Maybe the compiler just knows that <code class="highlighter-rouge">fatalError</code> is special. That’s what was done prior to Swift 3:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@noreturn</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">fatalError</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="o">^^^^^^^^^</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">@noreturn</code> attribute told the compiler that this function doesn’t return, and then the compiler had logic to handle that case and let us skip returning the Int we promised. But…bleh. I hate that solution. It opens up weird corner cases. For example, what happens if we add <code class="highlighter-rouge">@noreturn</code> to a function that we claim does return something, or something that throws:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@noreturn</span> <span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="kd">@noreturn</span> <span class="kd">func</span> <span class="nf">runForever</span><span class="p">()</span> <span class="k">throws</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>The first one is probably an error, and maybe the compiler should forbid it. But what about the second one? Is throwing a “return?” At the implementation level, it actually is. But should this attribute allow it? There’s not a really obvious answer. Is it possible for a function to require a <code class="highlighter-rouge">@noreturn</code> parameter? How does this impact function overloading?</p>
+
+<p>In Swift 3 they got rid of the attribute hack, and solved the problem with a type: <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0102-noreturn-bottom-type.md">Never</a>. The signature of <code class="highlighter-rouge">fatalError</code> is now:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fatalError</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Never</span>
+                               <span class="o">^^^^^</span>
+</code></pre></div></div>
+
+<p>So what’s Never? Is it some new compiler trick? Nope. It’s just a type, an enum with no cases:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Never</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<p>How many Never values are there? Well, none. You can’t construct one. That has all kinds of interesting implications.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Never</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>   <span class="c1">// f never returns</span>
+<span class="kd">func</span> <span class="nf">g</span><span class="p">(</span><span class="nv">_</span><span class="p">:</span> <span class="kt">Never</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>    <span class="c1">// g can never be called</span>
+
+<span class="kd">struct</span> <span class="kt">S</span> <span class="p">{</span>                  <span class="c1">// S can never be constructed</span>
+    <span class="k">let</span> <span class="nv">nope</span><span class="p">:</span> <span class="kt">Never</span>
+    <span class="o">...</span>
+<span class="p">}</span> 
+
+<span class="kd">enum</span> <span class="kt">E</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nf">ok</span><span class="p">(</span><span class="kt">Int</span><span class="p">)</span>       <span class="c1">// E.ok can be constructed</span>
+    <span class="k">case</span> <span class="nf">nope</span><span class="p">(</span><span class="kt">Never</span><span class="p">)</span>   <span class="c1">// E.nope can never be constructed</span>
+<span class="p">}</span>
+
+<span class="c1">// But also interesting:</span>
+
+<span class="kd">struct</span> <span class="kt">G</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span> <span class="p">{}</span>
+<span class="k">let</span> <span class="nv">ok</span> <span class="o">=</span> <span class="kt">G</span><span class="o">&lt;</span><span class="kt">Never</span><span class="o">&gt;</span><span class="p">()</span>     <span class="c1">// This is fine. Never can be a phantom type.</span>
+</code></pre></div></div>
+
+<p>Another interesting implication is that <code class="highlighter-rouge">[Never]</code> is <a href="https://twitter.com/cocoaphony/status/1184470123899478017">an empty array</a>.</p>
+
+<p>Never is the smallest possible type. We call it an “uninhabited type.” There’s nothing special about the name “Never.” You can create your own no-case enum, and it’ll work the same.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Our own custom uninhabited type</span>
+<span class="kd">enum</span> <span class="kt">NeverReturn</span> <span class="p">{}</span>
+
+<span class="kd">func</span> <span class="nf">neverReturn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">NeverReturn</span> <span class="p">{</span>
+    <span class="c1">// We could call fatalError() here, since generating any uninhabited type</span>
+    <span class="c1">// is sufficient to create any other. But we can also use an infinite loop.</span>
+    <span class="c1">// The compiler can prove this will never return. Never isn't just for crashing!</span>
+    <span class="k">while</span> <span class="kc">true</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">neverReturn</span><span class="p">()</span>   <span class="c1">// It's fine not to return Int, because the compiler knows this doesn't return</span>
+<span class="p">}</span>
+
+<span class="c1">// While Never can be used to create a NeverReturn, they're not the same type</span>
+<span class="k">let</span> <span class="nv">never</span><span class="p">:</span> <span class="kt">Never</span> <span class="o">=</span> <span class="nf">neverReturn</span><span class="p">()</span>           <span class="c1">// Cannot convert value of type 'NeverReturn' to specified type 'Never'</span>
+<span class="k">let</span> <span class="nv">neverEver</span><span class="p">:</span> <span class="kt">NeverReturn</span> <span class="o">=</span> <span class="nf">fatalError</span><span class="p">()</span>  <span class="c1">// Cannot convert value of type 'Never' to specified type 'NeverReturn'</span>
+</code></pre></div></div>
+
+<p>While it’s possible to create your own uninhabited types, I don’t really recommend it. The Swift team considered having different types for things like “exit” vs “abort” and intentionally chose not to. One uninhabited type is probably plenty. But it’s nice that it’s not some magical name.</p>
+
+<h3 id="you-never-hit-bottom">You never hit bottom</h3>
+
+<p>In type theory, an uninhabited type is often called a bottom type, and written as ⊥. A bottom type is a subtype of every other type. So Never would be an Int and a String and a UIViewController and every other type. The opposite is the top type (⊤), the supertype of every other type. In Swift, that’s Any.</p>
+
+<p>But in Swift, Never isn’t actually a bottom type. If it were, you could write this, and you can’t:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nf">fatalError</span><span class="p">()</span>   <span class="c1">// Cannot convert value of type 'Never' to specified type 'Int'</span>
+</code></pre></div></div>
+
+<p>It’s easy to fix this with a little extra syntax if you need it:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="p">{</span> <span class="nf">fatalError</span><span class="p">()</span> <span class="p">}()</span> 
+</code></pre></div></div>
+
+<p>It would be more consistent for Never to be a true bottom type, and for it to conform to every non-static protocol (i.e. protocols without static or init requirements). Whether that’s worth the weird corner cases it might create, I’m not sure. But maybe.</p>
+
+<h3 id="some-things-just-dont-happen">Some things just don’t happen</h3>
+
+<p>Never is my favorite type in stdlib. It’s been my favorite type since it was introduced in Swift 3, and the Combine framework has completely justified my love of it by applying it to generics.</p>
+
+<p>Publishers generate a series of values or a typed failure:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">Publisher</span> <span class="p">{</span>
+    <span class="kd">associatedtype</span> <span class="kt">Output</span>
+    <span class="kd">associatedtype</span> <span class="kt">Failure</span> <span class="p">:</span> <span class="kt">Error</span>
+    <span class="kd">func</span> <span class="n">receive</span><span class="o">&lt;</span><span class="kt">S</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">subscriber</span><span class="p">:</span> <span class="kt">S</span><span class="p">)</span> <span class="k">where</span> <span class="kt">S</span> <span class="p">:</span> <span class="kt">Subscriber</span><span class="p">,</span> <span class="k">Self</span><span class="o">.</span><span class="kt">Failure</span> <span class="o">==</span> <span class="kt">S</span><span class="o">.</span><span class="kt">Failure</span><span class="p">,</span> <span class="k">Self</span><span class="o">.</span><span class="kt">Output</span> <span class="o">==</span> <span class="kt">S</span><span class="o">.</span><span class="kt">Input</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>But what should Failure be if the Publisher <em>never</em> generates errors? Never, of course. No magic needed. It just works. What if it <em>only</em> can generate a Failure? Well, then Output is Never (see <a href="https://developer.apple.com/documentation/combine/publishers/ignoreoutput">IgnoreOutput</a>). When there’s a proper type, the special cases disappear, and it just works.</p>
+
+<p>So Never has gone from a little-known type solving a little-known problem around <code class="highlighter-rouge">fatalError</code> to something Swift developers will probably use every day without even thinking about it. And that makes me very happy.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+
+
+
+
+
+
+
+<time datetime="2019-10-28T13:02:00-04:00" pubdate data-updated="true">28 Oct 2019</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/at-your-request" title="Previous Post: Protocols V: At Your Request">&laquo; Protocols V: At Your Request</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+<!-- Fathom - simple website analytics - https://usefathom.com -->
+<script>
+(function(f, a, t, h, o, m){
+a[h]=a[h]||function(){
+    (a[h].q=a[h].q||[]).push(arguments)
+};
+o=f.createElement('script'),
+m=f.getElementsByTagName('script')[0];
+o.async=1; o.src=t; o.id='fathom-script';
+m.parentNode.insertBefore(o,m)
+})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'MSRAZWIU');
+fathom('trackPageview');
+</script>
+<!-- / Fathom -->
+
+
+
+
+</body>
+</html>

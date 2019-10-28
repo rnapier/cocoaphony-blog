@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Summary: If you want a real understanding of Cocoa and Cocoa Touch, this book is too recipe-based to give you that. If you really want recipes, &hellip;">
+  <meta name="description" content="Say you want to talk to another app through Applescript. With 10.5, you can much more easily get there from Cocoa without complex forays into &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/scripting-bridge">Scripting Bridge</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2009-04-27T22:13:27-04:00" pubdate data-updated="true">27 Apr 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Say you want to talk to another app through Applescript. With 10.5, you can much more easily get there from Cocoa without complex forays into CoreServices, Carbon and AppleEvents. The docs on how to do it are a little thin at times (as all Applescript docs are), so let’s walk through it. The relevant docs you’ll want to read are these:</p>
+
+<p><a href="http://www.apple.com/applescript/learn.html">Learning Applescript</a></p>
+
+<p><a href="http://developer.apple.com/documentation/ScriptingAutomation/Reference/ScriptingBridgeFramework">Scripting Bridge Framework Reference</a></p>
+
+<p><a href="http://developer.apple.com/samplecode/SBSystemPrefs/index.html">Scripting Bridge Sample Code</a></p>
+
+<p>And most importantly (and most hidden):</p>
+
+<p><a href="https://developer.apple.com/library/mac/#samplecode/SBSystemPrefs/Listings/ReadMe_txt.html">SBSystemPref’s Magical README</a></p>
+
+<p>And now for a step-by-step example. We’re going to send some mail with an attachment through Mail.app.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/scripting-bridge">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -418,44 +467,6 @@
 </ul>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/three-magic-words">Three Magic Words</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2008-11-24T17:55:31-05:00" pubdate data-updated="true">24 Nov 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Here are the three magic words: +alloc, -copy and +new. If you commit these magic words to memory, and devote yourself to a life of accessors, then Cocoa memory management should cause you no fear.</p>
-
-<p>For those interested in the path to memory management enlightenment, you should first deeply understand every word of the <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html" target="_blank">Memory Management Rules</a>. Don’t be afraid, it is very short, and if you will commit it to heart, you will avoid much suffering in the future. </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/three-magic-words">Read on &rarr;</a>
-    </footer>
   
 
 

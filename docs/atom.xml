@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2019-10-26T17:05:35-04:00</updated>
+  <updated>2019-10-28T13:02:52-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -12,6 +12,194 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Littlest Type]]></title>
+    <link href="https://robnapier.net/never"/>
+    <updated>2019-10-28T13:02:00-04:00</updated>
+    <id>https://robnapier.net/never</id>
+    <content type="html"><![CDATA[<p>Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types! We say what things are, and the compiler enforces it for us. But then you see some piece of code like thi:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">fatalError</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>That’s legal Swift. I don’t think many would find that surprising. Of course that’s legal, right? But it <em>is</em> surprising. <code class="highlighter-rouge">addOne</code> claims to be a function that accepts an Int and returns an Int. It does accept an Int, but…<em>it doesn’t return an Int</em>.</p>
+
+<p>“Don’t be silly, Rob. It crashes. It can’t return an Int if it crashes.”</p>
+
+<p>Well, yeah. But it promised to return an Int. It didn’t promise to “return an Int or crash,” did it? The whole point of strong types was that the compiler would enforce our promises, and the compiler doesn’t bat an eye at this code.</p>
+
+<p>“The compiler can’t possibly know everything that might crash.”</p>
+
+<p>I’m not ready to concede that, but even so, the compiler clearly can see that this function doesn’t return an Int. There’s no <code class="highlighter-rouge">return intValue</code> anywhere. This should prick our ears a bit. Something is strange here. Is it just compiler magic, or is there something deeper?</p>
+
+<p>Hint: There’s something deeper.
+<!-- more --></p>
+
+<h3 id="staring-into-the-void">Staring into the Void</h3>
+
+<p>Let’s take a step back and think about another thing that should surprise us.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">squidPrinter</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"🦑"</span><span class="p">)</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>So, <code class="highlighter-rouge">printSquid</code> is a closure that takes no parameters and returns…what?</p>
+
+<p>You might be tempted to say “nothing.” But that’s not what the code says. It says it returns Void. What’s Void?</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">()</span>
+</code></pre></div></div>
+
+<p>Void is a real thing. It’s the type of the empty tuple. It’s not “nothing.” In Swift, the type <code class="highlighter-rouge">()</code> and the value <code class="highlighter-rouge">()</code> happen to have the same spelling. When we mean <code class="highlighter-rouge">()</code> as a return type, we traditionally write it using the typealias Void. But <code class="highlighter-rouge">() -&gt; ()</code> is exactly the same thing as <code class="highlighter-rouge">() -&gt; Void</code>. Why “Void?” Because Swift has ObjC roots, and ObjC is C-like, and in C there are <code class="highlighter-rouge">void</code> functions that literally return nothing.</p>
+
+<p>In Swift, every function returns something. There are functions that return <code class="highlighter-rouge">()</code>, and there’s some syntactic sugar that inserts <code class="highlighter-rouge">-&gt; Void</code> and <code class="highlighter-rouge">return ()</code> for you in some cases. But you’re free to include them if you like (it’s not particularly idiomatic Swift, but it’s legal).</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">{}</span>
+<span class="kd">func</span> <span class="nf">g</span><span class="p">()</span> <span class="p">{</span> <span class="nf">return</span> <span class="p">()</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>And functions like <code class="highlighter-rouge">print</code> that seem to have no return value, really do return Void:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">printResult</span><span class="p">:</span> <span class="kt">Void</span> <span class="o">=</span> <span class="nf">print</span><span class="p">(</span><span class="s">"🦑"</span><span class="p">)</span> <span class="c1">// 🦑</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">printResult</span><span class="p">)</span>                  <span class="c1">// ()</span>
+</code></pre></div></div>
+
+<p>If we don’t add the <code class="highlighter-rouge">: Void</code> here, the compiler will emit a warning because you usually don’t want Void values, but they’re totally legal.</p>
+
+<h3 id="the-measure-of-a-type">The measure of a type</h3>
+
+<p>Each type has a set of values that are part of that type. Some types have an enormous number of values. Int has around 18 quintillion values. String has even more. And some types have very few values. Most enums have just a handful of possible values. Bool has just 2. A lot of the power of strong types is that we can create <em>small</em> types; types that can only hold exactly the value that are legal for our program.</p>
+
+<p>How small can a type get?</p>
+
+<p>Void has just one value. So that’s pretty small. In most languages that have this type, it’s called Unit. The one-value type.</p>
+
+<p>Can they get smaller?</p>
+
+<h3 id="not-a-value-in-sight">Not a value in sight</h3>
+
+<p>It’s time to get back to the original example:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">fatalError</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Looking at <code class="highlighter-rouge">fatalError</code>, it feels a lot like <code class="highlighter-rouge">print</code>. The syntax is similar. But we can’t just throw <code class="highlighter-rouge">print</code> into places <code class="highlighter-rouge">fatalError</code> goes:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span> <span class="c1">// Cannot convert return expression of type '()' to return type 'Int'</span>
+    <span class="o">^^^^^</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>How does the compiler know we’re allowed to use <code class="highlighter-rouge">fatalError</code> here, but not <code class="highlighter-rouge">print</code>? Maybe the compiler just knows that <code class="highlighter-rouge">fatalError</code> is special. That’s what was done prior to Swift 3:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@noreturn</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">fatalError</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="o">^^^^^^^^^</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">@noreturn</code> attribute told the compiler that this function doesn’t return, and then the compiler had logic to handle that case and let us skip returning the Int we promised. But…bleh. I hate that solution. It opens up weird corner cases. For example, what happens if we add <code class="highlighter-rouge">@noreturn</code> to a function that we claim does return something, or something that throws:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@noreturn</span> <span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="kd">@noreturn</span> <span class="kd">func</span> <span class="nf">runForever</span><span class="p">()</span> <span class="k">throws</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>The first one is probably an error, and maybe the compiler should forbid it. But what about the second one? Is throwing a “return?” At the implementation level, it actually is. But should this attribute allow it? There’s not a really obvious answer. Is it possible for a function to require a <code class="highlighter-rouge">@noreturn</code> parameter? How does this impact function overloading?</p>
+
+<p>In Swift 3 they got rid of the attribute hack, and solved the problem with a type: <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0102-noreturn-bottom-type.md">Never</a>. The signature of <code class="highlighter-rouge">fatalError</code> is now:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fatalError</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Never</span>
+                               <span class="o">^^^^^</span>
+</code></pre></div></div>
+
+<p>So what’s Never? Is it some new compiler trick? Nope. It’s just a type, an enum with no cases:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Never</span> <span class="p">{}</span>
+</code></pre></div></div>
+
+<p>How many Never values are there? Well, none. You can’t construct one. That has all kinds of interesting implications.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Never</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>   <span class="c1">// f never returns</span>
+<span class="kd">func</span> <span class="nf">g</span><span class="p">(</span><span class="nv">_</span><span class="p">:</span> <span class="kt">Never</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>    <span class="c1">// g can never be called</span>
+
+<span class="kd">struct</span> <span class="kt">S</span> <span class="p">{</span>                  <span class="c1">// S can never be constructed</span>
+    <span class="k">let</span> <span class="nv">nope</span><span class="p">:</span> <span class="kt">Never</span>
+    <span class="o">...</span>
+<span class="p">}</span> 
+
+<span class="kd">enum</span> <span class="kt">E</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nf">ok</span><span class="p">(</span><span class="kt">Int</span><span class="p">)</span>       <span class="c1">// E.ok can be constructed</span>
+    <span class="k">case</span> <span class="nf">nope</span><span class="p">(</span><span class="kt">Never</span><span class="p">)</span>   <span class="c1">// E.nope can never be constructed</span>
+<span class="p">}</span>
+
+<span class="c1">// But also interesting:</span>
+
+<span class="kd">struct</span> <span class="kt">G</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span> <span class="p">{}</span>
+<span class="k">let</span> <span class="nv">ok</span> <span class="o">=</span> <span class="kt">G</span><span class="o">&lt;</span><span class="kt">Never</span><span class="o">&gt;</span><span class="p">()</span>     <span class="c1">// This is fine. Never can be a phantom type.</span>
+</code></pre></div></div>
+
+<p>Another interesting implication is that <code class="highlighter-rouge">[Never]</code> is <a href="https://twitter.com/cocoaphony/status/1184470123899478017">an empty array</a>.</p>
+
+<p>Never is the smallest possible type. We call it an “uninhabited type.” There’s nothing special about the name “Never.” You can create your own no-case enum, and it’ll work the same.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Our own custom uninhabited type</span>
+<span class="kd">enum</span> <span class="kt">NeverReturn</span> <span class="p">{}</span>
+
+<span class="kd">func</span> <span class="nf">neverReturn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">NeverReturn</span> <span class="p">{</span>
+    <span class="c1">// We could call fatalError() here, since generating any uninhabited type</span>
+    <span class="c1">// is sufficient to create any other. But we can also use an infinite loop.</span>
+    <span class="c1">// The compiler can prove this will never return. Never isn't just for crashing!</span>
+    <span class="k">while</span> <span class="kc">true</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">neverReturn</span><span class="p">()</span>   <span class="c1">// It's fine not to return Int, because the compiler knows this doesn't return</span>
+<span class="p">}</span>
+
+<span class="c1">// While Never can be used to create a NeverReturn, they're not the same type</span>
+<span class="k">let</span> <span class="nv">never</span><span class="p">:</span> <span class="kt">Never</span> <span class="o">=</span> <span class="nf">neverReturn</span><span class="p">()</span>           <span class="c1">// Cannot convert value of type 'NeverReturn' to specified type 'Never'</span>
+<span class="k">let</span> <span class="nv">neverEver</span><span class="p">:</span> <span class="kt">NeverReturn</span> <span class="o">=</span> <span class="nf">fatalError</span><span class="p">()</span>  <span class="c1">// Cannot convert value of type 'Never' to specified type 'NeverReturn'</span>
+</code></pre></div></div>
+
+<p>While it’s possible to create your own uninhabited types, I don’t really recommend it. The Swift team considered having different types for things like “exit” vs “abort” and intentionally chose not to. One uninhabited type is probably plenty. But it’s nice that it’s not some magical name.</p>
+
+<h3 id="you-never-hit-bottom">You never hit bottom</h3>
+
+<p>In type theory, an uninhabited type is often called a bottom type, and written as ⊥. A bottom type is a subtype of every other type. So Never would be an Int and a String and a UIViewController and every other type. The opposite is the top type (⊤), the supertype of every other type. In Swift, that’s Any.</p>
+
+<p>But in Swift, Never isn’t actually a bottom type. If it were, you could write this, and you can’t:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nf">fatalError</span><span class="p">()</span>   <span class="c1">// Cannot convert value of type 'Never' to specified type 'Int'</span>
+</code></pre></div></div>
+
+<p>It’s easy to fix this with a little extra syntax if you need it:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="p">{</span> <span class="nf">fatalError</span><span class="p">()</span> <span class="p">}()</span> 
+</code></pre></div></div>
+
+<p>It would be more consistent for Never to be a true bottom type, and for it to conform to every non-static protocol (i.e. protocols without static or init requirements). Whether that’s worth the weird corner cases it might create, I’m not sure. But maybe.</p>
+
+<h3 id="some-things-just-dont-happen">Some things just don’t happen</h3>
+
+<p>Never is my favorite type in stdlib. It’s been my favorite type since it was introduced in Swift 3, and the Combine framework has completely justified my love of it by applying it to generics.</p>
+
+<p>Publishers generate a series of values or a typed failure:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">Publisher</span> <span class="p">{</span>
+    <span class="kd">associatedtype</span> <span class="kt">Output</span>
+    <span class="kd">associatedtype</span> <span class="kt">Failure</span> <span class="p">:</span> <span class="kt">Error</span>
+    <span class="kd">func</span> <span class="n">receive</span><span class="o">&lt;</span><span class="kt">S</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">subscriber</span><span class="p">:</span> <span class="kt">S</span><span class="p">)</span> <span class="k">where</span> <span class="kt">S</span> <span class="p">:</span> <span class="kt">Subscriber</span><span class="p">,</span> <span class="k">Self</span><span class="o">.</span><span class="kt">Failure</span> <span class="o">==</span> <span class="kt">S</span><span class="o">.</span><span class="kt">Failure</span><span class="p">,</span> <span class="k">Self</span><span class="o">.</span><span class="kt">Output</span> <span class="o">==</span> <span class="kt">S</span><span class="o">.</span><span class="kt">Input</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>But what should Failure be if the Publisher <em>never</em> generates errors? Never, of course. No magic needed. It just works. What if it <em>only</em> can generate a Failure? Well, then Output is Never (see <a href="https://developer.apple.com/documentation/combine/publishers/ignoreoutput">IgnoreOutput</a>). When there’s a proper type, the special cases disappear, and it just works.</p>
+
+<p>So Never has gone from a little-known type solving a little-known problem around <code class="highlighter-rouge">fatalError</code> to something Swift developers will probably use every day without even thinking about it. And that makes me very happy.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Protocols v: At Your Request]]></title>
@@ -2379,113 +2567,6 @@ works can give some insight into Swift’s new error handling system. Result isn
 dead; it still has interesting use cases like this one. But I expect those use
 cases to shrink, and I highly recommend exploring the new error handling and
 discover how to build great things with it.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[I, for One, Welcome Our New Haskell Overlords]]></title>
-    <link href="https://robnapier.net/haskell-overlords"/>
-    <updated>2014-09-29T10:57:00-04:00</updated>
-    <id>https://robnapier.net/haskell-overlords</id>
-    <content type="html"><![CDATA[<p><a href="https://twitter.com/TacticalGrace/status/506079987565613056">Manuel Chakravarty</a> made a comment a few weeks ago:</p>
-
-<blockquote>
-  <p>By not using standard FP terminology in emerging languages like Swift, we deny learners access to a lot of existing literature.</p>
-</blockquote>
-
-<p>I certainly agree. But there’s a lot more to it, and I hope the functional programming community will get involved in new ways. We’ll get there. First, a little history for the rest of us. FP folks, I’ll get back to you in a couple of sections.</p>
-
-<!-- more -->
-
-<h2 id="objective-history">Objective History</h2>
-
-<p>I remember when OOP became a thing in the 90s. I’d been a professional developer for about a decade at that point, shipping products in QuickBASIC, FoxPro, dBase, C, and SL-1 (a phone switching language so obscure it doesn’t even have a Wikipedia page). I’d done hobby work in Pascal, various kinds of assembler, and even Lisp. But the closest I came to OOP were some toy projects in Borland’s Object Windows Library for Turbo Pascal.</p>
-
-<p>This isn’t to brag about my old-school hipsterness. If you know me, you know I don’t have much of that. My point is that it wasn’t so long ago that you could do a lot of professional work and never talk about objects, classes, properties, methods, or any other OOPishnesses.</p>
-
-<p>Then suddenly, Java, and good grief, how could you possibly be a real programmer if you couldn’t abstract factory your instance interface? Java didn’t invent OOP. Far from it. But suddenly OOP seriously mattered.</p>
-
-<blockquote>
-  <p>First they ignore you, then they laugh at you, then they fight you, then you win. – Mahatma Gandhi</p>
-</blockquote>
-
-<p>I remember vividly people laughing at OOP. It was too academic. Too abstract. Too bloated. Too slow. Too confusing. But here we are, maybe 15 years later, and OOP is just how most programming is done.</p>
-
-<p>Don’t get me wrong. Most developers do OOP terribly. Really, really terribly. They keep making horrible design mistakes that we’ve known for decades are horrible design mistakes. But OOP is how you do things. It’s the paradigm in which terrible choices are made today. And good choices too. It’s just how things are done. It wasn’t always that way.</p>
-
-<h2 id="rise-of-the-lambdas">Rise of the Lambdas</h2>
-
-<p><span class="pullquote-right" data-pullquote="A paradigm is sneaking in when you aren&#8217;t paying attention. Pay attention."></span></p>
-
-<p>When I look around at FP today, I see OOP in the 90s. FP keeps creeping into languages. Python, Ruby, JavaScript, C#, Java. They didn’t start out intentionally functional, but they keep picking up functional features. New languages like Swift and Rust self-consciously flirt with functional programming, even if they won’t quite commit to it. Microsoft is pushing F#. Twitter is working in Scala. FP is becoming part of the landscape. Words like <em>closure</em> and <em>comprehension</em> are invading the vocabulary of professional developers. This has all happened before. This will all happen again. A paradigm is sneaking in when you aren’t paying attention. Pay attention. There’s a chance here to influence development practice for decades, for good or ill.</p>
-
-<p>&lt;/span&gt;</p>
-
-<h2 id="please-dont-applicative-functor-the-semi-group">Please Don’t Applicative Functor the Semi-Group</h2>
-
-<p><strong>What’s a biscuit joiner?</strong> It’s a machine for generating half of a negative ovaloid prism.</p>
-
-<p><strong>What’s a monad?</strong> It’s an endofunctor with two natural transformations satisfying associativity and identity.</p>
-
-<p>Let’s try that again….</p>
-
-<p>** What’s a biscuit joiner?** It’s a tool for cutting slots in the edges of boards. You put a little piece of wood in there that sticks out as a tab (called a “biscuit”) so you can glue panels together, like for a tabletop or door.</p>
-
-<p><strong>What’s a monad?</strong> It’s a result in a box. You can use them to chain together operations that might fail, or might happen in the future, or otherwise have some “context” around them that you want to pass along with the result itself. A Swift optional is one kind of monad, where the “context” is whether it actually has a value or not.</p>
-
-<p>None of the definitions above are complete or fully correct. But the last two are <em>useful</em> for people likely to be asking. After reading the second definition of a biscuit joiner, I wouldn’t expect you to be able to even recognize one, let alone use it safely, but you’d at least know when you might want to find out more about it.</p>
-
-<p><span class="pullquote-right" data-pullquote="We don&#8217;t need to be afraid of metaphor, even slightly strained metaphor."></span></p>
-
-<p>The same is true for how we introduce FP concepts. We don’t need to be afraid of metaphor, even slightly strained metaphor. I’m looking to people more expert than I am for better metaphors, better starting points. Maybe my monad intro could be improved. I’m aware that it doesn’t perfectly explain why lists are also monads. But starting the discussion with monoids and the monadic laws closes the conversation. It says this is something unrelated to shipping products. It shouldn’t be in the first paragraph, let alone the first sentence. It’s better to start a bit wrong and build on that, than to start more correct (but still a little wrong) and make an important tool seem irrelevant.</p>
-
-<p>&lt;/span&gt;</p>
-
-<p>I’m not saying we shouldn’t use FP terms, even opaque terms of art from category theory. I agree with what Manuel was saying at the start of this. We should call a monad a monad. We should even probably call a functor a functor (though I have a fondness for “mappable”). I’m just saying we should introduce them in ways that engage the goal, which is great shipping software, not proofs for their own sake.</p>
-
-<p>There is so much we can use well without fully understanding. Carpenters do not have to learn plant biology, let alone the subatomic nature of matter, before they can learn to work with and against the grain. I’d rather a great carpenter build my house than a great materials scientist. To ship great products, I want a programmer, not a mathematician.</p>
-
-<p>I want more people turning FP concepts into JSON parsers tied to REST clients with local databases and UI animations built on popular frameworks. We need FP experts engaging with the existing platforms, not trying to replace them with Haskell. <a href="http://robots.thoughtbot.com/ship-you-a-haskell">Ship you a Haskell</a> is a great article, but most of us work on platforms for which shipping is assumed, not news. “Employs total referential transparency” isn’t particularly useful for my AppStore blurb if the program is late and the animations are glitchy. FP is a means to an end for most projects, not the end itself.</p>
-
-<p>To those of you who don’t know Haskell, I’m still telling you to go learn it. It’s worth it. I just noticed that Apple’s job descriptions for the Foundation team include “Knowledge of Haskell, Rust, F#, or similar languages will be useful.” But things that make sense in Haskell don’t make sense everywhere. Haskell is just a language. Ubiquitous laziness and currying were choices of one language, not the one true functional way. They introduce tradeoffs.<sup id="fnref:lazy"><a href="#fn:lazy" class="footnote">1</a></sup> Languages that chose other tradeoffs need their own functional idioms. We shouldn’t write JavaScript in Swift (seriously, stop it), or Haskell in Swift, or ML in Swift, or even Objective-C in Swift. We must find our way to write great Swift on its own terms. We should learn from our ancestors, not just relive their lives.</p>
-
-<h2 id="swift-is-a-special-flower">Swift is a Special Flower</h2>
-
-<p>Every so often there are special opportunities. Swift represents a real chance to advance the state of common practice in our industry. <a href="https://robnapier.net/swift-is-not-functional">Swift isn’t functional</a>, but it has a lot of very interesting pieces available. And Swift will be extremely popular, by luck of birth as much as anything. I don’t mean to disparage the Swift dev team. They’ve done an admirable job. But if Swift weren’t the language of iOS development, it would likely be a pretty minor thing. But since it’s the favored language of an incredibly popular platform, and since it <em>does</em> have functional leanings, and frankly it’s a pretty nice language to work in, it represents an incredible opportunity to positively impact a whole discipline.</p>
-
-<p>To make the most of that opportunity takes live code in non-trivial apps, not just playing around with data structures and algorithms. Many of my code examples come out of a small <a href="https://github.com/rnapier/WikipediaSearcher">Wikipedia front-end</a> I play with to see how these things might work in practice. I try to solve problems in a real (if small) iOS app and see where it takes me.<sup id="fnref:production"><a href="#fn:production" class="footnote">2</a></sup> This is the approach I recommend for any would-be FP evangelist. Build a real program with a real UI before forming too strong an opinion of what FP should look like in Swift. Engage with stdlib and Cocoa (and GCD, and Core Animation, and…), don’t try to replace them. Don’t assume stdlib is the way it is out of ignorance. Yes, it’s backwards from Haskell. Yes, that makes certain kinds of composition really annoying. Maybe that just means those kinds of composition aren’t going to be good Swift.</p>
-
-<p><span class="pullquote-right" data-pullquote="good functional approaches may look different from language to language"></span></p>
-
-<p>This doesn’t stop Swift from enjoying great value from functional approaches. But it does mean that good functional approaches may look different from language to language, just like good OOP looks different from language to language. Haskell doesn’t look like Lisp. Why should we expect Swift to look like Haskell?</p>
-
-<p>&lt;/span&gt;</p>
-
-<p>Swift is like Scala. It consciously straddles two worlds. I think this should be celebrated. It means compromise, but I think it also means more users will get better software than if there were only “good languages” and “shipping languages.” We really can have languages that give the benefits of tomorrow without losing all the working components of today. I think Swift can be one of those languages.</p>
-
-<h2 id="the-ties-that">The ties that »=</h2>
-
-<p>I’m looking for help. I’m looking for FP veterans to bring what they’ve learned elsewhere, mix it with the experience of long-time Cocoa devs, and build a great foundation for Swift, maybe even nudge Apple in the process.</p>
-
-<p>Much of that, I believe, is education. I have an <a href="https://robnapier.net/categories/functional">ongoing series here</a>. I’d love to learn to teach it more effectively.</p>
-
-<p>It’s also about good tools. The tools we use shape our thinking. I want it to be as easy as possible to write great code, and Swift has a few glaring omissions. To that end, I started a project called <a href="https://github.com/llamakit/llamakit">LlamaKit</a>, aimed at providing a small set of important tools that are easy to integrate into existing projects and should be nearly universally useful. There are much more full-lambda projects out there, particularly <a href="https://github.com/typelift">TypeLift</a>. LlamaKit isn’t trying to fill that whole need, just provide the bare minimum to make functional programming approachable in Swift for common Cocoa problems, provide a foundation for more powerful frameworks, and help those frameworks interoperate more easily than they can today. I welcome input on the <a href="https://groups.google.com/forum/#!forum/llamakit">mailing list</a>. It’s still early days for LlamaKit, but I think it will stabilize into something useful very soon.</p>
-
-<h2 id="a-slight-nervousness-around-eagles">A slight nervousness around eagles</h2>
-
-<p>Occasionally, in my more self-aggrandizing moments, I fear I am Prometheus, stealing referential transparency from the gods to bring back to poor mortals trapped in their mutating loops. And I remember what came of Prometheus.</p>
-
-<p>Then I remember I’m just a code monkey deep down, and it’s all just code after all. I notice the paradigm is shifting. Seems a pretty nice time to light a fire.</p>
-<div class="footnotes">
-  <ol>
-    <li id="fn:lazy">
-      <p>Swift’s initial attempt at making things lazy by default was a disaster IMO. I’m glad they abandoned that. It just didn’t work with the rest of Cocoa. <a href="#fnref:lazy" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:production">
-      <p>I also apply some of these things to larger, more production apps, but I have to be more careful and don’t have the time or risk tolerance to experiment as much. That’s why I like having a non-trivial toy app. <a href="#fnref:production" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
 ]]></content>
   </entry>
   

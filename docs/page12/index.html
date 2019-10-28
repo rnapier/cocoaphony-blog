@@ -9,8 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Unregistering
-Because these bugs are very hard to track down and very easy to avoid, I’d like to direct everyone’s attention to how to properly &hellip;">
+  <meta name="description" content="Here are the three magic words: +alloc, -copy and +new. If you commit these magic words to memory, and devote yourself to a life of accessors, then &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -54,6 +53,44 @@ Because these bugs are very hard to track down and very easy to avoid, I’d lik
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/three-magic-words">Three Magic Words</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-11-24T17:55:31-05:00" pubdate data-updated="true">24 Nov 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here are the three magic words: +alloc, -copy and +new. If you commit these magic words to memory, and devote yourself to a life of accessors, then Cocoa memory management should cause you no fear.</p>
+
+<p>For those interested in the path to memory management enlightenment, you should first deeply understand every word of the <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html" target="_blank">Memory Management Rules</a>. Don’t be afraid, it is very short, and if you will commit it to heart, you will avoid much suffering in the future. </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/three-magic-words">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -386,46 +423,6 @@ I was incredibly skeptical from the headline. It read to me like “team builds 
 <p>That’s a team that “gets it.” You will get hacked. Designing for what you do <em>after</em> you get hacked is a sign of great security thinking.&lt;/span&gt;&lt;/span&gt;</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/garbage-collection">Garbage Collection</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2008-03-08T11:23:22-05:00" pubdate data-updated="true">08 Mar 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Two posts in a day… but this was a completely different topic.</p>
-
-<p>I’m beginning work on my first Leopard-only application, and so I’m trying out garbage collection. Sure, I’m excited about garbage collection. Sure, I have no great love of keeping track of my retain counts and autorelease pools. But….</p>
-
-<p>It feels really, really weird to not release my variables. I tend to rely on autorelease a lot. I know there are some disadvantages, but I like the fact that it notes your intention when you allocate the memory. </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/garbage-collection">Read on &rarr;</a>
-    </footer>
   
 
 

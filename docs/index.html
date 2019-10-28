@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="So, back to our APIClient. When last I left off, I had the following client code: final class APIClient { static let shared = APIClient() let baseURL &hellip;">
+  <meta name="description" content="Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/never">The Littlest Type</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2019-10-28T13:02:00-04:00" pubdate data-updated="true">28 Oct 2019</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types! We say what things are, and the compiler enforces it for us. But then you see some piece of code like thi:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="nf">fatalError</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>That’s legal Swift. I don’t think many would find that surprising. Of course that’s legal, right? But it <em>is</em> surprising. <code class="highlighter-rouge">addOne</code> claims to be a function that accepts an Int and returns an Int. It does accept an Int, but…<em>it doesn’t return an Int</em>.</p>
+
+<p>“Don’t be silly, Rob. It crashes. It can’t return an Int if it crashes.”</p>
+
+<p>Well, yeah. But it promised to return an Int. It didn’t promise to “return an Int or crash,” did it? The whole point of strong types was that the compiler would enforce our promises, and the compiler doesn’t bat an eye at this code.</p>
+
+<p>“The compiler can’t possibly know everything that might crash.”</p>
+
+<p>I’m not ready to concede that, but even so, the compiler clearly can see that this function doesn’t return an Int. There’s no <code class="highlighter-rouge">return intValue</code> anywhere. This should prick our ears a bit. Something is strange here. Is it just compiler magic, or is there something deeper?</p>
+
+<p>Hint: There’s something deeper.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/never">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -490,47 +544,6 @@
   
     <footer>
       <a rel="full-article" href="/talking">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/copying">Copying</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2016-09-03T13:56:14-04:00" pubdate data-updated="true">03 Sep 2016</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I’m on my way back from <a href="http://tryswiftnyc.com">try! Swift</a>, which was fantastic. Of course it had those obvious things I’d hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.</p>
-
-<p>I travel pretty well, but sometimes I make mistakes, and this was one of those times. The deodorant I thought I’d packed turned out to be body wash. Now there are a dozen reason that this shouldn’t really matter, and wouldn’t really matter given the A/C and the weather, etc., but I’m a product of my culture, and it was a bit stressful. I tried to find a drug store on the way to the conference, but I was afraid of being late and finally resigned myself to accepting things as they are and moving on.</p>
-
-<p>And then, in the conference rest room, I discovered a small cache of toiletries under a try! Swift sign saying “if you need one, please take one.” I was dumbfounded. It was a very small kindness, but it mattered to me.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/copying">Read on &rarr;</a>
     </footer>
   
 

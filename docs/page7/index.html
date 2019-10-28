@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I went out to NSCoder RTP for the first time last night and met up with Josh Johnson, who has been interested in taking up PandoraBoy development. So &hellip;">
+  <meta name="description" content="Update: You can now download the full example code from my book at GitHub. This comes from Chapter 11, “Batten the Hatches with Security Services.” &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -53,6 +53,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/aes-commoncrypto">Properly Encrypting With AES With CommonCrypto</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2011-08-11T16:43:34-04:00" pubdate data-updated="true">11 Aug 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Update: You can now download the full example code from my book at <a href="https://github.com/rnapier/ios5ptl/tree/master/ch11/CryptPic/CryptPic">GitHub</a>. This comes from Chapter 11, “Batten the Hatches with Security Services.”</strong></p>
+
+<p><strong>Update2: The things described here are handled automatically by <a href="https://github.com/rnapier/RNCryptor" target="_blank">RNCryptor</a>, which is an easier approach unless you want to write your own solution.</strong></p>
+
+<p>I see a lot of example code out there showing how to use <code class="highlighter-rouge">CCCrypt()</code>, and most of it is unfortunately wrong. Since I just got finished writing about 10 pages of explanation for my upcoming book, I thought I’d post a shortened form here and hopefully help clear things up a little. This is going to be a little bit of a whirlwind, focused on the simplest case. If you want the gory details including performance improvements for large amounts of data, well, <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-1119961327.html">the book</a> will be out later this year. :D</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/aes-commoncrypto">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -382,39 +424,6 @@
     <footer>
       <a rel="full-article" href="/pandoraboy-082-fixes-flash">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/building-address-book-plugins">Building Address Book Plugins</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2010-07-15T16:17:22-04:00" pubdate data-updated="true">15 Jul 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Just a reminder, because the template doesn’t seem to set this up correctly. To build an Address Book action plugin for 10.6, you need to compile for x86_64 or it will silently not show up. If you plan to support 10.5, you’ll need i386 as well. The template seems to build 32-bit universal (i386, ppc) by default.</p>
-</div>
-  
   
 
 
