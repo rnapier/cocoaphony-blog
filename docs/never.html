@@ -238,7 +238,7 @@
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="p">{</span> <span class="nf">fatalError</span><span class="p">()</span> <span class="p">}()</span> 
 </code></pre></div></div>
 
-<p>It would be more consistent for Never to be a true bottom type, and for it to conform to every non-static protocol (i.e. protocols without static or init requirements). Whether that’s worth the weird corner cases it might create, I’m not sure. But maybe.</p>
+<p>So Never acts like a bottom type when it’s being returned from a function, but not when it’s being passed to a function or assigned to a variable. It would be more consistent for Never to be a true bottom type, and for it to conform to every non-static protocol (i.e. protocols without static or init requirements). Whether that’s worth the weird corner cases it might create, I’m not sure. But maybe.</p>
 
 <h3 id="some-things-just-dont-happen">Some things just don’t happen</h3>
 
