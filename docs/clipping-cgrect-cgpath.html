@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2010-09-09T10:49:07-04:00" pubdate data-updated="true">09 Sep 2010</time>
+<time datetime="2010-09-09T08:49:07-06:00" pubdate data-updated="true">09 Sep 2010</time>
         
       </p>
     
@@ -81,9 +81,9 @@
 
 <p>For my purposes, I want the first full-height rectangle within the intersection of the line rectangle and the CGPath. Later I will expand this code to find all full-height rectangles within the intersection (there can be more than one), but this is enough to demonstrate the point.
 <!-- more -->
-First, we quickly clip the rectangle to the bounding box of the CGPath using <code class="highlighter-rouge">CGPathGetBoundingBox()</code>. In iOS 4, they’ve added <code class="highlighter-rouge">CGPathGetPathBoundingBox()</code>, which can create a tighter box if you have control points outside your path, but I don’t know yet if there’s a performance trade-off for using it.</p>
+First, we quickly clip the rectangle to the bounding box of the CGPath using <code class="language-plaintext highlighter-rouge">CGPathGetBoundingBox()</code>. In iOS 4, they’ve added <code class="language-plaintext highlighter-rouge">CGPathGetPathBoundingBox()</code>, which can create a tighter box if you have control points outside your path, but I don’t know yet if there’s a performance trade-off for using it.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CGRect rect = someRect();
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CGRect rect = someRect();
 CGPathRef path = somePath();
 
 CGRect boundingBox = CGPathGetBoundingBox(path);
@@ -91,11 +91,11 @@ CGRect clippedRect = CGRectIntersection(boundingBox, rect);
 clippedRect = clipRectToPath(clippedRect, path);
 </code></pre></div></div>
 
-<p>You could do this first-pass clipping in <code class="highlighter-rouge">clipRectToPath()</code>, but my actual code uses <code class="highlighter-rouge">CGMakeRect()</code> to build up the clippedRect because I’m making them in a loop.</p>
+<p>You could do this first-pass clipping in <code class="language-plaintext highlighter-rouge">clipRectToPath()</code>, but my actual code uses <code class="language-plaintext highlighter-rouge">CGMakeRect()</code> to build up the clippedRect because I’m making them in a loop.</p>
 
-<p>Without further fanfare, here is <code class="highlighter-rouge">clipRectToPath()</code>:</p>
+<p>Without further fanfare, here is <code class="language-plaintext highlighter-rouge">clipRectToPath()</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CGRect clipRectToPath(CGRect rect, CGPathRef path)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CGRect clipRectToPath(CGRect rect, CGPathRef path)
 {
 	size_t width = floorf(rect.size.width);
 	size_t height = floorf(rect.size.height);
@@ -179,7 +179,7 @@ clippedRect = clipRectToPath(clippedRect, path);
 
 
 
-<time datetime="2010-09-09T10:49:07-04:00" pubdate data-updated="true">09 Sep 2010</time>
+<time datetime="2010-09-09T08:49:07-06:00" pubdate data-updated="true">09 Sep 2010</time>
       
 
 <span class="categories">
@@ -221,7 +221,7 @@ clippedRect = clipRectToPath(clippedRect, path);
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

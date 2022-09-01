@@ -72,7 +72,7 @@ absorb, &hellip;">
 
 
 
-<time datetime="2014-09-14T20:14:00-04:00" pubdate data-updated="true">14 Sep 2014</time>
+<time datetime="2014-09-14T20:14:00-06:00" pubdate data-updated="true">14 Sep 2014</time>
         
       </p>
     
@@ -87,16 +87,16 @@ know what it’s about. That’s ok.</p>
 <p>Let’s take a little break and talk about a handy functional tool built into
 Swift stdlib. I promise no big reveals, no new operators, no fancy types; just
 hands-on, practical discussion of the Swiss Army knife of transform functions:
-<code class="highlighter-rouge">reduce</code>.</p>
+<code class="language-plaintext highlighter-rouge">reduce</code>.</p>
 
 <!-- more -->
 
 <p>Reducing is almost easier to show than to explain. Let’s start with a trivial
 example. You have an array of numbers and you want to know the sum. We might say
-you want to “reduce” a <code class="highlighter-rouge">[Int]</code> to a single <code class="highlighter-rouge">Int</code>. <code class="highlighter-rouge">reduce</code> takes a sequence, an
+you want to “reduce” a <code class="language-plaintext highlighter-rouge">[Int]</code> to a single <code class="language-plaintext highlighter-rouge">Int</code>. <code class="language-plaintext highlighter-rouge">reduce</code> takes a sequence, an
 intial value, and a “combining” function like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let xs = [1,2,3,4,5]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let xs = [1,2,3,4,5]
 let sum = reduce(xs, 0) { accumulator, value in accumulator + value }
 // ==&gt; 15
 </code></pre></div></div>
@@ -105,39 +105,39 @@ let sum = reduce(xs, 0) { accumulator, value in accumulator + value }
 far” and a “next value from the list” and it needs to return the result of
 combining them. Its signature looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(U, T) -&gt; U
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(U, T) -&gt; U
 </code></pre></div></div>
 
 <p>So it doesn’t have to return the same kind of thing as is in the list, but it
 often does. In our example, since we want the sum, we just add the two values.
 We could just as easily reduce the list to its product:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let product = reduce(xs, 1) { accumulator, value in accumulator * value }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let product = reduce(xs, 1) { accumulator, value in accumulator * value }
 // ==&gt; 120
 </code></pre></div></div>
 
 <p>I’m spelling out parameters to make it clear exactly what is being passed to
 the combining function, but we can of course use Swift shortcuts for this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = reduce(xs, 0) { $0 + $1 }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = reduce(xs, 0) { $0 + $1 }
 </code></pre></div></div>
 
 <p>Or we can go futher, and shorten it to:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = reduce(xs, 0, +)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = reduce(xs, 0, +)
 </code></pre></div></div>
 
-<p>What’s up with that? <a href="/flatmap">I told you before</a>, <code class="highlighter-rouge">+</code> is just a function:</p>
+<p>What’s up with that? <a href="/flatmap">I told you before</a>, <code class="language-plaintext highlighter-rouge">+</code> is just a function:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func +(lhs: Float, rhs: Float) -&gt; Float
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func +(lhs: Float, rhs: Float) -&gt; Float
 </code></pre></div></div>
 
-<p>And it’s in the form <code class="highlighter-rouge">(T, T) -&gt; T</code>, which is just a special case of <code class="highlighter-rouge">(U, T) -&gt;
+<p>And it’s in the form <code class="language-plaintext highlighter-rouge">(T, T) -&gt; T</code>, which is just a special case of <code class="language-plaintext highlighter-rouge">(U, T) -&gt;
 U</code>. So that’s fine, and we can pass it as the combining function.</p>
 
 <p>There’s also a method form that can be convenient:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = xs.reduce(0, combine: +)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let sum = xs.reduce(0, combine: +)
 </code></pre></div></div>
 
 <p>We can think of that as “take the list of x values, and add them, starting with
@@ -148,32 +148,32 @@ zero.”</p>
 <p>Another common name for this function is “fold.” Sometimes, in other languages,
 you’ll see “fold left” or “fold right.” Swift’s “reduce” is the same as “fold
 left.” <strike>(A right fold starts at the end of the list and goes 
-backwards.</strike><sup id="fnref:lazy"><a href="#fn:lazy" class="footnote">1</a></sup>) You may also see it called “aggregate” or
+backwards.</strike><sup id="fnref:lazy" role="doc-noteref"><a href="#fn:lazy" class="footnote" rel="footnote">1</a></sup>) You may also see it called “aggregate” or
 “accumulate” or “inject.” They’re all pretty much the same function.</p>
 
 <h2 id="finding-a-starting-point">Finding a starting point</h2>
 
 <p>OK, so we can add and multiply stuff. What else you got? We can get minimums and
-maximums. Let’s implement stdlib’s <code class="highlighter-rouge">minElement</code> for arrays with
-<code class="highlighter-rouge">reduce</code>.<sup id="fnref:array"><a href="#fn:array" class="footnote">2</a></sup></p>
+maximums. Let’s implement stdlib’s <code class="language-plaintext highlighter-rouge">minElement</code> for arrays with
+<code class="language-plaintext highlighter-rouge">reduce</code>.<sup id="fnref:array" role="doc-noteref"><a href="#fn:array" class="footnote" rel="footnote">2</a></sup></p>
 
 <p>Reducing requires an initial value. So, what should it be? For types that have a
-known minimum (like <code class="highlighter-rouge">Int.min</code>), you might be tempted to use it. But that’s not
+known minimum (like <code class="language-plaintext highlighter-rouge">Int.min</code>), you might be tempted to use it. But that’s not
 very flexible, and some orderable types don’t have an obvious minimum. For
-example, what if we implemened a <code class="highlighter-rouge">BigNum</code> type that supported arbitrarily large
+example, what if we implemened a <code class="language-plaintext highlighter-rouge">BigNum</code> type that supported arbitrarily large
 or small values?</p>
 
 <p>A common solution is to treat the first element as the initial value, and then
 reduce the rest:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
   return dropFirst(xs).reduce(xs[0], combine: min)
 }
 </code></pre></div></div>
 
 <p>That’s a reusable pattern, so we could, if we wanted to, extract it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
   func reduce1(combine: (T, T) -&gt; T) -&gt; T {
     return dropFirst(self).reduce(self[0], combine: combine)
   }
@@ -184,37 +184,37 @@ func minElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T {
 }
 </code></pre></div></div>
 
-<p>Notice that <code class="highlighter-rouge">reduce1</code> requires a combining function that takes and returns the
+<p>Notice that <code class="language-plaintext highlighter-rouge">reduce1</code> requires a combining function that takes and returns the
 same type. It’s worth taking a moment and thinking about why that has to be
 true.</p>
 
-<p>Of course, <code class="highlighter-rouge">reduce1</code> crashes if the array is empty. What if we wanted to get
-back an <code class="highlighter-rouge">Int?</code> to guard against that? Here’s one way we could do it:</p>
+<p>Of course, <code class="language-plaintext highlighter-rouge">reduce1</code> crashes if the array is empty. What if we wanted to get
+back an <code class="language-plaintext highlighter-rouge">Int?</code> to guard against that? Here’s one way we could do it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func safeMinElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T? {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func safeMinElement&lt;T: Comparable&gt;(xs: [T]) -&gt; T? {
   return xs.reduce(nil) { m, x in min(m ?? x, x) }
 }
 </code></pre></div></div>
 
-<p>So we start with <code class="highlighter-rouge">nil</code>, and for each element if the current minimum is <code class="highlighter-rouge">nil</code>, we
+<p>So we start with <code class="language-plaintext highlighter-rouge">nil</code>, and for each element if the current minimum is <code class="language-plaintext highlighter-rouge">nil</code>, we
 take whatever was passed in, and otherwise we take the minimum. Notice how we
 rely on Swift’s habit of promiting anything into an optional when required.
 Let’s us be pretty <strike>sloppy</strike> expressive.</p>
 
 <h2 id="beyond-math">Beyond math</h2>
 
-<p>The combining function <code class="highlighter-rouge">(U, T) -&gt; U</code> says nothing about numbers. We can reduce
+<p>The combining function <code class="language-plaintext highlighter-rouge">(U, T) -&gt; U</code> says nothing about numbers. We can reduce
 anything we can imagine. We could join strings just as easily.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func join(elements: [String]) -&gt; String {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func join(elements: [String]) -&gt; String {
   return elements.reduce("", +)
 }
 </code></pre></div></div>
 
-<p>Or, <a href="/flatmap#fn:1">as promised</a>, here’s <code class="highlighter-rouge">flatten</code>, which takes a nested array
+<p>Or, <a href="/flatmap#fn:1">as promised</a>, here’s <code class="language-plaintext highlighter-rouge">flatten</code>, which takes a nested array
 and removes one level of structure:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(xs: [[T]]) -&gt; [T] {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(xs: [[T]]) -&gt; [T] {
   return xs.reduce([], +)
 }
 </code></pre></div></div>
@@ -225,71 +225,71 @@ initial value? That’s another thing worth thinking about for a while, but it�
 too much theory for this post. (If you want to research it, the magic search
 term you want is <em>monoid</em>.)</p>
 
-<p>Mapping an array is just a special case of reducing:<sup id="fnref:leftright"><a href="#fn:leftright" class="footnote">3</a></sup></p>
+<p>Mapping an array is just a special case of reducing:<sup id="fnref:leftright" role="doc-noteref"><a href="#fn:leftright" class="footnote" rel="footnote">3</a></sup></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(xs: [T], f: T -&gt; U) -&gt; [U] {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(xs: [T], f: T -&gt; U) -&gt; [U] {
   return xs.reduce([]) { $0 + [f($1)] }
 }
 </code></pre></div></div>
 
 <p>So is filtering:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func filter&lt;T&gt;(xs: [T], includeElement: T -&gt; Bool) -&gt; [T] {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func filter&lt;T&gt;(xs: [T], includeElement: T -&gt; Bool) -&gt; [T] {
   return xs.reduce([]) { filtered, x in includeElement(x) ? filtered + [x] : filtered }
 }
 </code></pre></div></div>
 
 <p>FlatMap:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatMap&lt;T, U&gt;(xs: [T], f: T -&gt; [U]) -&gt; [U] {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatMap&lt;T, U&gt;(xs: [T], f: T -&gt; [U]) -&gt; [U] {
   return xs.reduce([]) { $0 + f($1) }
 }
 </code></pre></div></div>
 
 <p>Reverse:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverse&lt;T&gt;(xs: [T]) -&gt; [T] {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverse&lt;T&gt;(xs: [T]) -&gt; [T] {
   return reduce(xs, []) { [$1] + $0 }
 }
 </code></pre></div></div>
 
 <p>Even counting!</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func countElements&lt;T&gt;(xs: [T]) -&gt; Int {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func countElements&lt;T&gt;(xs: [T]) -&gt; Int {
   return reduce(xs, 0) { c, _ in c + 1 }
 }
 </code></pre></div></div>
 
 <p>You can do a lot of stuff this way. It’s particularly useful when you find
-yourself declaring a <code class="highlighter-rouge">var</code> just so you can initialize it with a loop. Any time
-you find yourself using <code class="highlighter-rouge">var</code> inside a function, consider whether this is better
-done with something else (<code class="highlighter-rouge">map</code>, <code class="highlighter-rouge">filter</code>, <code class="highlighter-rouge">reduce</code>, etc). Usually the answer is
+yourself declaring a <code class="language-plaintext highlighter-rouge">var</code> just so you can initialize it with a loop. Any time
+you find yourself using <code class="language-plaintext highlighter-rouge">var</code> inside a function, consider whether this is better
+done with something else (<code class="language-plaintext highlighter-rouge">map</code>, <code class="language-plaintext highlighter-rouge">filter</code>, <code class="language-plaintext highlighter-rouge">reduce</code>, etc). Usually the answer is
 yes.</p>
 
 <h2 id="from-whence-would-you-return">From whence would you return?</h2>
 
-<p>How about <code class="highlighter-rouge">contains</code>?</p>
+<p>How about <code class="language-plaintext highlighter-rouge">contains</code>?</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func contains&lt;T: Equatable&gt;(xs: [T], find: T) -&gt; Bool {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func contains&lt;T: Equatable&gt;(xs: [T], find: T) -&gt; Bool {
   return xs.reduce(false) { found, x in found || find == x }
 }
 </code></pre></div></div>
 
-<p>Hmmm…. It works, but it’s a poor choice in my opinion. <code class="highlighter-rouge">reduce</code> computes over
+<p>Hmmm…. It works, but it’s a poor choice in my opinion. <code class="language-plaintext highlighter-rouge">reduce</code> computes over
 the full list, so this is wasting a lot of effort checking values that aren’t
 needed. A good way to think about it is how you would expect this function to
 behave if the sequence were infinite. If you would never expect the function to
-return (like for <code class="highlighter-rouge">sum</code>), then <code class="highlighter-rouge">reduce</code> is proably a good fit. If you might
-expect it to return anyway (like for <code class="highlighter-rouge">contains</code>), then <code class="highlighter-rouge">reduce</code> is probably the
+return (like for <code class="language-plaintext highlighter-rouge">sum</code>), then <code class="language-plaintext highlighter-rouge">reduce</code> is proably a good fit. If you might
+expect it to return anyway (like for <code class="language-plaintext highlighter-rouge">contains</code>), then <code class="language-plaintext highlighter-rouge">reduce</code> is probably the
 wrong tool.</p>
 
-<p>Another good way to think about it is whether you would include a <code class="highlighter-rouge">return</code> or
-<code class="highlighter-rouge">break</code> in your for-loop (or just use a while-loop). If so, your problem
-probably doesn’t match <code class="highlighter-rouge">reduce</code> well.</p>
+<p>Another good way to think about it is whether you would include a <code class="language-plaintext highlighter-rouge">return</code> or
+<code class="language-plaintext highlighter-rouge">break</code> in your for-loop (or just use a while-loop). If so, your problem
+probably doesn’t match <code class="language-plaintext highlighter-rouge">reduce</code> well.</p>
 
-<p>To make it more clear, let’s see how <code class="highlighter-rouge">reduce</code> can be implemented:</p>
+<p>To make it more clear, let’s see how <code class="language-plaintext highlighter-rouge">reduce</code> can be implemented:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reduce&lt;T, U&gt;(xs: [T], initial: U, combine: (U, T) -&gt; U) -&gt; U {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reduce&lt;T, U&gt;(xs: [T], initial: U, combine: (U, T) -&gt; U) -&gt; U {
   var result = initial
   for x in xs {
     result = combine(result, x)
@@ -298,21 +298,21 @@ probably doesn’t match <code class="highlighter-rouge">reduce</code> well.</p>
 }
 </code></pre></div></div>
 
-<p>If your problem can be “reduced” to this, then <code class="highlighter-rouge">reduce</code> may be a good choice. If
+<p>If your problem can be “reduced” to this, then <code class="language-plaintext highlighter-rouge">reduce</code> may be a good choice. If
 you need to stop the for-in loop, then you’ll probably want another tool like
-<code class="highlighter-rouge">find</code>.</p>
+<code class="language-plaintext highlighter-rouge">find</code>.</p>
 
 <h2 id="so-doctor-should-i-reduce">So doctor, should I reduce?</h2>
 
-<p>I’ve given a bunch of examples here to show how powerful and flexible <code class="highlighter-rouge">reduce</code>
+<p>I’ve given a bunch of examples here to show how powerful and flexible <code class="language-plaintext highlighter-rouge">reduce</code>
 is. I want to get your imagination going a little bit and give you some ideas on
 how to use this function to solve a wide range of problem. But just because you
-<em>can</em> write <code class="highlighter-rouge">map</code> in terms of <code class="highlighter-rouge">reduce</code> doesn’t mean you <em>should</em>.</p>
+<em>can</em> write <code class="language-plaintext highlighter-rouge">map</code> in terms of <code class="language-plaintext highlighter-rouge">reduce</code> doesn’t mean you <em>should</em>.</p>
 
 <p>Most of the time if your result is an array, mapping and filtering are the right
-tools. If you’re taking an array and deriving a single value, then <code class="highlighter-rouge">reduce</code> (or
-<code class="highlighter-rouge">find</code>) is often the best tool. But if you have a complex combination of mapping
-and filtering, then a single <code class="highlighter-rouge">reduce</code> may simplify that and also speed it up.</p>
+tools. If you’re taking an array and deriving a single value, then <code class="language-plaintext highlighter-rouge">reduce</code> (or
+<code class="language-plaintext highlighter-rouge">find</code>) is often the best tool. But if you have a complex combination of mapping
+and filtering, then a single <code class="language-plaintext highlighter-rouge">reduce</code> may simplify that and also speed it up.</p>
 
 <p>Reducing is a quite popular operation in functional languages. In fact, a lot of
 people (including your humble author) spend a lot of time trying to solve
@@ -324,16 +324,16 @@ production code. Use the tools that make your code clear, not the tools that
 make you look smart.</p>
 
 <p>But with that in mind, reduce your problems away!</p>
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:lazy">
-      <p>UPDATE: After some <a href="https://twitter.com/cocoaphony/status/511339551915511808">helpful discussion</a> with @TacticalGrace and @pyrtsa, I’ve decided this description of fold right is too misleading. I usually favor simple-but-slightly-wrong explanations over more-correct-but-requires-lots-of-background-to-understand-and-is-still-slightly-wrong, but in this case, “goes backwards” really confuses how foldr is commonly used. We don’t have foldr in Swift, so I’m not going to dig into it here in a footnote; I’ll leave it to your <a href="https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29">exploration</a>. <a href="#fnref:lazy" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:lazy" role="doc-endnote">
+      <p>UPDATE: After some <a href="https://twitter.com/cocoaphony/status/511339551915511808">helpful discussion</a> with @TacticalGrace and @pyrtsa, I’ve decided this description of fold right is too misleading. I usually favor simple-but-slightly-wrong explanations over more-correct-but-requires-lots-of-background-to-understand-and-is-still-slightly-wrong, but in this case, “goes backwards” really confuses how foldr is commonly used. We don’t have foldr in Swift, so I’m not going to dig into it here in a footnote; I’ll leave it to your <a href="https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29">exploration</a>. <a href="#fnref:lazy" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:array">
-      <p>In this post, and in many of my posts, I will focus on Array implementations rather than the more general Sequence. That’s because Sequence (and Collection) can introduce a lot of complexity and obscure the key points being discussed. Some of their complexity is due to the nature of type constraints, and some is due to quirks about Swift that will likely improve. I’ve chosen to dodge all of that and focus on the most common and simplest case: Arrays. <a href="#fnref:array" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:array" role="doc-endnote">
+      <p>In this post, and in many of my posts, I will focus on Array implementations rather than the more general Sequence. That’s because Sequence (and Collection) can introduce a lot of complexity and obscure the key points being discussed. Some of their complexity is due to the nature of type constraints, and some is due to quirks about Swift that will likely improve. I’ve chosen to dodge all of that and focus on the most common and simplest case: Arrays. <a href="#fnref:array" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:leftright">
-      <p>If you’re familiar with Haskell, you may know that <code class="highlighter-rouge">map</code> is usually implemented as a <code class="highlighter-rouge">foldr</code>, while this is a <code class="highlighter-rouge">foldl</code>. That’s just for performance. In Haskell, list prepending (<code class="highlighter-rouge">:</code>) is much faster than appending (<code class="highlighter-rouge">++</code>). In Swift, array appending is the faster operation. So <code class="highlighter-rouge">foldr</code> is common in Haskell, but isn’t even in Swift stdlib. Keep this in mind when translating Haskell algorithms to Swift. Haskell often walks lists backwards for performance reasons. It’s more natural in Swift to walk them forward. <a href="#fnref:leftright" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:leftright" role="doc-endnote">
+      <p>If you’re familiar with Haskell, you may know that <code class="language-plaintext highlighter-rouge">map</code> is usually implemented as a <code class="language-plaintext highlighter-rouge">foldr</code>, while this is a <code class="language-plaintext highlighter-rouge">foldl</code>. That’s just for performance. In Haskell, list prepending (<code class="language-plaintext highlighter-rouge">:</code>) is much faster than appending (<code class="language-plaintext highlighter-rouge">++</code>). In Swift, array appending is the faster operation. So <code class="language-plaintext highlighter-rouge">foldr</code> is common in Haskell, but isn’t even in Swift stdlib. Keep this in mind when translating Haskell algorithms to Swift. Haskell often walks lists backwards for performance reasons. It’s more natural in Swift to walk them forward. <a href="#fnref:leftright" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -352,7 +352,7 @@ make you look smart.</p>
 
 
 
-<time datetime="2014-09-14T20:14:00-04:00" pubdate data-updated="true">14 Sep 2014</time>
+<time datetime="2014-09-14T20:14:00-06:00" pubdate data-updated="true">14 Sep 2014</time>
       
 
 <span class="categories">
@@ -394,7 +394,7 @@ make you look smart.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

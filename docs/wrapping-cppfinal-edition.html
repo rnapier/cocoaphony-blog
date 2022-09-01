@@ -70,14 +70,14 @@
 
 
 
-<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true">12 May 2012</time>
+<time datetime="2012-05-12T18:11:45-06:00" pubdate data-updated="true">12 May 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a “language.” It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code class="highlighter-rouge">.mm</code> is a blight on your code. Never let it spread.</p>
+<div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a “language.” It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code class="language-plaintext highlighter-rouge">.mm</code> is a blight on your code. Never let it spread.</p>
 
 <p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple’s frameworks are implemented in C++.</p>
 
@@ -93,7 +93,7 @@
 
 <p>Consider a simple C++ class (but throwing in the headache of a namespace):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespace MY {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespace MY {
 class Cpp {
   public:
     std::string getName() { return _name; };
@@ -106,7 +106,7 @@ class Cpp {
 
 <p>The wrapper for this is trivial:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface CPPWrapper : NSObject
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface CPPWrapper : NSObject
 @property (nonatomic, readwrite, copy) NSString *name;
 @end
 
@@ -139,11 +139,11 @@ class Cpp {
 @end
 </code></pre></div></div>
 
-<p>Couldn’t be easier really. The one headache that really remains in my experience is enums inside of a namespace (or more generally enums declared in a C++ header). The best solution is to use <code class="highlighter-rouge">#if __cplusplus</code> blocks to strip away the namespace and still declare the enum in pure C. Do this if at all possible. Otherwise you’ll wind up with an C enum that mirrors the C++ enum. This is a maintenance nightmare, since changes to the C++ enum will often be missed in the ObjC enum, and you’ll get very difficult-to-debug errors with enum mismatches.</p>
+<p>Couldn’t be easier really. The one headache that really remains in my experience is enums inside of a namespace (or more generally enums declared in a C++ header). The best solution is to use <code class="language-plaintext highlighter-rouge">#if __cplusplus</code> blocks to strip away the namespace and still declare the enum in pure C. Do this if at all possible. Otherwise you’ll wind up with an C enum that mirrors the C++ enum. This is a maintenance nightmare, since changes to the C++ enum will often be missed in the ObjC enum, and you’ll get very difficult-to-debug errors with enum mismatches.</p>
 
-<p>Just to ask and answer a possible question: why <code class="highlighter-rouge">*Cpp</code> and not just <code class="highlighter-rouge">Cpp</code>? The reason is that in almost all cases the C++ object will be created outside of your wrappers. So in almost all cases, there’s going to be a method like <code class="highlighter-rouge">initWithCpp:(Cpp *)cpp</code>. How does that work? Easy, wrap it in <code class="highlighter-rouge">#if __cplusplus</code>:</p>
+<p>Just to ask and answer a possible question: why <code class="language-plaintext highlighter-rouge">*Cpp</code> and not just <code class="language-plaintext highlighter-rouge">Cpp</code>? The reason is that in almost all cases the C++ object will be created outside of your wrappers. So in almost all cases, there’s going to be a method like <code class="language-plaintext highlighter-rouge">initWithCpp:(Cpp *)cpp</code>. How does that work? Easy, wrap it in <code class="language-plaintext highlighter-rouge">#if __cplusplus</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#if __cplusplus
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#if __cplusplus
 #include "Cpp.h"
 ...
 - (CppWrapper *)initWithCpp:(Cpp *)cpp;
@@ -166,7 +166,7 @@ class Cpp {
 
 
 
-<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true">12 May 2012</time>
+<time datetime="2012-05-12T18:11:45-06:00" pubdate data-updated="true">12 May 2012</time>
       
 
 <span class="categories">
@@ -208,7 +208,7 @@ class Cpp {
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

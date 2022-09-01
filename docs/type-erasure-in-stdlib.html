@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2015-10-06T19:05:13-04:00" pubdate data-updated="true">06 Oct 2015</time>
+<time datetime="2015-10-06T17:05:13-06:00" pubdate data-updated="true">06 Oct 2015</time>
         
       </p>
     
@@ -86,9 +86,9 @@
 <p>At the time I thought I’d pretty well nailed it down, but every time I dug into it I found another little thing I’d missed, and it never seemed to end. And with stdlib open sourcing soon, you’ll all just be able to read this yourselves, so why embarrass myself getting it all wrong? Over time I kind of hoped you all had forgotten that comment and planned to move on to other things. But then I was <a href="https://twitter.com/My_kl/status/650796108789219328">busted by Michael Welch</a>, and so I had to finish the spelunking and here you go.
 <!-- more --></p>
 
-<p>So, <a href="https://github.com/rnapier/MyAnySequence">here</a> is my annotated implementation of <code class="highlighter-rouge">AnyGenerator</code> and <code class="highlighter-rouge">AnySequence</code> that I believe pretty closely matches Apple’s implementation in stdlib (minus some low-level optimizations in <code class="highlighter-rouge">AnySequence</code> that I’ll call out when we get there). I’ve named my versions of public symbols with a trailing underscore to differentiate from the Swift version. For private symbols (with leading underscore), I’ve used the same name Swift does.</p>
+<p>So, <a href="https://github.com/rnapier/MyAnySequence">here</a> is my annotated implementation of <code class="language-plaintext highlighter-rouge">AnyGenerator</code> and <code class="language-plaintext highlighter-rouge">AnySequence</code> that I believe pretty closely matches Apple’s implementation in stdlib (minus some low-level optimizations in <code class="language-plaintext highlighter-rouge">AnySequence</code> that I’ll call out when we get there). I’ve named my versions of public symbols with a trailing underscore to differentiate from the Swift version. For private symbols (with leading underscore), I’ve used the same name Swift does.</p>
 
-<p>All type information was determined using <code class="highlighter-rouge">:type lookup</code> in the Swift REPL. In a few places I checked the implementation with Hopper, but in most cases, once you have the types, the implementation is obvious. (There’s a deep lesson in there if you pay attention.)</p>
+<p>All type information was determined using <code class="language-plaintext highlighter-rouge">:type lookup</code> in the Swift REPL. In a few places I checked the implementation with Hopper, but in most cases, once you have the types, the implementation is obvious. (There’s a deep lesson in there if you pay attention.)</p>
 </div>
 
 
@@ -104,7 +104,7 @@
 
 
 
-<time datetime="2015-10-06T19:05:13-04:00" pubdate data-updated="true">06 Oct 2015</time>
+<time datetime="2015-10-06T17:05:13-06:00" pubdate data-updated="true">06 Oct 2015</time>
       
 
 
@@ -140,7 +140,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

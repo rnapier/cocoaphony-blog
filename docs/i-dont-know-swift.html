@@ -71,7 +71,7 @@ blog, there’s a decent chance that I know more about Objective-C &hellip;">
 
 
 
-<time datetime="2014-07-18T11:04:22-04:00" pubdate data-updated="true">18 Jul 2014</time>
+<time datetime="2014-07-18T09:04:22-06:00" pubdate data-updated="true">18 Jul 2014</time>
         
       </p>
     
@@ -97,10 +97,10 @@ more experience, but even so, I know a thing or two about Objective-C.</p>
 <p>Nobody knows Swift because it isn’t baked yet. It’s early days. We’re all still
 figuring it out. There are no established patterns. The syntax is still
 changing. The stdlib is still changing. We know even more big changes are on the
-horizon.<sup id="fnref:access"><a href="#fn:access" class="footnote">1</a></sup> Writing the compiler isn’t the same as shipping an app. Some
+horizon.<sup id="fnref:access" role="doc-noteref"><a href="#fn:access" class="footnote" rel="footnote">1</a></sup> Writing the compiler isn’t the same as shipping an app. Some
 things take real-world experience, and no one has that.</p>
 
-<p>Tim Burks<sup id="fnref:tim"><a href="#fn:tim" class="footnote">2</a></sup> wrote a <a href="http://www.openradar.me/17628154">provocative radar</a>
+<p>Tim Burks<sup id="fnref:tim" role="doc-noteref"><a href="#fn:tim" class="footnote" rel="footnote">2</a></sup> wrote a <a href="http://www.openradar.me/17628154">provocative radar</a>
 recently:</p>
 
 <blockquote>
@@ -146,32 +146,32 @@ are the old folks. You remember before immutable arrays.</p>
 
 <p>You’re a day-zero Swift expert, and if you’re not, you could be a year-zero
 Swift expert even if you wait for iOS 8 to ship. The niches are all still open.
-Read everything.<sup id="fnref:mylist"><a href="#fn:mylist" class="footnote">3</a></sup> Write <a href="https://github.com/maxpow4h/swiftz">something</a>.
+Read everything.<sup id="fnref:mylist" role="doc-noteref"><a href="#fn:mylist" class="footnote" rel="footnote">3</a></sup> Write <a href="https://github.com/maxpow4h/swiftz">something</a>.
 Get involved. Try out new patterns, see if they work. Tell people what you 
-discover.<sup id="fnref:let"><a href="#fn:let" class="footnote">4</a></sup></p>
+discover.<sup id="fnref:let" role="doc-noteref"><a href="#fn:let" class="footnote" rel="footnote">4</a></sup></p>
 
 <p>And most of all, if things in Swift bother you, if they don’t work for you, if
-they could be better, say it now. Open radars.<sup id="fnref:radar"><a href="#fn:radar" class="footnote">5</a></sup> Post on devforum. Write
+they could be better, say it now. Open radars.<sup id="fnref:radar" role="doc-noteref"><a href="#fn:radar" class="footnote" rel="footnote">5</a></sup> Post on devforum. Write
 an example. Show why your way makes the code better. Swift is still changing,
 and it’s in beta exactly so it can change. It may be a long time before you
 have this chance again.</p>
 
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:access">
-      <p>Can you say access controls? We know they’re coming. We don’t know what they’ll look like. <a href="#fnref:access" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:access" role="doc-endnote">
+      <p>Can you say access controls? We know they’re coming. We don’t know what they’ll look like. <a href="#fnref:access" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:tim">
-      <p>…whose opinions I take quite seriously. He’s a smart, insightful guy. <a href="http://programming.nu">Nu</a> is an interesting language. I even agree with some of his frustrations about Swift. <a href="https://twitter.com/cocoaphony/status/487331425369063424">We just disagree on what to do about them.</a> <a href="#fnref:tim" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:tim" role="doc-endnote">
+      <p>…whose opinions I take quite seriously. He’s a smart, insightful guy. <a href="http://programming.nu">Nu</a> is an interesting language. I even agree with some of his frustrations about Swift. <a href="https://twitter.com/cocoaphony/status/487331425369063424">We just disagree on what to do about them.</a> <a href="#fnref:tim" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:mylist">
-      <p>BTW, my current favorite Swift blogs are <a href="http://airspeedvelocity.net">Airspeed Velocity</a> and <a href="http://nomothetis.svbtle.com">nomothetis (Alexandros Salazar)</a>. Highly recommended. They’re teaching me a lot. I’d love to see more people writing this way. <a href="#fnref:mylist" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:mylist" role="doc-endnote">
+      <p>BTW, my current favorite Swift blogs are <a href="http://airspeedvelocity.net">Airspeed Velocity</a> and <a href="http://nomothetis.svbtle.com">nomothetis (Alexandros Salazar)</a>. Highly recommended. They’re teaching me a lot. I’d love to see more people writing this way. <a href="#fnref:mylist" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:let">
-      <p>For example, I’ve found that <code class="highlighter-rouge">if let x = x { ... }</code> (rebinding to the same identifier) is a pretty good style for unloading an optional. I’ve also found that <code class="highlighter-rouge">map()</code> on an optional can be a handy replacement for <code class="highlighter-rouge">if-let</code> when you can’t use chaining. For example: <code class="highlighter-rouge">let optY = optX.map{Y(x:$0)}</code>. An extension on <code class="highlighter-rouge">Optional</code> to wrap <code class="highlighter-rouge">map</code> in a function called <code class="highlighter-rouge">ifSet</code> can make this a little easier to read. <a href="#fnref:let" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:let" role="doc-endnote">
+      <p>For example, I’ve found that <code class="language-plaintext highlighter-rouge">if let x = x { ... }</code> (rebinding to the same identifier) is a pretty good style for unloading an optional. I’ve also found that <code class="language-plaintext highlighter-rouge">map()</code> on an optional can be a handy replacement for <code class="language-plaintext highlighter-rouge">if-let</code> when you can’t use chaining. For example: <code class="language-plaintext highlighter-rouge">let optY = optX.map{Y(x:$0)}</code>. An extension on <code class="language-plaintext highlighter-rouge">Optional</code> to wrap <code class="language-plaintext highlighter-rouge">map</code> in a function called <code class="language-plaintext highlighter-rouge">ifSet</code> can make this a little easier to read. <a href="#fnref:let" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:radar">
-      <p>Yes, radar stinks; do it anyway, it’s not that bad. And from the forums, the Swift team is clearly reading and reacting to the radars they receive. <a href="#fnref:radar" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:radar" role="doc-endnote">
+      <p>Yes, radar stinks; do it anyway, it’s not that bad. And from the forums, the Swift team is clearly reading and reacting to the radars they receive. <a href="#fnref:radar" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -190,7 +190,7 @@ have this chance again.</p>
 
 
 
-<time datetime="2014-07-18T11:04:22-04:00" pubdate data-updated="true">18 Jul 2014</time>
+<time datetime="2014-07-18T09:04:22-06:00" pubdate data-updated="true">18 Jul 2014</time>
       
 
 <span class="categories">
@@ -232,7 +232,7 @@ have this chance again.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

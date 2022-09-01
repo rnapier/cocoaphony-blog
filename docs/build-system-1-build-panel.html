@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2009-05-14T08:00:59-04:00" pubdate data-updated="true">14 May 2009</time>
+<time datetime="2009-05-14T06:00:59-06:00" pubdate data-updated="true">14 May 2009</time>
         
       </p>
     
@@ -108,12 +108,12 @@
 
 <p>Look in Application.xcconfig, and move anything that’s in Debug but not in Release to Debug.xcconfig, and anything in Release but not Debug to Release.xcconfig. Anything that’s in both, delete the second copy of.</p>
 
-<p>Anything that is in both Release and Debug, move to Shared, and put <code class="highlighter-rouge">#include "Shared.xcconfig"</code> at the top of the Release and Debug configs.</p>
+<p>Anything that is in both Release and Debug, move to Shared, and put <code class="language-plaintext highlighter-rouge">#include "Shared.xcconfig"</code> at the top of the Release and Debug configs.</p>
 
 <p>If you’ve followed all the instructions, you should have four files that look like this (assuming your product’s name is “Test”):</p>
 
 <h3 id="sharedxcconfig">Shared.xcconfig</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ARCHS = $(ARCHS_STANDARD_32_BIT)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ARCHS = $(ARCHS_STANDARD_32_BIT)
 SDKROOT = iphoneos2.2.1
 CODE_SIGN_IDENTITY = 
 CODE_SIGN_IDENTITY[sdk=iphoneos#] = iPhone Developer
@@ -124,12 +124,12 @@ GCC_WARN_UNUSED_VARIABLE = YES
 </code></pre></div></div>
 
 <h3 id="releasexcconfig">Release.xcconfig</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Shared.xcconfig"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Shared.xcconfig"
 COPY_PHASE_STRIP = YES
 </code></pre></div></div>
 
 <h3 id="debugxcconfig">Debug.xcconfig</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Shared.xcconfig"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Shared.xcconfig"
 ONLY_ACTIVE_ARCH = YES
 COPY_PHASE_STRIP = NO
 GCC_DYNAMIC_NO_PIC = NO
@@ -137,7 +137,7 @@ GCC_OPTIMIZATION_LEVEL = 0
 </code></pre></div></div>
 
 <h3 id="applicationxcconfig">Application.xcconfig</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INFOPLIST_FILE = Info.plist
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INFOPLIST_FILE = Info.plist
 PRODUCT_NAME = Test
 ALWAYS_SEARCH_USER_PATHS = NO
 GCC_PRECOMPILE_PREFIX_HEADER = YES
@@ -162,7 +162,7 @@ GCC_PREFIX_HEADER = Test_Prefix.pch
 
 
 
-<time datetime="2009-05-14T08:00:59-04:00" pubdate data-updated="true">14 May 2009</time>
+<time datetime="2009-05-14T06:00:59-06:00" pubdate data-updated="true">14 May 2009</time>
       
 
 <span class="categories">
@@ -204,7 +204,7 @@ GCC_PREFIX_HEADER = Test_Prefix.pch
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

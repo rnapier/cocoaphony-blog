@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2010-06-09T02:39:04-04:00" pubdate data-updated="true">09 Jun 2010</time>
+<time datetime="2010-06-09T00:39:04-06:00" pubdate data-updated="true">09 Jun 2010</time>
         
       </p>
     
@@ -84,9 +84,9 @@
 <!-- more -->
 <p>We create a thin wrapper object to provide an ObjC face on a C++ object. The challenge is how to hide C++ classes from the header file. The answer is to put them in a struct that you forward declare so you don’t have to expose its contents. Structs are almost identical with C++ classes, but their forward declaration syntax is C-compatible (unlike class). Let’s look at how this is done.</p>
 
-<p>For this example, we will consider a C++ class called <code class="highlighter-rouge">RN::Wrap</code>. It holds a simple string with set and get accessors.</p>
+<p>For this example, we will consider a C++ class called <code class="language-plaintext highlighter-rouge">RN::Wrap</code>. It holds a simple string with set and get accessors.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Wrap {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Wrap {
 public:
 	Wrap(string str) : m_string(str) {};
 	string getString() { return m_string; };
@@ -96,19 +96,19 @@ private:
 };
 </code></pre></div></div>
 
-<p>We wrap this into Objective-C++ using an opaque structure, <code class="highlighter-rouge">RNWrapOpaque</code>:</p>
+<p>We wrap this into Objective-C++ using an opaque structure, <code class="language-plaintext highlighter-rouge">RNWrapOpaque</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct RNWrapOpaque;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct RNWrapOpaque;
 @interface RNWrap : NSObject {
     struct RNWrapOpaque *_cpp;
 }
 </code></pre></div></div>
 
-<p>Since we only include a raw pointer to <code class="highlighter-rouge">RNWrapOpaque</code>, we don’t have to declare anything else about it in the header file. If we tried to store the actual struct here (rather than a pointer), then that would defeat the purpose. This is the only raw pointer we will need.</p>
+<p>Since we only include a raw pointer to <code class="language-plaintext highlighter-rouge">RNWrapOpaque</code>, we don’t have to declare anything else about it in the header file. If we tried to store the actual struct here (rather than a pointer), then that would defeat the purpose. This is the only raw pointer we will need.</p>
 
 <p>Since structs are almost identical to classes in C++, we can use class features like constructors and destructors in the implementation (.mm file):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct RNWrapOpaque {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct RNWrapOpaque {
 public:
     RNWrapOpaque(string aStr) : wrap(aStr) {};
 	RN::Wrap wrap;
@@ -117,7 +117,7 @@ public:
 
 <p>Now initializing and using the opaque object is easy in ObjC++ code:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)initWithString:(NSString *)aString {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)initWithString:(NSString *)aString {
     self = [super init];
     if (self != nil) {
 	    self.cpp = new RNWrapOpaque([aString UTF8String]);
@@ -141,11 +141,11 @@ public:
 }
 </code></pre></div></div>
 
-<p>A nice side effect of this usages is that C++ objects are easy to detect through the <code class="highlighter-rouge">self.cpp</code> prefix. Memory management is easy since there is only one raw C++ pointer.</p>
+<p>A nice side effect of this usages is that C++ objects are easy to detect through the <code class="language-plaintext highlighter-rouge">self.cpp</code> prefix. Memory management is easy since there is only one raw C++ pointer.</p>
 
 <p>Using the class requires no special work. It’s pure ObjC:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RNWrap *wrap = [[[RNWrap alloc] initWithString:@"my string"] autorelease];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RNWrap *wrap = [[[RNWrap alloc] initWithString:@"my string"] autorelease];
 NSLog(@"wrap = %@", [wrap string]);
 </code></pre></div></div>
 
@@ -165,7 +165,7 @@ NSLog(@"wrap = %@", [wrap string]);
 
 
 
-<time datetime="2010-06-09T02:39:04-04:00" pubdate data-updated="true">09 Jun 2010</time>
+<time datetime="2010-06-09T00:39:04-06:00" pubdate data-updated="true">09 Jun 2010</time>
       
 
 <span class="categories">
@@ -207,7 +207,7 @@ NSLog(@"wrap = %@", [wrap string]);
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

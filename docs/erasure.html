@@ -70,29 +70,29 @@
 
 
 
-<time datetime="2015-08-04T15:42:00-04:00" pubdate data-updated="true">04 Aug 2015</time>
+<time datetime="2015-08-04T15:42:00-06:00" pubdate data-updated="true">04 Aug 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Once upon a time, when Swift was young, there were a couple of types called <code class="highlighter-rouge">SequenceOf</code> and <code class="highlighter-rouge">GeneratorOf</code>, and they could type erase stuff. “Type erase?” you may ask. “I thought we <em>loved</em> types.” We do. Don’t worry. Our types aren’t going anywhere. But sometimes we want them to be a little less…precise.</p>
+<div class="entry-content"><p>Once upon a time, when Swift was young, there were a couple of types called <code class="language-plaintext highlighter-rouge">SequenceOf</code> and <code class="language-plaintext highlighter-rouge">GeneratorOf</code>, and they could type erase stuff. “Type erase?” you may ask. “I thought we <em>loved</em> types.” We do. Don’t worry. Our types aren’t going anywhere. But sometimes we want them to be a little less…precise.</p>
 
-<p>In Swift 2, our little type erasers got a rename and some friends. Now they’re all named “Any”-something. So <code class="highlighter-rouge">SequenceOf</code> became <code class="highlighter-rouge">AnySequence</code> and <code class="highlighter-rouge">GeneratorOf</code> became <code class="highlighter-rouge">AnyGenerator</code> and there are a gaggle of indexes and collections from <code class="highlighter-rouge">AnyForwardIndex</code> to <code class="highlighter-rouge">AnyRandomAccessCollection</code>.</p>
+<p>In Swift 2, our little type erasers got a rename and some friends. Now they’re all named “Any”-something. So <code class="language-plaintext highlighter-rouge">SequenceOf</code> became <code class="language-plaintext highlighter-rouge">AnySequence</code> and <code class="language-plaintext highlighter-rouge">GeneratorOf</code> became <code class="language-plaintext highlighter-rouge">AnyGenerator</code> and there are a gaggle of indexes and collections from <code class="language-plaintext highlighter-rouge">AnyForwardIndex</code> to <code class="language-plaintext highlighter-rouge">AnyRandomAccessCollection</code>.</p>
 
 <p>So what are these type erasers? Let’s start with how to use one and we’ll work backwards to why.<!-- more --></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let seq = AnySequence([1,2,3])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let seq = AnySequence([1,2,3])
 </code></pre></div></div>
 
-<p>This creates an <code class="highlighter-rouge">AnySequence&lt;Int&gt;</code>. It’s just a sequence of Ints that we can iterate over. Isn’t <code class="highlighter-rouge">[1,2,3]</code> also a sequence of Ints we can iterate over? Well, yeah. But it’s also explicitly an Array. And sometimes you don’t want to have to deal with that kind of implementation detail.</p>
+<p>This creates an <code class="language-plaintext highlighter-rouge">AnySequence&lt;Int&gt;</code>. It’s just a sequence of Ints that we can iterate over. Isn’t <code class="language-plaintext highlighter-rouge">[1,2,3]</code> also a sequence of Ints we can iterate over? Well, yeah. But it’s also explicitly an Array. And sometimes you don’t want to have to deal with that kind of implementation detail.</p>
 
 <h2 id="who-needs-types-like-that">Who Needs Types Like That?</h2>
 
 <p>Let’s consider a little more complicated case:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let xs = [1,2,3]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let xs = [1,2,3]
 let ys = ["A","B","C"]
 let zs = zip(xs.reverse(), ys.reverse())
 // Zip2Sequence&lt;ReverseRandomAccessCollection&lt;Array&lt;Int&gt;&gt;, ReverseRandomAccessCollection&lt;Array&lt;String&gt;&gt;&gt;
@@ -100,36 +100,36 @@ let zs = zip(xs.reverse(), ys.reverse())
 
 <p>That’s quite a type. Imagine it as the return type of a function:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverseZip&lt;T,U&gt;(xs: [T], _ ys: [U]) -&gt; Zip2Sequence&lt;ReverseRandomAccessCollection&lt;[T]&gt;, ReverseRandomAccessCollection&lt;[U]&gt;&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverseZip&lt;T,U&gt;(xs: [T], _ ys: [U]) -&gt; Zip2Sequence&lt;ReverseRandomAccessCollection&lt;[T]&gt;, ReverseRandomAccessCollection&lt;[U]&gt;&gt; {
   return zip(xs.reverse(), ys.reverse())
 }
 </code></pre></div></div>
 
 <p>That’s insane. Let’s not do that. Not only is the type overwhelming, but it ties us to this particular implementation. We might want to refactor the code like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  return zip(xs, ys).reverse()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  return zip(xs, ys).reverse()
 </code></pre></div></div>
 
-<p>Then the return type would change to <code class="highlighter-rouge">[(T,U)]</code> and all the callers would have to be updated. Clearly we’re leaking too much information about our implementation. What’s the point of <code class="highlighter-rouge">reverseZip</code>? Is it to return a <code class="highlighter-rouge">Zip2Sequence&lt;...&gt;</code>? No. It’s to return a sequence of tuples. We want a type that means “a sequence of tuples.” Often we use <code class="highlighter-rouge">Array</code> for that, but there’s an even less restrictive way that doesn’t require making an extra copy: <code class="highlighter-rouge">AnySequence</code>.</p>
+<p>Then the return type would change to <code class="language-plaintext highlighter-rouge">[(T,U)]</code> and all the callers would have to be updated. Clearly we’re leaking too much information about our implementation. What’s the point of <code class="language-plaintext highlighter-rouge">reverseZip</code>? Is it to return a <code class="language-plaintext highlighter-rouge">Zip2Sequence&lt;...&gt;</code>? No. It’s to return a sequence of tuples. We want a type that means “a sequence of tuples.” Often we use <code class="language-plaintext highlighter-rouge">Array</code> for that, but there’s an even less restrictive way that doesn’t require making an extra copy: <code class="language-plaintext highlighter-rouge">AnySequence</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverseZip&lt;T,U&gt;(xs: [T], _ ys: [U]) -&gt; AnySequence&lt;(T,U)&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func reverseZip&lt;T,U&gt;(xs: [T], _ ys: [U]) -&gt; AnySequence&lt;(T,U)&gt; {
     return AnySequence(zip(xs, ys).reverse())
 }
 </code></pre></div></div>
 
 <p>Now we can keep our implementation details private. If we have some internal sequence type, we don’t have to share it with our callers. We just give them what they need and no more.</p>
 
-<p>Notice that <code class="highlighter-rouge">AnySequence</code> is not a protocol. It’s a generic <code class="highlighter-rouge">struct</code> that wraps another sequence. You can’t use an <code class="highlighter-rouge">[Int]</code> in a place that expects an <code class="highlighter-rouge">AnySequence&lt;Int&gt;</code>. You still want to use <code class="highlighter-rouge">SequenceType</code> for parameters in most cases.</p>
+<p>Notice that <code class="language-plaintext highlighter-rouge">AnySequence</code> is not a protocol. It’s a generic <code class="language-plaintext highlighter-rouge">struct</code> that wraps another sequence. You can’t use an <code class="language-plaintext highlighter-rouge">[Int]</code> in a place that expects an <code class="language-plaintext highlighter-rouge">AnySequence&lt;Int&gt;</code>. You still want to use <code class="language-plaintext highlighter-rouge">SequenceType</code> for parameters in most cases.</p>
 
-<p>These “Any” type erasers also aren’t like <code class="highlighter-rouge">Any</code> and <code class="highlighter-rouge">AnyObject</code>, which are protocols that just “hide” the type. You can still <code class="highlighter-rouge">as!</code> an <code class="highlighter-rouge">AnyObject</code> back to its original type. <code class="highlighter-rouge">AnySequence</code> and its kin completely encapsulate the underlying data. You can’t get the original back. This creates a very strong abstraction layer and strengthens type safety by making <code class="highlighter-rouge">as!</code> casting impossible.</p>
+<p>These “Any” type erasers also aren’t like <code class="language-plaintext highlighter-rouge">Any</code> and <code class="language-plaintext highlighter-rouge">AnyObject</code>, which are protocols that just “hide” the type. You can still <code class="language-plaintext highlighter-rouge">as!</code> an <code class="language-plaintext highlighter-rouge">AnyObject</code> back to its original type. <code class="language-plaintext highlighter-rouge">AnySequence</code> and its kin completely encapsulate the underlying data. You can’t get the original back. This creates a very strong abstraction layer and strengthens type safety by making <code class="language-plaintext highlighter-rouge">as!</code> casting impossible.</p>
 
-<p><a href="http://www.openradar.me/radar?id=5528602095386624">The new names worry me a little</a> because they make it look like <code class="highlighter-rouge">AnyObject</code> and <code class="highlighter-rouge">AnySequence</code> are the same kind of thing when they’re not. But the new naming convention is definitely more flexible. You couldn’t have named the <code class="highlighter-rouge">AnyIndex</code> types using the old <code class="highlighter-rouge">...Of</code> convention. So, I’m getting used to the new names.</p>
+<p><a href="http://www.openradar.me/radar?id=5528602095386624">The new names worry me a little</a> because they make it look like <code class="language-plaintext highlighter-rouge">AnyObject</code> and <code class="language-plaintext highlighter-rouge">AnySequence</code> are the same kind of thing when they’re not. But the new naming convention is definitely more flexible. You couldn’t have named the <code class="language-plaintext highlighter-rouge">AnyIndex</code> types using the old <code class="language-plaintext highlighter-rouge">...Of</code> convention. So, I’m getting used to the new names.</p>
 
 <h2 id="chains-of-association">Chains of Association</h2>
 
 <p>Hopefully by now you’re sold on why you’d want to use a type eraser. But would you ever want to build one? Let’s look at an example that comes up pretty often around associated types in protocols.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// An Animal can eat
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// An Animal can eat
 protocol Animal {
     typealias Food
     func feed(food: Food)
@@ -154,31 +154,31 @@ struct Bird: Animal {
 
 <p>So now let’s say we have a bunch of grass available and we’d like to feed it to some grass eaters. Seems easy:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for animal in grassEaters {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for animal in grassEaters {
     animal.feed(Grass())
 }
 </code></pre></div></div>
 
 <p>Now we just have to create this array of grass eaters. Should be simple, right? Hmmm…</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters = [Cow(), Goat()] // error: '_' is not convertible to 'Goat'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters = [Cow(), Goat()] // error: '_' is not convertible to 'Goat'
 </code></pre></div></div>
 
 <p>That’s a weird error. We probably just need to be explicit about the the type.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters: [Animal] = [Cow(), Goat()]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters: [Animal] = [Cow(), Goat()]
 // error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements
 </code></pre></div></div>
 
 <p>We all know that error, don’t we? OK, let’s try generics.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters: [Animal&lt;Grass&gt;] = [Cow(), Goat()]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters: [Animal&lt;Grass&gt;] = [Cow(), Goat()]
 // error: protocol 'Animal' can only be used as a generic constraint because it has Self or associated type requirements
 </code></pre></div></div>
 
 <p>Still? Oh right. You can’t specialize an associated type using generic syntax. That’s fine, we’ll just make the protocol generic.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protocol Animal&lt;Food&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protocol Animal&lt;Food&gt; {
     func feed(food: Food)
 }
 // error: Statement cannot begin with a closure expression
@@ -186,9 +186,9 @@ struct Bird: Animal {
 
 <p>Right, protocols can’t be generic. Type-safety is for chumps. Let’s go back to Objective-C.</p>
 
-<p>…Or maybe type erasure is what we need. Let’s build <code class="highlighter-rouge">AnyAnimal</code>. There are several ways to do this, but the easiest in my opinion is with closures.</p>
+<p>…Or maybe type erasure is what we need. Let’s build <code class="language-plaintext highlighter-rouge">AnyAnimal</code>. There are several ways to do this, but the easiest in my opinion is with closures.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct AnyAnimal&lt;Food&gt;: Animal {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct AnyAnimal&lt;Food&gt;: Animal {
     private let _feed: (Food) -&gt; Void
     init&lt;Base: Animal where Food == Base.Food&gt;(_ base: Base) {
         _feed = base.feed
@@ -197,16 +197,16 @@ struct Bird: Animal {
 }
 </code></pre></div></div>
 
-<p>(While this works exactly like <code class="highlighter-rouge">AnySequence</code>, this isn’t how <code class="highlighter-rouge">AnySequence</code> is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p>
+<p>(While this works exactly like <code class="language-plaintext highlighter-rouge">AnySequence</code>, this isn’t how <code class="language-plaintext highlighter-rouge">AnySequence</code> is implemented. In my next post I’ll discuss why and how to implement type erasers like stdlib does.)</p>
 
-<p>Now we can make <code class="highlighter-rouge">grassEaters</code>:</p>
+<p>Now we can make <code class="language-plaintext highlighter-rouge">grassEaters</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters = [AnyAnimal(Cow()), AnyAnimal(Goat())] // Type is [AnyAnimal&lt;Grass&gt;]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let grassEaters = [AnyAnimal(Cow()), AnyAnimal(Goat())] // Type is [AnyAnimal&lt;Grass&gt;]
 </code></pre></div></div>
 
 <p>But we still get type safety if we try to incorrectly mix our animals:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let mixedEaters = [AnyAnimal(Cow()), AnyAnimal(Bird())]
 // error: type of expression is ambiguous without more context
 </code></pre></div></div>
 
@@ -230,7 +230,7 @@ struct Bird: Animal {
 
 
 
-<time datetime="2015-08-04T15:42:00-04:00" pubdate data-updated="true">04 Aug 2015</time>
+<time datetime="2015-08-04T15:42:00-06:00" pubdate data-updated="true">04 Aug 2015</time>
       
 
 
@@ -266,7 +266,7 @@ struct Bird: Animal {
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2011-03-25T12:15:19-04:00" pubdate data-updated="true">25 Mar 2011</time>
+<time datetime="2011-03-25T10:15:19-06:00" pubdate data-updated="true">25 Mar 2011</time>
         
       </p>
     
@@ -84,7 +84,7 @@
 
 <p>The goal of this code is to walk down the path boundary, trying to grow an ever-larger rectangle. If the width or the offset of the boundary changes, then it starts a new rectangle.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (CFArrayRef)copyRectangularPathsForPath:(CGPathRef)path 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (CFArrayRef)copyRectangularPathsForPath:(CGPathRef)path 
                                    height:(CGFloat)height {
 	CFMutableArrayRef paths = CFArrayCreateMutable(NULL, 0, 
                                                    &amp;kCFTypeArrayCallBacks);
@@ -144,9 +144,9 @@
 }
 </code></pre></div></div>
 
-<p>Remember, the coordinate system here is flipped for iOS. So <code class="highlighter-rouge">CGRectGetMaxY()</code> is returning the top of the box, not the bottom. The call to <code class="highlighter-rouge">clipRectToPath()</code> is from my previous post on clipping rectangles to paths. Also noteworthy here is our use of <code class="highlighter-rouge">UIGraphicsGetCurrentContext()</code>. This routine is meant to be called inside of <code class="highlighter-rouge">drawRect:</code>.</p>
+<p>Remember, the coordinate system here is flipped for iOS. So <code class="language-plaintext highlighter-rouge">CGRectGetMaxY()</code> is returning the top of the box, not the bottom. The call to <code class="language-plaintext highlighter-rouge">clipRectToPath()</code> is from my previous post on clipping rectangles to paths. Also noteworthy here is our use of <code class="language-plaintext highlighter-rouge">UIGraphicsGetCurrentContext()</code>. This routine is meant to be called inside of <code class="language-plaintext highlighter-rouge">drawRect:</code>.</p>
 
-<p>There are some inefficiencies here. More efficient approaches would calculate the rectangles a single time, rather than during <code class="highlighter-rouge">drawRect:</code> (though this isn’t as inefficient as it sounds, since we try to avoid calling <code class="highlighter-rouge">drawRect:</code> more than we need). A better implementation could avoid some of the memory churn in <code class="highlighter-rouge">clipRectToPath()</code> by allocating a single large buffer. But this hopefully is a reasonable example of how to attack the problem.</p>
+<p>There are some inefficiencies here. More efficient approaches would calculate the rectangles a single time, rather than during <code class="language-plaintext highlighter-rouge">drawRect:</code> (though this isn’t as inefficient as it sounds, since we try to avoid calling <code class="language-plaintext highlighter-rouge">drawRect:</code> more than we need). A better implementation could avoid some of the memory churn in <code class="language-plaintext highlighter-rouge">clipRectToPath()</code> by allocating a single large buffer. But this hopefully is a reasonable example of how to attack the problem.</p>
 
 <p>An example Xcode project is attached.</p>
 
@@ -166,7 +166,7 @@
 
 
 
-<time datetime="2011-03-25T12:15:19-04:00" pubdate data-updated="true">25 Mar 2011</time>
+<time datetime="2011-03-25T10:15:19-06:00" pubdate data-updated="true">25 Mar 2011</time>
       
 
 <span class="categories">
@@ -208,7 +208,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

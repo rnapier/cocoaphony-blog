@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2015-10-07T20:27:00-04:00" pubdate data-updated="true">07 Oct 2015</time>
+<time datetime="2015-10-07T20:27:00-06:00" pubdate data-updated="true">07 Oct 2015</time>
         
       </p>
     
@@ -85,18 +85,18 @@
   <p>— Rob Napier (@cocoaphony) <a href="https://twitter.com/cocoaphony/status/648514927678910464">September 28, 2015</a></p>
 </blockquote>
 
-<p>I did a lot of writing and rewriting of the <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">Swift version of RNCryptor</a>. I struggled especially with what type to use for data. I gravitated quickly to <code class="highlighter-rouge">[UInt8]</code> with all its apparent Swiftiness. But in the end, after many iterations, I refactored back to <code class="highlighter-rouge">NSData</code>, and I’m really glad I did.</p>
+<p>I did a lot of writing and rewriting of the <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">Swift version of RNCryptor</a>. I struggled especially with what type to use for data. I gravitated quickly to <code class="language-plaintext highlighter-rouge">[UInt8]</code> with all its apparent Swiftiness. But in the end, after many iterations, I refactored back to <code class="language-plaintext highlighter-rouge">NSData</code>, and I’m really glad I did.</p>
 
 <p>This is the story of why.
 <!-- MORE --></p>
 
 <h3 id="in-fair-frameworks-where-we-lay-our-scene">In fair frameworks, where we lay our scene</h3>
 
-<p>First, I want to be clear that I don’t think <code class="highlighter-rouge">[UInt8]</code> is bad. In some places it’s better than <code class="highlighter-rouge">NSData</code>, but there are tradeoffs, and ultimately I found the tradeoffs favored <code class="highlighter-rouge">NSData</code> today. Some of those will improve in Future Swift, and I suspect something more Swifty than <code class="highlighter-rouge">NSData</code> will be the way of the future. But today, in the kinds of projects I work on, there’s a lot going for <code class="highlighter-rouge">NSData</code>.</p>
+<p>First, I want to be clear that I don’t think <code class="language-plaintext highlighter-rouge">[UInt8]</code> is bad. In some places it’s better than <code class="language-plaintext highlighter-rouge">NSData</code>, but there are tradeoffs, and ultimately I found the tradeoffs favored <code class="language-plaintext highlighter-rouge">NSData</code> today. Some of those will improve in Future Swift, and I suspect something more Swifty than <code class="language-plaintext highlighter-rouge">NSData</code> will be the way of the future. But today, in the kinds of projects I work on, there’s a lot going for <code class="language-plaintext highlighter-rouge">NSData</code>.</p>
 
 <p>“In the kinds of projects I work on” is an important caveat. I mostly build things that are used by other developers; frameworks, engines, services, even just snippets of code. I don’t build a lot of full applications that an end user would see. And the systems I build typically have a very small API surface. They typically do just one thing, and they’re built to be easily clicked together with things that I didn’t write.</p>
 
-<p>To achieve that, I try to make most of my code as self-contained as possible, with minimal dependencies. I try to make it easy to plug into whatever system you prefer. That usually means sticking as much as possible to the types provided by the system. Much as I love <a href="https://github.com/antitypical/Result"><code class="highlighter-rouge">Result</code></a>, none of my systems use it externally (and only a few use it internally). I try to avoid exposing my caller to any cleverness. If they’re familiar with the platform, I want them to find my API obvious, even boring. If they have a preferred error handling system, they probably have a way to convert <code class="highlighter-rouge">throws</code> to it, since that’s what Cocoa generates. So I use <code class="highlighter-rouge">throws</code>.</p>
+<p>To achieve that, I try to make most of my code as self-contained as possible, with minimal dependencies. I try to make it easy to plug into whatever system you prefer. That usually means sticking as much as possible to the types provided by the system. Much as I love <a href="https://github.com/antitypical/Result"><code class="language-plaintext highlighter-rouge">Result</code></a>, none of my systems use it externally (and only a few use it internally). I try to avoid exposing my caller to any cleverness. If they’re familiar with the platform, I want them to find my API obvious, even boring. If they have a preferred error handling system, they probably have a way to convert <code class="language-plaintext highlighter-rouge">throws</code> to it, since that’s what Cocoa generates. So I use <code class="language-plaintext highlighter-rouge">throws</code>.</p>
 
 <h3 id="the-elephant-in-the-room">The elephant in the room</h3>
 
@@ -104,19 +104,19 @@
 
 <p>Trying to cordon off Cocoa means constantly converting your types and patterns. That’s horrible for programs, and it’s very unswifty. Swift is all about integrating cleanly with Cocoa.</p>
 
-<p>If you’re writing Cocoa apps you wind up with <code class="highlighter-rouge">NSData</code> all the time. You get it when you read or write files, when you download things from the network, when you create PNGs, when you serialize. You can’t escape <code class="highlighter-rouge">NSData</code>. Swift automatically bridges <code class="highlighter-rouge">NSString</code> and <code class="highlighter-rouge">String</code>, <code class="highlighter-rouge">NSArray</code> and <code class="highlighter-rouge">Array</code>, <code class="highlighter-rouge">NSError</code> and <code class="highlighter-rouge">ErrorType</code>. Some day I hope <a href="http://www.openradar.me/23010231"><code class="highlighter-rouge">NSData</code> gets a bridge</a>, but it doesn’t have one today. So the question is what to do in the meantime?</p>
+<p>If you’re writing Cocoa apps you wind up with <code class="language-plaintext highlighter-rouge">NSData</code> all the time. You get it when you read or write files, when you download things from the network, when you create PNGs, when you serialize. You can’t escape <code class="language-plaintext highlighter-rouge">NSData</code>. Swift automatically bridges <code class="language-plaintext highlighter-rouge">NSString</code> and <code class="language-plaintext highlighter-rouge">String</code>, <code class="language-plaintext highlighter-rouge">NSArray</code> and <code class="language-plaintext highlighter-rouge">Array</code>, <code class="language-plaintext highlighter-rouge">NSError</code> and <code class="language-plaintext highlighter-rouge">ErrorType</code>. Some day I hope <a href="http://www.openradar.me/23010231"><code class="language-plaintext highlighter-rouge">NSData</code> gets a bridge</a>, but it doesn’t have one today. So the question is what to do in the meantime?</p>
 
-<p>There are basically two options: build the bridge or use <code class="highlighter-rouge">NSData</code>. Building the bridge (without modifying stdlib) is tricky if you want to avoid copying. It’s not hard if you’re not worried about performance, but an <code class="highlighter-rouge">NSData</code> can easily be multiple megabytes and that’s both time and memory. Even temporary copies raise your high water mark, which hurts the whole system. Yes, I know all about premature optimization, but when you’re building frameworks you need to avoid patterns that are reasonably likely to cause performance problems. Even when you’re building just one app, there’s a difference between “build simply, then optimize” and “throw performance out the window until Apple rejects your app, then optimize.” If it were just one copy, and it made everything else really simple, that might be worth discussing. But making a copy every time you move from one part of the system to another is a problem.</p>
+<p>There are basically two options: build the bridge or use <code class="language-plaintext highlighter-rouge">NSData</code>. Building the bridge (without modifying stdlib) is tricky if you want to avoid copying. It’s not hard if you’re not worried about performance, but an <code class="language-plaintext highlighter-rouge">NSData</code> can easily be multiple megabytes and that’s both time and memory. Even temporary copies raise your high water mark, which hurts the whole system. Yes, I know all about premature optimization, but when you’re building frameworks you need to avoid patterns that are reasonably likely to cause performance problems. Even when you’re building just one app, there’s a difference between “build simply, then optimize” and “throw performance out the window until Apple rejects your app, then optimize.” If it were just one copy, and it made everything else really simple, that might be worth discussing. But making a copy every time you move from one part of the system to another is a problem.</p>
 
-<p>With enough work you can solve this problem. It’s not tons of code, but it is a little bit tricky to be certain you’ve done it exactly right and won’t leak or crash (and much trickier to do from outside of stdlib). But is that work and complexity worth it? What problems were we really solving converting <code class="highlighter-rouge">NSData</code> to <code class="highlighter-rouge">[UInt8]</code>?</p>
+<p>With enough work you can solve this problem. It’s not tons of code, but it is a little bit tricky to be certain you’ve done it exactly right and won’t leak or crash (and much trickier to do from outside of stdlib). But is that work and complexity worth it? What problems were we really solving converting <code class="language-plaintext highlighter-rouge">NSData</code> to <code class="language-plaintext highlighter-rouge">[UInt8]</code>?</p>
 
-<h3 id="the-magic-that-is-array">The magic that is <code class="highlighter-rouge">Array</code></h3>
+<h3 id="the-magic-that-is-array">The magic that is <code class="language-plaintext highlighter-rouge">Array</code></h3>
 
-<p>Even if you don’t care about <code class="highlighter-rouge">NSData</code> interop, using <code class="highlighter-rouge">[UInt8]</code> doesn’t give you a magical unicorn API. <code class="highlighter-rouge">Array</code> has all kinds of little sharp edges that surprise and confuse if you want to very careful of making copies.</p>
+<p>Even if you don’t care about <code class="language-plaintext highlighter-rouge">NSData</code> interop, using <code class="language-plaintext highlighter-rouge">[UInt8]</code> doesn’t give you a magical unicorn API. <code class="language-plaintext highlighter-rouge">Array</code> has all kinds of little sharp edges that surprise and confuse if you want to very careful of making copies.</p>
 
-<p>Let’s start with a simple function using <code class="highlighter-rouge">NSData</code> and see what happens with <code class="highlighter-rouge">[UInt8]</code>. This function takes a <code class="highlighter-rouge">CCCryptorRef</code> and updates it with some data, writes the resulting encrypted data to a buffer and returns the buffer.</p>
+<p>Let’s start with a simple function using <code class="language-plaintext highlighter-rouge">NSData</code> and see what happens with <code class="language-plaintext highlighter-rouge">[UInt8]</code>. This function takes a <code class="language-plaintext highlighter-rouge">CCCryptorRef</code> and updates it with some data, writes the resulting encrypted data to a buffer and returns the buffer.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func updateCryptor(cryptor: CCCryptorRef, data: NSData) -&gt; NSData {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func updateCryptor(cryptor: CCCryptorRef, data: NSData) -&gt; NSData {
     let outputLength = CCCryptorGetOutputLength(cryptor, data.length, false)
     let buffer = NSMutableData(length: outputLength)!
     var dataOutMoved: Int = 0
@@ -132,9 +132,9 @@
 }
 </code></pre></div></div>
 
-<p>No problems there IMO. That’s a fine implementation. Easy to read and understand (if you understand <code class="highlighter-rouge">CCCryptorRef</code>). The <code class="highlighter-rouge">[UInt8]</code> implementation is about the same. I don’t think you could say one is really much cleaner than the other.</p>
+<p>No problems there IMO. That’s a fine implementation. Easy to read and understand (if you understand <code class="language-plaintext highlighter-rouge">CCCryptorRef</code>). The <code class="language-plaintext highlighter-rouge">[UInt8]</code> implementation is about the same. I don’t think you could say one is really much cleaner than the other.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func updateCryptor_(cryptor: CCCryptorRef, data: [UInt8]) -&gt; [UInt8] {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func updateCryptor_(cryptor: CCCryptorRef, data: [UInt8]) -&gt; [UInt8] {
     let outputLength = CCCryptorGetOutputLength(cryptor, data.length, false)
     var buffer = [UInt8](count: outputLength, repeatedValue: 0)
     var dataOutMoved: Int = 0
@@ -150,76 +150,76 @@
 }
 </code></pre></div></div>
 
-<p>But is it correct? Can we be certain that <code class="highlighter-rouge">data</code> is contiguous memory and isn’t really an <code class="highlighter-rouge">NSArray&lt;NSNumber&gt;</code> under the covers? If it is an <code class="highlighter-rouge">NSArray</code>, will this work or will we get the wrong data? Should we use <code class="highlighter-rouge">.withUnsafePointer</code> here? I studied the docs, and talked to several devs (including Apple devs), and in the end am pretty sure that this will always work. But I’m only “pretty sure.” And that’s only because of kind people at Apple (especially @jckarter) taking time to walk through it with me. Not everyone has that.</p>
+<p>But is it correct? Can we be certain that <code class="language-plaintext highlighter-rouge">data</code> is contiguous memory and isn’t really an <code class="language-plaintext highlighter-rouge">NSArray&lt;NSNumber&gt;</code> under the covers? If it is an <code class="language-plaintext highlighter-rouge">NSArray</code>, will this work or will we get the wrong data? Should we use <code class="language-plaintext highlighter-rouge">.withUnsafePointer</code> here? I studied the docs, and talked to several devs (including Apple devs), and in the end am pretty sure that this will always work. But I’m only “pretty sure.” And that’s only because of kind people at Apple (especially @jckarter) taking time to walk through it with me. Not everyone has that.</p>
 
-<p>This “but is it correct?” came up all over the place. Would this operation cause a copy? Exactly how long is an <code class="highlighter-rouge">UnsafeBufferPointer</code> valid? There’s a lot of bridging magic in <code class="highlighter-rouge">Array</code>, and it’s not always clear what is <em>promised</em>. Testing only gets you so far if the current implementation just happens to work. Sometimes behaviors change just by importing Foundation.</p>
+<p>This “but is it correct?” came up all over the place. Would this operation cause a copy? Exactly how long is an <code class="language-plaintext highlighter-rouge">UnsafeBufferPointer</code> valid? There’s a lot of bridging magic in <code class="language-plaintext highlighter-rouge">Array</code>, and it’s not always clear what is <em>promised</em>. Testing only gets you so far if the current implementation just happens to work. Sometimes behaviors change just by importing Foundation.</p>
 
-<p>I thought I might avoid the Cocoa-bridging ambiguities of <code class="highlighter-rouge">Array</code> by using <code class="highlighter-rouge">ContiguousArray</code> instead. That way I could be very precise about my expectations. But it turns out that passing <code class="highlighter-rouge">ContiguousArray</code> to C behaves very differently than passing <code class="highlighter-rouge">Array</code>. <code class="highlighter-rouge">Array</code> gets turned into a pointer to the first element, but <code class="highlighter-rouge">ContiguousArray</code> gets turned into a pointer to the struct. So the <code class="highlighter-rouge">ContiguousArray</code> gets corrupted and you crash. <code class="highlighter-rouge">Array</code> is more magical than you think. Magic is wonderful until your program crashes and you don’t know why.</p>
+<p>I thought I might avoid the Cocoa-bridging ambiguities of <code class="language-plaintext highlighter-rouge">Array</code> by using <code class="language-plaintext highlighter-rouge">ContiguousArray</code> instead. That way I could be very precise about my expectations. But it turns out that passing <code class="language-plaintext highlighter-rouge">ContiguousArray</code> to C behaves very differently than passing <code class="language-plaintext highlighter-rouge">Array</code>. <code class="language-plaintext highlighter-rouge">Array</code> gets turned into a pointer to the first element, but <code class="language-plaintext highlighter-rouge">ContiguousArray</code> gets turned into a pointer to the struct. So the <code class="language-plaintext highlighter-rouge">ContiguousArray</code> gets corrupted and you crash. <code class="language-plaintext highlighter-rouge">Array</code> is more magical than you think. Magic is wonderful until your program crashes and you don’t know why.</p>
 
 <p>I struggled with copy-on-write behavior. How do I know if an array’s buffer is shared so that a copy will happen on mutation? Will this code allocate 10MB or 20MB?</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func makeArray() -&gt; [UInt8] {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func makeArray() -&gt; [UInt8] {
     return Array(count: 10_000_000, repeatedValue: 0)
 }
 var array = makeArray() + [1]
 </code></pre></div></div>
 
-<p>What tests would prove that? Is it promised or just the current implementation? Does optimization level matter? Is it the same if <code class="highlighter-rouge">makeArray()</code> is in another module than the caller? Would small changes in my code lead to dramatic and surprising performance changes in apps that use my framework? This was a common problem in Scala before the <code class="highlighter-rouge">@tailrec</code> annotation was added. Very small tweaks to a recursive function could cause your stack to explode because you quietly broke tail call optimization. All your unit tests still pass, but the program crashes.</p>
+<p>What tests would prove that? Is it promised or just the current implementation? Does optimization level matter? Is it the same if <code class="language-plaintext highlighter-rouge">makeArray()</code> is in another module than the caller? Would small changes in my code lead to dramatic and surprising performance changes in apps that use my framework? This was a common problem in Scala before the <code class="language-plaintext highlighter-rouge">@tailrec</code> annotation was added. Very small tweaks to a recursive function could cause your stack to explode because you quietly broke tail call optimization. All your unit tests still pass, but the program crashes.</p>
 
-<p>In the end, I spent hours trying to be certain of the precise behaviors of <code class="highlighter-rouge">Array</code> bridging and copying. And all that to replace <code class="highlighter-rouge">NSData</code> code that is perfectly fine.</p>
+<p>In the end, I spent hours trying to be certain of the precise behaviors of <code class="language-plaintext highlighter-rouge">Array</code> bridging and copying. And all that to replace <code class="language-plaintext highlighter-rouge">NSData</code> code that is perfectly fine.</p>
 
 <h3 id="slice-and-dice">Slice and dice</h3>
 
-<p>When updating the cryptor, it is common that you’ll only want some of the data you were passed. You might want to slice off a header, or you might want to chunk the data up to reduce your encryption buffer size. In either case, you want to pass <code class="highlighter-rouge">updateCryptor()</code> a slice.</p>
+<p>When updating the cryptor, it is common that you’ll only want some of the data you were passed. You might want to slice off a header, or you might want to chunk the data up to reduce your encryption buffer size. In either case, you want to pass <code class="language-plaintext highlighter-rouge">updateCryptor()</code> a slice.</p>
 
-<p>For an immutable <code class="highlighter-rouge">NSData</code> that’s easy. Call <code class="highlighter-rouge">.subdataWithRange()</code> and you get another <code class="highlighter-rouge">NSData</code> back with no copying.</p>
+<p>For an immutable <code class="language-plaintext highlighter-rouge">NSData</code> that’s easy. Call <code class="language-plaintext highlighter-rouge">.subdataWithRange()</code> and you get another <code class="language-plaintext highlighter-rouge">NSData</code> back with no copying.</p>
 
-<p>But the <code class="highlighter-rouge">SubSequence</code> of <code class="highlighter-rouge">Array</code> is <code class="highlighter-rouge">ArraySlice</code>, and <code class="highlighter-rouge">updateCryptor()</code> doesn’t accept that. Of course you can copy your slice into a new <code class="highlighter-rouge">Array</code>, but unnecessary copying was what we wanted to avoid.</p>
+<p>But the <code class="language-plaintext highlighter-rouge">SubSequence</code> of <code class="language-plaintext highlighter-rouge">Array</code> is <code class="language-plaintext highlighter-rouge">ArraySlice</code>, and <code class="language-plaintext highlighter-rouge">updateCryptor()</code> doesn’t accept that. Of course you can copy your slice into a new <code class="language-plaintext highlighter-rouge">Array</code>, but unnecessary copying was what we wanted to avoid.</p>
 
-<p>We could make all the functions take <code class="highlighter-rouge">ArraySlice</code> and overload all the functions with an <code class="highlighter-rouge">Array</code> interface that forwards to the <code class="highlighter-rouge">ArraySlice</code> interface. But it’s a lot of duplication.</p>
+<p>We could make all the functions take <code class="language-plaintext highlighter-rouge">ArraySlice</code> and overload all the functions with an <code class="language-plaintext highlighter-rouge">Array</code> interface that forwards to the <code class="language-plaintext highlighter-rouge">ArraySlice</code> interface. But it’s a lot of duplication.</p>
 
-<p>So I decided to just convert everything to <code class="highlighter-rouge">UnsafeBufferPointer</code> and then pass that around internally. Easier semantics after a one-time conversion. No bridging worries. No unexpected copies. It seemed like a good idea at the time.</p>
+<p>So I decided to just convert everything to <code class="language-plaintext highlighter-rouge">UnsafeBufferPointer</code> and then pass that around internally. Easier semantics after a one-time conversion. No bridging worries. No unexpected copies. It seemed like a good idea at the time.</p>
 
-<p>The problem is that using <code class="highlighter-rouge">UnsafeBufferPointer</code> everywhere tends to turn your code inside out. Where you used to say:</p>
+<p>The problem is that using <code class="language-plaintext highlighter-rouge">UnsafeBufferPointer</code> everywhere tends to turn your code inside out. Where you used to say:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>updateCryptor(cryptor, data: data)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>updateCryptor(cryptor, data: data)
 </code></pre></div></div>
 
 <p>You now have to say:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data.withUnsafeBufferPointer { updateCryptor(cryptor, data: $0) }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data.withUnsafeBufferPointer { updateCryptor(cryptor, data: $0) }
 </code></pre></div></div>
 
-<p>Two solutions present themselves. First you decide that you are very clever, and use the <code class="highlighter-rouge">UnsafeBufferPointer</code> constructor:</p>
+<p>Two solutions present themselves. First you decide that you are very clever, and use the <code class="language-plaintext highlighter-rouge">UnsafeBufferPointer</code> constructor:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Never do this
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Never do this
 updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count))
 </code></pre></div></div>
 
-<p>Then @jckarter points out that by the time <code class="highlighter-rouge">updateCryptor</code> runs, there’s no promise that the <code class="highlighter-rouge">UnsafeBufferPointer</code> is still valid. ARC could destroy <code class="highlighter-rouge">data</code> before the statement even completes. (If you know that <code class="highlighter-rouge">data</code> is life-extended, then it is possible to know this will work, but it’s very unsafe, fragile, and hard to audit. Coding that way breaks everything Swift was trying to fix.)</p>
+<p>Then @jckarter points out that by the time <code class="language-plaintext highlighter-rouge">updateCryptor</code> runs, there’s no promise that the <code class="language-plaintext highlighter-rouge">UnsafeBufferPointer</code> is still valid. ARC could destroy <code class="language-plaintext highlighter-rouge">data</code> before the statement even completes. (If you know that <code class="language-plaintext highlighter-rouge">data</code> is life-extended, then it is possible to know this will work, but it’s very unsafe, fragile, and hard to audit. Coding that way breaks everything Swift was trying to fix.)</p>
 
-<p>So then you start creating function overloads to accept <code class="highlighter-rouge">Array</code> and <code class="highlighter-rouge">ArraySlice</code> and convert them into <code class="highlighter-rouge">UnsafeBufferPointer</code>, and you have even more duplicated code. And then you realize you want to accept <code class="highlighter-rouge">NSData</code> here, too, so you write an extension that adds <code class="highlighter-rouge">.withUnsafeBufferPointer()</code> to <code class="highlighter-rouge">NSData</code>, and now you have four versions of every function, and you realize you really should use a protocol instead. Brilliant!</p>
+<p>So then you start creating function overloads to accept <code class="language-plaintext highlighter-rouge">Array</code> and <code class="language-plaintext highlighter-rouge">ArraySlice</code> and convert them into <code class="language-plaintext highlighter-rouge">UnsafeBufferPointer</code>, and you have even more duplicated code. And then you realize you want to accept <code class="language-plaintext highlighter-rouge">NSData</code> here, too, so you write an extension that adds <code class="language-plaintext highlighter-rouge">.withUnsafeBufferPointer()</code> to <code class="language-plaintext highlighter-rouge">NSData</code>, and now you have four versions of every function, and you realize you really should use a protocol instead. Brilliant!</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protocol BufferType {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protocol BufferType {
     func withUnsafeBufferPointer&lt;R&gt;(body: (UnsafeBufferPointer&lt;UInt8&gt;) throws -&gt; R) rethrows -&gt; R
 }
 </code></pre></div></div>
 
-<p>This really feels like it’ll solve all these problems very elegantly. Except for this one problem. You want <code class="highlighter-rouge">[UInt8]</code> to be a <code class="highlighter-rouge">BufferType</code>, but you don’t want <code class="highlighter-rouge">[String]</code> to be a <code class="highlighter-rouge">BufferType</code>. And then you discover that while you can write extensions that only apply to <code class="highlighter-rouge">[UInt8]</code>, you can’t use those extensions to conform to a protocol. And that’s when the screaming starts. And then the barginning, and then the drinking.</p>
+<p>This really feels like it’ll solve all these problems very elegantly. Except for this one problem. You want <code class="language-plaintext highlighter-rouge">[UInt8]</code> to be a <code class="language-plaintext highlighter-rouge">BufferType</code>, but you don’t want <code class="language-plaintext highlighter-rouge">[String]</code> to be a <code class="language-plaintext highlighter-rouge">BufferType</code>. And then you discover that while you can write extensions that only apply to <code class="language-plaintext highlighter-rouge">[UInt8]</code>, you can’t use those extensions to conform to a protocol. And that’s when the screaming starts. And then the barginning, and then the drinking.</p>
 
-<p>When you get to the muttering, you came back and start building a <code class="highlighter-rouge">Buffer</code> class to wrap <code class="highlighter-rouge">Array</code>, <code class="highlighter-rouge">ArraySlice</code>, <code class="highlighter-rouge">NSData</code>, and even <code class="highlighter-rouge">CollectionType</code> to give it all a consistent interface. It’s ok, but it creates another “thing” for callers to deal with. In almost all cases, they have an <code class="highlighter-rouge">NSData</code>. There is almost no chance they had a <code class="highlighter-rouge">[UInt8]</code>. This is all just an extra layer for callers to deal with and to get in the way of the optimizer.</p>
+<p>When you get to the muttering, you came back and start building a <code class="language-plaintext highlighter-rouge">Buffer</code> class to wrap <code class="language-plaintext highlighter-rouge">Array</code>, <code class="language-plaintext highlighter-rouge">ArraySlice</code>, <code class="language-plaintext highlighter-rouge">NSData</code>, and even <code class="language-plaintext highlighter-rouge">CollectionType</code> to give it all a consistent interface. It’s ok, but it creates another “thing” for callers to deal with. In almost all cases, they have an <code class="language-plaintext highlighter-rouge">NSData</code>. There is almost no chance they had a <code class="language-plaintext highlighter-rouge">[UInt8]</code>. This is all just an extra layer for callers to deal with and to get in the way of the optimizer.</p>
 
-<p>I want to remind you that all of this, all these many, many hours of struggle, were to avoid the simple <code class="highlighter-rouge">NSData</code> code that took two minutes to write, works great, and is pretty darn Swifty as long as you don’t define “Swifty” as “does not import Foundation.”</p>
+<p>I want to remind you that all of this, all these many, many hours of struggle, were to avoid the simple <code class="language-plaintext highlighter-rouge">NSData</code> code that took two minutes to write, works great, and is pretty darn Swifty as long as you don’t define “Swifty” as “does not import Foundation.”</p>
 
 <h2 id="whats-the-matter-with-nsdata">What’s the matter with NSData?</h2>
 
-<p>So why did I resist using <code class="highlighter-rouge">NSData</code> anyway? Well, even though I believe the Foundation is absolutely a part of Swift, some of it isn’t <em>great</em> Swift. Notably <code class="highlighter-rouge">NSData</code> isn’t a <code class="highlighter-rouge">CollectionType</code>. But fixing that is <a href="https://gist.github.com/rnapier/da148690af63c401097d">pretty easy</a>.</p>
+<p>So why did I resist using <code class="language-plaintext highlighter-rouge">NSData</code> anyway? Well, even though I believe the Foundation is absolutely a part of Swift, some of it isn’t <em>great</em> Swift. Notably <code class="language-plaintext highlighter-rouge">NSData</code> isn’t a <code class="language-plaintext highlighter-rouge">CollectionType</code>. But fixing that is <a href="https://gist.github.com/rnapier/da148690af63c401097d">pretty easy</a>.</p>
 
-<p>End-to-end <code class="highlighter-rouge">NSData</code> also opened up some other opportunities for me, namely <code class="highlighter-rouge">dispatch_data</code>, which had threatened to be another can of worms with <code class="highlighter-rouge">[UInt8]</code>.</p>
+<p>End-to-end <code class="language-plaintext highlighter-rouge">NSData</code> also opened up some other opportunities for me, namely <code class="language-plaintext highlighter-rouge">dispatch_data</code>, which had threatened to be another can of worms with <code class="language-plaintext highlighter-rouge">[UInt8]</code>.</p>
 
 <p>For some, none of this will matter. The vast majority of my problems come from trying to dodge unnecessary copies. Much of this is very simple if you’re willing to just copy the data all over the place. For many kinds of problems, that’s fine. Use whatever you like. The copy-on-write system is actually pretty awesome and for most problems you can certainly trust it.</p>
 
-<p>But for those in my situation, where performance is a serious consideration in much of your code, you’re looking for predictability as much as speed, and data can be huge, my hope is we get a <code class="highlighter-rouge">Buffer</code> type (or <code class="highlighter-rouge">Data</code> or whatever) that acts as a bridge to <code class="highlighter-rouge">NSData</code>, supports <code class="highlighter-rouge">dispatch_data</code>, and plays nicely with stdlib. But until that comes, I think <code class="highlighter-rouge">NSData</code> is just fine.</p>
+<p>But for those in my situation, where performance is a serious consideration in much of your code, you’re looking for predictability as much as speed, and data can be huge, my hope is we get a <code class="language-plaintext highlighter-rouge">Buffer</code> type (or <code class="language-plaintext highlighter-rouge">Data</code> or whatever) that acts as a bridge to <code class="language-plaintext highlighter-rouge">NSData</code>, supports <code class="language-plaintext highlighter-rouge">dispatch_data</code>, and plays nicely with stdlib. But until that comes, I think <code class="language-plaintext highlighter-rouge">NSData</code> is just fine.</p>
 </div>
 
 
@@ -235,7 +235,7 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
 
 
 
-<time datetime="2015-10-07T20:27:00-04:00" pubdate data-updated="true">07 Oct 2015</time>
+<time datetime="2015-10-07T20:27:00-06:00" pubdate data-updated="true">07 Oct 2015</time>
       
 
 
@@ -271,7 +271,7 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

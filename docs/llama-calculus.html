@@ -71,7 +71,7 @@ intuition. Faced with words like object, property, &hellip;">
 
 
 
-<time datetime="2014-08-09T16:16:19-04:00" pubdate data-updated="true">09 Aug 2014</time>
+<time datetime="2014-08-09T14:16:19-06:00" pubdate data-updated="true">09 Aug 2014</time>
         
       </p>
     
@@ -90,9 +90,9 @@ designed to obscure its meaning (plus the ensuing
 <p>Let me boil functional programming down to its basics, the part you need before
 we can really get started: variables are evil. Stop mutating them. It just makes
 them more evil. If I could do just one thing to improve your Swift programs, it
-would be to generate an electric keyboard shock every time you typed <code class="highlighter-rouge">v</code> <code class="highlighter-rouge">a</code>
-<code class="highlighter-rouge">r</code>. Yeah, you’ll need it sometimes, but each time you should ask “is it worth
-the shock?” And by “the shock,” I mean “hard to find bugs.”<sup id="fnref:computed"><a href="#fn:computed" class="footnote">1</a></sup></p>
+would be to generate an electric keyboard shock every time you typed <code class="language-plaintext highlighter-rouge">v</code> <code class="language-plaintext highlighter-rouge">a</code>
+<code class="language-plaintext highlighter-rouge">r</code>. Yeah, you’ll need it sometimes, but each time you should ask “is it worth
+the shock?” And by “the shock,” I mean “hard to find bugs.”<sup id="fnref:computed" role="doc-noteref"><a href="#fn:computed" class="footnote" rel="footnote">1</a></sup></p>
 
 <!-- more -->
 
@@ -100,7 +100,7 @@ the shock?” And by “the shock,” I mean “hard to find bugs.”<sup id="fn
 It’s so common that you’ve probably never considered how insane it is. Here it
 is in Swift:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var x: Int
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var x: Int
 x = 5
 x = 7
 </code></pre></div></div>
@@ -108,12 +108,12 @@ x = 7
 <p>This program makes no sense. Read it out loud the way we usually do. “X is an
 Int.” Good. “X equals five.” Cool, got it. “X equals seven.” What? Didn’t you
 just say it equals five? Does 5 equal 7? What are you trying to pull here? The
-more reasonable result of this program should be <code class="highlighter-rouge">undefined</code> or possibly
-<code class="highlighter-rouge">false</code>. Both of these statements cannot be true. Yet we write this kind of
+more reasonable result of this program should be <code class="language-plaintext highlighter-rouge">undefined</code> or possibly
+<code class="language-plaintext highlighter-rouge">false</code>. Both of these statements cannot be true. Yet we write this kind of
 stuff all the time and we expect it to mean something other than “equals.”</p>
 
 <p>The correct way to read this out loud is “assign five to <em>x</em>, then assign seven
-to <em>x</em>.”<sup id="fnref:algol"><a href="#fn:algol" class="footnote">2</a></sup></p>
+to <em>x</em>.”<sup id="fnref:algol" role="doc-noteref"><a href="#fn:algol" class="footnote" rel="footnote">2</a></sup></p>
 
 <p>I know that sounds pedantic. A lot of the build-up to functional programming
 sounds pedantic, but bear with me. I’m going to keep bringing it back to
@@ -121,10 +121,10 @@ problems we all face every day, in mostly the terms we’re all used to.</p>
 
 <p>Let’s compare this to another piece of Swift:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let x = 5
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let x = 5
 </code></pre></div></div>
 
-<p>Here, the <code class="highlighter-rouge">=</code> is fundamentally different (and so should really have a different
+<p>Here, the <code class="language-plaintext highlighter-rouge">=</code> is fundamentally different (and so should really have a different
 operator). This doesn’t say “assign 5 to x.” This says “x <em>is</em> 5” and
 equivalently, “5 <em>is</em> x.” They are just different names for the same thing.
 Anywhere in this scope that you encounter <em>x</em>, the compiler may replace it with
@@ -158,7 +158,7 @@ outputs?” It’s really the question “what things could <em>possibly</em> be
 this, and what other things could this <em>possibly</em> be breaking.” And this is where
 state comes in. Consider a method:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class RestaurantMeal {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class RestaurantMeal {
     ...
     func calculateTheBill() { ... }
 }
@@ -172,16 +172,16 @@ caller.</p>
 <p>It’s very simple, but consider how hard it is to reason about this method. What
 are its inputs and outputs? Well, in principle, the entire current state of the
 object is the input, and the entire mutated state of the object is the
-output.<sup id="fnref:globals"><a href="#fn:globals" class="footnote">3</a></sup> What test cases would you write? And if the implementation
+output.<sup id="fnref:globals" role="doc-noteref"><a href="#fn:globals" class="footnote" rel="footnote">3</a></sup> What test cases would you write? And if the implementation
 details changed, would those test cases still provide sufficient coverage? If my
 final bill is wrong, how I do reproduce the state of this object to debug it?
-The whole point of OOP is that the internal details of <code class="highlighter-rouge">calculateTheBill()</code> are
+The whole point of OOP is that the internal details of <code class="language-plaintext highlighter-rouge">calculateTheBill()</code> are
 private. But in the real world of testing and debugging, they often turn out to
 be very important because we have to recreate the relevant state.</p>
 
 <p>Now consider the following free function (i.e. not part of an object):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func totalCostForItems(items: [Double], taxRate: Double) -&gt; Double { ... }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func totalCostForItems(items: [Double], taxRate: Double) -&gt; Double { ... }
 </code></pre></div></div>
 
 <p>You pass data to a function, and it returns you data. There is no state. If you
@@ -194,10 +194,10 @@ result on as many queues as you like. You know that none of your inputs can
 change behind your back. You don’t have to worry about whether your parameters
 are thread-safe because you have your own, immutable copies.</p>
 
-<p><code class="highlighter-rouge">calculateTheBill()</code> <em>assigns</em>. <code class="highlighter-rouge">totalCostForItems(taxRate:)</code> <em>is</em>. This is a
+<p><code class="language-plaintext highlighter-rouge">calculateTheBill()</code> <em>assigns</em>. <code class="language-plaintext highlighter-rouge">totalCostForItems(taxRate:)</code> <em>is</em>. This is a
 pure functional approach to the problem.</p>
 
-<p>“Functional? But there’s not a single <code class="highlighter-rouge">map</code> or closure or <code class="highlighter-rouge">&lt;*&gt;</code> to be seen.
+<p>“Functional? But there’s not a single <code class="language-plaintext highlighter-rouge">map</code> or closure or <code class="language-plaintext highlighter-rouge">&lt;*&gt;</code> to be seen.
 Wasn’t the point of <a href="/swift-is-not-functional">Swift is not Functional</a> that
 just using a few functions doesn’t make a language functional? Isn’t this
 all possible in C?”</p>
@@ -218,17 +218,17 @@ customers. Excessive state is a major contributor.</p>
 <p>Totally eliminating state from your programs is challenging at best, counter-productive 
 at worst. But as we go along in this series, I hope you start to see why you’d
 want to treat state as a powerful and somewhat dangerous tool to be used in
-moderation. And the first step down that road is to stop typing <code class="highlighter-rouge">var</code> (ouch!)</p>
-<div class="footnotes">
+moderation. And the first step down that road is to stop typing <code class="language-plaintext highlighter-rouge">var</code> (ouch!)</p>
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:computed">
-      <p>Swift unfortunately overloads <code class="highlighter-rouge">var</code> to mean both “mutable” and “computed property” even if the computed property is immutable. I am only referring to the first use. <a href="#fnref:computed" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:computed" role="doc-endnote">
+      <p>Swift unfortunately overloads <code class="language-plaintext highlighter-rouge">var</code> to mean both “mutable” and “computed property” even if the computed property is immutable. I am only referring to the first use. <a href="#fnref:computed" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:algol">
-      <p>ALGOL, and later Pascal, got this at least half-right: <code class="highlighter-rouge">x := 5</code>. There wasn’t a <code class="highlighter-rouge">&lt;</code> key on early keyboards, so <code class="highlighter-rouge">:</code> had to do. This really should be written <code class="highlighter-rouge">5 -&gt; x</code>, since the assignment happens after evaluation, but at least “x receives 5” is more sensible than “x equals 5.” So many C bugs could have been avoided if it had used ALGOL syntax. It amazes me that Swift held onto <code class="highlighter-rouge">=</code> for assignment. <a href="#fnref:algol" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:algol" role="doc-endnote">
+      <p>ALGOL, and later Pascal, got this at least half-right: <code class="language-plaintext highlighter-rouge">x := 5</code>. There wasn’t a <code class="language-plaintext highlighter-rouge">&lt;</code> key on early keyboards, so <code class="language-plaintext highlighter-rouge">:</code> had to do. This really should be written <code class="language-plaintext highlighter-rouge">5 -&gt; x</code>, since the assignment happens after evaluation, but at least “x receives 5” is more sensible than “x equals 5.” So many C bugs could have been avoided if it had used ALGOL syntax. It amazes me that Swift held onto <code class="language-plaintext highlighter-rouge">=</code> for assignment. <a href="#fnref:algol" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:globals">
-      <p>For this discussion, assume there are no mutable globals or singletons (which are just globals by another name). If there were, they create the same problems for every approach. <a href="#fnref:globals" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:globals" role="doc-endnote">
+      <p>For this discussion, assume there are no mutable globals or singletons (which are just globals by another name). If there were, they create the same problems for every approach. <a href="#fnref:globals" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -247,7 +247,7 @@ moderation. And the first step down that road is to stop typing <code class="hig
 
 
 
-<time datetime="2014-08-09T16:16:19-04:00" pubdate data-updated="true">09 Aug 2014</time>
+<time datetime="2014-08-09T14:16:19-06:00" pubdate data-updated="true">09 Aug 2014</time>
       
 
 <span class="categories">
@@ -289,7 +289,7 @@ moderation. And the first step down that road is to stop typing <code class="hig
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

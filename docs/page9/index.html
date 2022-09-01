@@ -73,7 +73,7 @@
 
 
 
-<time datetime="2009-12-25T17:24:06-05:00" pubdate data-updated="true">25 Dec 2009</time>
+<time datetime="2009-12-25T15:24:06-07:00" pubdate data-updated="true">25 Dec 2009</time>
         
       </p>
     
@@ -106,7 +106,7 @@
 
 
 
-<time datetime="2009-09-28T22:26:34-04:00" pubdate data-updated="true">28 Sep 2009</time>
+<time datetime="2009-09-28T20:26:34-06:00" pubdate data-updated="true">28 Sep 2009</time>
         
       </p>
     
@@ -143,7 +143,7 @@
 
 
 
-<time datetime="2009-09-14T09:14:51-04:00" pubdate data-updated="true">14 Sep 2009</time>
+<time datetime="2009-09-14T07:14:51-06:00" pubdate data-updated="true">14 Sep 2009</time>
         
       </p>
     
@@ -182,20 +182,20 @@
 
 
 
-<time datetime="2009-09-04T17:24:05-04:00" pubdate data-updated="true">04 Sep 2009</time>
+<time datetime="2009-09-04T15:24:05-06:00" pubdate data-updated="true">04 Sep 2009</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><code class="highlighter-rouge">NSCopying</code> is not always as simple to implement as you would think. Apple has a good <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmImplementCopy.html">write-up</a> discussing the complexities, but let me elaborate. Forgive some ranting digressions. It’s important to know how to work around the problems I’m going to discuss, but it’s also important to understand how insane it is to have to work around this issue.</p>
+  <div class="entry-content"><p><code class="language-plaintext highlighter-rouge">NSCopying</code> is not always as simple to implement as you would think. Apple has a good <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmImplementCopy.html">write-up</a> discussing the complexities, but let me elaborate. Forgive some ranting digressions. It’s important to know how to work around the problems I’m going to discuss, but it’s also important to understand how insane it is to have to work around this issue.</p>
 
-<p>First, there’s the fairly obvious problem of deep versus shallow copies. If object <code class="highlighter-rouge">foo</code> has an instance variable <code class="highlighter-rouge">*bar</code>, should a copy of <code class="highlighter-rouge">foo</code> have a second pointer to <code class="highlighter-rouge">bar</code>, or should it have its own copy of whatever <code class="highlighter-rouge">bar</code> points to? There is no way to answer this question generally; it depends on the nature of the objects.</p>
+<p>First, there’s the fairly obvious problem of deep versus shallow copies. If object <code class="language-plaintext highlighter-rouge">foo</code> has an instance variable <code class="language-plaintext highlighter-rouge">*bar</code>, should a copy of <code class="language-plaintext highlighter-rouge">foo</code> have a second pointer to <code class="language-plaintext highlighter-rouge">bar</code>, or should it have its own copy of whatever <code class="language-plaintext highlighter-rouge">bar</code> points to? There is no way to answer this question generally; it depends on the nature of the objects.</p>
 
-<p>Most of the time, this can be dealt with fairly easily by implementing the accessors with the correct behavior (retain versus copy), and you wind up with a <code class="highlighter-rouge">copyWithZone:</code> like this:</p>
+<p>Most of the time, this can be dealt with fairly easily by implementing the accessors with the correct behavior (retain versus copy), and you wind up with a <code class="language-plaintext highlighter-rouge">copyWithZone:</code> like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone
 {
     Product *copy = [[[self class] allocWithZone: zone] init];
     [copy setProductName:[self productName]];
@@ -203,9 +203,9 @@
 }
 </code></pre></div></div>
 
-<p>That works really well as long as your superclass doesn’t implement <code class="highlighter-rouge">NSCopying</code>, but if it does, you may not have enough information or access to cleanly copy it. Now you would think this would be easy:</p>
+<p>That works really well as long as your superclass doesn’t implement <code class="language-plaintext highlighter-rouge">NSCopying</code>, but if it does, you may not have enough information or access to cleanly copy it. Now you would think this would be easy:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)copyWithZone:(NSZone *)zone
 {
     Product *copy = [super copy];
     [copy setProductName:[self productName]];
@@ -213,7 +213,7 @@
 }
 </code></pre></div></div>
 
-<p>But that may or may not work. If <code class="highlighter-rouge">super</code> implements <code class="highlighter-rouge">-copyWithZone:</code> as described above, then all is fine. But what if your superclass uses <code class="highlighter-rouge">NSCopyObject()</code>? Things go badly, and in ways very difficult to understand and debug. </div>
+<p>But that may or may not work. If <code class="language-plaintext highlighter-rouge">super</code> implements <code class="language-plaintext highlighter-rouge">-copyWithZone:</code> as described above, then all is fine. But what if your superclass uses <code class="language-plaintext highlighter-rouge">NSCopyObject()</code>? Things go badly, and in ways very difficult to understand and debug. </div>
   
   
     <footer>
@@ -242,7 +242,7 @@
 
 
 
-<time datetime="2009-08-20T11:28:40-04:00" pubdate data-updated="true">20 Aug 2009</time>
+<time datetime="2009-08-20T09:28:40-06:00" pubdate data-updated="true">20 Aug 2009</time>
         
       </p>
     
@@ -251,7 +251,7 @@
 
   <div class="entry-content"><p>I work on a lot of projects that share significant code between iPhone and Mac versions. This is the beauty of Cocoa. While working on these projects, I’ve bumped into this idiom many times:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
 #import &lt;UIKit/UIKit.h&gt;
 #else
 #import &lt;Cocoa/Cocoa.h&gt;
@@ -290,7 +290,7 @@
 
 
 
-<time datetime="2009-08-19T09:01:02-04:00" pubdate data-updated="true">19 Aug 2009</time>
+<time datetime="2009-08-19T07:01:02-06:00" pubdate data-updated="true">19 Aug 2009</time>
         
       </p>
     
@@ -327,7 +327,7 @@
 
 
 
-<time datetime="2009-08-18T09:16:18-04:00" pubdate data-updated="true">18 Aug 2009</time>
+<time datetime="2009-08-18T07:16:18-06:00" pubdate data-updated="true">18 Aug 2009</time>
         
       </p>
     
@@ -364,7 +364,7 @@
 
 
 
-<time datetime="2009-08-16T21:17:14-04:00" pubdate data-updated="true">16 Aug 2009</time>
+<time datetime="2009-08-16T19:17:14-06:00" pubdate data-updated="true">16 Aug 2009</time>
         
       </p>
     
@@ -397,7 +397,7 @@
 
 
 
-<time datetime="2009-08-12T10:48:10-04:00" pubdate data-updated="true">12 Aug 2009</time>
+<time datetime="2009-08-12T08:48:10-06:00" pubdate data-updated="true">12 Aug 2009</time>
         
       </p>
     
@@ -406,10 +406,10 @@
 
   <div class="entry-content"><p>I keep coming across <a href="http://dotnetaddict.dotnetdevelopersjournal.com/leopard_nscollectionview.htm">code</a> like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
 </code></pre></div></div>
 
-<p>It’s time to say stop it already with the extra <code class="highlighter-rouge">+stringWithString:</code>. I haven’t worked out yet where this anti-pattern comes from. Maybe it’s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it’s a Java/.NET thing? I’m not sure. But I see it so often from so many places that it’s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
+<p>It’s time to say stop it already with the extra <code class="language-plaintext highlighter-rouge">+stringWithString:</code>. I haven’t worked out yet where this anti-pattern comes from. Maybe it’s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it’s a Java/.NET thing? I’m not sure. But I see it so often from so many places that it’s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
 
 </div>
   
@@ -440,7 +440,7 @@
 
 
 
-<time datetime="2009-08-05T14:33:56-04:00" pubdate data-updated="true">05 Aug 2009</time>
+<time datetime="2009-08-05T12:33:56-06:00" pubdate data-updated="true">05 Aug 2009</time>
         
       </p>
     
@@ -480,7 +480,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

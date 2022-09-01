@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2019-10-26T17:04:00-04:00" pubdate data-updated="true">26 Oct 2019</time>
+<time datetime="2019-10-26T15:04:00-06:00" pubdate data-updated="true">26 Oct 2019</time>
         
       </p>
     
@@ -105,7 +105,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>This <code class="highlighter-rouge">fetch</code> method is great for getting a model by ID, but I have other things I want to do. For example, I’d like to periodically POST to /keepalive and return if there’s an error. That’s really similar, but kind of different.
+<p>This <code class="language-plaintext highlighter-rouge">fetch</code> method is great for getting a model by ID, but I have other things I want to do. For example, I’d like to periodically POST to /keepalive and return if there’s an error. That’s really similar, but kind of different.
 <!-- more --></p>
 
 <pre style="float: left; width: 45%; min-width: 450px">
@@ -153,7 +153,7 @@ func keepAlive(
 
 <div style="clear: both;"></div>
 
-<p>Both basically follow this pattern of build an URL request, pass it to transport, and then deal with the result. I know it’s just one line that exactly duplicates, but the structure is still really similar, and it feels we could pull this apart. The problem is that <code class="highlighter-rouge">fetch</code> is doing too much.</p>
+<p>Both basically follow this pattern of build an URL request, pass it to transport, and then deal with the result. I know it’s just one line that exactly duplicates, but the structure is still really similar, and it feels we could pull this apart. The problem is that <code class="language-plaintext highlighter-rouge">fetch</code> is doing too much.</p>
 
 <p>So maybe we pull out the part that changes and call it Request. But what should Request be? So often, I see people jump to a PAT (protocol with associated type) like this:</p>
 
@@ -169,7 +169,7 @@ func keepAlive(
 
 <h3 id="pats-are-not-generic-protocols-or-at-least-not-in-the-way-youre-thinking">PATs are not “generic protocols” (or at least not in the way you’re thinking)</h3>
 
-<p>Generics and PATs are very different things that solve very different problems. Generics are type-parameterization. That means that the types are being passed as parameters to the function. They’re passed at compile time, but they’re still passed by the caller. When you say <code class="highlighter-rouge">Array&lt;Int&gt;</code>, you, the caller, get to decide what kinds of elements Array holds. In <code class="highlighter-rouge">Array&lt;Int&gt;(repeating: 0, count: 10)
+<p>Generics and PATs are very different things that solve very different problems. Generics are type-parameterization. That means that the types are being passed as parameters to the function. They’re passed at compile time, but they’re still passed by the caller. When you say <code class="language-plaintext highlighter-rouge">Array&lt;Int&gt;</code>, you, the caller, get to decide what kinds of elements Array holds. In <code class="language-plaintext highlighter-rouge">Array&lt;Int&gt;(repeating: 0, count: 10)
 </code>, Int is just as much a parameter as 0 and 10. It’s just a different kind of parameter.</p>
 
 <p>PATs aren’t like that. Their associated types are not parameters passed by the caller. They’re hooks provided by the implementor of the conforming type (or whoever wrote the conforming extension). When you conform a type to a PAT, you have to provide a mapping of stuff that algorithms need to stuff this type has. Collection requires an Index type in order to implement subscripts (among other things). Set says “here’s my Set.Index type that Collection algorithms should use when you need an Index type.” Array says “please use Int as my Index for those algorithms.” As the consumer of Set or Array, you can’t change those choices. You can’t say “I want an Array indexed by Character.” That’s not up to you. It’s not a type parameter.</p>
@@ -201,7 +201,7 @@ func keepAlive(
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="kt">Request</span><span class="o">.</span><span class="nf">fetching</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">User</span><span class="o">.</span><span class="kt">ID</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="nv">$0</span><span class="p">)}</span> <span class="p">))</span>
 </code></pre></div></div>
 
-<p>So I want to put User.ID into a system and get User back out in the completion handler, but the system (Request) only understands Data. That means we’re making a type eraser. We’re hiding a type (User) inside Request. How? With one of the simplest type erasers you can have: a generic function or closure. Basically, we just take <code class="highlighter-rouge">fetch</code> and wrap it into a closure. Here’s <code class="highlighter-rouge">fetch</code>:</p>
+<p>So I want to put User.ID into a system and get User back out in the completion handler, but the system (Request) only understands Data. That means we’re making a type eraser. We’re hiding a type (User) inside Request. How? With one of the simplest type erasers you can have: a generic function or closure. Basically, we just take <code class="language-plaintext highlighter-rouge">fetch</code> and wrap it into a closure. Here’s <code class="language-plaintext highlighter-rouge">fetch</code>:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">APIClient</span> <span class="p">{</span>
     <span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Fetchable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="kt">ID</span><span class="p">,</span>
@@ -222,7 +222,7 @@ func keepAlive(
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>And here’s <code class="highlighter-rouge">fetching</code>:</p>
+<p>And here’s <code class="language-plaintext highlighter-rouge">fetching</code>:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Request</span> <span class="p">{</span>
     <span class="kd">static</span> <span class="k">var</span> <span class="nv">baseURL</span><span class="p">:</span> <span class="kt">URL</span> <span class="p">{</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://www.example.com"</span><span class="p">)</span><span class="o">!</span> <span class="p">}</span>
@@ -248,9 +248,9 @@ func keepAlive(
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">fetching</code> is a generic method, but it returns a non-generic Request struct. This kind of generic-&gt;non-generic conversion is an incredibly powerful way to simplify your system and keep generics from spiraling out of control.</p>
+<p><code class="language-plaintext highlighter-rouge">fetching</code> is a generic method, but it returns a non-generic Request struct. This kind of generic-&gt;non-generic conversion is an incredibly powerful way to simplify your system and keep generics from spiraling out of control.</p>
 
-<p>You may ask “why a static <code class="highlighter-rouge">fetching</code> method rather than creating an <code class="highlighter-rouge">init(fetching:completion)</code> extension” For this one, <code class="highlighter-rouge">init</code> would probably be fine, but as you think about other kinds of Requests, especially ones with no parameters, it would get messy. For example, it’s hard to build a nice <code class="highlighter-rouge">init</code> for /keepalive. (This isn’t a deep design point; it’s just a stylistic choice. You might prefer <code class="highlighter-rouge">init(keepAliveWithCompletion:)</code>, and that’s up to you.)</p>
+<p>You may ask “why a static <code class="language-plaintext highlighter-rouge">fetching</code> method rather than creating an <code class="language-plaintext highlighter-rouge">init(fetching:completion)</code> extension” For this one, <code class="language-plaintext highlighter-rouge">init</code> would probably be fine, but as you think about other kinds of Requests, especially ones with no parameters, it would get messy. For example, it’s hard to build a nice <code class="language-plaintext highlighter-rouge">init</code> for /keepalive. (This isn’t a deep design point; it’s just a stylistic choice. You might prefer <code class="language-plaintext highlighter-rouge">init(keepAliveWithCompletion:)</code>, and that’s up to you.)</p>
 
 <p>In any case, this is how I’d build the /keepalive handler:</p>
 
@@ -303,7 +303,7 @@ func keepAlive(
 
 
 
-<time datetime="2019-10-26T17:04:00-04:00" pubdate data-updated="true">26 Oct 2019</time>
+<time datetime="2019-10-26T15:04:00-06:00" pubdate data-updated="true">26 Oct 2019</time>
       
 
 
@@ -339,7 +339,7 @@ func keepAlive(
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

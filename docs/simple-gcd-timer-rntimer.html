@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2012-05-29T21:37:25-04:00" pubdate data-updated="true">29 May 2012</time>
+<time datetime="2012-05-29T19:37:25-06:00" pubdate data-updated="true">29 May 2012</time>
         
       </p>
     
@@ -79,9 +79,9 @@
 
 <div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn’t find it anywhere and I was sick of writing it over and over again…. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot’s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash’s</a>, but they solve different problems.</i></p>
 
-<p>Have you ever noticed how hard it is to write a repeating <code class="highlighter-rouge">NSTimer</code> that doesn’t create a retain loop? Almost always you wind up with something like this:</p>
+<p>Have you ever noticed how hard it is to write a repeating <code class="language-plaintext highlighter-rouge">NSTimer</code> that doesn’t create a retain loop? Almost always you wind up with something like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSTimer scheduledTimerWithTimeInterval:1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSTimer scheduledTimerWithTimeInterval:1
                                  target:self
                                selector:@selector(something)
                                userInfo:nil 
@@ -90,7 +90,7 @@
 
 <p>Seems easy enough, except it’s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you’d think this would be easy. And it should be, so I fixed it. I just still can’t quite believe I’m the first to do so.</p>
 
-<p>Anyway, for your consideration I present a very simple class called <code class="highlighter-rouge">RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn’t address.</p>
+<p>Anyway, for your consideration I present a very simple class called <code class="language-plaintext highlighter-rouge">RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn’t address.</p>
 
 <p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
 </div>
@@ -108,7 +108,7 @@
 
 
 
-<time datetime="2012-05-29T21:37:25-04:00" pubdate data-updated="true">29 May 2012</time>
+<time datetime="2012-05-29T19:37:25-06:00" pubdate data-updated="true">29 May 2012</time>
       
 
 <span class="categories">
@@ -150,7 +150,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true">24 Jun 2012</time>
+<time datetime="2012-06-24T17:39:43-06:00" pubdate data-updated="true">24 Jun 2012</time>
         
       </p>
     
@@ -84,26 +84,26 @@
 
 <p>Aync usage looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RNEncryptor *encryptor = [[RNEncryptor alloc] initWithSettings:kRNCryptorAES256Settings
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RNEncryptor *encryptor = [[RNEncryptor alloc] initWithSettings:kRNCryptorAES256Settings
                                                       password:password
                                                        handler:^(RNCryptor *cryptor, NSData *data) {
                                                           ...
                                                        }];
 </code></pre></div></div>
 
-<p>You add data using <code class="highlighter-rouge">addData:</code>. <code class="highlighter-rouge">handler</code> may or may not be called once for every call to <code class="highlighter-rouge">addData:</code>. When you are done, you must call <code class="highlighter-rouge">finish</code>, at which point, <code class="highlighter-rouge">handler</code> will be called one last time. You can check this condition using <code class="highlighter-rouge">cryptor.isFinished</code>.</p>
+<p>You add data using <code class="language-plaintext highlighter-rouge">addData:</code>. <code class="language-plaintext highlighter-rouge">handler</code> may or may not be called once for every call to <code class="language-plaintext highlighter-rouge">addData:</code>. When you are done, you must call <code class="language-plaintext highlighter-rouge">finish</code>, at which point, <code class="language-plaintext highlighter-rouge">handler</code> will be called one last time. You can check this condition using <code class="language-plaintext highlighter-rouge">cryptor.isFinished</code>.</p>
 
 <p>There is still synchronous access such as:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSData *encryptedData = [RNEncryptor encryptData:data
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSData *encryptedData = [RNEncryptor encryptData:data
                                     withSettings:kRNCryptorAES256Settings
                                         password:password
                                            error:&amp;error];
 </code></pre></div></div>
 
-<p>I have dropped all the URL, file and stream APIs. Please let me know if you have a general use case where you would like them. I don’t mind creating some convenience methods, but the convenience methods in the original interface were becoming too numerous and that complicates testing. Input on this is welcome. I found that many people were either doing very small things where synchronous NSData is good, or they were using <code class="highlighter-rouge">NSURLConnection</code>, where you need all the callbacks (to handle redirects, authentication, etc.), so I’ve supported those two cases the most.</p>
+<p>I have dropped all the URL, file and stream APIs. Please let me know if you have a general use case where you would like them. I don’t mind creating some convenience methods, but the convenience methods in the original interface were becoming too numerous and that complicates testing. Input on this is welcome. I found that many people were either doing very small things where synchronous NSData is good, or they were using <code class="language-plaintext highlighter-rouge">NSURLConnection</code>, where you need all the callbacks (to handle redirects, authentication, etc.), so I’ve supported those two cases the most.</p>
 
-<p>By default, <code class="highlighter-rouge">handler</code> is called on the GCD queue that the cryptor was created on. You can modify this by setting <code class="highlighter-rouge">responseQueue</code>.</p>
+<p>By default, <code class="language-plaintext highlighter-rouge">handler</code> is called on the GCD queue that the cryptor was created on. You can modify this by setting <code class="language-plaintext highlighter-rouge">responseQueue</code>.</p>
 
 <p>Input on the API is welcome. I’m leaving it on the async branch until people have time to play with a little bit and I have time to document it fully.</p>
 </div>
@@ -121,7 +121,7 @@
 
 
 
-<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true">24 Jun 2012</time>
+<time datetime="2012-06-24T17:39:43-06:00" pubdate data-updated="true">24 Jun 2012</time>
       
 
 <span class="categories">
@@ -163,7 +163,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

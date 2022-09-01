@@ -71,7 +71,7 @@ to iOS. Since I have no background in &hellip;">
 
 
 
-<time datetime="2014-07-28T18:13:50-04:00" pubdate data-updated="true">28 Jul 2014</time>
+<time datetime="2014-07-28T16:13:50-06:00" pubdate data-updated="true">28 Jul 2014</time>
         
       </p>
     
@@ -107,7 +107,7 @@ in ways that won’t come again soon.</p>
 
 <p>But if you stayed away from iOS because of square brackets, I assure you that
 today’s Swift has a higher learning curve. Someday Swift will be simpler to
-learn than ObjC, especially once more of Cocoa is tailored to it.<sup id="fnref:cocoa"><a href="#fn:cocoa" class="footnote">1</a></sup> But
+learn than ObjC, especially once more of Cocoa is tailored to it.<sup id="fnref:cocoa" role="doc-noteref"><a href="#fn:cocoa" class="footnote" rel="footnote">1</a></sup> But
 today, crazy features like implicitly unwrapped optionals are something you have
 to deal with on day one. We’re still working out the best ways to deal with
 common coding problems. The handful of tutorials are mostly based on a few days
@@ -133,7 +133,7 @@ the compiler to accept your program due to confusing type errors. If your
 reaction is “thank goodness the compiler is verifying that my code is legal, I
 hope they improve the error messages soon,” then Swift is your language. If your
 reaction is “stupid compiler; I know this code will work fine, just run it” then
-you’re going to hate Swift.<sup id="fnref:types"><a href="#fn:types" class="footnote">2</a></sup></p>
+you’re going to hate Swift.<sup id="fnref:types" role="doc-noteref"><a href="#fn:types" class="footnote" rel="footnote">2</a></sup></p>
 
 <h3 id="for-the-ios-newcomer-from-strongly-typed-compiled-languages">For the iOS newcomer from strongly-typed, compiled languages</h3>
 
@@ -145,8 +145,8 @@ much more sense than ObjC.</p>
 
 <p>But still, as for web developers, this is the hardest time to learn iOS. The
 features of Swift are in flux and probably will be for a while. Cocoa is still
-Cocoa. If you find <code class="highlighter-rouge">UITableViewController</code> confusing, absolutely nothing has
-changed with Swift.<sup id="fnref:tableview"><a href="#fn:tableview" class="footnote">3</a></sup></p>
+Cocoa. If you find <code class="language-plaintext highlighter-rouge">UITableViewController</code> confusing, absolutely nothing has
+changed with Swift.<sup id="fnref:tableview" role="doc-noteref"><a href="#fn:tableview" class="footnote" rel="footnote">3</a></sup></p>
 
 <p>The reason to learn Swift is because you want to develop for iOS. But today,
 the <em>easier</em> route is to come through ObjC and pick up Swift when it stabilizes.
@@ -161,7 +161,7 @@ simple, it may be a great place to try out Swift, at least for some parts. The
 great news is that it’s not all or nothing. You can write one class in Swift and
 another in ObjC, and it really seems to work pretty well.</p>
 
-<p>Treat Swift like Autolayout.<sup id="fnref:carbon"><a href="#fn:carbon" class="footnote">4</a></sup> You don’t have to jump over the first day
+<p>Treat Swift like Autolayout.<sup id="fnref:carbon" role="doc-noteref"><a href="#fn:carbon" class="footnote" rel="footnote">4</a></sup> You don’t have to jump over the first day
 it’s released, but eventually you’re going to need to come over or things are
 going to get harder and harder. The best approach is to experiment with it
 early, and migrate as you develop new things. There’s no need to jump onto it
@@ -189,13 +189,13 @@ you asked…</p>
 For non-Cocoa devs, if you need to ask, then you probably shouldn’t jump into
 Swift today. If you have the time to learn a new language,
 <a href="http://learnyouahaskell.com">learn Haskell</a>. I  hate to be a Haskell fanboi.
-I’m not even a very good a Haskell programmer.<sup id="fnref:good"><a href="#fn:good" class="footnote">5</a></sup> That’s not the point. The
+I’m not even a very good a Haskell programmer.<sup id="fnref:good" role="doc-noteref"><a href="#fn:good" class="footnote" rel="footnote">5</a></sup> That’s not the point. The
 point is that Swift wants to be functional.
 <a href="http://robnapier.net/swift-is-not-functional">It isn’t functional</a>, but it wants to be.
 So if you want to understand the future of Swift, first learn the basics of
-Haskell.<sup id="fnref:haskell"><a href="#fn:haskell" class="footnote">6</a></sup> You should be able to read
+Haskell.<sup id="fnref:haskell" role="doc-noteref"><a href="#fn:haskell" class="footnote" rel="footnote">6</a></sup> You should be able to read
 <a href="http://chris.eidhof.nl/posts/json-parsing-in-swift.html">Chris Eidhof’s JSON Parser</a> and know
-why <code class="highlighter-rouge">&lt;*&gt;</code> and <code class="highlighter-rouge">&gt;&gt;=</code> were the obvious operators to use. You may agree or disagree
+why <code class="language-plaintext highlighter-rouge">&lt;*&gt;</code> and <code class="language-plaintext highlighter-rouge">&gt;&gt;=</code> were the obvious operators to use. You may agree or disagree
 with his parser, but if you can’t read Haskell, you won’t even understand the 
 discussion.
 </span></p>
@@ -220,25 +220,25 @@ my next post.</p>
 
 <p>And then yeah, sure, come play with us in Swift. It’s a blast!</p>
 
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:cocoa">
-      <p>My assumption is that 8.X will clean up some of the Cocoa <code class="highlighter-rouge">!</code>s and similar tweaks, along with significant optimizer improvements. Then 9 will see some Swift-ification of Foundation (or more Foundation features in Swift stdlib). 10 will see more Swift-ification of UIKit (maybe replacing more selector-based patterns with closures). The specifics are just conjecture, but making iOS development a Swift-centric experience is clearly a multi-release effort. <a href="#fnref:cocoa" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:cocoa" role="doc-endnote">
+      <p>My assumption is that 8.X will clean up some of the Cocoa <code class="language-plaintext highlighter-rouge">!</code>s and similar tweaks, along with significant optimizer improvements. Then 9 will see some Swift-ification of Foundation (or more Foundation features in Swift stdlib). 10 will see more Swift-ification of UIKit (maybe replacing more selector-based patterns with closures). The specifics are just conjecture, but making iOS development a Swift-centric experience is clearly a multi-release effort. <a href="#fnref:cocoa" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:types">
-      <p>On the other hand, if you’re comfortable with type theory, you may find Swift’s type system <a href="http://nomothetis.svbtle.com/type-variance-in-swift">a bit limited</a>. And the stdlib types in Beta 4 are still ugly and restrictive IMO. They’re getting better, but they still heavily rely on private details that make implementing your own Collections and Generators very frustrating. I hope this is cleaned up by v1, but I don’t know that it will be. <a href="#fnref:types" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:types" role="doc-endnote">
+      <p>On the other hand, if you’re comfortable with type theory, you may find Swift’s type system <a href="http://nomothetis.svbtle.com/type-variance-in-swift">a bit limited</a>. And the stdlib types in Beta 4 are still ugly and restrictive IMO. They’re getting better, but they still heavily rely on private details that make implementing your own Collections and Generators very frustrating. I hope this is cleaned up by v1, but I don’t know that it will be. <a href="#fnref:types" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:tableview">
-      <p>And nothing is likely to change in the foreseeable future. The use of delegates and datasources in <code class="highlighter-rouge">UITableView</code> are on purpose and work exactly as intended. If you don’t like that approach, you are unlikely ever to like iOS development. I happen to think <code class="highlighter-rouge">UITableView</code> is pretty brilliant. <a href="#fnref:tableview" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:tableview" role="doc-endnote">
+      <p>And nothing is likely to change in the foreseeable future. The use of delegates and datasources in <code class="language-plaintext highlighter-rouge">UITableView</code> are on purpose and work exactly as intended. If you don’t like that approach, you are unlikely ever to like iOS development. I happen to think <code class="language-plaintext highlighter-rouge">UITableView</code> is pretty brilliant. <a href="#fnref:tableview" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:carbon">
-      <p>For Mac devs, ObjC is the new Carbon. Take your lessons on its future from that. It’ll be around and fully supported for much longer than people expect. But eventually they’re going to start breaking ObjC things so that Swift can work better. <a href="#fnref:carbon" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:carbon" role="doc-endnote">
+      <p>For Mac devs, ObjC is the new Carbon. Take your lessons on its future from that. It’ll be around and fully supported for much longer than people expect. But eventually they’re going to start breaking ObjC things so that Swift can work better. <a href="#fnref:carbon" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:good">
-      <p>The joke is: Haskell is the language that proves you’re a bad programmer. I guess my next post should be titled “I don’t know Haskell, either.” <a href="#fnref:good" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:good" role="doc-endnote">
+      <p>The joke is: Haskell is the language that proves you’re a bad programmer. I guess my next post should be titled “I don’t know Haskell, either.” <a href="#fnref:good" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:haskell">
-      <p>I feel like I should justify “why Haskell rather than X” here. Why not ML, OCaml, F#? But if you follow the FP discussions floating around Swift, Haskell is always front of mind. It’s the <a href="http://nondot.org/sabre/">only FP language that Chris Lattner calls out</a> explicitly as an influence in Swift, and it includes a lot of the concepts that are working their way into Swift. If you’re going to pick one FP language to start with, it’s the one I recommend. <a href="#fnref:haskell" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:haskell" role="doc-endnote">
+      <p>I feel like I should justify “why Haskell rather than X” here. Why not ML, OCaml, F#? But if you follow the FP discussions floating around Swift, Haskell is always front of mind. It’s the <a href="http://nondot.org/sabre/">only FP language that Chris Lattner calls out</a> explicitly as an influence in Swift, and it includes a lot of the concepts that are working their way into Swift. If you’re going to pick one FP language to start with, it’s the one I recommend. <a href="#fnref:haskell" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -257,7 +257,7 @@ my next post.</p>
 
 
 
-<time datetime="2014-07-28T18:13:50-04:00" pubdate data-updated="true">28 Jul 2014</time>
+<time datetime="2014-07-28T16:13:50-06:00" pubdate data-updated="true">28 Jul 2014</time>
       
 
 <span class="categories">
@@ -299,7 +299,7 @@ my next post.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

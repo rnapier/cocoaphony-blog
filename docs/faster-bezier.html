@@ -70,14 +70,14 @@
 
 
 
-<time datetime="2012-03-06T12:53:40-05:00" pubdate data-updated="true">06 Mar 2012</time>
+<time datetime="2012-03-06T10:53:40-07:00" pubdate data-updated="true">06 Mar 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>When <a href="/fast-bezier-intro">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That’s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code class="highlighter-rouge">-Os</code> optimized function. But we’re just getting warmed up. We haven’t yet gotten half of the performance available.</p>
+<div class="entry-content"><p>When <a href="/fast-bezier-intro">last we looked at Bézier curve calculations</a>, we were able to calculate five million points in about 0.6s (~8.3Mp/s or megapoints-per-second). That’s 1000 points per curve, 100 curves, at 50fps. That was 5x faster than the original <code class="language-plaintext highlighter-rouge">-Os</code> optimized function. But we’re just getting warmed up. We haven’t yet gotten half of the performance available.</p>
 
 <!-- more -->
 <p>In this installment, we’ll look at improving our algorithm. The code is available on <a href="https://github.com/rnapier/cocoaphony/tree/master/BezierPerf">github</a>.</p>
@@ -108,7 +108,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Notice how we’re recalculating a lot of things. For example, we calculate <code class="highlighter-rouge">(1-t)*(1-t)*(1-t)</code> twice with the same <code class="highlighter-rouge">t</code>. That can’t be good. What if we factor out the part that doesn’t change between <em>x</em> and <em>y</em>?</p>
+<p>Notice how we’re recalculating a lot of things. For example, we calculate <code class="language-plaintext highlighter-rouge">(1-t)*(1-t)*(1-t)</code> twice with the same <code class="language-plaintext highlighter-rouge">t</code>. That can’t be good. What if we factor out the part that doesn’t change between <em>x</em> and <em>y</em>?</p>
 
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">copyBezierXY</span><span class="p">(</span><span class="n">CGPoint</span> <span class="n">P0</span><span class="p">,</span> <span class="n">CGPoint</span> <span class="n">P1</span><span class="p">,</span> <span class="n">CGPoint</span> <span class="n">P2</span><span class="p">,</span> <span class="n">CGPoint</span> <span class="n">P3</span><span class="p">,</span>
                           <span class="n">CGPoint</span> <span class="o">**</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
@@ -133,7 +133,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Hey, that gets us from 0.6s to 0.5s (10Mp/s). A 17% improvement’s pretty good. But let’s think about this some more. The values <code class="highlighter-rouge">t</code> can take are exactly dependent on <code class="highlighter-rouge">kSteps</code>, which is a constant for the program. And since the <code class="highlighter-rouge">C</code> variables depend only on <code class="highlighter-rouge">t</code>, that means they’re a fixed set as well. We should only have to calculate them once for the whole program. That seems a lot of work we don’t need to do. Let’s see how it turns out.</p>
+<p>Hey, that gets us from 0.6s to 0.5s (10Mp/s). A 17% improvement’s pretty good. But let’s think about this some more. The values <code class="language-plaintext highlighter-rouge">t</code> can take are exactly dependent on <code class="language-plaintext highlighter-rouge">kSteps</code>, which is a constant for the program. And since the <code class="language-plaintext highlighter-rouge">C</code> variables depend only on <code class="language-plaintext highlighter-rouge">t</code>, that means they’re a fixed set as well. We should only have to calculate them once for the whole program. That seems a lot of work we don’t need to do. Let’s see how it turns out.</p>
 
 <div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">copyBezierTable</span><span class="p">(</span><span class="n">CGPoint</span> <span class="n">P0</span><span class="p">,</span> <span class="n">CGPoint</span> <span class="n">P1</span><span class="p">,</span> <span class="n">CGPoint</span> <span class="n">P2</span><span class="p">,</span> <span class="n">CGPoint</span> <span class="n">P3</span><span class="p">,</span>
                              <span class="n">CGPoint</span> <span class="o">**</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
@@ -172,7 +172,7 @@
 
 <p>The cost of this is 4 floats (16 bytes) per step to store the constants. So for a 1000 step curve, that’s less than 16kB. Not a bad investment on iOS. This cost is for as many curves as you want, as long as they all use the same step size. Of course, if you want different numbers of steps, you could just pass a scale variable to calculate every other point, every fourth point, etc. But by the time we’re done optimizing this (and there’s still plenty of performance left to unlock), you may find that it’s faster and easier just to calculate the same number of points for all curves.</p>
 
-<p>There is another common way to speed up Bézier calculation. Hannu Kankaanpää wrote an excellent article explaining <a href="http://www.niksula.hut.fi/~hkankaan/Homepages/bezierfast.html">forward differencing using a Taylor series</a>. His approach is fast. About 50-60% faster than <code class="highlighter-rouge">copyBezierXY()</code>. But <code class="highlighter-rouge">copyBezierTable()</code> is about twice as fast as forward differencing if you calculate a lot of curves with the same step size. Forward differencing is fast if you have one incredibly expensive curve to calculate (say a large Bézier surface). But it loses when you need to calculate a lot of curves. Factoring out everything but the points themselves into a pre-calcuated table lets you skip almost all the work. And that’s the goal.</p>
+<p>There is another common way to speed up Bézier calculation. Hannu Kankaanpää wrote an excellent article explaining <a href="http://www.niksula.hut.fi/~hkankaan/Homepages/bezierfast.html">forward differencing using a Taylor series</a>. His approach is fast. About 50-60% faster than <code class="language-plaintext highlighter-rouge">copyBezierXY()</code>. But <code class="language-plaintext highlighter-rouge">copyBezierTable()</code> is about twice as fast as forward differencing if you calculate a lot of curves with the same step size. Forward differencing is fast if you have one incredibly expensive curve to calculate (say a large Bézier surface). But it loses when you need to calculate a lot of curves. Factoring out everything but the points themselves into a pre-calcuated table lets you skip almost all the work. And that’s the goal.</p>
 
 <p>We <em>still</em> haven’t pulled out Instruments, and we’re still writing in portable C. I wonder what we might get if we go off-road and write directly for the NEON coprocessor. Yes, that means we’re moving onto ARM assembler in the next post. Think you can’t beat the compiler? Think it’s not worth it to try? Think again.</p>
 </div>
@@ -190,7 +190,7 @@
 
 
 
-<time datetime="2012-03-06T12:53:40-05:00" pubdate data-updated="true">06 Mar 2012</time>
+<time datetime="2012-03-06T10:53:40-07:00" pubdate data-updated="true">06 Mar 2012</time>
       
 
 <span class="categories">
@@ -232,7 +232,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

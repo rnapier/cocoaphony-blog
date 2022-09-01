@@ -71,7 +71,7 @@ protocol Fetchable: Decodable { &hellip;">
 
 
 
-<time datetime="2019-04-29T11:18:00-04:00" pubdate data-updated="true">29 Apr 2019</time>
+<time datetime="2019-04-29T09:18:00-06:00" pubdate data-updated="true">29 Apr 2019</time>
         
       </p>
     
@@ -114,7 +114,7 @@ protocol Fetchable: Decodable { &hellip;">
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>This can decode any Fetchable model from an API endpoint that has a URL something like <code class="highlighter-rouge">https://&lt;base&gt;/&lt;model&gt;/&lt;id&gt;</code>. That’s pretty good, but we can do a lot better. A natural first question is “how do I test it?” It relies explicitly on URLSession, which is very hard to test against. A natural approach would be to create a protocol to mock URLSession.</p>
+<p>This can decode any Fetchable model from an API endpoint that has a URL something like <code class="language-plaintext highlighter-rouge">https://&lt;base&gt;/&lt;model&gt;/&lt;id&gt;</code>. That’s pretty good, but we can do a lot better. A natural first question is “how do I test it?” It relies explicitly on URLSession, which is very hard to test against. A natural approach would be to create a protocol to mock URLSession.</p>
 
 <p>I hope by the time you’re done with this series, hearing “create a protocol to mock” makes you flinch just a little.
 <!--more--></p>
@@ -123,7 +123,7 @@ protocol Fetchable: Decodable { &hellip;">
 The basic premise of a mock is to build a test object that mimics some other object you want to replace. That encourages you to design a protocol that very closely matches the existing interface, and then your “mock object” will also closely match that interface. This makes your “real” object, the protocol, and the mock evolve tightly in lockstep, and it cuts off opportunities for more powerful protocols that aren’t tied to one implementation. If the only reason you can imagine using a protocol is for testing, then you’re not getting all you could out of it. Protocols can be so much more.
 </span></p>
 
-<p>So my goal isn’t to “mock” URLSession, but to abstract the functionality I need. What I want is to map a URLRequest to Data, asynchronously:<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
+<p>So my goal isn’t to “mock” URLSession, but to abstract the functionality I need. What I want is to map a URLRequest to Data, asynchronously:<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A transport maps a URLRequest to Data, asynchronously</span>
 <span class="kd">protocol</span> <span class="kt">Transport</span> <span class="p">{</span>
@@ -153,7 +153,7 @@ The basic premise of a mock is to build a test object that mimics some other obj
     .chl { color: yellow; } /* code highlight */
 </style>
 
-<p>With that in place, <code class="highlighter-rouge">APIClient</code> can use Transport rather than URLSession.</p>
+<p>With that in place, <code class="language-plaintext highlighter-rouge">APIClient</code> can use Transport rather than URLSession.</p>
 
 <pre>
 final class APIClient {
@@ -181,7 +181,7 @@ final class APIClient {
 }
 </pre>
 
-<p>By using a default value in <code class="highlighter-rouge">init</code>, callers can still use the <code class="highlighter-rouge">APIClient()</code> syntax if they want the standard network transport.</p>
+<p>By using a default value in <code class="language-plaintext highlighter-rouge">init</code>, callers can still use the <code class="language-plaintext highlighter-rouge">APIClient()</code> syntax if they want the standard network transport.</p>
 
 <p>Transport is a lot more powerful than just “a URLSession mock.” It’s a function that converts URLRequests into Data. That means it can be composed. I can build a Transport that wraps other Transports. For example, I can build a Transport that adds headers to every request.</p>
 
@@ -238,21 +238,21 @@ final class APIClient {
 
 <h2 id="common-currency">Common currency</h2>
 
-<p>The split between a <code class="highlighter-rouge">APIClient.fetch</code>, which is generic, and <code class="highlighter-rouge">Transport.send</code>, which is not, is a common structure that I look for. <code class="highlighter-rouge">Transport.send</code> operates on a small set of concrete types: URLRequest in, Data out. When you’re working with a small set of concrete types, then composition is easy. Anything that can generate a URLRequest or can consume Data can participate. <code class="highlighter-rouge">APIClient.fetch</code> converts Data into any kind of generic Fetchable. When angle-brackets and associated types start creeping in, the code becomes more expressive, but harder to compose because you have to make sure all the types line up.</p>
+<p>The split between a <code class="language-plaintext highlighter-rouge">APIClient.fetch</code>, which is generic, and <code class="language-plaintext highlighter-rouge">Transport.send</code>, which is not, is a common structure that I look for. <code class="language-plaintext highlighter-rouge">Transport.send</code> operates on a small set of concrete types: URLRequest in, Data out. When you’re working with a small set of concrete types, then composition is easy. Anything that can generate a URLRequest or can consume Data can participate. <code class="language-plaintext highlighter-rouge">APIClient.fetch</code> converts Data into any kind of generic Fetchable. When angle-brackets and associated types start creeping in, the code becomes more expressive, but harder to compose because you have to make sure all the types line up.</p>
 
 <p>The power of the Internet is that it mostly operates on just one type: the packet. It doesn’t care what’s in the packet or what the packet “means.” It just moves packets from one place to another; packets in, packets out. And that’s why the Internet is so flexible, and the equipment that makes it work can be implemented by numerous vendors in wildly different ways, and they can all work together.</p>
 
-<p>At each layer above the network layer, additional context and meaning is applied to the information. It’s interpreted as user information or commands to execute or video to display. That’s composition, gluing together independent layers, each with their own concerns. When designing protocols, I try to employ the same approach. Particularly at the lowest layers I look for common, concrete types to work with. URL and URLRequest. Data and Int. Simple functions like <code class="highlighter-rouge">() -&gt; Void</code>. As I move up the stack, then greater meaning is applied to the data in the form of model types and the like. That means it’s easy to write Transports and many different things can use Transports. And that’s the goal.</p>
+<p>At each layer above the network layer, additional context and meaning is applied to the information. It’s interpreted as user information or commands to execute or video to display. That’s composition, gluing together independent layers, each with their own concerns. When designing protocols, I try to employ the same approach. Particularly at the lowest layers I look for common, concrete types to work with. URL and URLRequest. Data and Int. Simple functions like <code class="language-plaintext highlighter-rouge">() -&gt; Void</code>. As I move up the stack, then greater meaning is applied to the data in the form of model types and the like. That means it’s easy to write Transports and many different things can use Transports. And that’s the goal.</p>
 
 <p>This network stack still is nowhere near as flexible and powerful as I want. But now it can fetch a wide variety of model types from a particular type of API in a very composable and testable way. That’s great progress. For some very simple APIs, it might even be done. There’s no need to make it more flexible for its own sake. But I think we’ll quickly find more features we need to add.</p>
 
 <p>Next time, I’ll jump back up to the very top of the stack, to the models, and show where a PAT (protocol with associated type) can really shine.</p>
 
 <p><a href="/assets/protocols/StartWithAProtocol.zip">Swift Playground</a></p>
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1">
-      <p>Throughout this series, whenever it’s unambiguous, I’ll refer to <code class="highlighter-rouge">Result&lt;Value, Error&gt;</code> as just “Value.” <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:1" role="doc-endnote">
+      <p>Throughout this series, whenever it’s unambiguous, I’ll refer to <code class="language-plaintext highlighter-rouge">Result&lt;Value, Error&gt;</code> as just “Value.” <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -271,7 +271,7 @@ final class APIClient {
 
 
 
-<time datetime="2019-04-29T11:18:00-04:00" pubdate data-updated="true">29 Apr 2019</time>
+<time datetime="2019-04-29T09:18:00-06:00" pubdate data-updated="true">29 Apr 2019</time>
       
 
 
@@ -307,7 +307,7 @@ final class APIClient {
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

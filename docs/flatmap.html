@@ -71,7 +71,7 @@ surprising thing. Last time we looked at the incredible little map function, &he
 
 
 
-<time datetime="2014-09-07T09:13:15-04:00" pubdate data-updated="true">07 Sep 2014</time>
+<time datetime="2014-09-07T07:13:15-06:00" pubdate data-updated="true">07 Sep 2014</time>
         
       </p>
     
@@ -83,7 +83,7 @@ surprising thing. Last time we looked at the incredible little map function, &he
 surprising thing.</p>
 </blockquote>
 
-<p><a href="/maps">Last time</a> we looked at the incredible little <code class="highlighter-rouge">map</code> function, and saw
+<p><a href="/maps">Last time</a> we looked at the incredible little <code class="language-plaintext highlighter-rouge">map</code> function, and saw
 how it could be used to simplify a lot of tedious for-loops while making our
 code more clear and less error-prone. This time, we’re going to see if we can
 solve a common problem that happens with mapping, nesting.</p>
@@ -92,11 +92,11 @@ solve a common problem that happens with mapping, nesting.</p>
 
 <h2 id="when-we-left-our-heroes">When we left our heroes</h2>
 
-<p>First, a very quick recap on mapping. We can use <code class="highlighter-rouge">map</code> to transform an array of
+<p>First, a very quick recap on mapping. We can use <code class="language-plaintext highlighter-rouge">map</code> to transform an array of
 elements into an new array of different elements. For example, we can transform
 an array of strings into an array of string lengths in a variety of syntaxes:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let domains = ["apple.com", "google.com", "robnapier.net"]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let domains = ["apple.com", "google.com", "robnapier.net"]
 let lengths = domains.map { countElements($0) }
 let lengths = map(domains) { countElements($0) }
 let lengths = domains.map(countElements)
@@ -105,18 +105,18 @@ let lengths = map(domains, countElements)
 
 <p>Or we could transform an array of strings into an array of URLs:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let urls = domains.map { NSURL(scheme: "http", host: $0, path: "/") }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let urls = domains.map { NSURL(scheme: "http", host: $0, path: "/") }
 </code></pre></div></div>
 
 <p>We learned that we can map optionals and our custom
 <a href="https://gist.github.com/rnapier/42ef28d52ac92744730f">result</a> type.
-In both cases, successful values (<code class="highlighter-rouge">Some</code>, <code class="highlighter-rouge">Success</code>) are transformed with the
-function, while failing values (<code class="highlighter-rouge">None</code>, <code class="highlighter-rouge">nil</code>, <code class="highlighter-rouge">Failure</code>) are simply returned.
-In this way, mapping is very similar to optional chaining (<code class="highlighter-rouge">?.</code>).</p>
+In both cases, successful values (<code class="language-plaintext highlighter-rouge">Some</code>, <code class="language-plaintext highlighter-rouge">Success</code>) are transformed with the
+function, while failing values (<code class="language-plaintext highlighter-rouge">None</code>, <code class="language-plaintext highlighter-rouge">nil</code>, <code class="language-plaintext highlighter-rouge">Failure</code>) are simply returned.
+In this way, mapping is very similar to optional chaining (<code class="language-plaintext highlighter-rouge">?.</code>).</p>
 
-<p>We discovered that the different <code class="highlighter-rouge">map</code> functions all have the same “shape”:</p>
+<p>We discovered that the different <code class="language-plaintext highlighter-rouge">map</code> functions all have the same “shape”:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map(Array&lt;T&gt;, T -&gt; U) -&gt; Array&lt;U&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map(Array&lt;T&gt;, T -&gt; U) -&gt; Array&lt;U&gt;
 map(Optional&lt;T&gt;, T -&gt; U) -&gt; Optional&lt;U&gt;
 map(Result&lt;T&gt;, T -&gt; U) -&gt; Result&lt;U&gt;
 // or more generally:
@@ -135,7 +135,7 @@ map(F&lt;T&gt;, T -&gt; U) -&gt; F&lt;U&gt;
 <a href="https://gist.github.com/rnapier/e0d91580d613fb21a52b">simple example</a> to get
 ourselves started on a new problem. We have customers with some properties:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Customer {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Customer {
   let name: String
   let emails: [String]
 }
@@ -148,7 +148,7 @@ let customers = [
 
 <p>Now we’d like a list of all our customer names for our upcoming report. Easy!</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let names = customers.map { $0.name }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let names = customers.map { $0.name }
 // ["Alice", "Bob"]
 </code></pre></div></div>
 
@@ -156,7 +156,7 @@ let customers = [
 need to alert all of our users at all of their email addresses. Let’s grab
 those:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails = customers.map { $0.emails }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails = customers.map { $0.emails }
 // [["alice@example.com"], ["bob@example.org", "bobby@home.example"]]
 </code></pre></div></div>
 
@@ -165,9 +165,9 @@ list-of-lists of email addresses. What are we going to do now? I wouldn’t be
 surprised if you’ve encountered this before and fixed it with some kind of
 “flatten” function that removes one layer of structure. It’s slightly surprising
 that Swift doesn’t have one of these built in, but it’s easy enough to
-make.<sup id="fnref:simpler"><a href="#fn:simpler" class="footnote">1</a></sup></p>
+make.<sup id="fnref:simpler" role="doc-noteref"><a href="#fn:simpler" class="footnote" rel="footnote">1</a></sup></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(array: [[T]]) -&gt; [T] {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(array: [[T]]) -&gt; [T] {
   var result = [T]()
   for subarray in array {
     result.extend(subarray)
@@ -178,26 +178,26 @@ make.<sup id="fnref:simpler"><a href="#fn:simpler" class="footnote">1</a></sup><
 
 <p>With that, let’s try again:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let flatEmails = flatten(customers.map { $0.emails })
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let flatEmails = flatten(customers.map { $0.emails })
 // ["alice@example.com", "bob@example.org", "bobby@home.example"]
 </code></pre></div></div>
 
 <p>Great. Well, pretty great. There are a few small annoyances. Throwing
-<code class="highlighter-rouge">flatten()</code> on the start is kind of tedious, especially if this is part of a
+<code class="language-plaintext highlighter-rouge">flatten()</code> on the start is kind of tedious, especially if this is part of a
 chain of maps and filters. Consider if we wanted these to be URLs. We’d want to
 do this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails =
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails =
   customers.map { $0.emails }
   .flatten      // &lt;== this isn't possible
   .map { NSURL(string:"mailto:\($0)") }
 </code></pre></div></div>
 
 <p>But that’s not really possible in Swift. You can’t easily add an Array extension
-for <code class="highlighter-rouge">flatten</code> because it only applies to arrays of arrays. Swift can’t apply
+for <code class="language-plaintext highlighter-rouge">flatten</code> because it only applies to arrays of arrays. Swift can’t apply
 extensions only to certain kinds of arrays. So we’re forced to do this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails =
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let emails =
   flatten(customers.map { $0.emails })
   .map { NSURL(string:"mailto:\($0)") }
 </code></pre></div></div>
@@ -207,9 +207,9 @@ where flattening is needed.</p>
 
 <p>Like I said, this “map plus flatten” is pretty common, so maybe it’s worth
 making a little convenience method for it that we could stick on Array. Let’s
-call it <code class="highlighter-rouge">flatMap</code>:</p>
+call it <code class="language-plaintext highlighter-rouge">flatMap</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
   func flatMap&lt;U&gt;(transform: T -&gt; [U]) -&gt; [U] {
     return flatten(self.map(transform))
   }
@@ -219,7 +219,7 @@ call it <code class="highlighter-rouge">flatMap</code>:</p>
 <p>Just like it says on the tin. Apply the map. Flatten. Ta-da! And now we can
 call:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let flatMapEmails = customers.flatMap { $0.emails }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let flatMapEmails = customers.flatMap { $0.emails }
 // ["alice@example.com", "bob@example.org", "bobby@home.example"]
 </code></pre></div></div>
 
@@ -227,18 +227,18 @@ call:</p>
 
 <h2 id="flat-all-the-things">Flat all the things</h2>
 
-<p>Since we can map optionals and <code class="highlighter-rouge">Result</code>, can we flatten them too? Let’s look at
-the shape of <code class="highlighter-rouge">flatten</code> and how it might apply:</p>
+<p>Since we can map optionals and <code class="language-plaintext highlighter-rouge">Result</code>, can we flatten them too? Let’s look at
+the shape of <code class="language-plaintext highlighter-rouge">flatten</code> and how it might apply:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flatten(Array&lt;Array&lt;T&gt;&gt;) -&gt; Array&lt;T&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flatten(Array&lt;Array&lt;T&gt;&gt;) -&gt; Array&lt;T&gt;
 flatten(Optional&lt;Optional&lt;T&gt;&gt;) -&gt; Optional&lt;T&gt;
 flatten(Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt;
 </code></pre></div></div>
 
-<p>So we could flatten a <code class="highlighter-rouge">T??</code> to <code class="highlighter-rouge">T?</code> or a <code class="highlighter-rouge">Result&lt;Result&lt;T&gt;&gt;</code> to <code class="highlighter-rouge">Result&lt;T&gt;</code>.
+<p>So we could flatten a <code class="language-plaintext highlighter-rouge">T??</code> to <code class="language-plaintext highlighter-rouge">T?</code> or a <code class="language-plaintext highlighter-rouge">Result&lt;Result&lt;T&gt;&gt;</code> to <code class="language-plaintext highlighter-rouge">Result&lt;T&gt;</code>.
 That makes sense and sounds useful.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(result: Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(result: Result&lt;Result&lt;T&gt;&gt;) -&gt; Result&lt;T&gt; {
   switch result {
   case .Success(let box):
     switch box.unbox {
@@ -250,9 +250,9 @@ That makes sense and sounds useful.</p>
 }
 </code></pre></div></div>
 
-<p>And if we can map and flatten, then of course we can write <code class="highlighter-rouge">flatMap</code>:</p>
+<p>And if we can map and flatten, then of course we can write <code class="language-plaintext highlighter-rouge">flatMap</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Result {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Result {
   func flatMap&lt;U&gt;(transform: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
     return flatten(self.map(transform))
   }
@@ -264,19 +264,19 @@ That makes sense and sounds useful.</p>
 <p>That was easy enough to do, but who cares? Why would you ever want to do that?</p>
 
 <p>Let’s go back to the shape of this function. It’s a method, so we put the type
-of <code class="highlighter-rouge">self</code> as the first parameter to get a function form. That makes it easier
+of <code class="language-plaintext highlighter-rouge">self</code> as the first parameter to get a function form. That makes it easier
 to compare shapes:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
 </code></pre></div></div>
 
 <p>That looks very familiar. Back in
 <a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a> we developed a
-function called <code class="highlighter-rouge">continueWith</code> that let us chain together functions so that we’d
+function called <code class="language-plaintext highlighter-rouge">continueWith</code> that let us chain together functions so that we’d
 get a success if they all succeeded, and a failure if any of them failed. Here’s
 what it looked like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
   switch x {
   case .Success(let box): return f(box.unbox)
   case .Failure(let err): return .Failure(err)
@@ -287,7 +287,7 @@ what it looked like:</p>
 <p>Using that, we were able to turn our big, complicated JSON parser, full of
 conditional logic, into this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
   return continueWith(asJSON(data)) {     // data is NSData
     continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
       continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
@@ -299,7 +299,7 @@ conditional logic, into this:</p>
 
 <p>Let’s compare the shapes of these functions:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     flatMap(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
 continueWith(Result&lt;T&gt;, T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
 </code></pre></div></div>
 
@@ -311,7 +311,7 @@ some more basic function that they both derive from, or they may turn out to be
 the same thing.</p>
 
 <p>I’m not going to bore you with the fairly trivial (if slightly tedious) proof
-that <code class="highlighter-rouge">continueWith</code> and <code class="highlighter-rouge">flatMap</code> are in fact the same function. You can work it
+that <code class="language-plaintext highlighter-rouge">continueWith</code> and <code class="language-plaintext highlighter-rouge">flatMap</code> are in fact the same function. You can work it
 out on your own if you’re interested, or see
 <a href="https://gist.github.com/rnapier/b383d2542c9fabe913c9">my version in this gist</a>.
 But I will call out two facts: (1) they are the same function, and (2) it’s
@@ -348,8 +348,8 @@ implementation behaves identically.</p>
 <p>Test cases are not the same thing as a proof. I can’t create enough test cases
 to be certain that every number divisible by 6 is also divisible by 2 and 3.
 It’d take an infinite number of test cases. But if I prove it, I don’t need any
-tests at all. The key to making that easy is ensuring that <code class="highlighter-rouge">isDivisibleBySix(n:
-Int) -&gt; Bool</code> relies on nothing but <code class="highlighter-rouge">n</code>. If there is no mutable state, if there
+tests at all. The key to making that easy is ensuring that <code class="language-plaintext highlighter-rouge">isDivisibleBySix(n:
+Int) -&gt; Bool</code> relies on nothing but <code class="language-plaintext highlighter-rouge">n</code>. If there is no mutable state, if there
 are no side effects, if it’s just a function that takes a value and returns a
 value, then I can much more easily replace it with a different implementation
 and be confident it will behave the same.</p>
@@ -365,11 +365,11 @@ of that is the elimination of mutable state.</p>
 
 <p>OK, back to more hands-on, practical concerns.</p>
 
-<p>We implemented <code class="highlighter-rouge">continueWith</code> as a function, but we implemented <code class="highlighter-rouge">flatMap</code> as an
-extension method on <code class="highlighter-rouge">Result</code>. Does that change anything? Here’s our
+<p>We implemented <code class="language-plaintext highlighter-rouge">continueWith</code> as a function, but we implemented <code class="language-plaintext highlighter-rouge">flatMap</code> as an
+extension method on <code class="language-plaintext highlighter-rouge">Result</code>. Does that change anything? Here’s our
 function-based syntax:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
   return continueWith(asJSON(data)) {     // data is NSData
     continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
       continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
@@ -381,7 +381,7 @@ function-based syntax:</p>
 
 <p>Using a method approach, here’s what we get:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
   return asJSON(data)
     .flatMap(asJSONArray)
     .flatMap(secondElement)
@@ -393,9 +393,9 @@ function-based syntax:</p>
 <p>Yeah, that’s definitely easier to read, understand, and modify. Swift syntax
 tends to favor chaining methods over chaining functions. That’s somewhat
 unfortunate. Functions are easier to reason about (prove) because they don’t
-contain an implicit <code class="highlighter-rouge">self</code> that might hide state. Functions in Swift are also
+contain an implicit <code class="language-plaintext highlighter-rouge">self</code> that might hide state. Functions in Swift are also
 much more flexible in how they can be made generic (type-parameterized). As we
-saw before, it’s not possible to write <code class="highlighter-rouge">flatten</code> as a method on a generic type.
+saw before, it’s not possible to write <code class="language-plaintext highlighter-rouge">flatten</code> as a method on a generic type.
 Overuse of methods can get us into really frustrating situations if we want to
 write really reusable code.</p>
 
@@ -406,13 +406,13 @@ Operators are just functions that allow some syntax benefits:</p>
 
 <ul>
   <li>They don’t require parentheses</li>
-  <li>They can be prefix (<code class="highlighter-rouge">!x</code>), infix (<code class="highlighter-rouge">x + y</code>) or postfix (<code class="highlighter-rouge">x++</code>)</li>
+  <li>They can be prefix (<code class="language-plaintext highlighter-rouge">!x</code>), infix (<code class="language-plaintext highlighter-rouge">x + y</code>) or postfix (<code class="language-plaintext highlighter-rouge">x++</code>)</li>
 </ul>
 
-<p>So what if we defined an operator for <code class="highlighter-rouge">flatMap</code>? We’ll call it <code class="highlighter-rouge">&gt;&gt;==</code> for
+<p>So what if we defined an operator for <code class="language-plaintext highlighter-rouge">flatMap</code>? We’ll call it <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code> for
 reasons I’ll explain later.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>infix operator &gt;&gt;== {}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>infix operator &gt;&gt;== {}
 func &gt;&gt;== &lt;T,U&gt;(x: Result&lt;T&gt;, f:T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
   return x.flatMap(f)
 }
@@ -421,7 +421,7 @@ func &gt;&gt;== &lt;T,U&gt;(x: Result&lt;T&gt;, f:T -&gt; Result&lt;U&gt;) -&gt;
 <p>With that, here’s
 <a href="https://gist.github.com/rnapier/067156ac404cc42f17b6">our new parser</a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
   return asJSON(data)
     &gt;&gt;== asJSONArray
     &gt;&gt;== secondElement
@@ -440,21 +440,21 @@ are used consistently. There’s a cost to forcing people to learn and memorize
 your operator; make sure it’s going to be used often enough to be worth it.</p>
 
 <p>That said, we all use operators every day, and they’re an important part of
-programming. There is no difference between <code class="highlighter-rouge">+</code> and <code class="highlighter-rouge">&gt;&gt;==</code> other than you
-learned one when you were a child. <code class="highlighter-rouge">+</code> is nothing more than an infix function:</p>
+programming. There is no difference between <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code> other than you
+learned one when you were a child. <code class="language-plaintext highlighter-rouge">+</code> is nothing more than an infix function:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>infix operator + { associativity left precedence 140 }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>infix operator + { associativity left precedence 140 }
 func +(lhs: Float, rhs: Float) -&gt; Float
 func +(lhs: Int, rhs: Int) -&gt; Int
 ...
 </code></pre></div></div>
 
-<p>We could just as well use a function called <code class="highlighter-rouge">add()</code> to do the same thing, but
+<p>We could just as well use a function called <code class="language-plaintext highlighter-rouge">add()</code> to do the same thing, but
 instead everyone memorizes this arbitrary symbol because it’s easier to use.
-That’s important. There is nothing more <em>meaningful</em> about <code class="highlighter-rouge">+</code>, <code class="highlighter-rouge">-</code>, and <code class="highlighter-rouge">*</code>
-versus <code class="highlighter-rouge">&gt;&gt;==</code>. They’re just symbols you’ve memorized. I’m suggesting you should
+That’s important. There is nothing more <em>meaningful</em> about <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, and <code class="language-plaintext highlighter-rouge">*</code>
+versus <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code>. They’re just symbols you’ve memorized. I’m suggesting you should
 memorize one more. Well, several. But you’ll learn them over time just as you
-learned <code class="highlighter-rouge">√</code>, <code class="highlighter-rouge">∫</code>, <code class="highlighter-rouge">∑</code>, and <code class="highlighter-rouge">∞</code> later than you learned <code class="highlighter-rouge">+</code> and <code class="highlighter-rouge">-</code>.</p>
+learned <code class="language-plaintext highlighter-rouge">√</code>, <code class="language-plaintext highlighter-rouge">∫</code>, <code class="language-plaintext highlighter-rouge">∑</code>, and <code class="language-plaintext highlighter-rouge">∞</code> later than you learned <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">-</code>.</p>
 
 <p>That doesn’t mean you should go crazy with operators. In fact, I generally
 suggest you avoid creating new ones until you’ve thought quite a lot about it
@@ -465,20 +465,20 @@ code clearer and easier to write when used appropriately.</p>
 <h2 id="a-rose-by-any-other-name-would-be-confusing">A rose by any other name would be confusing</h2>
 
 <p>You might ask now what this function should be called. We started by calling it
-<code class="highlighter-rouge">continueWith</code>, but then it changed to <code class="highlighter-rouge">flatMap</code>, and then to <code class="highlighter-rouge">&gt;&gt;==</code>. I didn’t
-mention it here, but it’s also called <code class="highlighter-rouge">Bind</code> and <code class="highlighter-rouge">&gt;&gt;=</code>. Other Swift developers
+<code class="language-plaintext highlighter-rouge">continueWith</code>, but then it changed to <code class="language-plaintext highlighter-rouge">flatMap</code>, and then to <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code>. I didn’t
+mention it here, but it’s also called <code class="language-plaintext highlighter-rouge">Bind</code> and <code class="language-plaintext highlighter-rouge">&gt;&gt;=</code>. Other Swift developers
 have called it
 <a href="http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics">»&gt;</a>
 and <a href="http://nomothetis.svbtle.com/the-culmination-i">»=-</a>. Its math name is a
 monadic bind. But what should we call it?</p>
 
-<p>I believe Swift programmers should call the function <code class="highlighter-rouge">flatMap</code> (as in Scala) and
-should use <code class="highlighter-rouge">&gt;&gt;==</code> as the operator (derived from Haskell). The operator should be
-pronounced “bind” or colloquially “and then.” <code class="highlighter-rouge">bind()</code> and <code class="highlighter-rouge">&gt;&gt;=</code> are existing
+<p>I believe Swift programmers should call the function <code class="language-plaintext highlighter-rouge">flatMap</code> (as in Scala) and
+should use <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code> as the operator (derived from Haskell). The operator should be
+pronounced “bind” or colloquially “and then.” <code class="language-plaintext highlighter-rouge">bind()</code> and <code class="language-plaintext highlighter-rouge">&gt;&gt;=</code> are existing
 functions in Swift, and it’s dangerous to overload things with completely
-different meanings (I’m looking at you, C++ <code class="highlighter-rouge">&lt;&lt;</code>). I think the operator should
-preserve as much of the “shape” as possible from Haskell’s, and I think <code class="highlighter-rouge">&gt;&gt;==</code>
-does that best.<sup id="fnref:type"><a href="#fn:type" class="footnote">2</a></sup></p>
+different meanings (I’m looking at you, C++ <code class="language-plaintext highlighter-rouge">&lt;&lt;</code>). I think the operator should
+preserve as much of the “shape” as possible from Haskell’s, and I think <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code>
+does that best.<sup id="fnref:type" role="doc-noteref"><a href="#fn:type" class="footnote" rel="footnote">2</a></sup></p>
 
 <p><span class="pullquote-right" data-pullquote="spend time looking at how other languages and other Swift developers have approached the same problem."></span></p>
 
@@ -498,7 +498,7 @@ Make sure it’s valuable enough to be worth teaching them.</p>
 <p>If you’ve gotten this far, you’ve come a long way. It’s a lot to take in. Let me
 sum up where we are in our parser:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
   return asJSON(data)
     &gt;&gt;== asJSONArray
     &gt;&gt;== secondElement
@@ -519,27 +519,27 @@ handles errors without littering our code with error handling or requiring
 exceptions. It’s compact, but not dense. It’s easy to modify or extend. And each
 of the individual functions is about as simple as it could be and easy to unit
 test (or so simple that it literally can’t be wrong). There’s still more work to
-make it generic. Things like <code class="highlighter-rouge">secondElement</code> obviously don’t scale, and we’ll
+make it generic. Things like <code class="language-plaintext highlighter-rouge">secondElement</code> obviously don’t scale, and we’ll
 work on that in future posts. But the basic structure is quite nice I think.</p>
 
 <p>Until then, here are some take-aways:</p>
 
 <ul>
   <li>Swift makes it easier to chain together methods than functions</li>
-  <li>…but methods are harder to reason about because of <code class="highlighter-rouge">self</code></li>
-  <li>Generic operators like <code class="highlighter-rouge">&gt;&gt;==</code> make it easy to chain together functions that peal away a small part of the problem while maintaining structure like error handling</li>
+  <li>…but methods are harder to reason about because of <code class="language-plaintext highlighter-rouge">self</code></li>
+  <li>Generic operators like <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code> make it easy to chain together functions that peal away a small part of the problem while maintaining structure like error handling</li>
   <li>…but new operators should be created with caution, founded in the lessons of history</li>
 </ul>
 
 <p>That’s enough for this time. This was a major turning point, but there are still
 a lot of things to cover. Until then, stop mutating. Evolve.</p>
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:simpler">
-      <p>In a later post we’ll discuss how <code class="highlighter-rouge">flatten</code> is insanely simple to implement with <code class="highlighter-rouge">reduce</code>. The fact that its so simple is probably the reason they didn’t bother to add <code class="highlighter-rouge">flatten</code> to stdlib. But I’m guessing. <a href="#fnref:simpler" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:simpler" role="doc-endnote">
+      <p>In a later post we’ll discuss how <code class="language-plaintext highlighter-rouge">flatten</code> is insanely simple to implement with <code class="language-plaintext highlighter-rouge">reduce</code>. The fact that its so simple is probably the reason they didn’t bother to add <code class="language-plaintext highlighter-rouge">flatten</code> to stdlib. But I’m guessing. <a href="#fnref:simpler" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:type">
-      <p>I also have found it easy to type. I tried <code class="highlighter-rouge">&gt;&gt;=-</code> for a while and kept getting <code class="highlighter-rouge">&gt;&gt;=0-</code> when I was typing fast. <a href="#fnref:type" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:type" role="doc-endnote">
+      <p>I also have found it easy to type. I tried <code class="language-plaintext highlighter-rouge">&gt;&gt;=-</code> for a while and kept getting <code class="language-plaintext highlighter-rouge">&gt;&gt;=0-</code> when I was typing fast. <a href="#fnref:type" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -558,7 +558,7 @@ a lot of things to cover. Until then, stop mutating. Evolve.</p>
 
 
 
-<time datetime="2014-09-07T09:13:15-04:00" pubdate data-updated="true">07 Sep 2014</time>
+<time datetime="2014-09-07T07:13:15-06:00" pubdate data-updated="true">07 Sep 2014</time>
       
 
 <span class="categories">
@@ -600,7 +600,7 @@ a lot of things to cover. Until then, stop mutating. Evolve.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

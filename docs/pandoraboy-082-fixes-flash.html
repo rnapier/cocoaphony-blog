@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2010-07-15T23:30:24-04:00" pubdate data-updated="true">15 Jul 2010</time>
+<time datetime="2010-07-15T21:30:24-06:00" pubdate data-updated="true">15 Jul 2010</time>
         
       </p>
     
@@ -80,7 +80,7 @@
 <div class="entry-content"><p>For those of you having trouble with Flash 10.1, I’ve fixed PB to handle it. This moves from the hackish “dig around in the NetscapePlugin objects and call undocumented methods” approach to a standard CGEvent based keyboard injection. You can’t use NSApp’s sendEvent: to talk to Flash (probably because Flash is not in Cocoa). But the following code is a good general purpose “send me a virtual keystroke.”
 <!-- more --></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)sendKeyPress:(int)keycode withModifier:(int)modifier
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)sendKeyPress:(int)keycode withModifier:(int)modifier
 {
 	ProcessSerialNumber psn;
 	GetCurrentProcess(&amp;psn);
@@ -106,13 +106,13 @@
 }
 </code></pre></div></div>
 
-<p>First note the use of <code class="highlighter-rouge">CGEventPostToPSN()</code>. I originally made the mistake of using <code class="highlighter-rouge">CGEventPost()</code>. The problem is that this will send the keystroke to the currently active application, not PandoraBoy. For keyboard shortcuts and applescript where PB will certainly be in the background, <code class="highlighter-rouge">CGEventPostToPSN()</code> is a must here.</p>
+<p>First note the use of <code class="language-plaintext highlighter-rouge">CGEventPostToPSN()</code>. I originally made the mistake of using <code class="language-plaintext highlighter-rouge">CGEventPost()</code>. The problem is that this will send the keystroke to the currently active application, not PandoraBoy. For keyboard shortcuts and applescript where PB will certainly be in the background, <code class="language-plaintext highlighter-rouge">CGEventPostToPSN()</code> is a must here.</p>
 
 <p>Note that this uses virtual keycodes. That’s fine for PB, since (for now) we only send things that are universal (like spacebar). But it will be a problem when I implement sending “z” to snooze a song. The problem is that “z” means “the location of ‘z’ on an ANSI keyboard.” If you have a different keyboard layout, it’s still going to act like you pressed that lower left-hand key beside the shift, not “z”. If people have trouble with this, I’ll look into UCKeyboardLayout, but it was too much for tonight, and I don’t need it myself.</p>
 
 <p>The modifiers are tricky because if you want to send “Z” that really means “shift down, z down, z up, shift up.” This method takes care of all that for you. You would send “Z” like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[self sendKeyPress:kVK_ANSI_Z withModifier:kVK_Shift];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[self sendKeyPress:kVK_ANSI_Z withModifier:kVK_Shift];
 </code></pre></div></div>
 </div>
 
@@ -129,7 +129,7 @@
 
 
 
-<time datetime="2010-07-15T23:30:24-04:00" pubdate data-updated="true">15 Jul 2010</time>
+<time datetime="2010-07-15T21:30:24-06:00" pubdate data-updated="true">15 Jul 2010</time>
       
 
 <span class="categories">
@@ -171,7 +171,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

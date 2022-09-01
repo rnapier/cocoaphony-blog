@@ -71,7 +71,7 @@ to be required of every Swift blogger. And yes, several of the &hellip;">
 
 
 
-<time datetime="2014-08-18T22:00:00-04:00" pubdate data-updated="true">18 Aug 2014</time>
+<time datetime="2014-08-18T20:00:00-06:00" pubdate data-updated="true">18 Aug 2014</time>
         
       </p>
     
@@ -92,25 +92,25 @@ one is to allow the user to type in some search term, and return a list of
 pages. Our input is a piece of JSON like this from the Wikipedia API (after
 searching for “a”):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>["a",["Animal","Association football","Arthropod","Australia","AllMusic",...]]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>["a",["Animal","Association football","Arthropod","Australia","AllMusic",...]]
 </code></pre></div></div>
 
 <p>Our output should be a list of pages or an error. “A list of pages or an error.”
 That’s kind of a funny thing. What type would that be? If you’re an old ObjC dev
 like me, then you’d probably think (in Swift):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Page { let title: String }
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Page { let title: String }
 func pagesFromData(data: NSData, error: NSErrorPointer) -&gt; [Page]?
 </code></pre></div></div>
 
-<p>But that’s kind of a pain to use. We have to create an <code class="highlighter-rouge">NSError</code> variable and
-pass it with <code class="highlighter-rouge">&amp;error</code> and then check whether there was a result. Bleh. Gotta be
+<p>But that’s kind of a pain to use. We have to create an <code class="language-plaintext highlighter-rouge">NSError</code> variable and
+pass it with <code class="language-plaintext highlighter-rouge">&amp;error</code> and then check whether there was a result. Bleh. Gotta be
 a better way in this new Swift world.</p>
 
 <p>Let’s say it again. “A list of pages or an error.” That means it’s something
 that could be one of a couple of types. That’s just an enum. Let’s make it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum PageListResult {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum PageListResult {
   case Success([Page])
   case Failure(NSError)
 }
@@ -126,7 +126,7 @@ you.</em></p>
 
 <p>So that gives us a much better function signature:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; PageListResult
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; PageListResult
 </code></pre></div></div>
 
 <p>I’m amazed how often just figuring out the type I want and the function
@@ -144,7 +144,7 @@ so let’s get to work writing it. (In software, we are our own genies.) To pars
 this data, we need to do several things, any of which could fail:</p>
 
 <ol>
-  <li>Parse the <code class="highlighter-rouge">NSData</code> into a JSON object</li>
+  <li>Parse the <code class="language-plaintext highlighter-rouge">NSData</code> into a JSON object</li>
   <li>Make sure the JSON object is an array</li>
   <li>Get the second element</li>
   <li>Make sure the second element is a list of strings</li>
@@ -154,7 +154,7 @@ this data, we need to do several things, any of which could fail:</p>
 <p>If we write this in a straightforward style, we get the following
 (<a href="https://gist.github.com/rnapier/9e8f92a1ce6be5c3d295">complete gist</a>):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typealias JSON = AnyObject
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typealias JSON = AnyObject
 typealias JSONArray = [JSON]
 struct Page { let title: String }
 
@@ -205,8 +205,8 @@ func pagesFromData(data: NSData) -&gt; PageListResult {
 </code></pre></div></div>
 
 <p>That’s a lot of code, and frankly, it’s hard to tell what’s going on in there,
-even with the comments. Some of it is because of how <code class="highlighter-rouge">if let</code> works, so the
-errors wind up being in distant <code class="highlighter-rouge">else</code> clauses. But even if you rearranged it, I
+even with the comments. Some of it is because of how <code class="language-plaintext highlighter-rouge">if let</code> works, so the
+errors wind up being in distant <code class="language-plaintext highlighter-rouge">else</code> clauses. But even if you rearranged it, I
 think most approaches would look something like this. Lots of if’s and returns
 to deal with all the possible error conditions. (Or maybe you just skip the
 error legs because they’re too hard, but then you pay for it later when you’re
@@ -217,11 +217,11 @@ deny it.)</p>
 to understand this code quite yet, but I just want you to compare readability.
 This function does <em>exactly</em> the same thing as the above function. It has the
 same error checks, same success and failure results, passes the same unit tests,
-returns the same <code class="highlighter-rouge">NSError</code> values. Even with no idea what <code class="highlighter-rouge">&gt;==</code> means, even if
+returns the same <code class="language-plaintext highlighter-rouge">NSError</code> values. Even with no idea what <code class="language-plaintext highlighter-rouge">&gt;==</code> means, even if
 you just call it “the thing you put at the beginning of each step,” I’d say this
 function is a lot easier to understand and maintain.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
   return data
     &gt;== asJSON
     &gt;== asJSONArray
@@ -242,31 +242,31 @@ still have better code for your trouble.</p>
 <p>So, what’s the first thing we wish for? Well, a lot of our confusing code is
 tied up in different ways of managing success versus failure. It would be nice
 if each step dealt with success or failure in the same way. For example, I wish
-there were a function that took an <code class="highlighter-rouge">NSData</code> and returned parsed JSON or an
-error. Then it’d look just like the <code class="highlighter-rouge">pagesFromData</code> function. How about:</p>
+there were a function that took an <code class="language-plaintext highlighter-rouge">NSData</code> and returned parsed JSON or an
+error. Then it’d look just like the <code class="language-plaintext highlighter-rouge">pagesFromData</code> function. How about:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum JSONResult {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum JSONResult {
   case Success(JSON)
   case Failure(NSError)
 }
 func asJSON(data: NSData) -&gt; JSONResult
 </code></pre></div></div>
 
-<p>That’s OK, but now we have this <code class="highlighter-rouge">PageListResult</code> and <code class="highlighter-rouge">JSONResult</code> that are
+<p>That’s OK, but now we have this <code class="language-plaintext highlighter-rouge">PageListResult</code> and <code class="language-plaintext highlighter-rouge">JSONResult</code> that are
 almost identical, and obviously that’s going to keep repeating. This feels like
 a generic problem that we should solve in a generic way:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum Result&lt;A&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum Result&lt;A&gt; {
   case Success(A)
   case Failure(NSError)
 }
 </code></pre></div></div>
 
 <p>And that would be great, except that Beta6 can’t quite handle it (known bug,
-will hopefully be fixed soon). So in the meantime, to get this we need a <code class="highlighter-rouge">Box</code>
-for our <code class="highlighter-rouge">Success</code> case:</p>
+will hopefully be fixed soon). So in the meantime, to get this we need a <code class="language-plaintext highlighter-rouge">Box</code>
+for our <code class="language-plaintext highlighter-rouge">Success</code> case:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum Result&lt;A&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum Result&lt;A&gt; {
   case Success(Box&lt;A&gt;)
   case Failure(NSError)
 }
@@ -277,9 +277,9 @@ final class Box&lt;T&gt; {
 }
 </code></pre></div></div>
 
-<p>So back to our wished-for function, using our awesome new <code class="highlighter-rouge">Result</code>:</p>
+<p>So back to our wished-for function, using our awesome new <code class="language-plaintext highlighter-rouge">Result</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func asJSON(data: NSData) -&gt; Result&lt;JSON&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func asJSON(data: NSData) -&gt; Result&lt;JSON&gt; {
   var error: NSError?
   let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: &amp;error)
 
@@ -293,7 +293,7 @@ final class Box&lt;T&gt; {
 }
 </code></pre></div></div>
 
-<p>(If the <code class="highlighter-rouge">.Some</code> cases are unfamiliar to you, read 
+<p>(If the <code class="language-plaintext highlighter-rouge">.Some</code> cases are unfamiliar to you, read 
 <a href="http://natashatherobot.com/swift-unwrap-multiple-optionals/">Unwrapping Multiple Optionals</a>
 from Natasha the Robot.)</p>
 
@@ -301,7 +301,7 @@ from Natasha the Robot.)</p>
 helper functions in 
 <a href="https://gist.github.com/rnapier/2c2bccc40b24fb9d54fc">this gist</a>):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
 
   // 1. Parse the NSData into a JSON object
   switch asJSON(data) {
@@ -343,14 +343,14 @@ focus on typing. Focus on consistency and clarity. Conciseness will often follow
 on its own.</p>
 
 <p>Our function is now incredibly consistent. At each step down the tree we call 
-a function that takes <code class="highlighter-rouge">something</code> and returns a <code class="highlighter-rouge">Result&lt;something-else&gt;</code>. And
-if any of those results are <code class="highlighter-rouge">.Failure</code>, we return the error. I wish…</p>
+a function that takes <code class="language-plaintext highlighter-rouge">something</code> and returns a <code class="language-plaintext highlighter-rouge">Result&lt;something-else&gt;</code>. And
+if any of those results are <code class="language-plaintext highlighter-rouge">.Failure</code>, we return the error. I wish…</p>
 
 <p>Hmmm…. what do I wish? There’s clearly a pattern here, and where there are
 patterns there are opportunities for functions. Let’s think harder about this
 pattern.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  switch asJSON(data) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  switch asJSON(data) {
   case .Success(let boxJson):
     switch asJSONArray(boxJson.unbox) {
     case .Success(let boxArray):
@@ -368,7 +368,7 @@ pattern.</p>
 
 <p>Let’s write it a bit more generally:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  switch f1(x0) {                // Pass x0 to some function
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  switch f1(x0) {                // Pass x0 to some function
   case .Success(let x1box):      // If successful,  
     switch f2(x1box.unbox) {        // continue to another function   
     case .Success(let x2box):    // If successful,
@@ -384,19 +384,19 @@ pattern.</p>
   }
 </code></pre></div></div>
 
-<p>So I wish I had a function that took “the <code class="highlighter-rouge">Result</code> so far” and “the next step”
-and returned a <code class="highlighter-rouge">Result</code>. If passed a <code class="highlighter-rouge">.Success</code>, then it should pass the
-contents to the next step. If passed a <code class="highlighter-rouge">.Failure</code>, then it should stop and
-return that. Let’s call it <code class="highlighter-rouge">continueWith</code> for the time being.</p>
+<p>So I wish I had a function that took “the <code class="language-plaintext highlighter-rouge">Result</code> so far” and “the next step”
+and returned a <code class="language-plaintext highlighter-rouge">Result</code>. If passed a <code class="language-plaintext highlighter-rouge">.Success</code>, then it should pass the
+contents to the next step. If passed a <code class="language-plaintext highlighter-rouge">.Failure</code>, then it should stop and
+return that. Let’s call it <code class="language-plaintext highlighter-rouge">continueWith</code> for the time being.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func continueWith&lt;T,U&gt;(a: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func continueWith&lt;T,U&gt;(a: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt;
 </code></pre></div></div>
 
 <p>Stop. I know you just skimmed over that signature. Go read it again. Make sure
 you know what it says. Say it out loud. It takes a result, and a function that
 takes something and returns a result, and returns a result. That probably still
 didn’t make any sense. Go back and think about it until it does. This function
-is important. Think about where it says <code class="highlighter-rouge">A</code> and where it says <code class="highlighter-rouge">B</code>. It should
+is important. Think about where it says <code class="language-plaintext highlighter-rouge">A</code> and where it says <code class="language-plaintext highlighter-rouge">B</code>. It should
 start to click in your head pretty quickly once you stop and think about it for
 a second and stop speed-reading.</p>
 
@@ -404,7 +404,7 @@ a second and stop speed-reading.</p>
 
 <p>Really, don’t go on until it makes 90% sense to you. You might be thinking
 something like “hey, this kind of converts A into B, but inside a Result.” Yeah,
-that kind of makes sense. Kind of like <code class="highlighter-rouge">map</code>, but kind of different. Hold onto
+that kind of makes sense. Kind of like <code class="language-plaintext highlighter-rouge">map</code>, but kind of different. Hold onto
 that thought, or whatever thought made it make sense to you (we’re all
 different). Maybe what you’re thinking will be useful later.</p>
 
@@ -413,7 +413,7 @@ different). Maybe what you’re thinking will be useful later.</p>
 <p>OK, now that we’re on the same page, if we had a function like that, we could
 write:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func pagesFromData(data: NSData) -&gt; Result&lt;[Page]&gt; {
   return continueWith(asJSON(data)) {     // data is NSData
     continueWith(asJSONArray($0)) {       // $0 is JSON (AnyObject)
       continueWith(secondElement($0)) {   // $0 is JSONArray ([AnyObject])
@@ -423,12 +423,12 @@ write:</p>
 }
 </code></pre></div></div>
 
-<p>That’s starting to look kind of nice. I like this <code class="highlighter-rouge">continueWith</code> function. I
-wonder how we’d write it. Well, if it’s passed a <code class="highlighter-rouge">.Success</code>, it unboxes it and
-calls the next function.<sup id="fnref:unbox"><a href="#fn:unbox" class="footnote">1</a></sup> If it’s passed a <code class="highlighter-rouge">.Failure</code>, it returns a
-<code class="highlighter-rouge">.Failure</code>. That doesn’t seem too hard:</p>
+<p>That’s starting to look kind of nice. I like this <code class="language-plaintext highlighter-rouge">continueWith</code> function. I
+wonder how we’d write it. Well, if it’s passed a <code class="language-plaintext highlighter-rouge">.Success</code>, it unboxes it and
+calls the next function.<sup id="fnref:unbox" role="doc-noteref"><a href="#fn:unbox" class="footnote" rel="footnote">1</a></sup> If it’s passed a <code class="language-plaintext highlighter-rouge">.Failure</code>, it returns a
+<code class="language-plaintext highlighter-rouge">.Failure</code>. That doesn’t seem too hard:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
   switch x {
   case .Success(let box): return f(box.unbox)
   case .Failure(let err): return .Failure(err)
@@ -436,29 +436,29 @@ calls the next function.<sup id="fnref:unbox"><a href="#fn:unbox" class="footnot
 }
 </code></pre></div></div>
 
-<p>That was actually pretty simple. Don’t get too used to the name <code class="highlighter-rouge">continueWith</code>.
+<p>That was actually pretty simple. Don’t get too used to the name <code class="language-plaintext highlighter-rouge">continueWith</code>.
 We’ll be discussing other names for this function later. It’s more powerful than
 it looks.</p>
 
 <p>You can look at the <a href="https://gist.github.com/rnapier/0f5611d0bf89a9645713">full gist</a> if you like.</p>
 
-<p>Go back and ponder that last version of <code class="highlighter-rouge">pagesFromData</code> for a moment. What do
+<p>Go back and ponder that last version of <code class="language-plaintext highlighter-rouge">pagesFromData</code> for a moment. What do
 you like about it? What still bothers you?</p>
 
 <hr />
 
 <p>I told you there were several jumping off points in this discussion, and we’ve
-reached one of them. The nested version of this function using <code class="highlighter-rouge">continueWith</code> is
+reached one of them. The nested version of this function using <code class="language-plaintext highlighter-rouge">continueWith</code> is
 already a lot easier to reason about than the original version. The techniques
 are pretty vanilla for Swift: an enum with associated data, and a function that
 takes function. All you need to do is structure your code so each failable step
-takes a value and returns a <code class="highlighter-rouge">Result</code>. You can continue this pattern
+takes a value and returns a <code class="language-plaintext highlighter-rouge">Result</code>. You can continue this pattern
 indefinitely, keeping the code easy to understand, while still getting good
 error messages.</p>
 
 <p>So let’s leave it there for this post. Soon we’ll push this further, make it
 easier to read and more generic. We might even talk more about this interesting
-<code class="highlighter-rouge">continueWith</code> function.</p>
+<code class="language-plaintext highlighter-rouge">continueWith</code> function.</p>
 
 <p>In the meantime, you may be interested in some other explorations of these
 topics. They all have spoilers of where we’re going, but there’s no harm in
@@ -468,7 +468,7 @@ best with you.</p>
 <ul>
   <li>Alexandros Salazar’s 
 <a href="http://nomothetis.svbtle.com/error-handling-in-swift">Error Handling in Swift</a>. 
-A must-read series in my opinion. My use of the <code class="highlighter-rouge">Result</code> type is based directly
+A must-read series in my opinion. My use of the <code class="language-plaintext highlighter-rouge">Result</code> type is based directly
 on his.</li>
   <li>Tony DiPasquale’s
 <a href="http://robots.thoughtbot.com/efficient-json-in-swift-with-functional-concepts-and-generics">Efficient JSON in Swift with Functional Concepts and Generics</a>, which is a
@@ -484,10 +484,10 @@ series. If you leave them a little befuddled, then this series will get to the
 same place, just a bit more gently.</p>
 
 <p>Until then, stop mutating. Evolve.</p>
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:unbox">
-      <p>Remember that the “unbox” step is just because of a Beta6 compiler limitation. <a href="#fnref:unbox" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:unbox" role="doc-endnote">
+      <p>Remember that the “unbox” step is just because of a Beta6 compiler limitation. <a href="#fnref:unbox" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -506,7 +506,7 @@ same place, just a bit more gently.</p>
 
 
 
-<time datetime="2014-08-18T22:00:00-04:00" pubdate data-updated="true">18 Aug 2014</time>
+<time datetime="2014-08-18T20:00:00-06:00" pubdate data-updated="true">18 Aug 2014</time>
       
 
 <span class="categories">
@@ -548,7 +548,7 @@ same place, just a bit more gently.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

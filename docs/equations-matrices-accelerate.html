@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2012-02-06T11:19:28-05:00" pubdate data-updated="true">06 Feb 2012</time>
+<time datetime="2012-02-06T09:19:28-07:00" pubdate data-updated="true">06 Feb 2012</time>
         
       </p>
     
@@ -105,9 +105,9 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>For the four control points (<code class="highlighter-rouge">P0</code>…<code class="highlighter-rouge">P3</code>), you pass the <code class="highlighter-rouge">x</code> value to <code class="highlighter-rouge">Bezier()</code> and get back the <code class="highlighter-rouge">x</code> value of the curve. Repeat for <code class="highlighter-rouge">y</code>. There are many reasons that the above approach is inefficient. We’ll discuss that more in later posts. But for this post, the goal is to figure out how to convert this into an matrix operation so we can use some of of our fancy hardware to calculate it for us.</p>
+<p>For the four control points (<code class="language-plaintext highlighter-rouge">P0</code>…<code class="language-plaintext highlighter-rouge">P3</code>), you pass the <code class="language-plaintext highlighter-rouge">x</code> value to <code class="language-plaintext highlighter-rouge">Bezier()</code> and get back the <code class="language-plaintext highlighter-rouge">x</code> value of the curve. Repeat for <code class="language-plaintext highlighter-rouge">y</code>. There are many reasons that the above approach is inefficient. We’ll discuss that more in later posts. But for this post, the goal is to figure out how to convert this into an matrix operation so we can use some of of our fancy hardware to calculate it for us.</p>
 
-<p>The first step is realizing what kind of matrix we want. Our goal is to collect all the <code class="highlighter-rouge">t</code> terms into one matrix, all the <code class="highlighter-rouge">P</code> terms into one matrix. and all the constants into a third matrix. When we’re done, it’ll look like this (where <code class="highlighter-rouge">K</code> is the constants):</p>
+<p>The first step is realizing what kind of matrix we want. Our goal is to collect all the <code class="language-plaintext highlighter-rouge">t</code> terms into one matrix, all the <code class="language-plaintext highlighter-rouge">P</code> terms into one matrix. and all the constants into a third matrix. When we’re done, it’ll look like this (where <code class="language-plaintext highlighter-rouge">K</code> is the constants):</p>
 
 <div>
 \begin{equation}
@@ -136,9 +136,9 @@ t \\\\
 \end{equation}
 </div>
 
-<p>The four <code class="highlighter-rouge">P</code> values are the control points from the Bézier equation (these are points, so they include an x and y). The four <code class="highlighter-rouge">t</code> terms are the powers that occur in the equation (remember: 1 = t<sup>0 </sup>).</p>
+<p>The four <code class="language-plaintext highlighter-rouge">P</code> values are the control points from the Bézier equation (these are points, so they include an x and y). The four <code class="language-plaintext highlighter-rouge">t</code> terms are the powers that occur in the equation (remember: 1 = t<sup>0 </sup>).</p>
 
-<p>When you multiply matrices, the result has the number of rows in the first matrix and the number of columns in the second. So <code class="highlighter-rouge">P</code> is 1x4 and the constants are MxN (we’ll figure out M and N shortly). So that result is 1xN. Times <code class="highlighter-rouge">T</code> (4x1) and we’ll finish up with a 1x1 matrix. A single point value. This is why it matters that <code class="highlighter-rouge">P</code> is in a row and <code class="highlighter-rouge">T</code> is in a column.</p>
+<p>When you multiply matrices, the result has the number of rows in the first matrix and the number of columns in the second. So <code class="language-plaintext highlighter-rouge">P</code> is 1x4 and the constants are MxN (we’ll figure out M and N shortly). So that result is 1xN. Times <code class="language-plaintext highlighter-rouge">T</code> (4x1) and we’ll finish up with a 1x1 matrix. A single point value. This is why it matters that <code class="language-plaintext highlighter-rouge">P</code> is in a row and <code class="language-plaintext highlighter-rouge">T</code> is in a column.</p>
 
 <p>But a “point” is a vector. Let’s make that a little clearer (I hope):</p>
 
@@ -165,7 +165,7 @@ t \\\\
 \end{equation}
 </div>
 
-<p>OK, that’s a little closer to a <code class="highlighter-rouge">CGPoint</code>. One x, one y. But what about “the constants?” These are the multipliers for each of the terms in “expanded form.” What we want is our equation in a form like:</p>
+<p>OK, that’s a little closer to a <code class="language-plaintext highlighter-rouge">CGPoint</code>. One x, one y. But what about “the constants?” These are the multipliers for each of the terms in “expanded form.” What we want is our equation in a form like:</p>
 
 <div>
 \begin{equation}
@@ -173,7 +173,7 @@ aP_0t^3 + bP_0t^2 + cP_0t + dP_0 + eP_1t^3 + fP_1t^2 + gP_1t + \cdots
 \end{equation}
 </div>
 
-<p>This gives us the sum of every combination of each <code class="highlighter-rouge">P</code> with each power of <code class="highlighter-rouge">t</code>. When you see “the sum of every combination” you should be thinking dot product and matrix multiplication. From this equation, it shouldn’t take a lot of imagination to figure out what <code class="highlighter-rouge">K</code> looks like.</p>
+<p>This gives us the sum of every combination of each <code class="language-plaintext highlighter-rouge">P</code> with each power of <code class="language-plaintext highlighter-rouge">t</code>. When you see “the sum of every combination” you should be thinking dot product and matrix multiplication. From this equation, it shouldn’t take a lot of imagination to figure out what <code class="language-plaintext highlighter-rouge">K</code> looks like.</p>
 
 <div>
 \begin{equation}
@@ -212,7 +212,7 @@ t \\\\
   </tbody>
 </table>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expand (1-t)^3 P_0 + 3 (1-t)^2 t P_1 + 3 (1-t) t^2 P_2 + t^3 P_3
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expand (1-t)^3 P_0 + 3 (1-t)^2 t P_1 + 3 (1-t) t^2 P_2 + t^3 P_3
 </code></pre></div></div>
 
 <p><img class="center" src="/images/equations-matrices-accelerate/wolframalpha-20120206103919629.gif" /></p>
@@ -236,7 +236,7 @@ t \\\\
   <tbody>
     <tr>
       <td>As an exercise, calculate the matrix for the Bézier derivative yourself. Wolfram</td>
-      <td>Alpha will give you the derivative of a function using the command <code class="highlighter-rouge">derivative</code> (instead of <code class="highlighter-rouge">expand</code>). I’ll give you a hint: the matrix is not 4x4. I’ll post the answer (and how to get it) in my next installment.</td>
+      <td>Alpha will give you the derivative of a function using the command <code class="language-plaintext highlighter-rouge">derivative</code> (instead of <code class="language-plaintext highlighter-rouge">expand</code>). I’ll give you a hint: the matrix is not 4x4. I’ll post the answer (and how to get it) in my next installment.</td>
     </tr>
   </tbody>
 </table>
@@ -255,7 +255,7 @@ t \\\\
 
 
 
-<time datetime="2012-02-06T11:19:28-05:00" pubdate data-updated="true">06 Feb 2012</time>
+<time datetime="2012-02-06T09:19:28-07:00" pubdate data-updated="true">06 Feb 2012</time>
       
 
 <span class="categories">
@@ -297,7 +297,7 @@ t \\\\
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

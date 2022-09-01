@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2009-08-20T11:28:40-04:00" pubdate data-updated="true">20 Aug 2009</time>
+<time datetime="2009-08-20T09:28:40-06:00" pubdate data-updated="true">20 Aug 2009</time>
         
       </p>
     
@@ -79,7 +79,7 @@
 
 <div class="entry-content"><p>I work on a lot of projects that share significant code between iPhone and Mac versions. This is the beauty of Cocoa. While working on these projects, I’ve bumped into this idiom many times:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
 #import &lt;UIKit/UIKit.h&gt;
 #else
 #import &lt;Cocoa/Cocoa.h&gt;
@@ -91,7 +91,7 @@
 <p>There is one interesting exception that we’ve run into: NSImage versus UIImage. These are really model classes, but they’re part of AppKit and UIKit. They have very similar interfaces, so in most code you should be able to interchange them and keep everything portable. What to do?
 <!-- more --></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifdef TARGET_OS_IPHONE
 #import &lt;UIKit/UIImage.h&gt;
 typedef UIImage XXImage;
 #else
@@ -104,9 +104,9 @@ typedef NSImage XXImage;
 
 <p>Or you could go to CGImages exclusively, but what a pain if you don’t need them already.</p>
 
-<p><b>EDIT Sep 24, 2009:</b> In light of a Radar I’ve recently opened (radar://7224053), I need to amend the above. It’s better to use #define rather than typedef. I strongly prefer typedef, but there’s a bizarre bug that it bumps into. Typedef confuses <code class="highlighter-rouge">valueForKey:</code> for some reason. You can use the following code to determine if the bug has been fixed yet:</p>
+<p><b>EDIT Sep 24, 2009:</b> In light of a Radar I’ve recently opened (radar://7224053), I need to amend the above. It’s better to use #define rather than typedef. I strongly prefer typedef, but there’s a bizarre bug that it bumps into. Typedef confuses <code class="language-plaintext highlighter-rouge">valueForKey:</code> for some reason. You can use the following code to determine if the bug has been fixed yet:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import &lt;Foundation/Foundation.h&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#import &lt;Foundation/Foundation.h&gt;
 // Swapping #define for typedef makes this work
 typedef NSString MYString;
 //#define MYString NSString
@@ -143,7 +143,7 @@ int main (int argc, const char * argv[]) {
 
 
 
-<time datetime="2009-08-20T11:28:40-04:00" pubdate data-updated="true">20 Aug 2009</time>
+<time datetime="2009-08-20T09:28:40-06:00" pubdate data-updated="true">20 Aug 2009</time>
       
 
 <span class="categories">
@@ -185,7 +185,7 @@ int main (int argc, const char * argv[]) {
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

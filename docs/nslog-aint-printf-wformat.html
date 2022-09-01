@@ -71,7 +71,7 @@ NSLog(@"%s", 1); And you compiled with -Wformat. You might expect both of these 
 
 
 
-<time datetime="2010-04-13T11:45:15-04:00" pubdate data-updated="true">13 Apr 2010</time>
+<time datetime="2010-04-13T09:45:15-06:00" pubdate data-updated="true">13 Apr 2010</time>
         
       </p>
     
@@ -80,23 +80,23 @@ NSLog(@"%s", 1); And you compiled with -Wformat. You might expect both of these 
 
 <div class="entry-content"><p>So say you had this code:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>printf("%s", 1);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>printf("%s", 1);
 NSLog(@"%s", 1);
 </code></pre></div></div>
 
-<p>And you compiled with <code class="highlighter-rouge">-Wformat</code>. You might expect both of these lines to kick out a warning:</p>
+<p>And you compiled with <code class="language-plaintext highlighter-rouge">-Wformat</code>. You might expect both of these lines to kick out a warning:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Format '%s' expects type 'char *', but argument 2 has type 'int'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Format '%s' expects type 'char *', but argument 2 has type 'int'
 </code></pre></div></div>
 
-<p>You’d be particularly misled when you went and looked at the definition of <code class="highlighter-rouge">NSLog()</code>:</p>
+<p>You’d be particularly misled when you went and looked at the definition of <code class="language-plaintext highlighter-rouge">NSLog()</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FOUNDATION_EXPORT void NSLog(NSString *format, ...) __attribute__((format(__NSString__, 1, 2)));
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FOUNDATION_EXPORT void NSLog(NSString *format, ...) __attribute__((format(__NSString__, 1, 2)));
 </code></pre></div></div>
 
-<p>Why look there, doesn’t that look like it should provide format type checking? Oh how foolish. Neither gcc nor clang can actually handle that <code class="highlighter-rouge">__NSString__</code> specifier in a robust way. So the first line above will give a useful warning, but the second one will silently compile and later crash. Exciting, I know. You have been warned.</p>
+<p>Why look there, doesn’t that look like it should provide format type checking? Oh how foolish. Neither gcc nor clang can actually handle that <code class="language-plaintext highlighter-rouge">__NSString__</code> specifier in a robust way. So the first line above will give a useful warning, but the second one will silently compile and later crash. Exciting, I know. You have been warned.</p>
 
-<p><code class="highlighter-rouge">-Wformat-nonliteral</code> and <code class="highlighter-rouge">-Wformat-security</code> do catch dangerous calls like <code class="highlighter-rouge">NSLog(foo)</code>, so <code class="highlighter-rouge">__NSString__</code> isn’t a complete loss, but it’s a shame we can’t get type checking here.</p>
+<p><code class="language-plaintext highlighter-rouge">-Wformat-nonliteral</code> and <code class="language-plaintext highlighter-rouge">-Wformat-security</code> do catch dangerous calls like <code class="language-plaintext highlighter-rouge">NSLog(foo)</code>, so <code class="language-plaintext highlighter-rouge">__NSString__</code> isn’t a complete loss, but it’s a shame we can’t get type checking here.</p>
 
 <p>There’s a good discussion of this at <a href="http://stackoverflow.com/questions/1229212/nslog-improper-format-specifier-affects-other-variables]">NSLog(…) improper format specifier affects other variables?</a></p>
 </div>
@@ -114,7 +114,7 @@ NSLog(@"%s", 1);
 
 
 
-<time datetime="2010-04-13T11:45:15-04:00" pubdate data-updated="true">13 Apr 2010</time>
+<time datetime="2010-04-13T09:45:15-06:00" pubdate data-updated="true">13 Apr 2010</time>
       
 
 <span class="categories">
@@ -156,7 +156,7 @@ NSLog(@"%s", 1);
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

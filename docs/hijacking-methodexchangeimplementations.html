@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2010-07-07T18:17:25-04:00" pubdate data-updated="true">07 Jul 2010</time>
+<time datetime="2010-07-07T16:17:25-06:00" pubdate data-updated="true">07 Jul 2010</time>
         
       </p>
     
@@ -79,16 +79,16 @@
 
 <div class="entry-content"><p><em>Based on a <a href="http://stackoverflow.com/questions/1929740/is-there-a-way-to-retrieve-every-responder-that-has-handled-a-uitouch">discussion</a> from StackOverflow.</em></p>
 
-<p>Sometimes you want to inject some logic into a method you don’t control. The most common sane reason to do this is for debugging or profiling. For instance, you might want to log every time the various <code class="highlighter-rouge">NSNotificationCenter</code> methods are called so you can determine if that’s a performance bottleneck. (As I discovered myself, if you have thousands of notification observations in your system, it can be a serious performance problem.)</p>
+<p>Sometimes you want to inject some logic into a method you don’t control. The most common sane reason to do this is for debugging or profiling. For instance, you might want to log every time the various <code class="language-plaintext highlighter-rouge">NSNotificationCenter</code> methods are called so you can determine if that’s a performance bottleneck. (As I discovered myself, if you have thousands of notification observations in your system, it can be a serious performance problem.)</p>
 
 <p>In most OOP languages your only option would be to subclass the object you want to instrument and then arrange for every instance of that object to be your subclass. In many cases that’s either very difficult or outright impossible, particularly if the object is used internally by a system framework. But Objective-C is highly dynamic, and message dispatching is resolved at runtime. You can modify how it works.
 <!-- more --></p>
 
-<p>On Mac, there is an <code class="highlighter-rouge">NSObject</code> method called <code class="highlighter-rouge">poseAsClass:</code> that can achieve this easily. Unfortunately, it’s deprecated in 10.5 and isn’t available at all for Mac 64-bit and iPhone. I want a technique that I can use reliably for all my platforms, and luckily there is a fully supported alternative: <code class="highlighter-rouge">method_exchangeImplemenations()</code>.</p>
+<p>On Mac, there is an <code class="language-plaintext highlighter-rouge">NSObject</code> method called <code class="language-plaintext highlighter-rouge">poseAsClass:</code> that can achieve this easily. Unfortunately, it’s deprecated in 10.5 and isn’t available at all for Mac 64-bit and iPhone. I want a technique that I can use reliably for all my platforms, and luckily there is a fully supported alternative: <code class="language-plaintext highlighter-rouge">method_exchangeImplemenations()</code>.</p>
 
 <p>So how do we use it? First, we create a category on our target (NSNotificationCenter):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface NSNotificationCenter (RNHijack)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface NSNotificationCenter (RNHijack)
 + (void)hijack;
 @end
 
@@ -114,9 +114,9 @@
 }
 </code></pre></div></div>
 
-<p>Then, somewhere early in my program, I call <code class="highlighter-rouge">[NSNotificationCenter hijack]</code>. Now, every <code class="highlighter-rouge">removeObserver:</code> message is logged, no matter who sends it, even inside Cocoa itself. To make sure that I catch everything, I often put this in main.m, before the call to ‘NSApplicationMain()’.</p>
+<p>Then, somewhere early in my program, I call <code class="language-plaintext highlighter-rouge">[NSNotificationCenter hijack]</code>. Now, every <code class="language-plaintext highlighter-rouge">removeObserver:</code> message is logged, no matter who sends it, even inside Cocoa itself. To make sure that I catch everything, I often put this in main.m, before the call to ‘NSApplicationMain()’.</p>
 
-<p>The line to pay particular notice to is the apparent infinite loop in <code class="highlighter-rouge">RNHijack_removeObserver:</code> that seems to call itself. Why does this work? Because method_exchangeImplementation() <em>swaps</em> the two implementations. The old <code class="highlighter-rouge">removeObserver:</code> now points to my implementation, but conversely <code class="highlighter-rouge">RNHijack_removeObserver:</code> points to the <em>old</em> implementation.</p>
+<p>The line to pay particular notice to is the apparent infinite loop in <code class="language-plaintext highlighter-rouge">RNHijack_removeObserver:</code> that seems to call itself. Why does this work? Because method_exchangeImplementation() <em>swaps</em> the two implementations. The old <code class="language-plaintext highlighter-rouge">removeObserver:</code> now points to my implementation, but conversely <code class="language-plaintext highlighter-rouge">RNHijack_removeObserver:</code> points to the <em>old</em> implementation.</p>
 
 <p>It is hard to imagine code that is more confusing and fragile than this, which is why this technique must be used with the utmost care. Personally I can’t imagine using this outside of debugging and profiling. But when you need it, it is an incredibly powerful tool.</p>
 </div>
@@ -134,7 +134,7 @@
 
 
 
-<time datetime="2010-07-07T18:17:25-04:00" pubdate data-updated="true">07 Jul 2010</time>
+<time datetime="2010-07-07T16:17:25-06:00" pubdate data-updated="true">07 Jul 2010</time>
       
 
 <span class="categories">
@@ -176,7 +176,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

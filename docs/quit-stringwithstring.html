@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2009-08-12T10:48:10-04:00" pubdate data-updated="true">12 Aug 2009</time>
+<time datetime="2009-08-12T08:48:10-06:00" pubdate data-updated="true">12 Aug 2009</time>
         
       </p>
     
@@ -79,42 +79,42 @@
 
 <div class="entry-content"><p>I keep coming across <a href="http://dotnetaddict.dotnetdevelopersjournal.com/leopard_nscollectionview.htm">code</a> like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newMonster.trueName = [NSString stringWithString:@"New Monster"];
 </code></pre></div></div>
 
-<p>It’s time to say stop it already with the extra <code class="highlighter-rouge">+stringWithString:</code>. I haven’t worked out yet where this anti-pattern comes from. Maybe it’s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it’s a Java/.NET thing? I’m not sure. But I see it so often from so many places that it’s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
+<p>It’s time to say stop it already with the extra <code class="language-plaintext highlighter-rouge">+stringWithString:</code>. I haven’t worked out yet where this anti-pattern comes from. Maybe it’s a misunderstanding of some sample code in <a href="http://www.amazon.com/Programming-Objective-C-Developers-Library-Stephen/dp/0672325861">Kochan</a>? Maybe it’s a Java/.NET thing? I’m not sure. But I see it so often from so many places that it’s clearly something that needs discussing. (The rest of the linked article is good; it just gave me a good example of this issue.)</p>
 
 <!-- more -->
 <p>The correct form of the above code is:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newMonster.trueName = @"New Monster";
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newMonster.trueName = @"New Monster";
 </code></pre></div></div>
 
-<p>Now isn’t that easier? <code class="highlighter-rouge">@"Blah"</code> is an NSString object. Full object. Does everything an NSString can do:</p>
+<p>Now isn’t that easier? <code class="language-plaintext highlighter-rouge">@"Blah"</code> is an NSString object. Full object. Does everything an NSString can do:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *foobar = [@"foo" stringByAppendingString:@"bar"];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *foobar = [@"foo" stringByAppendingString:@"bar"];
 </code></pre></div></div>
 
 <p>It’s secretly a private subclass of NSString called NSConstantString, but that doesn’t matter for this purpose. In proper OOP, a subclass is as good as its parent. If it isn’t, then the model is broken.</p>
 
 <p>Now, that leads us to NSMutableString. I sometimes see this code, and sometimes it’s right and sometimes it’s wrong:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *string = [NSString stringWithString:mutableString];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *string = [NSString stringWithString:mutableString];
 </code></pre></div></div>
 
-<p>This code is wrong if you’re going to return <code class="highlighter-rouge">string</code>. If the caller expected an NSString and you return an NSMutableString, that’s fine. There is no reason to make an extra copy just to change the type; it’s a waste of time and memory.</p>
+<p>This code is wrong if you’re going to return <code class="language-plaintext highlighter-rouge">string</code>. If the caller expected an NSString and you return an NSMutableString, that’s fine. There is no reason to make an extra copy just to change the type; it’s a waste of time and memory.</p>
 
 <p>BUT… there’s another case. What if someone passes you an NSMutableString when you expect an NSString? If you’re going to retain that object, it’s a good idea to make a copy. That way if the caller modifies the string later, your copy doesn’t change behind your back. Consider this code:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMutableString *ms = [@"foo" mutableCopy];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSMutableString *ms = [@"foo" mutableCopy];
 anObject.foo = ms;
 [ms appendString:@"bar"];
 anObject.foobar = ms;
 </code></pre></div></div>
 
-<p>In this case, anObject would be very surprised that its <code class="highlighter-rouge">foo</code> property suddenly held “foobar”. The fix to that is to use <code class="highlighter-rouge">-copy</code> in <code class="highlighter-rouge">-setFoo:</code>. <code class="highlighter-rouge">+stringWithString:</code> would be ok in this case, but I prefer <code class="highlighter-rouge">-copy</code> because it’s shorter, clearer to me, and almost certainly faster at least in some cases. This is why I recommend using the “copy” attribute on public properties that have well-known mutable subclasses (NSString, NSArray, NSSet, etc.)</p>
+<p>In this case, anObject would be very surprised that its <code class="language-plaintext highlighter-rouge">foo</code> property suddenly held “foobar”. The fix to that is to use <code class="language-plaintext highlighter-rouge">-copy</code> in <code class="language-plaintext highlighter-rouge">-setFoo:</code>. <code class="language-plaintext highlighter-rouge">+stringWithString:</code> would be ok in this case, but I prefer <code class="language-plaintext highlighter-rouge">-copy</code> because it’s shorter, clearer to me, and almost certainly faster at least in some cases. This is why I recommend using the “copy” attribute on public properties that have well-known mutable subclasses (NSString, NSArray, NSSet, etc.)</p>
 
-<p>You’ll note that I used <code class="highlighter-rouge">-mutableCopy</code> above to create the NSMutableString. I did that just to show how to use <code class="highlighter-rouge">-mutableCopy</code>. Generally for initializing an NSMutableString to a constant string, I’d use <code class="highlighter-rouge">+stringWithString:</code>, which is what this method is really for: creating an NSString <em>subclass</em> with an NSString. But you should never need <code class="highlighter-rouge">+stringWithString:</code> to create an NSString itself.</p>
+<p>You’ll note that I used <code class="language-plaintext highlighter-rouge">-mutableCopy</code> above to create the NSMutableString. I did that just to show how to use <code class="language-plaintext highlighter-rouge">-mutableCopy</code>. Generally for initializing an NSMutableString to a constant string, I’d use <code class="language-plaintext highlighter-rouge">+stringWithString:</code>, which is what this method is really for: creating an NSString <em>subclass</em> with an NSString. But you should never need <code class="language-plaintext highlighter-rouge">+stringWithString:</code> to create an NSString itself.</p>
 </div>
 
 
@@ -130,7 +130,7 @@ anObject.foobar = ms;
 
 
 
-<time datetime="2009-08-12T10:48:10-04:00" pubdate data-updated="true">12 Aug 2009</time>
+<time datetime="2009-08-12T08:48:10-06:00" pubdate data-updated="true">12 Aug 2009</time>
       
 
 <span class="categories">
@@ -172,7 +172,7 @@ anObject.foobar = ms;
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

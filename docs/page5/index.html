@@ -73,7 +73,7 @@
 
 
 
-<time datetime="2012-11-29T22:50:04-05:00" pubdate data-updated="true">29 Nov 2012</time>
+<time datetime="2012-11-29T20:50:04-07:00" pubdate data-updated="true">29 Nov 2012</time>
         
       </p>
     
@@ -122,7 +122,7 @@
 
 
 
-<time datetime="2012-09-18T11:01:11-04:00" pubdate data-updated="true">18 Sep 2012</time>
+<time datetime="2012-09-18T09:01:11-06:00" pubdate data-updated="true">18 Sep 2012</time>
         
       </p>
     
@@ -155,7 +155,7 @@
 
 
 
-<time datetime="2012-08-21T10:13:18-04:00" pubdate data-updated="true">21 Aug 2012</time>
+<time datetime="2012-08-21T08:13:18-06:00" pubdate data-updated="true">21 Aug 2012</time>
         
       </p>
     
@@ -195,7 +195,7 @@
 
 
 
-<time datetime="2012-07-13T16:06:30-04:00" pubdate data-updated="true">13 Jul 2012</time>
+<time datetime="2012-07-13T14:06:30-06:00" pubdate data-updated="true">13 Jul 2012</time>
         
       </p>
     
@@ -228,7 +228,7 @@
 
 
 
-<time datetime="2012-06-26T11:15:12-04:00" pubdate data-updated="true">26 Jun 2012</time>
+<time datetime="2012-06-26T09:15:12-06:00" pubdate data-updated="true">26 Jun 2012</time>
         
       </p>
     
@@ -266,7 +266,7 @@
 
 
 
-<time datetime="2012-06-24T19:39:43-04:00" pubdate data-updated="true">24 Jun 2012</time>
+<time datetime="2012-06-24T17:39:43-06:00" pubdate data-updated="true">24 Jun 2012</time>
         
       </p>
     
@@ -303,7 +303,7 @@
 
 
 
-<time datetime="2012-06-18T19:37:41-04:00" pubdate data-updated="true">18 Jun 2012</time>
+<time datetime="2012-06-18T17:37:41-06:00" pubdate data-updated="true">18 Jun 2012</time>
         
       </p>
     
@@ -320,7 +320,7 @@
 
 <p>This will make it much easier to write RNCryptor-compatible modules in Java, JavaScript, etc., as have been requested.</p>
 
-<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code class="highlighter-rouge">CCKeyDerivationPBKDF</code>.</p>
+<p>Possibly most importantly, this change gets us closer to making RNCryptor compatible back to iOS 4.0, and Mac OS X 10.4. I still have to consider <code class="language-plaintext highlighter-rouge">CCKeyDerivationPBKDF</code>.</p>
 
 <p>If you update, note that this is incompatible with your existing encrypted files. I doubt there is enough field usage out there that this is an issue, but if it is, let me know and I can discuss with you how to convert.</p>
 </div>
@@ -348,7 +348,7 @@
 
 
 
-<time datetime="2012-05-29T21:37:25-04:00" pubdate data-updated="true">29 May 2012</time>
+<time datetime="2012-05-29T19:37:25-06:00" pubdate data-updated="true">29 May 2012</time>
         
       </p>
     
@@ -357,9 +357,9 @@
 
   <div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn’t find it anywhere and I was sick of writing it over and over again…. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot’s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash’s</a>, but they solve different problems.</i></p>
 
-<p>Have you ever noticed how hard it is to write a repeating <code class="highlighter-rouge">NSTimer</code> that doesn’t create a retain loop? Almost always you wind up with something like this:</p>
+<p>Have you ever noticed how hard it is to write a repeating <code class="language-plaintext highlighter-rouge">NSTimer</code> that doesn’t create a retain loop? Almost always you wind up with something like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSTimer scheduledTimerWithTimeInterval:1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSTimer scheduledTimerWithTimeInterval:1
                                  target:self
                                selector:@selector(something)
                                userInfo:nil 
@@ -368,7 +368,7 @@
 
 <p>Seems easy enough, except it’s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you’d think this would be easy. And it should be, so I fixed it. I just still can’t quite believe I’m the first to do so.</p>
 
-<p>Anyway, for your consideration I present a very simple class called <code class="highlighter-rouge">RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn’t address.</p>
+<p>Anyway, for your consideration I present a very simple class called <code class="language-plaintext highlighter-rouge">RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn’t address.</p>
 
 <p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
 </div>
@@ -396,14 +396,14 @@
 
 
 
-<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true">12 May 2012</time>
+<time datetime="2012-05-12T18:11:45-06:00" pubdate data-updated="true">12 May 2012</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a “language.” It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code class="highlighter-rouge">.mm</code> is a blight on your code. Never let it spread.</p>
+  <div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a “language.” It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code class="language-plaintext highlighter-rouge">.mm</code> is a blight on your code. Never let it spread.</p>
 
 <p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple’s frameworks are implemented in C++.</p>
 
@@ -437,7 +437,7 @@
 
 
 
-<time datetime="2012-03-30T22:48:49-04:00" pubdate data-updated="true">30 Mar 2012</time>
+<time datetime="2012-03-30T20:48:49-06:00" pubdate data-updated="true">30 Mar 2012</time>
         
       </p>
     
@@ -476,7 +476,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

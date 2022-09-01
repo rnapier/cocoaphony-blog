@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2019-04-22T00:00:00-04:00" pubdate data-updated="true">22 Apr 2019</time>
+<time datetime="2019-04-22T00:00:00-06:00" pubdate data-updated="true">22 Apr 2019</time>
         
       </p>
     
@@ -89,7 +89,7 @@
 
 <p>And so, dutifully, I started with a protocol. I made a UserProtocol and a DocumentProtocol and a ShapeProtocol and on and on, and then started implementing all those protocols with generic subclasses and eventually I found myself in a corner.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Protocol 'P' can only be used as a generic constraint because it has Self or associated type requirements
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Protocol 'P' can only be used as a generic constraint because it has Self or associated type requirements
 </code></pre></div></div>
 
 <p>And then I started throwing things.
@@ -131,7 +131,7 @@ If you take away just one thing from this series, I want it to be this: <em>Writ
 
 <p>Over the next several articles I’ll be developing a very common system, a general-purpose networking stack that can fetch data asynchronously and decode arbitrary types. You may have built a system like this yourself in Swift. You may have used a framework that does it. The point of this exercise isn’t really the end result (though I think it’s quite useful code), but the process. What questions should you ask, and when, and how do you know what good answers look like? And most importantly, how does this “protocol-oriented” thing guide us? How is it different than other approaches?</p>
 
-<p>I expect that you’re somewhat familiar with Swift, and particularly that you understand the syntax of generic functions and types, and have at least seen an <code class="highlighter-rouge">associatedtype</code> before. If you’re just getting started in Swift, maybe bookmark this series for later.</p>
+<p>I expect that you’re somewhat familiar with Swift, and particularly that you understand the syntax of generic functions and types, and have at least seen an <code class="language-plaintext highlighter-rouge">associatedtype</code> before. If you’re just getting started in Swift, maybe bookmark this series for later.</p>
 
 <p>So to get started, I want to show a common starting point that never goes well for me. I’ve made this mistake many times, and I always find myself in a corner eventually. I see a lot of other people make this mistake, too.</p>
 
@@ -203,7 +203,7 @@ How do I know this won’t go well? I’ll discuss it much more in depth later, 
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>I’m sure many of you have written code kind of like this many times. Construct a URLRequest. Fetch it. Parse it. Pass it to the completion handler. Now, what does the code for <code class="highlighter-rouge">fetchDocument</code> look like?</p>
+<p>I’m sure many of you have written code kind of like this many times. Construct a URLRequest. Fetch it. Parse it. Pass it to the completion handler. Now, what does the code for <code class="language-plaintext highlighter-rouge">fetchDocument</code> look like?</p>
 
 <style>
     .chl { color: yellow; } /* code highlight */
@@ -232,7 +232,7 @@ func fetch<span class="chl">Document</span>(id: Int, completion: @escaping (Resu
 }
 </pre>
 
-<p>Unsurprisingly, <code class="highlighter-rouge">fetchDocument</code> is almost identical except for four changes: the function name, the type to pass to the closure, the URL path, and the type to decode. It’s so similar because I copied and pasted it. And when you find yourself copying and pasting, that’s where I know there’s probably some reusable code. So I extract that into a generic function:</p>
+<p>Unsurprisingly, <code class="language-plaintext highlighter-rouge">fetchDocument</code> is almost identical except for four changes: the function name, the type to pass to the closure, the URL path, and the type to decode. It’s so similar because I copied and pasted it. And when you find yourself copying and pasting, that’s where I know there’s probably some reusable code. So I extract that into a generic function:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">fetch</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">:</span> <span class="kt">Decodable</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">_</span><span class="p">:</span> <span class="kt">Model</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> 
                              <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Model</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
@@ -243,9 +243,9 @@ func fetch<span class="chl">Document</span>(id: Int, completion: @escaping (Resu
 
 <h2 id="where-should-type-parameters-go">Where should type parameters go?</h2>
 
-<p>Before going on, it’s worth exploring the signature. Notice that I pass the type of Model as a parameter. It doesn’t even need a name, because the value won’t be used. It’s just there to nail down the type parameter in the function’s parameters rather than in completion handler’s parameters. I’m mostly doing this to show a technique, and because <code class="highlighter-rouge">fetch(2) { ... }</code> is a bit ambiguous to the reader (since all ID types are Int currently). Sometimes this makes sense, sometimes it doesn’t.</p>
+<p>Before going on, it’s worth exploring the signature. Notice that I pass the type of Model as a parameter. It doesn’t even need a name, because the value won’t be used. It’s just there to nail down the type parameter in the function’s parameters rather than in completion handler’s parameters. I’m mostly doing this to show a technique, and because <code class="language-plaintext highlighter-rouge">fetch(2) { ... }</code> is a bit ambiguous to the reader (since all ID types are Int currently). Sometimes this makes sense, sometimes it doesn’t.</p>
 
-<p>A good example where I think it makes a lot of sense is JSONDecoder’s <code class="highlighter-rouge">decode</code> method. It’s called this way:</p>
+<p>A good example where I think it makes a lot of sense is JSONDecoder’s <code class="language-plaintext highlighter-rouge">decode</code> method. It’s called this way:</p>
 
 <pre>
 let value = try JSONDecoder().decode(<span class="chl">Int.self</span>, from: data)
@@ -257,11 +257,11 @@ let value = try JSONDecoder().decode(<span class="chl">Int.self</span>, from: da
 let value<span class="chl">: Int</span> = try JSONDecoder().decode(data)
 </pre>
 
-<p>It would have even been a little shorter that way. But it forces the caller to add a type annotation on the variable, which is a little ugly, and unusual in Swift. If the only place the type parameter shows up is in the return value, I usually recommend passing it as a parameter. But in any case, try writing some code with it, and focus on making things clear at the call-site. <sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
+<p>It would have even been a little shorter that way. But it forces the caller to add a type annotation on the variable, which is a little ugly, and unusual in Swift. If the only place the type parameter shows up is in the return value, I usually recommend passing it as a parameter. But in any case, try writing some code with it, and focus on making things clear at the call-site. <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
 
-<h2 id="making-fetch-generic">Making <code class="highlighter-rouge">fetch</code> generic</h2>
+<h2 id="making-fetch-generic">Making <code class="language-plaintext highlighter-rouge">fetch</code> generic</h2>
 
-<p>Implementing <code class="highlighter-rouge">fetch</code> is pretty straightforward, except for one small <span class="cer">problem</span>:</p>
+<p>Implementing <code class="language-plaintext highlighter-rouge">fetch</code> is pretty straightforward, except for one small <span class="cer">problem</span>:</p>
 
 <pre>
 func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span> id: Int,
@@ -295,7 +295,7 @@ func <span class="chl">fetch&lt;Model&gt;(_ model: Model.Type,</span> id: Int,
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="highlighter-rouge">apiBase</code>. (See <a href="/nonconformist">Protocols are nonconformists</a> for more on the difference between “<em>requires</em> Decodable” and “<em>is</em> Decodable.”) With that, I can finish writing <code class="highlighter-rouge">fetch</code>:</p>
+<p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="language-plaintext highlighter-rouge">apiBase</code>. (See <a href="/nonconformist">Protocols are nonconformists</a> for more on the difference between “<em>requires</em> Decodable” and “<em>is</em> Decodable.”) With that, I can finish writing <code class="language-plaintext highlighter-rouge">fetch</code>:</p>
 
 <pre>
 // Fetch any Fetchable type given an ID, and return it asynchronously
@@ -345,10 +345,10 @@ func fetch&lt;Model&gt;(_ model: Model.Type, id: Int,
 <p><a href="/assets/protocols/StartWithAProtocol.zip">Swift Playground</a></p>
 
 <p>(I don’t have comments on this site, but if you’re interested in any conversations about it, follow the thread on <a href="https://twitter.com/cocoaphony/status/1121549665789411333">Twitter</a>.)</p>
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1">
-      <p>A previous version of this post advocated for this approach much more strongly, but <a href="https://twitter.com/peres/status/1121824695211429888">some questions on Twitter</a> made me rethink this. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:1" role="doc-endnote">
+      <p>A previous version of this post advocated for this approach much more strongly, but <a href="https://twitter.com/peres/status/1121824695211429888">some questions on Twitter</a> made me rethink this. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -367,7 +367,7 @@ func fetch&lt;Model&gt;(_ model: Model.Type, id: Int,
 
 
 
-<time datetime="2019-04-22T00:00:00-04:00" pubdate data-updated="true">22 Apr 2019</time>
+<time datetime="2019-04-22T00:00:00-06:00" pubdate data-updated="true">22 Apr 2019</time>
       
 
 
@@ -403,7 +403,7 @@ func fetch&lt;Model&gt;(_ model: Model.Type, id: Int,
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

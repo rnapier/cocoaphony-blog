@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2019-10-28T13:02:00-04:00" pubdate data-updated="true">28 Oct 2019</time>
+<time datetime="2019-10-28T11:02:00-06:00" pubdate data-updated="true">28 Oct 2019</time>
         
       </p>
     
@@ -84,7 +84,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>That’s legal Swift. I don’t think many would find that surprising. Of course that’s legal, right? But it <em>is</em> surprising. <code class="highlighter-rouge">addOne</code> claims to be a function that accepts an Int and returns an Int. It does accept an Int, but…<em>it doesn’t return an Int</em>.</p>
+<p>That’s legal Swift. I don’t think many would find that surprising. Of course that’s legal, right? But it <em>is</em> surprising. <code class="language-plaintext highlighter-rouge">addOne</code> claims to be a function that accepts an Int and returns an Int. It does accept an Int, but…<em>it doesn’t return an Int</em>.</p>
 
 <p>“Don’t be silly, Rob. It crashes. It can’t return an Int if it crashes.”</p>
 
@@ -92,7 +92,7 @@
 
 <p>“The compiler can’t possibly know everything that might crash.”</p>
 
-<p>I’m not ready to concede that, but even so, the compiler clearly can see that this function doesn’t return an Int. There’s no <code class="highlighter-rouge">return intValue</code> anywhere. This should prick our ears a bit. Something is strange here. Is it just compiler magic, or is there something deeper?</p>
+<p>I’m not ready to concede that, but even so, the compiler clearly can see that this function doesn’t return an Int. There’s no <code class="language-plaintext highlighter-rouge">return intValue</code> anywhere. This should prick our ears a bit. Something is strange here. Is it just compiler magic, or is there something deeper?</p>
 
 <p>Hint: There’s something deeper.
 <!-- more --></p>
@@ -104,28 +104,28 @@
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">printSquid</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="s">"🦑"</span><span class="p">)</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>So, <code class="highlighter-rouge">printSquid</code> is a closure that takes no parameters and returns…what?</p>
+<p>So, <code class="language-plaintext highlighter-rouge">printSquid</code> is a closure that takes no parameters and returns…what?</p>
 
 <p>You might be tempted to say “nothing.” But that’s not what the code says. It says it returns Void. What’s Void?</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">()</span>
 </code></pre></div></div>
 
-<p>Void is a real thing. It’s the type of the empty tuple. It’s not “nothing.” In Swift, the type <code class="highlighter-rouge">()</code> and the value <code class="highlighter-rouge">()</code> happen to have the same spelling. When we mean <code class="highlighter-rouge">()</code> as a return type, we traditionally write it using the typealias Void. But <code class="highlighter-rouge">() -&gt; ()</code> is exactly the same thing as <code class="highlighter-rouge">() -&gt; Void</code>. Why “Void?” Because Swift has ObjC roots, and ObjC is C-like, and in C there are <code class="highlighter-rouge">void</code> functions that literally return nothing.</p>
+<p>Void is a real thing. It’s the type of the empty tuple. It’s not “nothing.” In Swift, the type <code class="language-plaintext highlighter-rouge">()</code> and the value <code class="language-plaintext highlighter-rouge">()</code> happen to have the same spelling. When we mean <code class="language-plaintext highlighter-rouge">()</code> as a return type, we traditionally write it using the typealias Void. But <code class="language-plaintext highlighter-rouge">() -&gt; ()</code> is exactly the same thing as <code class="language-plaintext highlighter-rouge">() -&gt; Void</code>. Why “Void?” Because Swift has ObjC roots, and ObjC is C-like, and in C there are <code class="language-plaintext highlighter-rouge">void</code> functions that literally return nothing.</p>
 
-<p>In Swift, every function returns something. There are functions that return <code class="highlighter-rouge">()</code>, and there’s some syntactic sugar that inserts <code class="highlighter-rouge">-&gt; Void</code> and <code class="highlighter-rouge">return ()</code> for you in some cases. But you’re free to include them if you like (it’s not particularly idiomatic Swift, but it’s legal).</p>
+<p>In Swift, every function returns something. There are functions that return <code class="language-plaintext highlighter-rouge">()</code>, and there’s some syntactic sugar that inserts <code class="language-plaintext highlighter-rouge">-&gt; Void</code> and <code class="language-plaintext highlighter-rouge">return ()</code> for you in some cases. But you’re free to include them if you like (it’s not particularly idiomatic Swift, but it’s legal).</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">{}</span>
 <span class="kd">func</span> <span class="nf">g</span><span class="p">()</span> <span class="p">{</span> <span class="nf">return</span> <span class="p">()</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>And functions like <code class="highlighter-rouge">print</code> that seem to have no return value, really do return Void:</p>
+<p>And functions like <code class="language-plaintext highlighter-rouge">print</code> that seem to have no return value, really do return Void:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">printResult</span><span class="p">:</span> <span class="kt">Void</span> <span class="o">=</span> <span class="nf">print</span><span class="p">(</span><span class="s">"🦑"</span><span class="p">)</span> <span class="c1">// 🦑</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">printResult</span><span class="p">)</span>                  <span class="c1">// ()</span>
 </code></pre></div></div>
 
-<p>If we don’t add the <code class="highlighter-rouge">: Void</code> here, the compiler will emit a warning because you usually don’t want Void values, but they’re totally legal.</p>
+<p>If we don’t add the <code class="language-plaintext highlighter-rouge">: Void</code> here, the compiler will emit a warning because you usually don’t want Void values, but they’re totally legal.</p>
 
 <h3 id="the-measure-of-a-type">The measure of a type</h3>
 
@@ -146,7 +146,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Looking at <code class="highlighter-rouge">fatalError</code>, it feels a lot like <code class="highlighter-rouge">print</code>. The syntax is similar. But we can’t just throw <code class="highlighter-rouge">print</code> into places <code class="highlighter-rouge">fatalError</code> goes:</p>
+<p>Looking at <code class="language-plaintext highlighter-rouge">fatalError</code>, it feels a lot like <code class="language-plaintext highlighter-rouge">print</code>. The syntax is similar. But we can’t just throw <code class="language-plaintext highlighter-rouge">print</code> into places <code class="language-plaintext highlighter-rouge">fatalError</code> goes:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
     <span class="nf">print</span><span class="p">(</span><span class="s">"Haha! No Int for you!"</span><span class="p">)</span> <span class="c1">// Cannot convert return expression of type '()' to return type 'Int'</span>
@@ -154,21 +154,21 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>How does the compiler know we’re allowed to use <code class="highlighter-rouge">fatalError</code> here, but not <code class="highlighter-rouge">print</code>? Maybe the compiler just knows that <code class="highlighter-rouge">fatalError</code> is special. That’s what was done prior to Swift 3:</p>
+<p>How does the compiler know we’re allowed to use <code class="language-plaintext highlighter-rouge">fatalError</code> here, but not <code class="language-plaintext highlighter-rouge">print</code>? Maybe the compiler just knows that <code class="language-plaintext highlighter-rouge">fatalError</code> is special. That’s what was done prior to Swift 3:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@noreturn</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">fatalError</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="o">^^^^^^^^^</span>
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">@noreturn</code> attribute told the compiler that this function doesn’t return, and then the compiler had logic to handle that case and let us skip returning the Int we promised. But…bleh. I hate that solution. It opens up weird corner cases. For example, what happens if we add <code class="highlighter-rouge">@noreturn</code> to a function that we claim does return something, or something that throws:</p>
+<p>The <code class="language-plaintext highlighter-rouge">@noreturn</code> attribute told the compiler that this function doesn’t return, and then the compiler had logic to handle that case and let us skip returning the Int we promised. But…bleh. I hate that solution. It opens up weird corner cases. For example, what happens if we add <code class="language-plaintext highlighter-rouge">@noreturn</code> to a function that we claim does return something, or something that throws:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@noreturn</span> <span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="n">_</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 <span class="kd">@noreturn</span> <span class="kd">func</span> <span class="nf">runForever</span><span class="p">()</span> <span class="k">throws</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The first one is probably an error, and maybe the compiler should forbid it. But what about the second one? Is throwing a “return?” At the implementation level, it actually is. But should this attribute allow it? There’s not a really obvious answer. Is it possible for a function to require a <code class="highlighter-rouge">@noreturn</code> parameter? How does this impact function overloading?</p>
+<p>The first one is probably an error, and maybe the compiler should forbid it. But what about the second one? Is throwing a “return?” At the implementation level, it actually is. But should this attribute allow it? There’s not a really obvious answer. Is it possible for a function to require a <code class="language-plaintext highlighter-rouge">@noreturn</code> parameter? How does this impact function overloading?</p>
 
-<p>In Swift 3 they got rid of the attribute hack, and solved the problem with a type: <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0102-noreturn-bottom-type.md">Never</a>. The signature of <code class="highlighter-rouge">fatalError</code> is now:</p>
+<p>In Swift 3 they got rid of the attribute hack, and solved the problem with a type: <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0102-noreturn-bottom-type.md">Never</a>. The signature of <code class="language-plaintext highlighter-rouge">fatalError</code> is now:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fatalError</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Never</span>
                                <span class="o">^^^^^</span>
@@ -200,7 +200,7 @@
 <span class="k">let</span> <span class="nv">ok</span> <span class="o">=</span> <span class="kt">G</span><span class="o">&lt;</span><span class="kt">Never</span><span class="o">&gt;</span><span class="p">()</span>     <span class="c1">// This is fine. Never can be a phantom type.</span>
 </code></pre></div></div>
 
-<p>Another interesting implication is that <code class="highlighter-rouge">[Never]</code> is <a href="https://twitter.com/cocoaphony/status/1184470123899478017">an empty array</a>.</p>
+<p>Another interesting implication is that <code class="language-plaintext highlighter-rouge">[Never]</code> is <a href="https://twitter.com/cocoaphony/status/1184470123899478017">an empty array</a>.</p>
 
 <p>Never is the smallest possible type. We call it an “uninhabited type.” There’s nothing special about the name “Never.” You can create your own no-case enum, and it’ll work the same.</p>
 
@@ -256,7 +256,7 @@
 
 <p>But what should Failure be if the Publisher <em>never</em> generates errors? Never, of course. No magic needed. It just works. What if it <em>only</em> can generate a Failure? Well, then Output is Never (see <a href="https://developer.apple.com/documentation/combine/publishers/ignoreoutput">IgnoreOutput</a>). When there’s a proper type, the special cases disappear, and it just works.</p>
 
-<p>So Never has gone from a little-known type solving a little-known problem around <code class="highlighter-rouge">fatalError</code> to something Swift developers will probably use every day without even thinking about it. And that makes me very happy.</p>
+<p>So Never has gone from a little-known type solving a little-known problem around <code class="language-plaintext highlighter-rouge">fatalError</code> to something Swift developers will probably use every day without even thinking about it. And that makes me very happy.</p>
 </div>
 
 
@@ -272,7 +272,7 @@
 
 
 
-<time datetime="2019-10-28T13:02:00-04:00" pubdate data-updated="true">28 Oct 2019</time>
+<time datetime="2019-10-28T11:02:00-06:00" pubdate data-updated="true">28 Oct 2019</time>
       
 
 
@@ -306,7 +306,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

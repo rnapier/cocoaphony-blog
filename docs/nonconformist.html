@@ -71,7 +71,7 @@
 
 
 
-<time datetime="2019-04-28T12:43:00-04:00" pubdate data-updated="true">28 Apr 2019</time>
+<time datetime="2019-04-28T10:43:00-06:00" pubdate data-updated="true">28 Apr 2019</time>
         
       </p>
     
@@ -90,7 +90,7 @@
 </code></pre></div></div>
 
 <blockquote>
-  <p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="highlighter-rouge">apiBase</code>.</p>
+  <p>I need a protocol that requires that the type be Decodable, and also requires that it provide this extra string, <code class="language-plaintext highlighter-rouge">apiBase</code>.</p>
 </blockquote>
 
 <p>Read that again. It <em>requires</em> that the type be Decodable and also <em>requires</em> other things. I didn’t say that Fetchable <em>is</em> Decodable. It isn’t.
@@ -103,12 +103,12 @@
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="n">decode</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="n">from</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Decodable</span>
 </code></pre></div></div>
 
-<p>Well, remember that JSONDecoder’s <code class="highlighter-rouge">decode</code> method requires a type that conforms to Decodable. If Decodable (or Fetchable) conformed to Decodable, I could write:</p>
+<p>Well, remember that JSONDecoder’s <code class="language-plaintext highlighter-rouge">decode</code> method requires a type that conforms to Decodable. If Decodable (or Fetchable) conformed to Decodable, I could write:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">JSONDecoder</span><span class="p">()</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Decodable</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with <code class="highlighter-rouge">result</code>? It’s only known method would be <code class="highlighter-rouge">init(from: Decoder)</code>. There are no instance methods on Decodable.</p>
+<p>And in fact, I see people try to write that all the time. But how could that possibly work? How can JSONDecoder know which of an unbounded number of possible types you want this JSON to be decoded into? Even if you did it, what could you possibly do with <code class="language-plaintext highlighter-rouge">result</code>? It’s only known method would be <code class="language-plaintext highlighter-rouge">init(from: Decoder)</code>. There are no instance methods on Decodable.</p>
 
 <p>And so again: Protocols do not conform to protocols, not even to themselves.</p>
 
@@ -128,30 +128,30 @@
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">things</span><span class="p">:</span> <span class="p">[</span><span class="kt">MyProtocol</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
 </code></pre></div></div>
 
-<p>You might imagine that you could call <code class="highlighter-rouge">things.doThing()</code>. After all, <code class="highlighter-rouge">doThing()</code> applies to any array of MyProtocol, and what’s more MyProtocol than MyProtocol? But that’s exactly what you can’t do. The syntax <code class="highlighter-rouge">where Element: MyProtocol</code> means “Element conforms to MyProtocol.” And as I’ve repeated many times now: MyProtocol does not conform to itself. In order to add an extension on <code class="highlighter-rouge">[MyProtocol]</code>, you would need to write an extension with <code class="highlighter-rouge">==</code> rather than <code class="highlighter-rouge">:</code>.</p>
+<p>You might imagine that you could call <code class="language-plaintext highlighter-rouge">things.doThing()</code>. After all, <code class="language-plaintext highlighter-rouge">doThing()</code> applies to any array of MyProtocol, and what’s more MyProtocol than MyProtocol? But that’s exactly what you can’t do. The syntax <code class="language-plaintext highlighter-rouge">where Element: MyProtocol</code> means “Element conforms to MyProtocol.” And as I’ve repeated many times now: MyProtocol does not conform to itself. In order to add an extension on <code class="language-plaintext highlighter-rouge">[MyProtocol]</code>, you would need to write an extension with <code class="language-plaintext highlighter-rouge">==</code> rather than <code class="language-plaintext highlighter-rouge">:</code>.</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span> <span class="o">==</span> <span class="kt">MyProtocol</span> <span class="p">{</span>
     <span class="kd">func</span> <span class="nf">doThing</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>This says that Element <em>is exactly</em> MyProtocol. That doesn’t include types that conform to MyProtocol. It only applies exactly to <code class="highlighter-rouge">[MyProtocol]</code>.</p>
+<p>This says that Element <em>is exactly</em> MyProtocol. That doesn’t include types that conform to MyProtocol. It only applies exactly to <code class="language-plaintext highlighter-rouge">[MyProtocol]</code>.</p>
 
 <h2 id="theres-always-usually-an-exception">There’s <strike>always</strike> usually an exception</h2>
 
-<p>OK, what about the exceptions? There <em>are</em> a some protocols that do conform to themselves. <code class="highlighter-rouge">@objc</code> protocols do unless they have “static” requirements such as <code class="highlighter-rouge">init</code>, or static properties or methods. And in Swift 5, Error conforms to itself so that you can have “untyped error” Results like <code class="highlighter-rouge">Result&lt;T, Error&gt;</code>. If Error didn’t conform to itself, you’d have to use a concrete type for the error. But these are compiler-enforced special cases. You can’t make <em>your</em> protocol conform to itself.</p>
+<p>OK, what about the exceptions? There <em>are</em> a some protocols that do conform to themselves. <code class="language-plaintext highlighter-rouge">@objc</code> protocols do unless they have “static” requirements such as <code class="language-plaintext highlighter-rouge">init</code>, or static properties or methods. And in Swift 5, Error conforms to itself so that you can have “untyped error” Results like <code class="language-plaintext highlighter-rouge">Result&lt;T, Error&gt;</code>. If Error didn’t conform to itself, you’d have to use a concrete type for the error. But these are compiler-enforced special cases. You can’t make <em>your</em> protocol conform to itself.</p>
 
 <h2 id="impossible-or-just-not-implemented">Impossible? Or just not implemented?</h2>
 
-<p>But could they? Yes, some could in principle. The rule is pretty straightforward: if a protocol includes an <code class="highlighter-rouge">init</code> or <code class="highlighter-rouge">static</code> requirement, or includes a <code class="highlighter-rouge">Self</code> method parameter, then self-conformance is tricky. If there is no such requirement, then it it’s much more straightforward (basically the same as for <code class="highlighter-rouge">@objc</code>). There’s no deep reason that Encodable can’t be Encodable. The following could work, and I think would be both sensible and useful, it just doesn’t today:</p>
+<p>But could they? Yes, some could in principle. The rule is pretty straightforward: if a protocol includes an <code class="language-plaintext highlighter-rouge">init</code> or <code class="language-plaintext highlighter-rouge">static</code> requirement, or includes a <code class="language-plaintext highlighter-rouge">Self</code> method parameter, then self-conformance is tricky. If there is no such requirement, then it it’s much more straightforward (basically the same as for <code class="language-plaintext highlighter-rouge">@objc</code>). There’s no deep reason that Encodable can’t be Encodable. The following could work, and I think would be both sensible and useful, it just doesn’t today:</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">encodables</span><span class="p">:</span> <span class="p">[</span><span class="kt">Encodable</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
 <span class="k">let</span> <span class="nv">json</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">JSONEncoder</span><span class="p">()</span><span class="o">.</span><span class="nf">encode</span><span class="p">(</span><span class="n">encodables</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>Will this ever work? I don’t know. It’s been brought up a few times on <a href="https://forums.swift.org/t/will-existentials-ever-conform-to-their-protocols/4919">Swift Evolution</a>, and hasn’t been rejected outright. One concern is that adding an <code class="highlighter-rouge">init</code> requirement to an existing protocol could break existing usage (possibly in downstream code) in ways that might surprise developers. I haven’t found a clear statement, but it seems the team wants to make this work someday.</p>
+<p>Will this ever work? I don’t know. It’s been brought up a few times on <a href="https://forums.swift.org/t/will-existentials-ever-conform-to-their-protocols/4919">Swift Evolution</a>, and hasn’t been rejected outright. One concern is that adding an <code class="language-plaintext highlighter-rouge">init</code> requirement to an existing protocol could break existing usage (possibly in downstream code) in ways that might surprise developers. I haven’t found a clear statement, but it seems the team wants to make this work someday.</p>
 
-<p>It’s even possible that “challenging” protocols could self-conform if there were default implementations. One could imagine a Swift where <code class="highlighter-rouge">Collection(1, 2, 3)</code> would return an Array in a Collection existential. (I’m not suggesting that would be a good idea; I really don’t know. It’s just that it’s the kind of thing one could imagine.)</p>
+<p>It’s even possible that “challenging” protocols could self-conform if there were default implementations. One could imagine a Swift where <code class="language-plaintext highlighter-rouge">Collection(1, 2, 3)</code> would return an Array in a Collection existential. (I’m not suggesting that would be a good idea; I really don’t know. It’s just that it’s the kind of thing one could imagine.)</p>
 
 <p>In this series I’m generally going to talk about things I know from experience using today’s Swift or can predict about likely-near-term Swift (i.e. there’s an SE in the works). So any time I say something like “that won’t work,” I mean “without adding a significant feature to Swift that I don’t know is planned.” (Hopefully folks will continue to correct me if I’m misleading about how hard something would be.)</p>
 
@@ -179,7 +179,7 @@
 
 
 
-<time datetime="2019-04-28T12:43:00-04:00" pubdate data-updated="true">28 Apr 2019</time>
+<time datetime="2019-04-28T10:43:00-06:00" pubdate data-updated="true">28 Apr 2019</time>
       
 
 
@@ -215,7 +215,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

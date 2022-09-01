@@ -26,4 +26,5 @@ end
 
 gem 'pygments.rb'
 gem 'rdiscount'
-# gem 'octopress'
+
+gem "webrick", "~> 1.7"

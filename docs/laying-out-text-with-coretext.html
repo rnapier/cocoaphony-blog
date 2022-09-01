@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2011-05-20T11:09:12-04:00" pubdate data-updated="true">20 May 2011</time>
+<time datetime="2011-05-20T09:09:12-06:00" pubdate data-updated="true">20 May 2011</time>
         
       </p>
     
@@ -79,14 +79,14 @@
 
 <div class="entry-content"><p>I’m back in full book-writing mode, now working with <a href="http://mugunthkumar.com/">Mugunth Kumar</a>, who is brilliant. Go check out his stuff. Hopefully we’ll have something published and in all your hands by the end of the year. The book has taken up most of my writing time, so the blog will continue to be a bit quiet, but sometimes I like to answer a Stackoverflow question a bit more fully than I can there.</p>
 
-<p>Today’s question is about <a href="http://stackoverflow.com/questions/6062420/core-text-performance/6062816#6062816">laying out text without <code class="highlighter-rouge">CTFramesetter</code></a>. We’re going to take a whirlwind tour through some CoreText code to demonstrate this. It’s not quite what the OP was asking about, but it shows some techniques and I had it handy. I’ll be writing a whole chapter on Core Text soon.</p>
+<p>Today’s question is about <a href="http://stackoverflow.com/questions/6062420/core-text-performance/6062816#6062816">laying out text without <code class="language-plaintext highlighter-rouge">CTFramesetter</code></a>. We’re going to take a whirlwind tour through some CoreText code to demonstrate this. It’s not quite what the OP was asking about, but it shows some techniques and I had it handy. I’ll be writing a whole chapter on Core Text soon.</p>
 
-<p>The goal of this project was to make “pinch” view. It lays out text in a view, and where ever you touch, the text is pinched towards that point. It’s not meant to be really useful. Everything is done in <code class="highlighter-rouge">drawRect:</code>, which is ok in this case, since we only draw when we’re dirty, and when we’re dirty we have to redraw everything anyway. But in many cases, you’d want to do these calculations elsewhere, and only do final drawing in <code class="highlighter-rouge">drawRect:</code>.</p>
+<p>The goal of this project was to make “pinch” view. It lays out text in a view, and where ever you touch, the text is pinched towards that point. It’s not meant to be really useful. Everything is done in <code class="language-plaintext highlighter-rouge">drawRect:</code>, which is ok in this case, since we only draw when we’re dirty, and when we’re dirty we have to redraw everything anyway. But in many cases, you’d want to do these calculations elsewhere, and only do final drawing in <code class="language-plaintext highlighter-rouge">drawRect:</code>.</p>
 
 <p>We start with some basic view layout, and loop until we run out of text or run out of vertical space in the view.
 <!-- more --></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)drawRect:(CGRect)rect {      
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)drawRect:(CGRect)rect {      
   [... Basic view setup and drawing the border ...]
   
   // Work out the geometry
@@ -104,14 +104,14 @@
 
 <p>Now we ask the typesetter to break off a line for us.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    CTTypesetterRef typesetter = self.typesetter;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    CTTypesetterRef typesetter = self.typesetter;
     CFIndex count = CTTypesetterSuggestLineBreak(typesetter, start, boundsWidth);
     CTLineRef line = CTTypesetterCreateLine(typesetter, CFRangeMake(start, count));
 </code></pre></div></div>
 
 <p>And decide whether to full-justify it or not based on whether it’s at least 85% of a line:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    CGFloat ascent;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    CGFloat ascent;
     CGFloat descent;
     CGFloat leading;
     double lineWidth = CTLineGetTypographicBounds(line, &amp;ascent, &amp;descent, &amp;leading);
@@ -125,11 +125,11 @@
     }
 </code></pre></div></div>
 
-<p>Now we start pulling off one <code class="highlighter-rouge">CTRun</code> at a time. A run is a series of glyphs within a line that share the same formatting. In our case, we should generally just have one run per line. This is a good point to explain the difference between a glyph and character. A character represents a unit of information. A glyph represents a unit of drawing. In the vast majority of cases in English, these two are identical, but there a few exceptions even in English called ligatures. The most famous is “fi” which in some fonts is drawn as a single glyph. Open TextEdit. Choose Lucida Grande 36 point font. Type “fi” and see for yourself how it’s drawn. Compare it to “ft” if you think it’s just drawing the “f” too wide. The joining is on purpose.</p>
+<p>Now we start pulling off one <code class="language-plaintext highlighter-rouge">CTRun</code> at a time. A run is a series of glyphs within a line that share the same formatting. In our case, we should generally just have one run per line. This is a good point to explain the difference between a glyph and character. A character represents a unit of information. A glyph represents a unit of drawing. In the vast majority of cases in English, these two are identical, but there a few exceptions even in English called ligatures. The most famous is “fi” which in some fonts is drawn as a single glyph. Open TextEdit. Choose Lucida Grande 36 point font. Type “fi” and see for yourself how it’s drawn. Compare it to “ft” if you think it’s just drawing the “f” too wide. The joining is on purpose.</p>
 
-<p>So the thing to keep in mind is that there can be a different number of glyphs than characters. High-level Core Text objects work in characters. Low-level objects work in glyphs. There are functions to convert character indexes into glyph indexes and vice versa. So, let’s back to the code. We’re going to move the Core Graphics text pointer and start looping through our <code class="highlighter-rouge">CTRun</code> objects:</p>
+<p>So the thing to keep in mind is that there can be a different number of glyphs than characters. High-level Core Text objects work in characters. Low-level objects work in glyphs. There are functions to convert character indexes into glyph indexes and vice versa. So, let’s back to the code. We’re going to move the Core Graphics text pointer and start looping through our <code class="language-plaintext highlighter-rouge">CTRun</code> objects:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    // Move us forward to the baseline
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    // Move us forward to the baseline
     textPosition.y -= ceil(ascent);
     CGContextSetTextPosition(context, textPosition.x, textPosition.y);
     
@@ -148,7 +148,7 @@
 
 <p>Now we have our run, and we’re going to work out the font so we can draw it. By definition, the entire run will have the same font and other attributes. Note that the code only handles font changes. It won’t handle decorations like underline (remember: bold is a font, underline is a decoration). You’d need to add more code if you wanted that.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      CTRunRef run = CFArrayGetValueAtIndex(glyphRuns, runIndex);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      CTRunRef run = CFArrayGetValueAtIndex(glyphRuns, runIndex);
       CTFontRef runFont = CFDictionaryGetValue(CTRunGetAttributes(run),
                                                kCTFontAttributeName);
 
@@ -159,11 +159,11 @@
       CFRelease(cgFont);
 </code></pre></div></div>
 
-<p>Now we’re going to pull out all the glyphs so we can lay them out one at a time. <code class="highlighter-rouge">CTRun</code> has one of those annoying <code class="highlighter-rouge">Get...Ptr</code> constructs that are common in Core frameworks. <code class="highlighter-rouge">CTRunGetPositionsPtr()</code> will very quickly return you the internal pointer to the glyphs locations. But it might fail if the <code class="highlighter-rouge">CTRun</code> hasn’t calculating them yet. If that happens, then you have to call <code class="highlighter-rouge">CTRunGetPositions()</code> and hand it a buffer to copy into. To handle this, I keep around a buffer that I <code class="highlighter-rouge">realloc()</code> to the largest size I need. This almost never comes up because <code class="highlighter-rouge">CTRunGetPositionsPtr()</code> almost always returns a result.</p>
+<p>Now we’re going to pull out all the glyphs so we can lay them out one at a time. <code class="language-plaintext highlighter-rouge">CTRun</code> has one of those annoying <code class="language-plaintext highlighter-rouge">Get...Ptr</code> constructs that are common in Core frameworks. <code class="language-plaintext highlighter-rouge">CTRunGetPositionsPtr()</code> will very quickly return you the internal pointer to the glyphs locations. But it might fail if the <code class="language-plaintext highlighter-rouge">CTRun</code> hasn’t calculating them yet. If that happens, then you have to call <code class="language-plaintext highlighter-rouge">CTRunGetPositions()</code> and hand it a buffer to copy into. To handle this, I keep around a buffer that I <code class="language-plaintext highlighter-rouge">realloc()</code> to the largest size I need. This almost never comes up because <code class="language-plaintext highlighter-rouge">CTRunGetPositionsPtr()</code> almost always returns a result.</p>
 
-<p>Note the comment about being “slightly dangerous.” I’m grabbing the internal location data structures and modifying them. This works out because we are the only user of this <code class="highlighter-rouge">CTRun</code>, but these are really immutable structures. If two <code class="highlighter-rouge">CTRun</code> objects are created from the same data, then Apple is free to return us two pointers to the same object. So it’s within the specs that we’re actually modifying data that some other part of the program is using for a different layout. That’s pretty unlikely, but it’s worth keeping in mind. My early tests of this on a first-generation iPad suggested that this optimization was noticeable in Instruments. On the other hand, I hadn’t applied some other optimizations yet (like reusing <code class="highlighter-rouge">positionsBuffer</code>), so it may be practical to get better safety and performance here. I’ll have to profile further.</p>
+<p>Note the comment about being “slightly dangerous.” I’m grabbing the internal location data structures and modifying them. This works out because we are the only user of this <code class="language-plaintext highlighter-rouge">CTRun</code>, but these are really immutable structures. If two <code class="language-plaintext highlighter-rouge">CTRun</code> objects are created from the same data, then Apple is free to return us two pointers to the same object. So it’s within the specs that we’re actually modifying data that some other part of the program is using for a different layout. That’s pretty unlikely, but it’s worth keeping in mind. My early tests of this on a first-generation iPad suggested that this optimization was noticeable in Instruments. On the other hand, I hadn’t applied some other optimizations yet (like reusing <code class="language-plaintext highlighter-rouge">positionsBuffer</code>), so it may be practical to get better safety and performance here. I’ll have to profile further.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      CFIndex glyphCount = CTRunGetGlyphCount(run);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      CFIndex glyphCount = CTRunGetGlyphCount(run);
       
       // This is slightly dangerous. We're getting a pointer to the internal
       // data, and yes, we're modifying it. But it avoids copying the memory
@@ -195,9 +195,9 @@
       }
 </code></pre></div></div>
 
-<p>Now we move around the characters with a little trig. I originally coded this using <code class="highlighter-rouge">CGAffineTransforms</code>, but doing the math by hand turned out to be much faster.</p>
+<p>Now we move around the characters with a little trig. I originally coded this using <code class="language-plaintext highlighter-rouge">CGAffineTransforms</code>, but doing the math by hand turned out to be much faster.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      // Squeeze the text towards the touch-point
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      // Squeeze the text towards the touch-point
       if (touchIsActive)
       {
         for (CFIndex glyphIndex = 0; glyphIndex &lt; glyphCount; ++glyphIndex)
@@ -231,7 +231,7 @@
 
 <p>Finally, finally, we draw the glyphs and move down a line. We move down by adding the previous-calculated descent, leading and then +1. The “+1” was added because it matches up with how CTFramesetter lays out. Otherwise the descenders of one line exactly touch the ascenders of the next line.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      CGContextShowGlyphsAtPositions(context, glyphs, positions, glyphCount);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      CGContextShowGlyphsAtPositions(context, glyphs, positions, glyphCount);
     }
     
     // Move the index beyond the line break.
@@ -263,7 +263,7 @@
 
 
 
-<time datetime="2011-05-20T11:09:12-04:00" pubdate data-updated="true">20 May 2011</time>
+<time datetime="2011-05-20T09:09:12-06:00" pubdate data-updated="true">20 May 2011</time>
       
 
 <span class="categories">
@@ -305,7 +305,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

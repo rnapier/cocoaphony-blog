@@ -70,7 +70,7 @@
 
 
 
-<time datetime="2014-09-17T15:50:00-04:00" pubdate data-updated="true">17 Sep 2014</time>
+<time datetime="2014-09-17T15:50:00-06:00" pubdate data-updated="true">17 Sep 2014</time>
         
       </p>
     
@@ -81,7 +81,7 @@
 
 <p>For those who read my blog for Cocoa (and recently Swift) discussion, you may be surprised that most of my professional work right now is in Go, C, and C++ (in that order). So I thought I might take a moment to discuss Go.</p>
 
-<p>First, it’s important to say that I really like Go. I didn’t think I would. I’m a language snob at heart. Before Swift, I’d been spending a lot of time on the <a href="http://learnyouahaskell.com">functional</a> side of the <a href="http://www.scala-lang.org">street</a> with a brief dallience with <a href="http://akka.io">actors</a>. I was just about to do deeper <a href="http://clojure.org">into the parens</a>, when I wound up taking a side trip into Google-land and Go. I’d dipped my toe into the water once before and been turned off by what seemed to be the sloppiness of the language. How variables are declared bugged me (turns out it <a href="http://gophercon.sourcegraph.com/post/83845316771/panel-discussion-with-go-team-members">bugs the lead language designer</a>, too). The multiple return types of <code class="highlighter-rouge">range</code> bugged me. <a href="http://blog.golang.org/strings">Strings switching between code points and bytes</a> bugged me. The fact that Go can’t implement its own <code class="highlighter-rouge">append()</code> harkened back to funky Perl magic. Go just seemed sloppy and under-considered.</p>
+<p>First, it’s important to say that I really like Go. I didn’t think I would. I’m a language snob at heart. Before Swift, I’d been spending a lot of time on the <a href="http://learnyouahaskell.com">functional</a> side of the <a href="http://www.scala-lang.org">street</a> with a brief dallience with <a href="http://akka.io">actors</a>. I was just about to do deeper <a href="http://clojure.org">into the parens</a>, when I wound up taking a side trip into Google-land and Go. I’d dipped my toe into the water once before and been turned off by what seemed to be the sloppiness of the language. How variables are declared bugged me (turns out it <a href="http://gophercon.sourcegraph.com/post/83845316771/panel-discussion-with-go-team-members">bugs the lead language designer</a>, too). The multiple return types of <code class="language-plaintext highlighter-rouge">range</code> bugged me. <a href="http://blog.golang.org/strings">Strings switching between code points and bytes</a> bugged me. The fact that Go can’t implement its own <code class="language-plaintext highlighter-rouge">append()</code> harkened back to funky Perl magic. Go just seemed sloppy and under-considered.</p>
 
 <!-- more -->
 
@@ -113,7 +113,7 @@
 
 <p>I recently wrote some Go code that looked basically like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func (f *Frobulator) frobulate() error {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func (f *Frobulator) frobulate() error {
   if f.thingsToFrobulate &gt; 0 {
     var err error
 
@@ -143,7 +143,7 @@
 
 <p>If I were writing this in Swift with my <a href="https://github.com/LlamaKit/LlamaKit">LlamaKit</a> bells-and-functional-whistles, I might write it as:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func frobulate() -&gt; Result&lt;Void&gt; {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func frobulate() -&gt; Result&lt;Void&gt; {
   var result = success(())
   if self.thingsToFrobulate &gt; 0 {
     result = logit(FrobulatingMessage)
@@ -157,7 +157,7 @@
 
 <p>The Swift+LlamaKit version is half as long, and almost every line is focused on the task at hand. It feels much more elegant. There is far less duplication. But there’s a pretty big story in how these two functions were written.</p>
 
-<p>When writing the Swift function, I found myself spending a lot of time thinking about how to write it. Should I use <code class="highlighter-rouge">&gt;&gt;==</code> or <code class="highlighter-rouge">.flatMap()</code>? Should I use my custom <code class="highlighter-rouge">Result</code> here at all, or should I stick to standard Swift and return <code class="highlighter-rouge">NSError?</code>, or maybe <code class="highlighter-rouge">Bool</code> with an <code class="highlighter-rouge">NSErrorPtr</code>? This was my first time using <code class="highlighter-rouge">Result&lt;Void&gt;</code>, and I started asking myself if I should create a typealias for that and maybe a helper function for the slightly strange looking <code class="highlighter-rouge">success(())</code>. The <code class="highlighter-rouge">var</code> bothered me. It always feels like a hack in FP, like you’re not smart enough to do it right. I wrote a different version that didn’t have a <code class="highlighter-rouge">var</code>. That duplicated <code class="highlighter-rouge">self.cleanup</code> in two places. So I started working on a new function that would let me include the conditional in the functional composition. I made and re-made a lot of choices. <sup id="fnref:swift"><a href="#fn:swift" class="footnote">1</a></sup></p>
+<p>When writing the Swift function, I found myself spending a lot of time thinking about how to write it. Should I use <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code> or <code class="language-plaintext highlighter-rouge">.flatMap()</code>? Should I use my custom <code class="language-plaintext highlighter-rouge">Result</code> here at all, or should I stick to standard Swift and return <code class="language-plaintext highlighter-rouge">NSError?</code>, or maybe <code class="language-plaintext highlighter-rouge">Bool</code> with an <code class="language-plaintext highlighter-rouge">NSErrorPtr</code>? This was my first time using <code class="language-plaintext highlighter-rouge">Result&lt;Void&gt;</code>, and I started asking myself if I should create a typealias for that and maybe a helper function for the slightly strange looking <code class="language-plaintext highlighter-rouge">success(())</code>. The <code class="language-plaintext highlighter-rouge">var</code> bothered me. It always feels like a hack in FP, like you’re not smart enough to do it right. I wrote a different version that didn’t have a <code class="language-plaintext highlighter-rouge">var</code>. That duplicated <code class="language-plaintext highlighter-rouge">self.cleanup</code> in two places. So I started working on a new function that would let me include the conditional in the functional composition. I made and re-made a lot of choices. <sup id="fnref:swift" role="doc-noteref"><a href="#fn:swift" class="footnote" rel="footnote">1</a></sup></p>
 
 <p><span class="pullquote-right" data-pullquote="When writing the Go function, I started at the top and typed until I got to the bottom."></span></p>
 
@@ -174,10 +174,10 @@
 <p>Did I mention Go compiles <em>really fast</em>?</p>
 
 <p>But late at night, when it’s my own time for my own projects, it’s Swift I’d rather work in.</p>
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:swift">
-      <p>The underlying issue here isn’t that I chose to use special operators out of LlamaKit. I could have written the Swift code in <a href="https://gist.github.com/rnapier/27ba98c827c9d7798879">the same style as the Go code</a> or in <a href="https://gist.github.com/rnapier/4a48b24024ff969f2e94">traditional ObjC style</a>. The point is that there are lots of ways you could do it, and lots of ways different Swift developers will <em>choose</em> to do it because the language is very flexible and there is no obvious “Swift way.” <a href="#fnref:swift" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:swift" role="doc-endnote">
+      <p>The underlying issue here isn’t that I chose to use special operators out of LlamaKit. I could have written the Swift code in <a href="https://gist.github.com/rnapier/27ba98c827c9d7798879">the same style as the Go code</a> or in <a href="https://gist.github.com/rnapier/4a48b24024ff969f2e94">traditional ObjC style</a>. The point is that there are lots of ways you could do it, and lots of ways different Swift developers will <em>choose</em> to do it because the language is very flexible and there is no obvious “Swift way.” <a href="#fnref:swift" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -196,7 +196,7 @@
 
 
 
-<time datetime="2014-09-17T15:50:00-04:00" pubdate data-updated="true">17 Sep 2014</time>
+<time datetime="2014-09-17T15:50:00-06:00" pubdate data-updated="true">17 Sep 2014</time>
       
 
 <span class="categories">
@@ -238,7 +238,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2020 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2022 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
