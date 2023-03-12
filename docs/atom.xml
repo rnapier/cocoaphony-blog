@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2022-09-01T10:23:34-06:00</updated>
+  <updated>2023-03-12T18:22:36-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[The Littlest Type]]></title>
     <link href="https://robnapier.net/never"/>
-    <updated>2019-10-28T11:02:00-06:00</updated>
+    <updated>2019-10-28T13:02:00-04:00</updated>
     <id>https://robnapier.net/never</id>
     <content type="html"><![CDATA[<p>Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types! We say what things are, and the compiler enforces it for us. But then you see some piece of code like this:</p>
 
@@ -204,7 +204,7 @@
   <entry>
     <title type="html"><![CDATA[Protocols v: At Your Request]]></title>
     <link href="https://robnapier.net/at-your-request"/>
-    <updated>2019-10-26T15:04:00-06:00</updated>
+    <updated>2019-10-26T17:04:00-04:00</updated>
     <id>https://robnapier.net/at-your-request</id>
     <content type="html"><![CDATA[<p>So, back to our <a href="https://robnapier.net/start-with-a-protocol">APIClient</a>. When last <a href="https://robnapier.net/thats-not-a-number">I left off</a>, I had the following client code:</p>
 
@@ -423,7 +423,7 @@ func keepAlive(
   <entry>
     <title type="html"><![CDATA[Protocols IV: That's Not a Number]]></title>
     <link href="https://robnapier.net/thats-not-a-number"/>
-    <updated>2019-05-27T00:00:00-06:00</updated>
+    <updated>2019-05-27T00:00:00-04:00</updated>
     <id>https://robnapier.net/thats-not-a-number</id>
     <content type="html"><![CDATA[<p>So far in this series, I’ve <a href="https://robnapier.net/start-with-a-protocol">created a simple APIClient</a> that can fetch any Fetchable type and decode it from a specific API, and then <a href="https://robnapier.net/a-mockery-of-protocols">extracted a Transport protocol</a> to abstract away the network layer. In this part, I’ll reconsider the top of the stack, the models, and see if I can make those more flexible.
 <!-- more --></p>
@@ -733,7 +733,7 @@ struct User: Codable, Hashable {
   <entry>
     <title type="html"><![CDATA[Protocols III: Existential Spelling]]></title>
     <link href="https://robnapier.net/existential-spelling"/>
-    <updated>2019-05-12T00:00:00-06:00</updated>
+    <updated>2019-05-12T00:00:00-04:00</updated>
     <id>https://robnapier.net/existential-spelling</id>
     <content type="html"><![CDATA[<p><em>This was supposed to be a quick sidebar, but it turned into a full-length article, so I’m calling it part 3. The original part 3, continuing the network stack, is mostly done, but I wanted to explain this weird word “existentials” first, and it turned out longer than I’d expected. Blame Joe Groff; he’s written too much interesting stuff lately and I want to talk about it.</em></p>
 
@@ -905,7 +905,7 @@ But it probably won’t solve as many problems as people expect. Many protocol p
   <entry>
     <title type="html"><![CDATA[Protocols II: A Mockery of Protocols]]></title>
     <link href="https://robnapier.net/a-mockery-of-protocols"/>
-    <updated>2019-04-29T09:18:00-06:00</updated>
+    <updated>2019-04-29T11:18:00-04:00</updated>
     <id>https://robnapier.net/a-mockery-of-protocols</id>
     <content type="html"><![CDATA[<p><a href="https://robnapier.net/start-with-a-protocol">In the last section</a>, I ended my little network stack at this point:</p>
 
@@ -1091,7 +1091,7 @@ final class APIClient {
   <entry>
     <title type="html"><![CDATA[Protocols Sidebar I: Protocols Are Nonconformists]]></title>
     <link href="https://robnapier.net/nonconformist"/>
-    <updated>2019-04-28T10:43:00-06:00</updated>
+    <updated>2019-04-28T12:43:00-04:00</updated>
     <id>https://robnapier.net/nonconformist</id>
     <content type="html"><![CDATA[<p><a href="https://robnapier.net/start-with-a-protocol">Last time</a>, I mentioned something in passing:</p>
 
@@ -1185,7 +1185,7 @@ final class APIClient {
   <entry>
     <title type="html"><![CDATA[Protocols I: "Start With a Protocol," He Said]]></title>
     <link href="https://robnapier.net/start-with-a-protocol"/>
-    <updated>2019-04-22T00:00:00-06:00</updated>
+    <updated>2019-04-22T00:00:00-04:00</updated>
     <id>https://robnapier.net/start-with-a-protocol</id>
     <content type="html"><![CDATA[<h2 id="in-the-beginning-crusty">In the beginning, Crusty</h2>
 
@@ -1468,7 +1468,7 @@ func fetch&lt;Model&gt;(_ model: Model.Type, id: Int,
   <entry>
     <title type="html"><![CDATA[A Conditional Breakpoint]]></title>
     <link href="https://robnapier.net/conditional-breakpoint"/>
-    <updated>2017-04-23T09:59:20-06:00</updated>
+    <updated>2017-04-23T11:59:20-04:00</updated>
     <id>https://robnapier.net/conditional-breakpoint</id>
     <content type="html"><![CDATA[<p><a href="https://twitter.com/jamesdempsey/status/855979622655291392">I’m now a Conditional Breakpoint.</a> It’s been a dream of mine for long time, and it finally happened at <a href="http://cocoaconf.com/chicago-2017/sessions/breakpoint-jam">CocoaConf Chicago</a>. There are folks who have played extensively with <a href="http://jamesdempsey.net/2013/03/02/introducing-the-breakpoint-jam-at-cocoaconf-chicago/">James Dempsey</a>, and those are the Breakpoints. If you’ve only played occasionally (even once), you’re a Conditional Breakpoint.
 <!--more--></p>
@@ -1494,7 +1494,7 @@ func fetch&lt;Model&gt;(_ model: Model.Type, id: Int,
   <entry>
     <title type="html"><![CDATA[Refactoring Slow and Steady]]></title>
     <link href="https://robnapier.net/refactoring"/>
-    <updated>2017-02-13T10:21:55-07:00</updated>
+    <updated>2017-02-13T12:21:55-05:00</updated>
     <id>https://robnapier.net/refactoring</id>
     <content type="html"><![CDATA[<p>I’ve been talking with folks on a Slack about refactoring today, and I thought I’d put some of my thoughts here. Maybe a little less polished than I’d like, but I wanted to get them out of my head and down on “paper.”</p>
 
@@ -1543,7 +1543,7 @@ Testing is great. Testing is critical. Testing is necessary. But unit testing is
   <entry>
     <title type="html"><![CDATA[Talking and Teaching]]></title>
     <link href="https://robnapier.net/talking"/>
-    <updated>2016-11-29T08:35:09-07:00</updated>
+    <updated>2016-11-29T10:35:09-05:00</updated>
     <id>https://robnapier.net/talking</id>
     <content type="html"><![CDATA[<p><a href="https://twitter.com/pepibumur">Pedro Piñera</a> makes some important points in his article <a href="http://ppinera.es/2016/11/16/in-a-world.html">In a world…</a>. There are a number of things in there, and you should go read it, but I want to focus on one part, which is the observation that the core “iOS speaker circle” is a fairly small group of people. Pedro notes:</p>
 
@@ -1602,7 +1602,7 @@ Yes! I totally agree with most of this, except that this is <em>positive</em>. I
   <entry>
     <title type="html"><![CDATA[Copying]]></title>
     <link href="https://robnapier.net/copying"/>
-    <updated>2016-09-03T11:56:14-06:00</updated>
+    <updated>2016-09-03T13:56:14-04:00</updated>
     <id>https://robnapier.net/copying</id>
     <content type="html"><![CDATA[<p>I’m on my way back from <a href="http://tryswiftnyc.com">try! Swift</a>, which was fantastic. Of course it had those obvious things I’d hope for. Interesting talks, friendly people. Making new friends, and reuniting with old ones. But it also had some surprising delights and lessons.</p>
 
@@ -1671,7 +1671,7 @@ I spoke to the conference organizer, <a href="https://twitter.com/NatashaTheRobo
   <entry>
     <title type="html"><![CDATA[Inspiration]]></title>
     <link href="https://robnapier.net/inspiration"/>
-    <updated>2016-08-26T13:46:27-06:00</updated>
+    <updated>2016-08-26T15:46:27-04:00</updated>
     <id>https://robnapier.net/inspiration</id>
     <content type="html"><![CDATA[<p>As a speaker, writer, and member of our community, <a href="http://dimsumthinking.com">Daniel Steinberg</a> is my inspiration. That’s not a secret. If you and I have spent much time talking after a conference, I’ve probably mentioned it. It’s not the sort of thing you usually say to someone, and I don’t think I ever have, but I’ve learned a lot from his speaking style, and I constantly try to live up to his standard of kindness. I’m not by nature very kind, so if you see me behaving that way, I’m likely trying to do what I think Daniel might.</p>
 
@@ -1686,7 +1686,7 @@ I spoke to the conference organizer, <a href="https://twitter.com/NatashaTheRobo
   <entry>
     <title type="html"><![CDATA[NSData, My Old Friend]]></title>
     <link href="https://robnapier.net/nsdata"/>
-    <updated>2015-10-07T20:27:00-06:00</updated>
+    <updated>2015-10-07T20:27:00-04:00</updated>
     <id>https://robnapier.net/nsdata</id>
     <content type="html"><![CDATA[<h2 id="or-how-i-learned-to-stop-worrying-and-love-foundation">Or… “How I learned to stop worrying, and love Foundation.”</h2>
 
@@ -1837,7 +1837,7 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   <entry>
     <title type="html"><![CDATA[Type-erasure in Stdlib]]></title>
     <link href="https://robnapier.net/type-erasure-in-stdlib"/>
-    <updated>2015-10-06T17:05:13-06:00</updated>
+    <updated>2015-10-06T19:05:13-04:00</updated>
     <id>https://robnapier.net/type-erasure-in-stdlib</id>
     <content type="html"><![CDATA[<p>When <a href="http://robnapier.net/erasure">last we talked about type erasure</a>, I described an easy way to build type erasures using closures. And I mentioned:</p>
 
@@ -1857,7 +1857,7 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   <entry>
     <title type="html"><![CDATA[RNCryptor V4]]></title>
     <link href="https://robnapier.net/rncryptor-v4"/>
-    <updated>2015-10-04T10:38:36-06:00</updated>
+    <updated>2015-10-04T12:38:36-04:00</updated>
     <id>https://robnapier.net/rncryptor-v4</id>
     <content type="html"><![CDATA[<p>After months of writing and rewriting, I am happy to finally announce <a href="https://github.com/RNCryptor/RNCryptor/releases/tag/RNCryptor-4.0.0-beta.1">RNCryptor 4 beta 1</a> in Swift.</p>
 
@@ -1881,7 +1881,7 @@ updateCryptor(cryptor, data: UnsafeBufferPointer(start: data, count: data.count)
   <entry>
     <title type="html"><![CDATA[A Little Respect for AnySequence]]></title>
     <link href="https://robnapier.net/erasure"/>
-    <updated>2015-08-04T15:42:00-06:00</updated>
+    <updated>2015-08-04T15:42:00-04:00</updated>
     <id>https://robnapier.net/erasure</id>
     <content type="html"><![CDATA[<p>Once upon a time, when Swift was young, there were a couple of types called <code class="language-plaintext highlighter-rouge">SequenceOf</code> and <code class="language-plaintext highlighter-rouge">GeneratorOf</code>, and they could type erase stuff. “Type erase?” you may ask. “I thought we <em>loved</em> types.” We do. Don’t worry. Our types aren’t going anywhere. But sometimes we want them to be a little less…precise.</p>
 
@@ -2027,7 +2027,7 @@ struct Bird: Animal {
   <entry>
     <title type="html"><![CDATA[Product or Process?]]></title>
     <link href="https://robnapier.net/product-or-process"/>
-    <updated>2015-07-20T09:20:17-06:00</updated>
+    <updated>2015-07-20T11:20:17-04:00</updated>
     <id>https://robnapier.net/product-or-process</id>
     <content type="html"><![CDATA[<p>Forgive a slight divergence. I’ll bring it back to software development before the end.</p>
 
@@ -2092,7 +2092,7 @@ struct Bird: Animal {
   <entry>
     <title type="html"><![CDATA[Throw Money at It]]></title>
     <link href="https://robnapier.net/throw-money"/>
-    <updated>2015-06-22T14:41:00-06:00</updated>
+    <updated>2015-06-22T14:41:00-04:00</updated>
     <id>https://robnapier.net/throw-money</id>
     <content type="html"><![CDATA[<p>My dad has always been an engineer, but by the end of his career he had three-letter titles starting with “C”. And all my life he’s taught me lessons, but the most important ones to me professionally were never about technical matters; they were always the talks about how large companies work. Watching some of the reactions from devs to the recent <a href="http://taylorswift.tumblr.com/post/122071902085/to-apple-love-taylor">Taylor Swift</a>/<a href="https://twitter.com/cue/status/612824775220555776">Apple</a> back-and-forth, I realized that one of my dad’s lessons might be helpful to others.<!-- more --></p>
 
@@ -2121,7 +2121,7 @@ struct Bird: Animal {
   <entry>
     <title type="html"><![CDATA[Re...throws?]]></title>
     <link href="https://robnapier.net/re-throws"/>
-    <updated>2015-06-18T11:12:00-06:00</updated>
+    <updated>2015-06-18T11:12:00-04:00</updated>
     <id>https://robnapier.net/re-throws</id>
     <content type="html"><![CDATA[<p><a href="https://robnapier.net/throw-what-dont-throw">Last time</a> we talked about how a function that can
 throw errors is a different type in Swift than a function that cannot throw
@@ -2380,7 +2380,7 @@ can promise it’ll only return X.</p>
   <entry>
     <title type="html"><![CDATA[Throw What Don't Throw]]></title>
     <link href="https://robnapier.net/throw-what-dont-throw"/>
-    <updated>2015-06-16T20:58:00-06:00</updated>
+    <updated>2015-06-16T20:58:00-04:00</updated>
     <id>https://robnapier.net/throw-what-dont-throw</id>
     <content type="html"><![CDATA[<p>So say you are trying out all this interesting new <code class="language-plaintext highlighter-rouge">throw</code> stuff in Swift 2. And
 say you’re running an early Beta in which many stdlib functions don’t handle
