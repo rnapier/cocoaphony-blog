@@ -132,6 +132,9 @@ extension KeyedDecodingContainer {
     public subscript<T: Decodable>(key: Key) -> T {
         get throws { try self.decode(T.self, forKey: key) }
     }
+    public subscript<T: Decodable>(ifPresent key: Key) -> T? {
+        get throws { try self.decodeIfPresent(T.self, forKey: key) }
+    }
 }
 ```
 
@@ -140,8 +143,9 @@ And now, custom decoding looks like this:
 ```swift
 init(from decoder: Decoder) throws {
     let c = try decoder.anyKeyedContainer()
-    name  = try c["name"]
-    age   = try c["age"]
+    name     = try c["name"]
+    age      = try c["age"]
+    children = try c[ifPresent: "children"]
 }
 ```
 
