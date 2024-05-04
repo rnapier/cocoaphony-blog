@@ -15,6 +15,7 @@ public protocol CodingKey : CustomDebugStringConvertible, CustomStringConvertibl
     init?(intValue: Int)
 }
 ```
+<!-- more -->
 
 You can see how the compiler generates automatic coding keys by running it through `swiftc -print-ast`. That will output the Abstract Syntax Tree as Swift code, after automatic conformances are injected.
 

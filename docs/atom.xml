@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2024-05-04T16:38:23-04:00</updated>
+  <updated>2024-05-04T16:40:52-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -29,6 +29,7 @@
     <span class="nf">init</span><span class="p">?(</span><span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div></div>
+<!-- more -->
 
 <p>You can see how the compiler generates automatic coding keys by running it through <code class="language-plaintext highlighter-rouge">swiftc -print-ast</code>. That will output the Abstract Syntax Tree as Swift code, after automatic conformances are injected.</p>
 
