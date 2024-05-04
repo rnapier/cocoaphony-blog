@@ -9,8 +9,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="The first public beta of Swift has been out for a week. I’ve been there since
-the beginning. I’ve read almost the entire book and have written many &hellip;">
+  <meta name="description" content="Ever since Swift came out, I keep seeing weird comments that Swift is a
+functional programming language. I’ve puzzled a bit over why anyone would say &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -48,6 +48,7 @@ the beginning. I’ve read almost the entire book and have written many &hellip;
   <li><a href="/">Blog</a></li>
   <li><a href="/archives">Archives</a></li>
   <li><a href="/talks">Talks</a></li>
+  <li><a href="https://cocoaphony.micro.blog">micro.blog</a></li>
 </ul>
 
 </nav>
@@ -55,6 +56,56 @@ the beginning. I’ve read almost the entire book and have written many &hellip;
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/swift-is-not-functional">Swift Is Not Functional</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2014-06-10T19:57:28-04:00" pubdate data-updated="true">10 Jun 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ever since Swift came out, I keep seeing weird comments that Swift is a
+functional programming language. I’ve puzzled a bit over why anyone would say
+that, since there’s really very little “functional” about Swift. It’s a pretty
+traditional object oriented language with a focus on generic programming.</p>
+
+<p>My conjecture is that people are using a feature list to determine a
+language’s paradigm. But there’s a reason we use the word <em>paradigm</em>.</p>
+
+<blockquote>
+  <p>paradigm. (n) A worldview underlying the theories and methodology of a
+particular scientific subject</p>
+</blockquote>
+
+<p>“A worldview.” Yeah, that captures it.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/swift-is-not-functional">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -433,45 +484,6 @@ how you would calculate good lengths for other assumptions.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/animating-arbitrary-keypaths">Animating Arbitrary KeyPaths</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2012-12-17T21:44:41-05:00" pubdate data-updated="true">17 Dec 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</a>, I discussed my PinchView from <a href="http://robnapier.net/blog/laying-out-text-with-coretext-547">Laying out text with Core Text</a>. It’s a text view that squeezes the glyphs towards your finger when you touch it. I built it to demonstrate per-glyph layout in Core Text. While demonstrating it, I was pretty unsatisfied with how it looked when you touched it or let go. When you drag your finger on the view, the glyphs move around like water. It’s quite pretty. But when you initially touch the screen, the glyphs suddenly jump to their new locations, and then they jump back when you release the screen. Well, that’s no good. So I wanted to add animations.</p>
-
-<p>But here’s the thing: what do you animate? While you do want to animate the glyph positions, you’re not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer’s list of animatable properties confirmed that there’s nothing like that. But no problem, I added a custom property called <code class="language-plaintext highlighter-rouge">touchPointScale</code> and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/animating-arbitrary-keypaths">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page5">&larr; Older</a>
@@ -491,7 +503,7 @@ how you would calculate good lengths for other assumptions.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2023 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2024 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

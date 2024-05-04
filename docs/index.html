@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Sometimes there’s code so commonplace that we forget how strange it actually is. I mean, Swift is a strongly typed language right? Types types types &hellip;">
+  <meta name="description" content="Let’s talk about CodingKey. It’s a protocol. It is not a magic enum thing. Coding keys do not have to be enums. There is some special compiler magic &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -47,6 +47,7 @@
   <li><a href="/">Blog</a></li>
   <li><a href="/archives">Archives</a></li>
   <li><a href="/talks">Talks</a></li>
+  <li><a href="https://cocoaphony.micro.blog">micro.blog</a></li>
 </ul>
 
 </nav>
@@ -54,6 +55,172 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/anycodingkey">AnyCodingKey</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2024-05-04T16:37:00-04:00" pubdate data-updated="true">04 May 2024</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Let’s talk about CodingKey. It’s a protocol. It is not a magic enum thing. Coding keys do not have to be enums. There is some special compiler magic for when CodingKeys are enums, but it’s just a protocol.</p>
+
+<p>It’s something that wraps a string value, that may also wrap an int value. That’s it.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CodingKey</span> <span class="p">:</span> <span class="kt">CustomDebugStringConvertible</span><span class="p">,</span> <span class="kt">CustomStringConvertible</span><span class="p">,</span> <span class="kt">Sendable</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="nf">init</span><span class="p">?(</span><span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="k">var</span> <span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="nf">init</span><span class="p">?(</span><span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can see how the compiler generates automatic coding keys by running it through <code class="language-plaintext highlighter-rouge">swiftc -print-ast</code>. That will output the Abstract Syntax Tree as Swift code, after automatic conformances are injected.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% <span class="nb">echo</span> <span class="s1">'struct Person:Decodable { var name: String }'</span> | swiftc <span class="nt">-print-ast</span> -
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Output of `-print-ast`</span>
+<span class="kd">internal</span> <span class="kd">struct</span> <span class="kt">Person</span> <span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
+  <span class="kd">internal</span> <span class="k">var</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+  <span class="kd">private</span> <span class="kd">enum</span> <span class="kt">CodingKeys</span> <span class="p">:</span> <span class="kt">CodingKey</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">name</span>
+    <span class="kd">@_implements</span><span class="p">(</span><span class="kt">Equatable</span><span class="p">,</span> <span class="o">==</span><span class="p">(</span><span class="nv">_</span><span class="p">:</span><span class="nv">_</span><span class="p">:))</span> <span class="kd">fileprivate</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">__derived_enum_equals</span><span class="p">(</span><span class="n">_</span> <span class="nv">a</span><span class="p">:</span> <span class="kt">Person</span><span class="o">.</span><span class="kt">CodingKeys</span><span class="p">,</span> <span class="n">_</span> <span class="nv">b</span><span class="p">:</span> <span class="kt">Person</span><span class="o">.</span><span class="kt">CodingKeys</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+      <span class="kd">private</span> <span class="k">var</span> <span class="nv">index_a</span><span class="p">:</span> <span class="kt">Int</span>
+      <span class="k">switch</span> <span class="n">a</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="o">.</span><span class="nv">name</span><span class="p">:</span>
+        <span class="n">index_a</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="p">}</span>
+      <span class="kd">private</span> <span class="k">var</span> <span class="nv">index_b</span><span class="p">:</span> <span class="kt">Int</span>
+      <span class="k">switch</span> <span class="n">b</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="o">.</span><span class="nv">name</span><span class="p">:</span>
+        <span class="n">index_b</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="n">index_a</span> <span class="o">==</span> <span class="n">index_b</span>
+    <span class="p">}</span>
+    <span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">hash</span><span class="p">(</span><span class="n">into</span> <span class="nv">hasher</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Hasher</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It’ll generate an enum, and a few dozen or a few hundred lines worth of conformances. You’ll notice that Equatable implementation is based on a switch statement and numeric values rather than the string comparison you might have expected. Comparing integers is a lot faster than strings.</p>
+
+<p>But the important part is that it generates a very simple <code class="language-plaintext highlighter-rouge">stringValue</code> initializer and property. For int values, it just returns nil. It doesn’t support int values.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="n">stringValue</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="s">"name"</span><span class="p">:</span>
+    <span class="k">self</span> <span class="o">=</span> <span class="kt">Person</span><span class="o">.</span><span class="kt">CodingKeys</span><span class="o">.</span><span class="n">name</span>
+  <span class="k">default</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">nil</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">private</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">fileprivate</span> <span class="k">var</span> <span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="p">{</span>
+  <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">nil</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">fileprivate</span> <span class="k">var</span> <span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+  <span class="k">get</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nv">name</span><span class="p">:</span>
+      <span class="k">return</span> <span class="s">"name"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>What if we made a struct that did the same thing? Glad you asked:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AnyCodingKey</span><span class="p">:</span> <span class="kt">CodingKey</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">let</span> <span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span>
+
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span>
+
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">stringValue</span> <span class="o">=</span> <span class="n">stringValue</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">nil</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is my absolute favorite custom type and I use it all the time. This is its most minimal form, and the way you’ll see it pretty often in the wild. Lots of people have invented this under different names.</p>
+
+<p>The form I use is a <a href="https://github.com/rnapier/advanced-codable/blob/26a4b09c7647b169289512aa877f7e118b6442cc/Codable.playground/Pages/Defaulting.xcplaygroundpage/Contents.swift#L19-L35">little more fancy</a>. It supports Int keys, and most importantly it conforms to ExpressibleByStringLiteral so that I can use quoted strings as keys. But at its heart, it’s just this, a coding key that can wrap any String and so can be the key of any JSON object.</p>
+
+<p>Why do I love this struct so much? Well, for one, it gets rid of the need for defining CodingKeys.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Person</span><span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">var</span> <span class="nv">age</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">var</span> <span class="nv">children</span><span class="p">:</span> <span class="p">[</span><span class="kt">Person</span><span class="p">]?</span>
+<span class="p">}</span>
+
+<span class="nf">init</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="k">try</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">container</span><span class="p">(</span><span class="nv">keyedBy</span><span class="p">:</span> <span class="kt">AnyCodingKey</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+
+    <span class="n">name</span>     <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">String</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"name"</span><span class="p">)</span>
+    <span class="n">age</span>      <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Int</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"age"</span><span class="p">)</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="o">.</span><span class="nf">decodeIfPresent</span><span class="p">([</span><span class="kt">Person</span><span class="p">]</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"children"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The hard-coded string literals may cause you to freak out a little. But here’s the thing. If you’re only implementing Decodable or only implementing Encodable, that string will occur in exactly one place which is exactly the place you use it. That’s better than creating a hand-written constant somewhere else. And I generally recommend that you only implement Encodable or Decodable unless you need them both. Unneeded conformances just add headaches and overhead.</p>
+
+<p>And with this tool some really interesting, and ultimately quite simple, syntax is possible.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Decoder</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">anyKeyedContainer</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">KeyedDecodingContainer</span><span class="o">&lt;</span><span class="kt">AnyCodingKey</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="nf">container</span><span class="p">(</span><span class="nv">keyedBy</span><span class="p">:</span> <span class="kt">AnyCodingKey</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">KeyedDecodingContainer</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">subscript</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Decodable</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="kt">Key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="k">throws</span> <span class="p">{</span> <span class="k">try</span> <span class="k">self</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And now, custom decoding looks like this:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="k">try</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">anyKeyedContainer</span><span class="p">()</span>
+    <span class="n">name</span>  <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="p">[</span><span class="s">"name"</span><span class="p">]</span>
+    <span class="n">age</span>   <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="p">[</span><span class="s">"age"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>See my <a href="https://github.com/rnapier/advanced-codable/blob/main/Codable.playground/Sources/Decoder%2BAnyCodingKey.swift">advanced-codable</a> repo for lots of examples that handle optionals, default values, robust error handling, and more. But the point isn’t to build a fancy library. The point is that with just a few lines of code, you can implement the things you need for your specific problem. And that the starting point is AnyCodingKey.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -507,50 +674,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/talking">Talking and Teaching</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2016-11-29T10:35:09-05:00" pubdate data-updated="true">29 Nov 2016</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://twitter.com/pepibumur">Pedro Piñera</a> makes some important points in his article <a href="http://ppinera.es/2016/11/16/in-a-world.html">In a world…</a>. There are a number of things in there, and you should go read it, but I want to focus on one part, which is the observation that the core “iOS speaker circle” is a fairly small group of people. Pedro notes:</p>
-
-<blockquote>
-  <p>There’s a huge difference when you compare a talk from someone that has been working a lot on the topic and from someone that studied the topic for giving a talk. Why do people do it then? Talks with a lot of value usually come from unknown people. From these people that from the anonymity worked on a topic and they achieved something that they were willing to share. … People don’t care about the company that person had worked for, or the newsletter that the person had written, but instead, what that person wants to share.</p>
-</blockquote>
-
-<p>While I agree with Pedro’s concern, I disagree that this is the proper ideal.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/talking">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page2">&larr; Older</a>
@@ -568,7 +691,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2023 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2024 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

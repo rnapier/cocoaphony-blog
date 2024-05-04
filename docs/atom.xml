@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2023-03-12T18:22:36-04:00</updated>
+  <updated>2024-05-04T16:38:23-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -12,6 +12,148 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AnyCodingKey]]></title>
+    <link href="https://robnapier.net/anycodingkey"/>
+    <updated>2024-05-04T16:37:00-04:00</updated>
+    <id>https://robnapier.net/anycodingkey</id>
+    <content type="html"><![CDATA[<p>Let’s talk about CodingKey. It’s a protocol. It is not a magic enum thing. Coding keys do not have to be enums. There is some special compiler magic for when CodingKeys are enums, but it’s just a protocol.</p>
+
+<p>It’s something that wraps a string value, that may also wrap an int value. That’s it.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CodingKey</span> <span class="p">:</span> <span class="kt">CustomDebugStringConvertible</span><span class="p">,</span> <span class="kt">CustomStringConvertible</span><span class="p">,</span> <span class="kt">Sendable</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="nf">init</span><span class="p">?(</span><span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="k">var</span> <span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="nf">init</span><span class="p">?(</span><span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can see how the compiler generates automatic coding keys by running it through <code class="language-plaintext highlighter-rouge">swiftc -print-ast</code>. That will output the Abstract Syntax Tree as Swift code, after automatic conformances are injected.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% <span class="nb">echo</span> <span class="s1">'struct Person:Decodable { var name: String }'</span> | swiftc <span class="nt">-print-ast</span> -
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Output of `-print-ast`</span>
+<span class="kd">internal</span> <span class="kd">struct</span> <span class="kt">Person</span> <span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
+  <span class="kd">internal</span> <span class="k">var</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+  <span class="kd">private</span> <span class="kd">enum</span> <span class="kt">CodingKeys</span> <span class="p">:</span> <span class="kt">CodingKey</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">name</span>
+    <span class="kd">@_implements</span><span class="p">(</span><span class="kt">Equatable</span><span class="p">,</span> <span class="o">==</span><span class="p">(</span><span class="nv">_</span><span class="p">:</span><span class="nv">_</span><span class="p">:))</span> <span class="kd">fileprivate</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">__derived_enum_equals</span><span class="p">(</span><span class="n">_</span> <span class="nv">a</span><span class="p">:</span> <span class="kt">Person</span><span class="o">.</span><span class="kt">CodingKeys</span><span class="p">,</span> <span class="n">_</span> <span class="nv">b</span><span class="p">:</span> <span class="kt">Person</span><span class="o">.</span><span class="kt">CodingKeys</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+      <span class="kd">private</span> <span class="k">var</span> <span class="nv">index_a</span><span class="p">:</span> <span class="kt">Int</span>
+      <span class="k">switch</span> <span class="n">a</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="o">.</span><span class="nv">name</span><span class="p">:</span>
+        <span class="n">index_a</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="p">}</span>
+      <span class="kd">private</span> <span class="k">var</span> <span class="nv">index_b</span><span class="p">:</span> <span class="kt">Int</span>
+      <span class="k">switch</span> <span class="n">b</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="o">.</span><span class="nv">name</span><span class="p">:</span>
+        <span class="n">index_b</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="n">index_a</span> <span class="o">==</span> <span class="n">index_b</span>
+    <span class="p">}</span>
+    <span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">hash</span><span class="p">(</span><span class="n">into</span> <span class="nv">hasher</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Hasher</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It’ll generate an enum, and a few dozen or a few hundred lines worth of conformances. You’ll notice that Equatable implementation is based on a switch statement and numeric values rather than the string comparison you might have expected. Comparing integers is a lot faster than strings.</p>
+
+<p>But the important part is that it generates a very simple <code class="language-plaintext highlighter-rouge">stringValue</code> initializer and property. For int values, it just returns nil. It doesn’t support int values.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="n">stringValue</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="s">"name"</span><span class="p">:</span>
+    <span class="k">self</span> <span class="o">=</span> <span class="kt">Person</span><span class="o">.</span><span class="kt">CodingKeys</span><span class="o">.</span><span class="n">name</span>
+  <span class="k">default</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">nil</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">private</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">fileprivate</span> <span class="k">var</span> <span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="p">{</span>
+  <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">nil</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">fileprivate</span> <span class="k">var</span> <span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+  <span class="k">get</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nv">name</span><span class="p">:</span>
+      <span class="k">return</span> <span class="s">"name"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>What if we made a struct that did the same thing? Glad you asked:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AnyCodingKey</span><span class="p">:</span> <span class="kt">CodingKey</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">let</span> <span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span>
+
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span>
+
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">stringValue</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">stringValue</span> <span class="o">=</span> <span class="n">stringValue</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">intValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">nil</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is my absolute favorite custom type and I use it all the time. This is its most minimal form, and the way you’ll see it pretty often in the wild. Lots of people have invented this under different names.</p>
+
+<p>The form I use is a <a href="https://github.com/rnapier/advanced-codable/blob/26a4b09c7647b169289512aa877f7e118b6442cc/Codable.playground/Pages/Defaulting.xcplaygroundpage/Contents.swift#L19-L35">little more fancy</a>. It supports Int keys, and most importantly it conforms to ExpressibleByStringLiteral so that I can use quoted strings as keys. But at its heart, it’s just this, a coding key that can wrap any String and so can be the key of any JSON object.</p>
+
+<p>Why do I love this struct so much? Well, for one, it gets rid of the need for defining CodingKeys.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Person</span><span class="p">:</span> <span class="kt">Decodable</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">var</span> <span class="nv">age</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">var</span> <span class="nv">children</span><span class="p">:</span> <span class="p">[</span><span class="kt">Person</span><span class="p">]?</span>
+<span class="p">}</span>
+
+<span class="nf">init</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="k">try</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">container</span><span class="p">(</span><span class="nv">keyedBy</span><span class="p">:</span> <span class="kt">AnyCodingKey</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+
+    <span class="n">name</span>     <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">String</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"name"</span><span class="p">)</span>
+    <span class="n">age</span>      <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Int</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"age"</span><span class="p">)</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="o">.</span><span class="nf">decodeIfPresent</span><span class="p">([</span><span class="kt">Person</span><span class="p">]</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"children"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The hard-coded string literals may cause you to freak out a little. But here’s the thing. If you’re only implementing Decodable or only implementing Encodable, that string will occur in exactly one place which is exactly the place you use it. That’s better than creating a hand-written constant somewhere else. And I generally recommend that you only implement Encodable or Decodable unless you need them both. Unneeded conformances just add headaches and overhead.</p>
+
+<p>And with this tool some really interesting, and ultimately quite simple, syntax is possible.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Decoder</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">anyKeyedContainer</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">KeyedDecodingContainer</span><span class="o">&lt;</span><span class="kt">AnyCodingKey</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="nf">container</span><span class="p">(</span><span class="nv">keyedBy</span><span class="p">:</span> <span class="kt">AnyCodingKey</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">KeyedDecodingContainer</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">subscript</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Decodable</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="kt">Key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="k">throws</span> <span class="p">{</span> <span class="k">try</span> <span class="k">self</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And now, custom decoding looks like this:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">c</span> <span class="o">=</span> <span class="k">try</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">anyKeyedContainer</span><span class="p">()</span>
+    <span class="n">name</span>  <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="p">[</span><span class="s">"name"</span><span class="p">]</span>
+    <span class="n">age</span>   <span class="o">=</span> <span class="k">try</span> <span class="n">c</span><span class="p">[</span><span class="s">"age"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>See my <a href="https://github.com/rnapier/advanced-codable/blob/main/Codable.playground/Sources/Decoder%2BAnyCodingKey.swift">advanced-codable</a> repo for lots of examples that handle optionals, default values, robust error handling, and more. But the point isn’t to build a fancy library. The point is that with just a few lines of code, you can implement the things you need for your specific problem. And that the starting point is AnyCodingKey.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Littlest Type]]></title>
@@ -2374,199 +2516,6 @@ Think types. Your function returns “either X or an error.” And sometimes, yo
 can promise it’ll only return X.</p>
 
 <p>Throw in peace.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Throw What Don't Throw]]></title>
-    <link href="https://robnapier.net/throw-what-dont-throw"/>
-    <updated>2015-06-16T20:58:00-04:00</updated>
-    <id>https://robnapier.net/throw-what-dont-throw</id>
-    <content type="html"><![CDATA[<p>So say you are trying out all this interesting new <code class="language-plaintext highlighter-rouge">throw</code> stuff in Swift 2. And
-say you’re running an early Beta in which many stdlib functions don’t handle
-throw closures yet. Or maybe you’re in the future and dealing with some other
-piece of code that you wish could handle a throw closure, but doesn’t. What do
-you do?
-<!-- more --></p>
-
-<p>By now you may be asking “what the heck is a throw closure? Talk sense, man!”
-Let’s take a small step back and quickly introduce the new <code class="language-plaintext highlighter-rouge">throws</code> feature.
-That’s not the point of this article, though. You should go watch the WWDC
-videos. But basically, it’s like this. Say you have a function that might fail.
-In Swift 2, you can write it this way:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum Error: ErrorType { case Negative }
-
-let f: (Int) throws -&gt; String = {
-    guard $0 &gt;= 0 else { throw Error.Negative }
-    return "".join(Repeat(count: $0, repeatedValue: "X"))
-}
-</code></pre></div></div>
-
-<p>First, the <code class="language-plaintext highlighter-rouge">throws</code> in the signature tells us that this function may throw.
-Functions may not throw errors unless they explicitly indicate that they can.</p>
-
-<p>You might think of “throwing errors” as equivalent to “exceptions” in languages
-you’re familiar with, but it’s a little different. A throw is really just a
-fancy return. A throwing function can return <em>either</em> a type or an <code class="language-plaintext highlighter-rouge">ErrorType</code>.
-And “throws” is probably best thought of as somewhat opaque sugar around an
-Either type.</p>
-
-<p>That tells us something very important:</p>
-
-<blockquote>
-  <p>A function that throws errors is a different <em>type</em> than one that doesn’t.</p>
-</blockquote>
-
-<p>I don’t mean that it’s “some other kind of thing.” I mean like <code class="language-plaintext highlighter-rouge">Int</code> is a
-different type than <code class="language-plaintext highlighter-rouge">String</code>, and <code class="language-plaintext highlighter-rouge">String</code> is a different type than <code class="language-plaintext highlighter-rouge">(Int) -&gt;
-String</code>, <code class="language-plaintext highlighter-rouge">(Int) -&gt; String</code> is a different type than <code class="language-plaintext highlighter-rouge">(Int) throws -&gt; String</code>. In
-fact, <code class="language-plaintext highlighter-rouge">(Int) -&gt; String</code> is a <em>subtype</em> of <code class="language-plaintext highlighter-rouge">(Int) throws -&gt; String</code>, which is
-pretty awesome and a little subtle, but we’ll get to that in another post.</p>
-
-<p>So what does that mean? Let’s think of a simple case of map today (Swift 2 Beta
-1):</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>print([1,2,3].map(f)) // Cannot invoke 'map' with an argument list of type '((Int) throws -&gt; String)'
-</code></pre></div></div>
-
-<p>What’s going on here? Let’s look at the type signature:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T&gt;(@noescape transform: (Self.Generator.Element) -&gt; T) -&gt; [T]
-</code></pre></div></div>
-
-<p>So <code class="language-plaintext highlighter-rouge">transform</code> is of type <code class="language-plaintext highlighter-rouge">(Element) -&gt; T</code>. We’re passing <code class="language-plaintext highlighter-rouge">(Element) throws -&gt;
-T</code>. Remember I said that a non-throwing function is a subtype of a throwing
-function. So <code class="language-plaintext highlighter-rouge">(Element) throws -&gt; T</code> is a <em>supertype</em> of what what this function
-wants. That’s like passing NSObject to something that wants UIView. You can’t do
-that.</p>
-
-<p>So what do we do? Well for map, this is easy. We can just implement our own throwing version:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
-    func map&lt;T&gt;(@noescape transform: (Generator.Element) throws -&gt; T) rethrows -&gt; [T] {
-        var result: [T] = []
-        for x in self {
-            result.append(try transform(x))
-        }
-        return result
-    }
-}
-</code></pre></div></div>
-
-<p>And now we can use it:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>print(try [1,2,3].map(f))
-</code></pre></div></div>
-
-<p>Notice the use of <code class="language-plaintext highlighter-rouge">try</code>. This is pretty different than how <code class="language-plaintext highlighter-rouge">try</code> is used in
-other langauges, and another way that Swift’s error handling doesn’t quite match
-“exceptions.” Swift uses <code class="language-plaintext highlighter-rouge">try</code> to remind the programmer about functions that
-may throw errors. The compiler doesn’t need <code class="language-plaintext highlighter-rouge">try</code>. It doesn’t create scope, or
-mark control flow points, or anything like that. It’s not a function or a
-constructor. It’s just a keyword that Swift forces you to include so that <em>you</em>
-(and your coworkers) remember what’s going on. When you see <code class="language-plaintext highlighter-rouge">try</code>, you should
-think “hey, control could suddenly jump somewhere else from this point.” It
-reduces surprise when that happens, and conversely tells you where control
-<em>can’t</em> suddenly jump (i.e. everywhere without <code class="language-plaintext highlighter-rouge">try</code>). I think that’s pretty
-nice.</p>
-
-<p>You may also notice both <code class="language-plaintext highlighter-rouge">throws</code> and <code class="language-plaintext highlighter-rouge">rethrows</code> in the method signature. I’ll
-get to that in a later blog post. Just trust me for now. This code would also
-work if you used <code class="language-plaintext highlighter-rouge">throws</code> in both places, but this is the better signature.</p>
-
-<p>And one more “also notice.” Also notice that this is an <em>overload</em> of map. The
-closures have different types, so the compiler can pick the right one. Nice.</p>
-
-<p>OK, that was a lot of setup, and you could probably figure out on your own how
-to rewrite map this way. And besides, by beta 2, I’m sure there will be a
-proper (re)throwing version of map. So why bother? For the next step.</p>
-
-<p>I know how map is implemented. It’s really simple. But what if I <em>didn’t</em> know
-how it was implemented? How about some function that I’m not sure I could write
-correctly? How about a more obscure function that may not get throwing love
-quite so quickly? How about <code class="language-plaintext highlighter-rouge">Array.withUnsafeBufferPointer</code>? Ooohhh….</p>
-
-<p>So here’s our signature:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func withUnsafeBufferPointer&lt;R&gt;(@noescape body: (UnsafeBufferPointer&lt;T&gt;) -&gt; R) -&gt; R
-</code></pre></div></div>
-
-<p>We want to accept a <code class="language-plaintext highlighter-rouge">body</code> that can throw, but we want to pass it to the
-existing method, which can’t accept a throwing closure. So what do we do? We go
-back to our old friend, Result. Here’s a super-simple Result implementation that
-can convert to and from throwing closures:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum Result&lt;T&gt; {
-    case Success(T)
-    case Failure(ErrorType)
-
-    func value() throws -&gt; T {
-        switch self {
-        case .Success(let value): return value
-        case .Failure(let err): throw err
-        }
-    }
-
-    init(@noescape f: () throws -&gt; T) {
-        do    { self = .Success(try f()) }
-        catch { self = .Failure(error) }
-    }
-}
-</code></pre></div></div>
-
-<p>If you’re familiar with Result or Either, this should be pretty self-evident,
-but the key pieces are that <code class="language-plaintext highlighter-rouge">result.value()</code> will unwrap the result into either
-a value or a thrown error. And <code class="language-plaintext highlighter-rouge">init</code> will take a throwing closure and convert
-it into a Result. With that piece, here’s how we build our method:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
-    func withUnsafeBufferPointer&lt;R&gt;(@noescape body: (UnsafeBufferPointer&lt;T&gt;) throws -&gt; R) throws -&gt; R {
-        return try self.withUnsafeBufferPointer { buf in
-            return Result{ try body(buf) }
-            }.value()
-    }
-}
-</code></pre></div></div>
-
-<p>The closure <code class="language-plaintext highlighter-rouge">body</code> is of type <code class="language-plaintext highlighter-rouge">(UnsafeBufferPointer&lt;T&gt;) throws -&gt; R</code>, which we
-can’t pass to <code class="language-plaintext highlighter-rouge">withUnsafeBufferPointer</code>. But <em>our</em> closure is of type
-<code class="language-plaintext highlighter-rouge">(UnsafeBufferPointer&lt;T&gt;) -&gt; Result&lt;R&gt;</code>, which is just fine (no throws here,
-move along).</p>
-
-<p>Let’s walk through the closure from the inside out.</p>
-
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">try body(buf)</code>. Execute our throwing closure using the <code class="language-plaintext highlighter-rouge">buf</code> provided to us by the default implementation.</li>
-  <li><code class="language-plaintext highlighter-rouge">Result{...}</code>. Capture it into a Result enum</li>
-  <li><code class="language-plaintext highlighter-rouge">return Result{...}</code>. Return the Result, not the underlying value.</li>
-  <li>The whole function nows looks like <code class="language-plaintext highlighter-rouge">return try result.value()</code></li>
-  <li>This either returns the computed value (type <code class="language-plaintext highlighter-rouge">R</code>), or throws</li>
-</ol>
-
-<p>This method is marked <code class="language-plaintext highlighter-rouge">throws</code> rather than <code class="language-plaintext highlighter-rouge">rethrows</code> because … reasons. (The
-final throw doesn’t come directly from <code class="language-plaintext highlighter-rouge">body</code>, but from <code class="language-plaintext highlighter-rouge">value()</code>. That’ll
-hopefully make more sense when I explain <code class="language-plaintext highlighter-rouge">rethrows</code>.)</p>
-
-<p>And just for completeness (and because I needed it myself), we can do the same
-thing to <code class="language-plaintext highlighter-rouge">withUnsafeMutableBufferPointer</code>, but we need to give the compiler more
-type information because of the <code class="language-plaintext highlighter-rouge">inout</code> parameter:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Array {
-    mutating func withUnsafeMutableBufferPointer&lt;R&gt;(@noescape body: (inout UnsafeMutableBufferPointer&lt;T&gt;) throws -&gt; R) throws-&gt; R {
-        return try self.withUnsafeMutableBufferPointer { (inout buf: UnsafeMutableBufferPointer&lt;T&gt;) in
-            return Result{try body(&amp;buf)}}.value()
-    }
-}
-</code></pre></div></div>
-
-<p>These particular implementations probably won’t be useful for long. I’m sure the
-stdlib team will quickly clean this up (and you probably shouldn’t be using
-<code class="language-plaintext highlighter-rouge">withUnsafeBufferPointer</code> very much anyway). But hopefully exploring how this
-works can give some insight into Swift’s new error handling system. Result isn’t
-dead; it still has interesting use cases like this one. But I expect those use
-cases to shrink, and I highly recommend exploring the new error handling and
-discover how to build great things with it.</p>
 ]]></content>
   </entry>
   

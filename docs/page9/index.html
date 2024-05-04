@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="PandoraBoy’s user interface is pretty screwed up since the recent Pandora update. I’ve talked with Pandora and it’s a known problem with WebKit. You’ &hellip;">
+  <meta name="description" content="Now that we’re past the New Year, and I have a chance to reorganize my schedule, I’m working up my next series of postings. While you’re all &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -47,6 +47,7 @@
   <li><a href="/">Blog</a></li>
   <li><a href="/archives">Archives</a></li>
   <li><a href="/talks">Talks</a></li>
+  <li><a href="https://cocoaphony.micro.blog">micro.blog</a></li>
 </ul>
 
 </nav>
@@ -54,6 +55,39 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/gotoandplay">gotoAndPlay</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2010-01-08T10:45:43-05:00" pubdate data-updated="true">08 Jan 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Now that we’re past the New Year, and I have a chance to reorganize my schedule, I’m working up my next series of postings. While you’re all patiently waiting, go read <a href="http://gotoandplay.freeblog.hu">gotoAndPlay</a>. I started out helping Geri on some <a href="http://stackoverflow.com/questions/2016394/set-opacity-of-a-cglayer-before-draw">layer</a> drawing <a href="http://stackoverflow.com/questions/2024376/drawing-a-cglayer-outside-the-method-drawrect-faster/2024421">questions</a> on StackOverflow, and have really gotten interested in his efforts to make his apps really beautiful.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -422,45 +456,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/view-controllers-notifications">View Controllers and Notifications</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2009-08-05T14:33:56-04:00" pubdate data-updated="true">05 Aug 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Observing NSNotifications in a view control is a good thing. But remember, just because you’re not onscreen doesn’t mean that you’re not still observing. This is particularly noteworthy on iPhone, where your view can get dropped any time memory is tight and you’re offscreen, but it can bite you anywhere.</p>
-
-<p>ViewControllers, WindowControllers and other UI controllers are often better off registering and uregistering for notifications when they are put on and off the screen rather than when they are allocated and deallocated. This often means that they will need to update their state when put on screen. For example, an icon indicating “connected” might be part of a StatusViewController. When StatusView comes on screen, StatusViewController should update the connected status and then begin observing changes on it. When StatusView goes off screen, StatusViewController should stop observing.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/view-controllers-notifications">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page10">&larr; Older</a>
@@ -480,7 +475,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2023 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2024 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

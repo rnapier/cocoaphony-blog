@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Just a reminder, because the template doesn’t seem to set this up correctly. To build an Address Book action plugin for 10.6, you need to compile for &hellip;">
+  <meta name="description" content="For those of you having trouble with Flash 10.1, I’ve fixed PB to handle it. This moves from the hackish “dig around in the NetscapePlugin objects &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -47,6 +47,7 @@
   <li><a href="/">Blog</a></li>
   <li><a href="/archives">Archives</a></li>
   <li><a href="/talks">Talks</a></li>
+  <li><a href="https://cocoaphony.micro.blog">micro.blog</a></li>
 </ul>
 
 </nav>
@@ -54,6 +55,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-082-fixes-flash">PandoraBoy 0.8.2 - Fixes Flash</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2010-07-15T23:30:24-04:00" pubdate data-updated="true">15 Jul 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those of you having trouble with Flash 10.1, I’ve fixed PB to handle it. This moves from the hackish “dig around in the NetscapePlugin objects and call undocumented methods” approach to a standard CGEvent based keyboard injection. You can’t use NSApp’s sendEvent: to talk to Flash (probably because Flash is not in Cocoa). But the following code is a good general purpose “send me a virtual keystroke.”
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/pandoraboy-082-fixes-flash">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -408,39 +446,6 @@ NSLog(@"%s", 1);
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/gotoandplay">gotoAndPlay</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2010-01-08T10:45:43-05:00" pubdate data-updated="true">08 Jan 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Now that we’re past the New Year, and I have a chance to reorganize my schedule, I’m working up my next series of postings. While you’re all patiently waiting, go read <a href="http://gotoandplay.freeblog.hu">gotoAndPlay</a>. I started out helping Geri on some <a href="http://stackoverflow.com/questions/2016394/set-opacity-of-a-cglayer-before-draw">layer</a> drawing <a href="http://stackoverflow.com/questions/2024376/drawing-a-cglayer-outside-the-method-drawrect-faster/2024421">questions</a> on StackOverflow, and have really gotten interested in his efforts to make his apps really beautiful.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page9">&larr; Older</a>
@@ -460,7 +465,7 @@ NSLog(@"%s", 1);
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2023 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2024 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

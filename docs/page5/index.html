@@ -9,7 +9,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Here are some useful links you’re probably looking for. Rich Text, Core Text Presentation Zapfino Extra Pro Understanding Bidirectional (BIDI) Text &hellip;">
+  <meta name="description" content="During CocoaConf-2012-Raleigh, I discussed my PinchView from Laying out text with Core Text. It’s a text view that squeezes the glyphs towards your &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -47,6 +47,7 @@
   <li><a href="/">Blog</a></li>
   <li><a href="/archives">Archives</a></li>
   <li><a href="/talks">Talks</a></li>
+  <li><a href="https://cocoaphony.micro.blog">micro.blog</a></li>
 </ul>
 
 </nav>
@@ -54,6 +55,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/animating-arbitrary-keypaths">Animating Arbitrary KeyPaths</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2012-12-17T21:44:41-05:00" pubdate data-updated="true">17 Dec 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>During <a href="http://cocoaconf.com/raleigh-2012/home">CocoaConf-2012-Raleigh</a>, I discussed my PinchView from <a href="http://robnapier.net/blog/laying-out-text-with-coretext-547">Laying out text with Core Text</a>. It’s a text view that squeezes the glyphs towards your finger when you touch it. I built it to demonstrate per-glyph layout in Core Text. While demonstrating it, I was pretty unsatisfied with how it looked when you touched it or let go. When you drag your finger on the view, the glyphs move around like water. It’s quite pretty. But when you initially touch the screen, the glyphs suddenly jump to their new locations, and then they jump back when you release the screen. Well, that’s no good. So I wanted to add animations.</p>
+
+<p>But here’s the thing: what do you animate? While you do want to animate the glyph positions, you’re not doing it directly. The location of each glyph is dependent on the location of the current touch. What you want to animate is how much the touch impacts the glyph positions. A quick look over CALayer’s list of animatable properties confirmed that there’s nothing like that. But no problem, I added a custom property called <code class="language-plaintext highlighter-rouge">touchPointScale</code> and animated that. (I cover animating custom properties in the Layers chapter of <a href="http://iosptl.com">iOS:PTL</a>, and I still have to pull out that chapter every time to remind myself how to do it. Ole Begemann has a <a href="http://stackoverflow.com/questions/2395382/animating-a-custom-property-of-calayer-subclass">good, quick writeup</a> on Stack Overflow.)
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/animating-arbitrary-keypaths">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -419,44 +459,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/github-pricing">Github and Its Pricing</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2012-03-30T22:48:49-04:00" pubdate data-updated="true">30 Mar 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I’ve been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It’s a good interface. It works. I could use a few more features in the Issues module, but it’s nice that they keep it simple. I’ve tried BitBucket and Assembla, and looked at several others. I’ve managed my own servers. In every test, github wins.</p>
-
-<p>Except for price. github is often the most expensive. Especially if you need what I need, which is several small repositories, each with a small number of collaborators (often just one or two). But just a few of those can push you into the Medium plan, or even into the Bronze plan.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/github-pricing">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page6">&larr; Older</a>
@@ -476,7 +478,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2023 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  Copyright &copy; 2024 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

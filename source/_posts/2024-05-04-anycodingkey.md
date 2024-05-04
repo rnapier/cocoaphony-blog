@@ -1,8 +1,8 @@
 ---
 layout: post
 title: AnyCodingKey
+date: 2024-05-04 16:37 -0400
 ---
-
 Let’s talk about CodingKey. It’s a protocol. It is not a magic enum thing. Coding keys do not have to be enums. There is some special compiler magic for when CodingKeys are enums, but it’s just a protocol.
 
 It’s something that wraps a string value, that may also wrap an int value. That’s it.
@@ -96,7 +96,7 @@ public struct AnyCodingKey: CodingKey {
 
 This is my absolute favorite custom type and I use it all the time. This is its most minimal form, and the way you’ll see it pretty often in the wild. Lots of people have invented this under different names.
 
-The form I use is a little more complicated. It supports Int keys, and most importantly it conforms to ExpressibleByStringLiteral so that I can use quoted strings as keys. But at its heart, it’s just this, a coding key that can wrap any String and so can be the key of any JSON object.
+The form I use is a [little more fancy](https://github.com/rnapier/advanced-codable/blob/26a4b09c7647b169289512aa877f7e118b6442cc/Codable.playground/Pages/Defaulting.xcplaygroundpage/Contents.swift#L19-L35). It supports Int keys, and most importantly it conforms to ExpressibleByStringLiteral so that I can use quoted strings as keys. But at its heart, it’s just this, a coding key that can wrap any String and so can be the key of any JSON object.
 
 Why do I love this struct so much? Well, for one, it gets rid of the need for defining CodingKeys. 
 
@@ -117,3 +117,31 @@ init(from decoder: Decoder) throws {
 ```
 
 The hard-coded string literals may cause you to freak out a little. But here’s the thing. If you’re only implementing Decodable or only implementing Encodable, that string will occur in exactly one place which is exactly the place you use it. That’s better than creating a hand-written constant somewhere else. And I generally recommend that you only implement Encodable or Decodable unless you need them both. Unneeded conformances just add headaches and overhead.
+
+And with this tool some really interesting, and ultimately quite simple, syntax is possible.
+
+```swift
+extension Decoder {
+    public func anyKeyedContainer() throws -> KeyedDecodingContainer<AnyCodingKey> {
+        try container(keyedBy: AnyCodingKey.self)
+    }
+}
+
+extension KeyedDecodingContainer {
+    public subscript<T: Decodable>(key: Key) -> T {
+        get throws { try self.decode(T.self, forKey: key) }
+    }
+}
+```
+
+And now, custom decoding looks like this:
+
+```swift
+init(from decoder: Decoder) throws {
+    let c = try decoder.anyKeyedContainer()
+    name  = try c["name"]
+    age   = try c["age"]
+}
+```
+
+See my [advanced-codable](https://github.com/rnapier/advanced-codable/blob/main/Codable.playground/Sources/Decoder%2BAnyCodingKey.swift) repo for lots of examples that handle optionals, default values, robust error handling, and more. But the point isn't to build a fancy library. The point is that with just a few lines of code, you can implement the things you need for your specific problem. And that the starting point is AnyCodingKey.
