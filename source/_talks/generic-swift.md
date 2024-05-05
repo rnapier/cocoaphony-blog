@@ -2,7 +2,7 @@
 layout: talk
 title: "Generic Swift: It Isn't Supposed to Hurt"
 repo: https://github.com/rnapier/generics
-talk_date: 2019-08-25
+talk_date: 2019-04-17
 presentations:
   - conference: FrenchKit 2019
     date: 2019-10-07
@@ -15,14 +15,16 @@ presentations:
   - conference: AltConf 2019
     date: 2019-07-05
     video: https://youtu.be/DXwJg0QTlZE
+  - conference: 360iDev 2019
+    date: 2019-08-25
+    notes: 4 hour workshop
   - conference: PhillyETE 2019
     date: 2019-04-23
     conference_link: https://2019.phillyemergingtech.com
     video: https://youtu.be/_m6DxTEisR8
     highlight: true
-  - conference: 360iDev 2019
-    date: 2019-08-25
-    notes: 4 hour workshop
+  - conference: Swift by Midwest, 2019
+    date: 2019-04-17
 ---
 They said Swift is “protocol oriented,” so you wrote protocols. But you wanted
 them to be generic, so you added associated types. But your collections broke,

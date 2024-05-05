@@ -1,26 +1,26 @@
 ---
 layout: talk
 title: "Learning From Our Elders"
-talk_date: 2017
+talk_date: 2017-01-26
 presentations:
-  - conference: AppsConf
+  - conference: AppsConf, 2018
     date: 2018-10-08
     conference_link: https://appsconf.ru/2018/abstracts/3725
     video: https://youtu.be/CUwYDP_JhrA
-  - conference: Mobile Developer's Summit (MODS)
+  - conference: Mobile Developer's Summit (MODS), 2017
     date: 2017-10-05  
-  - conference: CocoaConf, San Jose
-    date: 2017-06-08
-  - conference: 360 iDev
+  - conference: 360 iDev, 2017
     date: 2017-08-15
     video: https://youtu.be/bD1ucQ5UfN0
-  - conference: UIKonf
+  - conference: CocoaConf, San Jose, 2017
+    date: 2017-06-08
+  - conference: UIKonf, 2017
     date: 2017-05-16
     video: https://youtu.be/c3Kg3c8vqsc
     highlight: true
-  - conference: CocoaConf Chicago
-    date:  2017-04-21
-  - conference: CocoaHeads RTP
+  - conference: CocoaConf Chicago, 2017
+    date: 2017-04-21
+  - conference: CocoaHeads RTP, 2017
     date: 2017-01-26
     video: https://vimeo.com/204897590
 

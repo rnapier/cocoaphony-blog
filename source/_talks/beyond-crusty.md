@@ -3,7 +3,7 @@ layout: talk
 title: "Beyond Crusty: Real-World Protocols"
 talk_date: 2016-01-29
 presentations:
-  - conference: dotSwift, Jan 2016
+  - conference: dotSwift, 2016
     date: 2016-01-29
     conference_link: http://2016.dotswift.io
     video: https://youtu.be/QCxkaTj7QJs
