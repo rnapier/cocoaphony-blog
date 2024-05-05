@@ -6,13 +6,11 @@ title: Talks
 {% for talk in site.talks %}
 ## {{ talk.title | link: talk.url }}
 
-### Presentations
+{% assign highlight = talk.presentations | where: "highlight", true | last %}
 
-| Date | Conference | Video | Notes |
-|------|------------|-------|-------|
-{% for pres in talk.presentations -%}
-| {{ pres.date }} | {{ pres.conference | link: pres.conference_link }} | {% if pres.video %}[link]({{ pres.video }}){% endif -%} | {{ pres.notes }} |
-{% endfor %}
+* Repository: {{ talk.repo | link: talk.repo }}
+{% if highlight %}* Video: {{ highlight.conference | link: highlight.video }}{% endif %}
+
 {% endfor %}
 
 ## Kids Today
