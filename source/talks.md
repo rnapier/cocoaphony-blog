@@ -3,7 +3,7 @@ layout: page
 title: Talks
 ---
 
-{% assign talks = site.talks | sort: "year" | reverse %}
+{% assign talks = site.talks | sort: "talk_date" | reverse %}
 
 {% for talk in talks %}
 ## {{ talk.title | link: talk.url }}
@@ -14,27 +14,12 @@ title: Talks
 
 {% endfor %}
 
-## Kids Today
-
-* [PhillyETE, May 2019](https://2019.phillyemergingtech.com) - [video](https://youtu.be/TPDoiZZxRrg)
-* [CocoaConf Chicago, 2017]()
-* [CocoaConf Yosemite, 2017]()
-
-## Learning From Our Elders
-
-* [CocoaConf Chicago, 2017]()
-* [CocoaConf SJ, Jun 2017]()
-* [UIKonf, May 2017]() - [video](https://youtu.be/c3Kg3c8vqsc)
-* [AppsConf, May 2019](https://appsconf.ru/spb/2019) - [video](https://youtu.be/CUwYDP_JhrA)
-* [360 iDev, Nov 2017]() - [video](https://youtu.be/bD1ucQ5UfN0)
-* [Mobile Developer's Summit (MODS), 2017]()
-* CocoaHeads RTP 2017 - [video](https://vimeo.com/204897590)
-
 ## Practical Security
 
 * [DevFest Triangle, Sep 2019](https://devfest.gdgtriangle.com/home)
 * [Istanbul Tech Talks, Sep 2017]() - [video](https://youtu.be/c-77CxUKCZo)
 * [360iDev, Dev 2017]() - [video](https://youtu.be/8YkaC7yfUrQ)
+* CocoaConf SJ, Jun 6, 2017
 * CocoaConf DC, 2016
 * CocoaConf Seattle, 2016
 * CocoaConf DC, 2013
