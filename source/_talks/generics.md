@@ -1,21 +1,22 @@
 ---
+layout: talk
 title: "Generic Swift: It Isn't Supposed to Hurt"
-url: https://github.com/rnapier/generics
+repo: https://github.com/rnapier/generics
 presentations:
   - conference: FrenchKit 2019
     date: 2019-10-07
-    conference-url: https://frenchkit.fr
+    conference_link: https://frenchkit.fr
     video: https://youtu.be/RvSoXVxN7Aw
     notes: also a 90 minute masterclass
   - conference: SwiftFest 2019
     date: 2019-07-29
-    conference-url: https://swiftfest.io/schedule/#session-020
+    conference_link: https://swiftfest.io/schedule/#session-020
   - conference: AltConf 2019
     date: 2019-07-05
     video: https://youtu.be/DXwJg0QTlZE
   - conference: PhillyETE 2019
     date: 2019-04-23
-    conference-url: https://2019.phillyemergingtech.com
+    conference_link: https://2019.phillyemergingtech.com
     video: https://youtu.be/_m6DxTEisR8
   - conference: 360iDev 2019
     date: 2019-08-25

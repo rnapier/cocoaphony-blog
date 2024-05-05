@@ -143,7 +143,7 @@ Now, if only we had a way to figure out all those constants easily. We could do 
 
 Bless you Wolfram. You are my hero.
 
-So we head over to Wolfram|Alpha and ask it to <a href="http://www.wolframalpha.com/input/?i=expand+%281-t%29%5E3+P_0+%2B+3+%281-t%29%5E2+t+P_1+%2B+3+%281-t%29+t%5E2+P_2+%2B+t%5E3+P_3">expand the Bézier equation</a> for us:
+So we head over to Wolfram\|Alpha and ask it to <a href="http://www.wolframalpha.com/input/?i=expand+%281-t%29%5E3+P_0+%2B+3+%281-t%29%5E2+t+P_1+%2B+3+%281-t%29+t%5E2+P_2+%2B+t%5E3+P_3">expand the Bézier equation</a> for us:
 
 ```
 expand (1-t)^3 P_0 + 3 (1-t)^2 t P_1 + 3 (1-t) t^2 P_2 + t^3 P_3

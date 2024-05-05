@@ -4,18 +4,16 @@ title: Talks
 ---
 
 {% for talk in site.talks %}
-## {{ talk.title }}
+## {{ talk.title | link: talk.url }}
 
-{% for pres in talk.presentations %}
-* {{ pres.conference | link: pres.conference-url }}
+### Presentations
+
+| Date | Conference | Video | Notes |
+|------|------------|-------|-------|
+{% for pres in talk.presentations -%}
+| {{ pres.date }} | {{ pres.conference | link: pres.conference_link }} | {% if pres.video %}[link]({{ pres.video }}){% endif -%} | {{ pres.notes }} |
 {% endfor %}
-{{ talk.content }}
 {% endfor %}
-
-
-## Beyond Crusty: Real-World Protocols
-
-* [dotSwift, Jan 2016](http://2016.dotswift.io) - [video](https://youtu.be/QCxkaTj7QJs)
 
 ## Kids Today
 

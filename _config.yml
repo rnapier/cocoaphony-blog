@@ -43,7 +43,8 @@ plugins_dir: plugins
 subscribe_rss: /atom.xml
 
 collections:
-  - talks
+  talks:
+    output: true
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

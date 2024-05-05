@@ -1,0 +1,30 @@
+---
+layout: page
+---
+
+{{ content }}
+
+{% if page.repo %}<p><strong>Repository:</strong> <a href="{{ page.repo }}">{{ page.repo }}</a>{% endif %}
+
+<h3 id="presentations">Presentations</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Conference</th>
+      <th>Video</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for pres in page.presentations %}
+    <tr>
+      <td>{{ pres.date }}</td>
+      <td><a href="{{ pres.conference_link }}">{{ pres.conference }}</a></td>
+      <td>{% if pres.video %}<a href="{{ pres.video }}">link</a>{% endif %}</td>
+      <td>{{ pres.notes }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>    

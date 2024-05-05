@@ -1,3 +1,5 @@
+/* CSS Reset */
+
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
 pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd,
 q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt,
@@ -49,6 +51,9 @@ article, aside, details, figcaption, figure, footer, header, hgroup,
 menu, nav, section, summary {
     display: block
 }
+
+/* END CSS RESET */
+
 
 a {
     color: #1863a1
@@ -356,7 +361,7 @@ article blockquote cite:before {
 .group, body > header, body > nav, body > footer, body #content > article,
 body #content > div > article, body #content > div > section, body div.pagination,
 aside.sidebar, #main, #content, .sidebar {
-    * zoom: 1
+    zoom: 1
 }
 
 .group:after, body > header:after, body > nav:after, body > footer:after,
@@ -1735,7 +1740,7 @@ figure.code .highlight {
     margin-bottom: 0
 }
 
-.code-title, html .gist .gist-file .gist-meta a[href * ='#file'], h3.filename,
+.code-title, html .gist .gist-file .gist-meta a[href='#file'], h3.filename,
 figure.code figcaption {
     text-align: center;
     font-size: 13px;
@@ -1759,7 +1764,7 @@ figure.code figcaption {
     border-bottom: 0
 }
 
-.download-source, html .gist .gist-file .gist-meta a[href * =raw], figure.code figcaption a {
+.download-source, html .gist .gist-file .gist-meta a[href=raw], figure.code figcaption a {
     position: absolute;
     right: .8em;
     text-decoration: none;
@@ -1770,7 +1775,7 @@ figure.code figcaption {
     padding-left: 3em
 }
 
-.download-source:hover, html .gist .gist-file .gist-meta a[href * =raw]:hover,
+.download-source:hover, html .gist .gist-file .gist-meta a[href=raw]:hover,
 figure.code figcaption a:hover {
     text-decoration: underline
 }
@@ -2213,8 +2218,25 @@ sup {
 }
 
 p code, li code {
-/*     background: none; /* border:none; */ */
     padding: 0;
     margin: 0
 }
 
+/* Table borders */
+/* Table with simple borders with comfortable padding. */
+table {
+    border-collapse: collapse;
+    margin-bottom: 1.5em;
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 0.6em 0.8em;
+    border: 1px solid #ddd;
+    text-align: left
+}
+
+th {
+    background: #ddd;
+    font-weight: bold
+}
