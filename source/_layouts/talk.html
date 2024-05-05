@@ -19,7 +19,7 @@ layout: page
   </thead>
   <tbody>
     {% for pres in page.presentations %}
-    <tr>
+    <tr {% if pres.highlight %}class="talk-highlight"{% endif %}>
       <td>{{ pres.date }}</td>
       <td><a href="{{ pres.conference_link }}">{{ pres.conference }}</a></td>
       <td>{% if pres.video %}<a href="{{ pres.video }}">link</a>{% endif %}</td>

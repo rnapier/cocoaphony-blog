@@ -3,12 +3,13 @@ layout: page
 title: Talks
 ---
 
-{% for talk in site.talks %}
+{% assign talks = site.talks | sort: "year" | reverse %}
+
+{% for talk in talks %}
 ## {{ talk.title | link: talk.url }}
 
-{% assign highlight = talk.presentations | where: "highlight", true | last %}
-
-* Repository: {{ talk.repo | link: talk.repo }}
+{% assign highlight = talk.presentations | where: "highlight", true | first %}
+{% if talk.repo %}* Repository: {{ talk.repo | link: talk.repo }}{% endif %}
 {% if highlight %}* Video: {{ highlight.conference | link: highlight.video }}{% endif %}
 
 {% endfor %}

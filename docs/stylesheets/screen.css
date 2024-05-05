@@ -2223,7 +2223,6 @@ p code, li code {
 }
 
 /* Table borders */
-/* Table with simple borders with comfortable padding. */
 table {
     border-collapse: collapse;
     margin-bottom: 1.5em;
@@ -2239,4 +2238,10 @@ th, td {
 th {
     background: #ddd;
     font-weight: bold
+}
+
+/* Talk highlights */
+.talk-highlight td {
+    font-weight: bold;
+    background-color: lightyellow;
 }
