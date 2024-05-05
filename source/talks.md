@@ -10,13 +10,9 @@ title: Talks
 
 {% assign highlight = talk.presentations | where: "highlight", true | first %}
 {% if talk.repo %}* Repository: {{ talk.repo | link: talk.repo }}{% endif %}
-{% if highlight %}* Video: {{ highlight.conference | link: highlight.video }}{% endif %}
+{% if highlight and highlight.video %}* Video: {{ highlight.conference | link: highlight.video }}{% endif %}
 
 {% endfor %}
-
-## Once More, With Types
-
-* [Do iOS, Dec 2016]() - [video](https://youtu.be/_S6UOrwS-Tg)
 
 ## To be! Or not? Optionals in Practice
 
