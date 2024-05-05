@@ -12,6 +12,8 @@ presentations:
     date: 2019-04-24
     conference_link: https://2019.phillyemergingtech.com
     video: https://youtu.be/TPDoiZZxRrg
+  - conference: Mobile Developers Summit (MODS)
+    date: 2017-10-05
   - conference: CocoaConf Chicago
     date: 2017-04-21
   - conference: CocoaConf Yosemite

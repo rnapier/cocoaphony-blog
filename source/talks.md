@@ -14,16 +14,6 @@ title: Talks
 
 {% endfor %}
 
-## Practical Security
-
-* [DevFest Triangle, Sep 2019](https://devfest.gdgtriangle.com/home)
-* [Istanbul Tech Talks, Sep 2017]() - [video](https://youtu.be/c-77CxUKCZo)
-* [360iDev, Dev 2017]() - [video](https://youtu.be/8YkaC7yfUrQ)
-* CocoaConf SJ, Jun 6, 2017
-* CocoaConf DC, 2016
-* CocoaConf Seattle, 2016
-* CocoaConf DC, 2013
-
 ## Secrets and Lies
 
 * [MobileOptimized, Oct 2018]() - [video](https://youtu.be/Jv-qEr0j4AM)
