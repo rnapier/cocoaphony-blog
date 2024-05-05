@@ -14,10 +14,6 @@ title: Talks
 
 {% endfor %}
 
-## Lambda: There and Back Again
-
-* [try! Swift NYC, 2016]() - [video](https://youtu.be/pgwM-LvMiDU)
-
 ## Animating Custom Layer Properties
 
 * CocoaHeads RTP, Jun 2012 - [video](https://vimeo.com/44986916)
