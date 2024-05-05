@@ -12,6 +12,8 @@ presentations:
     date: 2019-04-24
     conference_link: https://2019.phillyemergingtech.com
     video: https://youtu.be/TPDoiZZxRrg
+  - conference: Swift by Northwest
+    date: 2018-10-20
   - conference: Mobile Developers Summit (MODS)
     date: 2017-10-05
   - conference: CocoaConf Chicago

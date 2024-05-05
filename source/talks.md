@@ -14,12 +14,6 @@ title: Talks
 
 {% endfor %}
 
-## Secrets and Lies
-
-* [MobileOptimized, Oct 2018]() - [video](https://youtu.be/Jv-qEr0j4AM)
-* [360iDev, Mar 2018]() - [video](https://youtu.be/ziwm8bMKxsw)
-* [SwiftFest, Jun 2018](https://2018.swiftfest.io/schedule/#session-018)
-
 ## Once More, With Types
 
 * [Do iOS, Dec 2016]() - [video](https://youtu.be/_S6UOrwS-Tg)
