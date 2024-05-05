@@ -14,10 +14,6 @@ title: Talks
 
 {% endfor %}
 
-## To be! Or not? Optionals in Practice
-
-* [iOS Conf SG, Nov 2017](http://iosconf.sg/) - [video](https://youtu.be/Q1Tayh4unMw)
-
 ## Lambda: There and Back Again
 
 * [try! Swift NYC, 2016]() - [video](https://youtu.be/pgwM-LvMiDU)
