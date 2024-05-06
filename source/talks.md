@@ -14,9 +14,6 @@ title: Talks
 
 {% endfor %}
 
-## AppCode Lightning Talk
-
-* CocoaHeads RTP, Jul 2013 - [video](https://vimeo.com/74539769)
 
 ## Array to Zipper
 
