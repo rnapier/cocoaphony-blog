@@ -14,10 +14,6 @@ title: Talks
 
 {% endfor %}
 
-## Animating Custom Layer Properties
-
-* CocoaHeads RTP, Jun 2012 - [video](https://vimeo.com/44986916)
-
 ## Rich Text, Core Text
 
 * CocoaHeads RTP, Dec 2012 - [video](https://vimeo.com/56670254)

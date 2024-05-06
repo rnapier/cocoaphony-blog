@@ -16,12 +16,20 @@ layout: page
     </tr>
   </thead>
   <tbody>
+
     {% for pres in page.presentations %}
+    {%- assign notesArray = pres.notes | markdownify | strip | split: "<p>" -%}
+    {%- if notesArray.size > 2 -%}
+    {%- assign notes = notesArray | join: "<p>" -%}
+    {%- else -%}
+    {%- assign notes = notesArray[1] | remove: "</p>" -%}
+    {%- endif -%}
+
     <tr {% if pres.highlight %}class="talk-highlight"{% endif %}>
       <td>{{ pres.date }}</td>
       <td>{% if pres.conference_link %}<a href="{{ pres.conference_link }}">{{ pres.conference }}</a>{% else %}{{ pres.conference }}{% endif %}</td>
       <td>{% if pres.video %}<a href="{{ pres.video }}">link</a>{% endif %}</td>
-      <td>{{ pres.notes }}</td>
+      <td>{{ notes }}</td>
     </tr>
     {% endfor %}
     </tbody>
