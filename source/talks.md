@@ -14,25 +14,3 @@ title: Talks
 
 {% endfor %}
 
-
-## Array to Zipper
-
-* CocoaConf Seattle, 2016
-* CocoaConf DC, 2015
-
-## Llama Calculus
-
-* CocoaConf DC, 2015
-* CocoaConf Atlanta, 2014
-
-## Get Security and Privacy Right
-
-* Renaissance, 2014 - [video](https://youtu.be/Kk6sdM9_6ZI)
-
-## Almost Physics: UIKit Dynamics
-
-* CocoaConf Raleigh, 2014
-
-## Avoiding Security Blunders
-
-* CocoaConf Raleigh, 2012
