@@ -3,7 +3,7 @@ layout: page
 title: Talks
 ---
 
-{% assign talks = site.talks | sort: "talk_date" | reverse %}
+{% assign talks = site.talks | sort_natural: "talk_date" | reverse %}
 
 {% for talk in talks %}
 ## {{ talk.title | link: talk.url }}
@@ -13,12 +13,6 @@ title: Talks
 {% if highlight and highlight.video %}* Video: {{ highlight.conference | link: highlight.video }}{% endif %}
 
 {% endfor %}
-
-## Rich Text, Core Text
-
-* CocoaHeads RTP, Dec 2012 - [video](https://vimeo.com/56670254)
-* CocoaConf DC, 2013
-* CocoaConf Raleigh, 2012
 
 ## AppCode Lightning Talk
 

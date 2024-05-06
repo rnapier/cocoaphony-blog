@@ -2,7 +2,7 @@
 layout: talk
 title: "Practical Security"
 repo: https://github.com/rnapier/practical-security
-talk_date: 2013
+talk_date: 2013-03-22
 presentations:
   - conference: DevFest Triangle, 2019
     date: 2019-09-21
@@ -22,7 +22,7 @@ presentations:
   - conference: CocoaConf Seattle, 2016
     date: 2016
   - conference: CocoaConf DC, 2013
-    date: 2013
+    date: 2013-03-22
 
 ---
 
