@@ -1,7 +1,6 @@
 ---
 layout: talk
 title: "Array to Zipper"
-repo: 
 talk_date: 2015
 presentations:
   - conference: CocoaConf Seattle, 2016
