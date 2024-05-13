@@ -1,13 +1,13 @@
 ---
 layout: talk
 title: "Learning From Our Elders"
-talk_date: 2017-01-26
+talk_date: 2016-12
 presentations:
   - conference: AppsConf, 2018
     date: 2018-10-08
     conference_link: https://appsconf.ru/2018/abstracts/3725
     video: https://youtu.be/CUwYDP_JhrA
-  - conference: Mobile Developer's Summit (MODS), 2017
+  - conference: Mobile & Disruptive Technology Summit (MODS), 2017
     date: 2017-10-05  
   - conference: 360 iDev, 2017
     date: 2017-08-15
@@ -22,8 +22,10 @@ presentations:
     date: 2017-04-21
   - conference: CocoaHeads RTP, 2017
     date: 2017-01-26
+    conference_link: https://cocoaheads.tv/learning-from-our-elders-applying-functional-insights-without-losing-swift-by-rob-napier/
     video: https://vimeo.com/204897590
-
+  - conference: CocoaConf DC, 2016
+    date: 2016-09-09
 ---
 Learning From Our Elders: Applying functional insights without losing Swift
 

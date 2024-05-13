@@ -18,6 +18,8 @@ presentations:
   - conference: 360iDev 2019
     date: 2019-08-25
     notes: 4 hour workshop
+  - conference: SwiftFest, 2019
+    date: 2019-07-29
   - conference: PhillyETE 2019
     date: 2019-04-23
     conference_link: https://2019.phillyemergingtech.com

@@ -2,7 +2,7 @@
 layout: talk
 title: "Rich Text, Core Text"
 repo: 
-talk_date: 2012
+talk_date: 2012-11-30
 presentations:
   - conference: CocoaConf DC, 2013
     date: 2013
@@ -10,8 +10,8 @@ presentations:
     date: 2012-12
     video: https://vimeo.com/56670254
     highlight: true
-  - conference: CocoaConf, Raleigh, 012
-    date: 2012
+  - conference: CocoaConf, Raleigh, 2012
+    date: 2012-11-30
 ---
 Drawing rich text, particularly editable rich text, has long been a real problem for iOS developers. No longer! iOS 6 finally integrates the kind of rich text capabilities that Mac developers have used for years. Previously neglected NSAttributedString is now the heart of rich text throughout UIKit. In this session you’ll learn your way around fonts, decorations, paragraph styles, text direction, and more.
 

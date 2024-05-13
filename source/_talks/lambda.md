@@ -5,6 +5,7 @@ talk_date: 2016-09-01
 presentations:  
   - conference: try! Swift NYC, 2016
     date: 2016-09-01
+    conference_link: https://realm.io/news/tryswift-rob-napier-swift-legacy-functional-programming/
     video: https://youtu.be/pgwM-LvMiDU
     highlight: true
 ---

@@ -20,7 +20,6 @@ presentations:
   - conference: SwiftFest, 2018
     conference_link: https://2018.swiftfest.io/schedule/#session-018 
     date: 2018-06-19
-
 ---
 
 “Security though obscurity is no security.” Well… sort of. The truth is much more complicated. Obfuscation is difficult, fragile, and a never ending battle. But sometimes it’s the only tool for the job, whether to protect a secret key or the integrity of your high-score list. In this session you’ll learn what attacks your app is already facing (whether you know it or not), the differences between cryptography, obfuscation, and steganography, and approachable ways you can use them to protect your users, your service, and your business.
