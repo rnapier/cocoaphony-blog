@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="During CocoaConf-2012-Raleigh, I discussed my PinchView from Laying out text with Core Text. It’s a text view that squeezes the glyphs towards your &hellip;">
+  <meta name="description" content="Thank you to Allen Mann for discovering the following significant security vulnerability in RNCryptor. The Vulnerability RNCryptor computes the HMAC &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/rncryptor-hmac-vulnerability">RNCryptor HMAC Vulnerability (My Security Blunder)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2013-01-14T13:52:38-05:00" pubdate data-updated="true">14 Jan 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thank you to Allen Mann for discovering the following significant security vulnerability in RNCryptor.</p>
+
+<h3>The Vulnerability</h3>
+
+<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> computes the HMAC over the ciphertext only. It does not compute an HMAC over the header, particularly the IV. This allows an attacker to modify the IV and thus manipulate the first block (16-bytes) of decrypted plaintext. This is a major issue, and is exactly the kind of problem that RNCryptor is designed to avoid.</p>
+
+<p>I will be modifying RNCryptor shortly to fix this. This will rev the file version to 2. I will provide a backward-compatibly option to read v1 files (default off). I strongly recommend that developers move to the v2 format.</p>
+
+<p>I will try to get this out as quickly as I can, hopefully this week.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/rncryptor-hmac-vulnerability">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -407,47 +452,6 @@
 <p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/wrapping-cppfinal-edition">Wrapping C++ Final Edition</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true">12 May 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a “language.” It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code class="language-plaintext highlighter-rouge">.mm</code> is a blight on your code. Never let it spread.</p>
-
-<p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple’s frameworks are implemented in C++.</p>
-
-<p>So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your “middleware” in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/wrapping-cppfinal-edition">Read on &rarr;</a>
-    </footer>
   
 
 

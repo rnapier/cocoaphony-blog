@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="For those of you having trouble with Flash 10.1, I’ve fixed PB to handle it. This moves from the hackish “dig around in the NetscapePlugin objects &hellip;">
+  <meta name="description" content="Several people have noted that PandoraBoy is displaying a “Profile” window over the player that interferes with the player. This is a notification &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoras-profile-popup">Pandora's "Profile" Pop-up</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2010-08-06T10:14:58-04:00" pubdate data-updated="true">06 Aug 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Several people have noted that PandoraBoy is displaying a “Profile” window over the player that interferes with the player. This is a notification from Pandora because they’ve changed their privacy settings (you can now make your profile private, and they want to know if you want that).</p>
+
+<p>This should be a one-time event for existing accounts. I suspect that new accounts will not see it. The solution is to open www.pandora.com in Safari, answer the question, and then re-launch PB.</p>
+
+<p>PandoraBoy goes directly to the the mini-player on launch. Pandora doesn’t code for that since it’s impossible from the website. So sometimes they make interfaces that are larger than the mini-player without updating the mini-player code to resize. PB doesn’t resize the window (it doesn’t know how large it should be). It just relies on the mini-player to do it in Javascript, but in cases like this, the mini-player also doesn’t know how large the window should be.</p>
+
+<p>BTW, I often am asked why PB doesn’t make the window resizable for cases like this. The answer is that it doesn’t help. The mini-player is a flash app, and has a clipping frame independent of the window. So while you can resize the window, the content is still clipped at the border of the flash app. Ah, the wonders of Flash.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -394,46 +433,6 @@ NSLog(@"%s", 1);
   
     <footer>
       <a rel="full-article" href="/learning-cocoa-2">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/how-become-security-domain-expert">How to Become a Security Domain Expert?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2010-01-08T14:38:45-05:00" pubdate data-updated="true">08 Jan 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>From a posting on <a href="http://stackoverflow.com/questions/1514102/how-to-become-a-security-domain-expert/1514199#1514199">StackOverflow</a>.</em></p>
-
-<p>There are many areas of security expertise, so it highly depends on what your want your career path to look like. At the bits-and-bytes end there is penetration testing and “security research” (which is often as much “cataloging of programming bugs” as actual research). At the more strategic end there is “risk management” which often spends much of its time in non-technical considerations like appropriate budgets, education and response.</p>
-
-<p>Blah, blah, blah, but how do you get started, right?</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/how-become-security-domain-expert">Read on &rarr;</a>
     </footer>
   
 

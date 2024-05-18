@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I’ve been looking into better ways to host my repositories for clients, manage task lists, documents, etc. I like github. It’s a good interface. It &hellip;">
+  <meta name="description" content="I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/wrapping-cppfinal-edition">Wrapping C++ Final Edition</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2012-05-12T20:11:45-04:00" pubdate data-updated="true">12 May 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful for what it does, but it is a mess of a “language.” It has many downsides, for slower compiles and poor debugging facilities, to confusing code and inefficient ARC code. <code class="language-plaintext highlighter-rouge">.mm</code> is a blight on your code. Never let it spread.</p>
+
+<p>That said, Objective-C++ is invaluable for integrating C++ into Objective-C. And while I am not a great lover of C++, it is a very useful language and there is a great deal of excellent code written in it that is well-worth reusing in your Cocoa projects. Many of Apple’s frameworks are implemented in C++.</p>
+
+<p>So my recommendation for those who have existing C++ logic code has always been thus: write your UI in pure Objective-C (.m). Write your “middleware” in pure C++ (.cpp). And have a thin Objective-C++ (.mm) wrapper layer to glue them together. Your ObjC++ API should ideally exactly match your C++ API, just converting types (for instance converting std::string to and from NSString).
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/wrapping-cppfinal-edition">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -396,41 +437,6 @@
 
 
   <div class="entry-content"><p>For those who have asked, the <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-1119961580.html">Adobe E-Book version</a> of iOS 5 Programming is available now from Wiley. I’m not certain yet when the Kindle version will be out, but I’m looking into it, along with getting a list of what other formats are planned.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/moment-sun">A Moment in the Sun</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2011-12-15T00:51:54-05:00" pubdate data-updated="true">15 Dec 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have no idea what Amazon rankings really mean right around a book launch. Since they weight towards recent sales, I’m sure they spike, so you have to take these things with a grain of salt. But for at least a little while, we have the <a href="http://www.amazon.com/gp/bestsellers/books/377559011">#1 book in Mobile &amp; Wireless Programming</a>. I promise I won’t keep spamming you all with book updates, but it’s the first time I’ve been at the top of a “best sellers” list.</p>
-
-<p><img class="center" src="/images/moment-sun/Screen-Shot-2011-12-14-at-11.46.46-PM.png" /></p>
 </div>
   
   

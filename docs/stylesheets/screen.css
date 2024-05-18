@@ -253,12 +253,6 @@ sub {
     bottom: -.5em
 }
 
-a[rev='footnote'] {
-    font-size: .75em;
-    padding: 0 .3em;
-    line-height: 1
-}
-
 q {
     font-style: italic
 }
@@ -1211,7 +1205,7 @@ article > footer .comments:before, article > footer .byline ~ .categories:before
     color: #0181eb
 }
 
-#content div.pagination a[href * =archive]:before, #content div.pagination a[href * =archive]:after {
+#content div.pagination a[href=archive]:before, #content div.pagination a[href=archive]:after {
     content: '\2014';
     padding: 0 .3em
 }
@@ -1332,7 +1326,7 @@ html .gist .gist-file .gist-meta a:hover {
     color: #93a1a1 !important
 }
 
-html .gist .gist-file .gist-meta a[href * ='#file'] {
+html .gist .gist-file .gist-meta a[href='#file'] {
     position: absolute;
     top: 0;
     left: 0;
@@ -1340,11 +1334,11 @@ html .gist .gist-file .gist-meta a[href * ='#file'] {
     color: #474747 !important
 }
 
-html .gist .gist-file .gist-meta a[href * ='#file']:hover {
+html .gist .gist-file .gist-meta a[href='#file']:hover {
     color: #1863a1 !important
 }
 
-html .gist .gist-file .gist-meta a[href * =raw] {
+html .gist .gist-file .gist-meta a[href=raw] {
     top: .4em
 }
 
@@ -2161,7 +2155,32 @@ body > footer p:last-child {
     margin-bottom: 0
 }
 
-#footnotediv {
+.footnote {
+    font-size: .75em;
+    padding: 0 .3em;
+}
+
+.footnotes {
+    font-size: .75em;
+    padding: 0 .3em;
+    margin-top: 1em;
+    border-top: 1px solid #ddd;
+}
+
+.reversefootnote {
+    font-size: .75em;
+    padding: 0 .3em;
+    line-height: 1
+}
+
+/* a[rev='footnote'] {
+    font-size: .75em;
+    padding: 0 .3em;
+    line-height: 1
+} */
+
+
+/* #footnotediv {
     position: absolute;
     width: 400px;
     overflow: visible
@@ -2206,7 +2225,7 @@ a.footnotebacklink img {
     right: 0;
     font-family: Arial, sans-serif;
     font-weight: bold
-}
+} */
 
 sup a {
     margin: 0;
@@ -2244,4 +2263,36 @@ th {
 .talk-highlight td {
     font-weight: bold;
     background-color: lightyellow;
+}
+
+/* Figures */
+figure {
+    margin: 1em 0;
+    padding: 0;
+    border: 0;
+    text-align: center;
+}
+
+figcaption {
+    font-size: 0.8em;
+    color: #666;
+    text-align: center;
+}
+
+.embed-right {
+    padding: 0;
+    float: right;
+    width: 45%;
+    margin: .5em 0 1em 1.5em;
+    position: relative;
+    top: 7px;
+}
+
+.embed-left {
+    padding: 0;
+    float: left;
+    width: 45%;
+    margin: .5em 1.5em 1em 0;
+    position: relative;
+    top: 7px;
 }

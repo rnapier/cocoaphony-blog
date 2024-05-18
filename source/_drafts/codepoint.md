@@ -31,7 +31,7 @@ Picture in your mind a lowercase *x* with an acute accent. If you're comfortable
 
 But that's kind of strange. I don't think there's any language in the world that uses that symbol. And yet, we probably all agree on what it would look like if we did. That tells us that "lowercase x" and "with an acute accent" are probably abstract, composable pieces among Latin-using cultures.
 
-The "abstract" is important. [There are many ways that you could draw x and "acute accent" and have them be understood.](https://fonts.google.com/?preview.text=xx́&preview.text_type=custom&category=Display,Handwriting) The goal of Unicode code points is to capture the essence and meaning of the mark rather than the specific way it's drawn.
+The "abstract" is important. [There are many ways that you could draw x and "acute accent" and have them be understood.](https://fonts.google.com/?preview.text=x́&preview.text_type=custom&category=Display,Handwriting) The goal of Unicode code points is to capture the essence and meaning of the mark rather than the specific way it's drawn.
 
 Now Unicode is wildly inconsistent about exactly how this idea is applied, and really there’s no universally consistent way you could apply it. Unicode is the way it is for many reasons. Backward compatibility with older systems, global politics, mistakes, and frankly, human writing systems are deeply messy, and so anything that tries to encode them is going to be deeply messy. But the idea is that there are these abstract pieces of human writing, independent of exactly how their drawn, that each code point represents.
 
@@ -40,6 +40,9 @@ Now Unicode is wildly inconsistent about exactly how this idea is applied, and r
 In Unicode, these code points are 21 bit numbers, ranging from 0x00000000 - 0x7FFFFFFF (0 - 2,147,483,647).
 
 21 bits seems strange. Most computer-numbers are a power of two, and not only is 21 not itself a power of two, but when put into 8-bit bytes, it needs 3, which *also* isn't a power of two. But as I said, many things about Unicode are the way they are because of its history. Originally, Unicode (specifically UCS-2) was encoded in 16 bit code points. That turned out to be far too small
+
+
+
 
 
 

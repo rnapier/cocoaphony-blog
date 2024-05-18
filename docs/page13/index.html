@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Researchers at the University of Illinois at Urbana-Champaign build a new browser from scratch to help keep hackers at bay. I was incredibly &hellip;">
+  <meta name="description" content="The $10,000 Mac Hack I recently read a comment about this hack wondering how long the author had sat on the exploit rather than reporting it to Apple &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/reporting-vulnerabilities">Reporting Vulnerabilities</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-04-04T16:31:32-04:00" pubdate data-updated="true">04 Apr 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://security.itworld.com/5013/mac-hacked-first-in-contest-080327/page_1.html">The $10,000 Mac Hack</a></p>
+
+<p>I recently read a comment about this hack wondering how long the author had sat on the exploit rather than reporting it to Apple. It’s a very important point.</p>
+
+<p>My opinion of these “security researchers” is well known: there’s a difference between bird watching and research. Finding yet another buffer overflow isn’t “research.” Creating a new way to secure systems is research. Coming up with whole new classes of attack might be research (along the lines of bioweapon research). Those who hunt new instances of old bugs are collectors of exotic animals, weapon manufacturers, volunteer quality testers, or a half-dozen other categories that have little to do with science or research.</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/reporting-vulnerabilities">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -383,45 +423,6 @@ I was incredibly skeptical from the headline. It read to me like “team builds 
 
 <p>I’ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you’d get a stray “ERROR: Could not find webNetscapePluggin” error in your logs. Hopefully that’s now fixed.</p>
 <div class="post-body entry-content">Should post a 0.6 (or at least 0.6 beta) sometime after the New Year.</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/87">87</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2007-12-24T23:18:04-05:00" pubdate data-updated="true">24 Dec 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Huge changes in PandoraBoy on the way. I’m working on full-screen mode, so you can run PandoraBoy from across the room and still see what’s currently playing. Building a smooth transition from window to full-screen without interrupting playback has taken my a couple of days, but I think it’s a pleasing effect. Right now it doesn’t do a lot more than be a full-screen Pandora window (which isn’t very exciting in itself, though much harder than it sounds), but next I’ll work on a plug-in architecture to let you put various information on the bottom portion of the screen. Then it’ll actually be useful.</p>
-
-<p>Why is it so hard to go full-screen you may ask? Afterall, it’s just a webpage. But the mini-player is a web page that assumes the window is a specific size. Getting the background gradient to look right at any size is the main problem, since there is no direct way to scale a background in CSS2. repeat-x handles left-to-right scaling, but the pandora background isn’t tileable vertically. My final solution was to build an NSImageView which holds a flipped version of the Pandora background, and then placed it immediately underneath the pandora webview. It handles all vertical stretching and gives a nice darker area at the bottom rather than just fading to white.</p>
-
-<p>I’ll also investigate a black-screen mode with the pandora player standing with no background. I had that working at one point, but it’s been hard to recreate it in a way to zooms cleanly. CSS2 and Javascript just aren’t nearly as powerful as Cocoa….</p>
-
-<p>If you’re feeling insanely adventurous, it’s all checked in on truck in subversion….</p>
 </div>
   
   

@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="PandoraBoy 0.5 is live. Go forth. I may not get to work on PB for a few days at least. One-way call paths will be my life for a little while I &hellip;">
+  <meta name="description" content="Huge changes in PandoraBoy on the way. I’m working on full-screen mode, so you can run PandoraBoy from across the room and still see what’s currently &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/87">87</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2007-12-24T23:18:04-05:00" pubdate data-updated="true">24 Dec 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Huge changes in PandoraBoy on the way. I’m working on full-screen mode, so you can run PandoraBoy from across the room and still see what’s currently playing. Building a smooth transition from window to full-screen without interrupting playback has taken my a couple of days, but I think it’s a pleasing effect. Right now it doesn’t do a lot more than be a full-screen Pandora window (which isn’t very exciting in itself, though much harder than it sounds), but next I’ll work on a plug-in architecture to let you put various information on the bottom portion of the screen. Then it’ll actually be useful.</p>
+
+<p>Why is it so hard to go full-screen you may ask? Afterall, it’s just a webpage. But the mini-player is a web page that assumes the window is a specific size. Getting the background gradient to look right at any size is the main problem, since there is no direct way to scale a background in CSS2. repeat-x handles left-to-right scaling, but the pandora background isn’t tileable vertically. My final solution was to build an NSImageView which holds a flipped version of the Pandora background, and then placed it immediately underneath the pandora webview. It handles all vertical stretching and gives a nice darker area at the bottom rather than just fading to white.</p>
+
+<p>I’ll also investigate a black-screen mode with the pandora player standing with no background. I had that working at one point, but it’s been hard to recreate it in a way to zooms cleanly. CSS2 and Javascript just aren’t nearly as powerful as Cocoa….</p>
+
+<p>If you’re feeling insanely adventurous, it’s all checked in on truck in subversion….</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

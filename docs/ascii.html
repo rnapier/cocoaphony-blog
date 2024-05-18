@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>ASCII - Cocoaphony</title>
+  <meta name="author" content="Rob Napier">
+
+  
+  <meta name="description" content="Every part of this post is over-simplified. History is messy and difficult to sum up. The original version was twice and long and still over- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="https://robnapier.net/ascii">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Cocoaphony" type="application/atom+xml">
+  <link href="https://micro.blog/cocoaphony" rel="me" />
+  <link href="https://twitter.com/cocoaphony" rel="me" />
+  <link href="https://mastodon.social/@cocoaphony" rel="me" />
+  
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Cocoaphony</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+  <li><a href="/talks">Talks</a></li>
+  <li><a href="https://cocoaphony.micro.blog">micro.blog</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ASCII</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2024-05-18T14:30:00-04:00" pubdate data-updated="true">18 May 2024</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em>Every part of this post is over-simplified. History is messy and difficult to sum up. The original version was twice and long and still over-simplified. Just go with it.</em></p>
+
+<figure>
+    <img src="/images/ascii/USASCII_code_chart.png" width="50%" alt="ASCII chart with 8 sticks (i.e. columns) and 16 rows, demonstrating the underlying structure of ASCII" />
+    <figcaption>Public Domain. Source: <a href="https://commons.wikimedia.org/wiki/File:USASCII_code_chart.png">WikiCommons</a></figcaption>
+</figure>
+
+<p>In 1961 the American Standards Association began developing a new character encoding to replace the dozens of existing systems. In the end they created the 7-bit system that we call the <em>American Standard Code for Information Interchange</em>. We take ASCII for granted today, almost obvious, but it’s actually very carefully designed and surprisingly clever. ASCII is inspired by automated telegraph codes that evolved to drive teletypes.</p>
+
+<!-- more -->
+
+<p>To simplify hardware implementations, ASCII splits the characters into 8 vertical “sticks,” or columns, based on the first three bits of its encoding. The first two sticks are control characters which are intended to interact with the teletype itself. Things like starting a record or moving the carriage head. And that means, in hardware, you can look at just those first two bits and decide where to route the rest of the information for decoding. Very fast. Very easy to implement.</p>
+
+<p>In stick 3 (0x30-0x3F) come the digits zero through 9. That means you can just stick a “3” on the front of any digit and you get the character for that digit. That’s not an accident. Notice how upper case and lower case letters differ by just one bit. Makes case-insensitive search really easy, just clear one bit. Also not an accident.</p>
+
+<h2 id="before-ascii-ebcdic">Before ASCII: (E)BCDIC</h2>
+
+<figure>
+    <img src="/images/ascii/Codes-07.gif" width="50%" alt="EBCDIC chart, showing structure of EBCDIC, specifically the many blank areas of unassigned codepoints" />
+    <figcaption>CC BY-SA. Source: <a href="https://en.wikipedia.org/wiki/EBCDIC">Wikipedia:EBCDIC</a></figcaption>
+</figure>
+
+<p>IBM, who didn’t invent ASCII but was part of the committee, had decades of experience evolving what eventually became their 8-bit EBCDIC, <em>Extended Binary Coded Decimal Interchange Code</em>. In EBCDIC, the decimal digits start at 0xF0 rather than 0x30, but the concept is the same.</p>
+
+<figure class="embed-right">
+    <img src="/images/ascii/Blue-punch-card-front.png" width="50%" alt="IBM punch card, showing the layout of the card" />
+    <figcaption>IBM-style punch card, encoding the EBCDIC character set. Public Domain. Source: <a href="https://commons.wikimedia.org/wiki/File:Blue-punch-card-front.png">WikiCommons</a></figcaption>
+</figure>
+
+<p>As the name suggests, it extends the previous 6-bit BCDIC format, which was designed to work with punch card equipment and mechanical tabulators, which is why it has what seem like odd “gaps” in its layout. This approach made it more compatible with the existing 6-bit systems and the related equipment. It isn’t particularly well-suited to electrical or magnetic encoding, but it taught IBM the value of lining up digits this way for BCD conversions.<sup id="fnref:holes" role="doc-noteref"><a href="#fn:holes" class="footnote" rel="footnote">1</a></sup></p>
+
+<p>If you’re working on business-focused computers, rather than scientific computing, the math generally isn’t very complicated. There aren’t a lot of square roots or logarithms in accounting. You mostly need add, subtract, multiply, and the occassional divide. But you spend a lot of time inputing and outputting numeric results in base 10. So it makes sense to do all your math in decimal so that converting back and forth between digits and their characters is really cheap and you avoid <a href="https://floating-point-gui.de">base conversion rounding errors</a>. And that’s exactly what they did. A lot of IBM computers did all their math in binary coded decimal, and (E)BCDIC and ASCII reflect that.</p>
+
+<h2 id="math">Math!</h2>
+
+<p>Now at the same time, there were completely different computers being built for scientific and engineering computing. While a lot of business computers used 6-, 8-, or 9-bit characters, or “bytes,” scientific computers often worked with 36-bit “words.” They did their math in binary because it’s more efficient. It made it more expensive to convert between numbers and characters for I/O, but scientific computers do a lot more computing than they do I/O-ing.</p>
+
+<h3 id="sidebar-its-always-the-system360-or-the-pdp-11">Sidebar: It’s always the System/360 or the PDP-11</h3>
+
+<p><em>Wait, why 36 bits? Who does that?</em> Well, 36 binary digits gives the same accuracy as 10 decimal digits.</p>
+
+<p><em>OK, why why 10 decimal digits?</em> To match the accuracy of the mechanical calculators they competed against.</p>
+
+<p>Notice the lack of powers of 2? Yeah, our obsession with powers of 2 came later.</p>
+
+<p>And by “later,” I mean 1964 and the IBM System/360.</p>
+
+<figure class="embed-right">
+    <img src="/images/ascii/IBMS360.jpg" width="50%" alt="IBM System/360 mainframe computer." />
+    <figcaption>IBM System/360 mainframe computer. Source: <a href="https://web.archive.org/web/20230405074032/https://www.ibm.com/ibm/history/ibm100/us/en/icons/system360/">IBM</a></figcaption>
+</figure>
+
+<p>So many things about modern computers can be traced to the System/360, but one of the most ubiquitous is it used 8-bit characters, and IBM was powerful enough to make that the norm that we use to this day. Before the System/360, “bytes” came in a variety of sizes. After the System/360, a byte was 8 bits.</p>
+
+<p>Despite IBM being a massive supporter of ASCII, the System/360 used EBCDIC because it was more compatible with existing IBM peripherals. So it’s kind of a distraction on our discussion of ASCII, but it’ll come back up later. History isn’t always a simple matter of “this caused that.” Sometimes a lot of things are going on at the same time. EBCDIC technically <strong>post-dates</strong> ASCII by a few months. Sometimes history doesn’t quite follow the narrative.</p>
+
+<h2 id="the-many-sciis">The many *SCIIs</h2>
+
+<figure>
+    <img src="/images/ascii/ISO646.png" alt="ISO 646 chart, showing some of the many national variants of ASCII." />
+    <figcaption>Some of the many ISO 646 national variants. CC BY-SA. Source: <a href="https://en.wikipedia.org/wiki/ISO/IEC_646#ISO/IEC_646_national_variants">Wikipedia:ISO/IEC 646</a></figcaption>
+</figure>
+
+<p>Getting back to 7-bit ASCII. ASCII was pretty clever, but it’s also very US-centric. That’s wasn’t because no one was thinking about other countries and cultures. ASCII is the <strong>American</strong> Standard Code. It is just one of numerous national standards under the ISO/IEC 646 umbrella. For example, there’s YUSCII, the Yugoslav Standard Code. There’s a Chinese national standard, an Icelandic standard, two Japanese, a couple of Canadian. There’s a ton of them.</p>
+
+<figure>
+    <img src="/images/ascii/ISOIEC-646-INV.png" width="50%" alt="ISO 646 chart, showing the invariant characters in white and the customizable characters in gray." />
+    <figcaption>ISO/IEC 646 chart with national variants and diacritics indicated. CC BY-SA. Source: <a href="https://en.wikipedia.org/wiki/ISO/IEC_646#Code_page_layout">Wikipedia:ISO/IEC 646</a></figcaption>
+</figure>
+
+<p>The idea was that there were certain invariant characters across standards, the ones in white, and then countries could assign whatever they wanted to certain code points, the ones in gray. And they could get combining characters using a backspace with diacritics. But you’ll notice there are only 9 customizable characters. Not a lot to work with. And building accented characters with backspace makes many text algorithms very hard.</p>
+
+<p>But after the System/360 (I told you it’d come back up), more computers moved to 8-bit characters. And with the rise of microcomputers, most of which were 8-bit, there was this extra bit to work with. Some systems used the extra bit to carry extra information, or used it as a parity bit to detect data corruption. But it could also be used to get another 128 characters. That’s a lot, but it’s still nowhere close to enough to cover everything you’d want, even just for Latin-based writing systems.</p>
+
+<p>So all those ISO/IEC 646 national standards morphed into a menagerie of ISO/IEC 8859 “extended ASCII” encodings, establishing the American national standard as the base that others built on, and thankfully getting rid of the “backspace for diacritics” system. The most popular was Latin-1, based mostly on an older DEC standard called the Multinational Character Set. It does a pretty good job of covering Western European languages, along with a several others.</p>
+
+<figure>
+    <img src="/images/ascii/Latin-1.png" width="50%" alt="ISO 8859-1 chart, showing the characters in the Latin-1 encoding." />
+    <figcaption>ISO 8859-1 chart. CC BY-SA. Source: <a href="https://en.wikipedia.org/wiki/ISO/IEC_8859-1#Code_page_layout">Wikipedia:ISO/IEC 8859-1</a></figcaption>
+</figure>
+
+<p>But on the other hand, consider:</p>
+
+<ul>
+  <li>Język Polski (Polish)</li>
+  <li>Latviešu Valoda (Latvian)</li>
+  <li>Hànyǔ Pīnyīn (Chinese Pinyin)</li>
+</ul>
+
+<p>They’re all “Latin-based,” but they all need characters, mostly in the form of diacritics or tone marks, that aren’t in Latin-1. And if you like diacritics <strong>and</strong> tone marks, you can have that, too:</p>
+
+<ul>
+  <li>Tiếng Việt (Vietnamese)</li>
+</ul>
+
+<p>Oh dear….</p>
+
+<p>So Latin-1 only does a “pretty good job” for Western European languages, but there are still a lot more languages out there using Latin that need their own extended ASCII. Non-Latin alphabets like Cyrillic, Greek, Arabic, Hebrew, and Thai are all encoded using different forms of extended ASCII, too. Even Asian-language encodings like Big5 and Shift JIS are based on ASCII, or at least compatible with it. The number 65 is the encoding of the uppercase Latin A almost everywhere, even in non-Latin encodings. Not an accident.</p>
+
+<p>But this consistency can also be a problem. The encodings are “almost compatible.” They’re so compatible that it is very difficult to look at an arbitrary text file and determine what encoding it’s in. Extended ASCII is very “dense.” Every possible sequence of bytes is a valid extended ASCII string. If you encounter the string “Tiêìng Viêòt”, have you accidentally treated the CP1258 encoding of “Tiếng Việt” as if it were Latin-1? Or is this text intentional, like it is in this document?</p>
+
+<p>Even worse, there’s no easy way to mix encodings in the same document. Even if you add markup to indicate the encoding of each section, algorithms like searching becomes incredibly hard. And if you jump into the middle of a document, or worse, a stream, you have to rewind to find out what the current encoding is.</p>
+
+<p>It’s…bad.</p>
+
+<h2 id="what-if-we-unified-all-of-this-">What if we “unified” all of this? 🤔</h2>
+
+<p>It took a few decades to finally build a better way. But that’s for another post.</p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:holes" role="doc-endnote">
+      <p>I’m familiar with the common story that says that EBCDIC is laid out the way it is to minimize sequential holes in order to prevent weaking the card. I can’t find any primary source for that, and it doesn’t really follow from the character layout. The only evidence I’ve seen given is the slightly surprising placement of the ‘S’ encoding. But I expect that this was more about placing the ‘/’ encoding near the numbers in the older 6-bit encodings (the ones where the letters are “backwards”). Just modifying the ‘S’ encoding slightly shouldn’t have much if any impact on tape or card integrity. If the goal were to manage where holes show up, I would expect the letters to be laid out based on some English-frequency basis, or scattered around the encoding table, not laid out compactly and alphabetically. I’ve been reading <a href="https://archive.org/details/mackenzie-coded-char-sets/">Coded Character Sets, History and Development</a>, published in 1980, and I can’t find any mention of BCD encodings trying to optimize hole placement. <a href="#fnref:holes" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+
+
+
+
+
+
+
+<time datetime="2024-05-18T14:30:00-04:00" pubdate data-updated="true">18 May 2024</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/anycodingkey" title="Previous Post: AnyCodingKey">&laquo; AnyCodingKey</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2024 - <a href="mailto:rob@neverwood.org">Rob Napier</a> - <a href="https://twitter.com/cocoaphony">@cocoaphony</a> - 
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+<!-- Fathom - simple website analytics - https://usefathom.com -->
+<script>
+(function(f, a, t, h, o, m){
+a[h]=a[h]||function(){
+    (a[h].q=a[h].q||[]).push(arguments)
+};
+o=f.createElement('script'),
+m=f.getElementsByTagName('script')[0];
+o.async=1; o.src=t; o.id='fathom-script';
+m.parentNode.insertBefore(o,m)
+})(document, window, '//cdn.usefathom.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'MSRAZWIU');
+fathom('trackPageview');
+</script>
+<!-- / Fathom -->
+
+
+
+
+</body>
+</html>

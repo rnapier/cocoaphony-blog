@@ -6,8 +6,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Ever since Swift came out, I keep seeing weird comments that Swift is a
-functional programming language. I’ve puzzled a bit over why anyone would say &hellip;">
+  <meta name="description" content="I know a thing or two about Objective-C. It’s not bragging. If you’re reading my
+blog, there’s a decent chance that I know more about Objective-C &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -50,6 +50,56 @@ functional programming language. I’ve puzzled a bit over why anyone would say 
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/i-dont-know-swift">I Don't Know Swift</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2014-07-18T11:04:22-04:00" pubdate data-updated="true">18 Jul 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I know a thing or two about Objective-C. It’s not bragging. If you’re reading my
+blog, there’s a decent chance that I know more about Objective-C than you do. I
+have opinions about it. You should take them seriously even if you disagree.
+They’re founded on shipping a lot of code. I’ve shipped Cocoa software solo and
+in big teams, OS X and iOS, year-long release cycles and 30 hours to build a
+demo for Steve Jobs. I’ve been writing ObjC since 10.4 was the new hotness,
+before ARC, before properties, before Intel. There are many developers with much
+more experience, but even so, I know a thing or two about Objective-C.</p>
+
+<p>I have no idea how to write Swift.</p>
+
+<p>Neither does anyone else.</p>
+
+<p>Not even Apple.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/i-dont-know-swift">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -428,51 +478,6 @@ how you would calculate good lengths for other assumptions.</p>
 <p>Please let me know if anyone encounters issues.</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/rncryptor-hmac-vulnerability">RNCryptor HMAC Vulnerability (My Security Blunder)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2013-01-14T13:52:38-05:00" pubdate data-updated="true">14 Jan 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Thank you to Allen Mann for discovering the following significant security vulnerability in RNCryptor.</p>
-
-<h3>The Vulnerability</h3>
-
-<p><a href="https://github.com/rnapier/RNCryptor">RNCryptor</a> computes the HMAC over the ciphertext only. It does not compute an HMAC over the header, particularly the IV. This allows an attacker to modify the IV and thus manipulate the first block (16-bytes) of decrypted plaintext. This is a major issue, and is exactly the kind of problem that RNCryptor is designed to avoid.</p>
-
-<p>I will be modifying RNCryptor shortly to fix this. This will rev the file version to 2. I will provide a backward-compatibly option to read v1 files (default off). I strongly recommend that developers move to the v2 format.</p>
-
-<p>I will try to get this out as quickly as I can, hopefully this week.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/rncryptor-hmac-vulnerability">Read on &rarr;</a>
-    </footer>
   
 
 
