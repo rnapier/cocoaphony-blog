@@ -182,7 +182,7 @@ func transmit(data: Data, over transport: <span class="chl">URLSession</span>) {
 func transmit(data: Data, over transport: <span class="chl">TestTransport</span>) { ... }
 </pre>
 
-<p>The entire <code class="language-plaintext highlighter-rouge">transmit</code> function is (in principle) copied, just as if you’d written an overload <code class="language-plaintext highlighter-rouge">transmit</code> for each type. This is an over-simplification, and the compiler may not actually make all the copies, or it may generate an existential version instead (or in addition). It depends on a lot of things, including the optimization flags. But when you call a generic function, you should think of it as creating a new version of the function written specifically for the type you called it with.<sup id="fnref:performance" role="doc-noteref"><a href="#fn:performance" class="footnote" rel="footnote">1</a></sup></p>
+<p>The entire <code class="language-plaintext highlighter-rouge">transmit</code> function is (in principle) copied, just as if you’d written an overload <code class="language-plaintext highlighter-rouge">transmit</code> for each type. This is an over-simplification, and the compiler may not actually make all the copies, or it may generate an existential version instead (or in addition). It depends on a lot of things, including the optimization flags. But when you call a generic function, you should think of it as creating a new version of the function written specifically for the type you called it with.<sup id="fnref:performance"><a href="#fn:performance" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <ul>
   <li>In an existential (protocol parameter) function, the parameters may need to be copied into an existential at <em>run-time</em>.</li>
@@ -199,7 +199,7 @@ func transmit(data: Data, over transport: <span class="chl">TestTransport</span>
 
 <h2 id="what-if-we-made-things-more-generallyumexistential">What if we made things more generally…um…existential?</h2>
 
-<p>So couldn’t Swift just create an existential all the time, even for protocols with associated types (PATs)? Yes, but…it’s complicated. For the most common cases, yes, Swift could automatically create an <code class="language-plaintext highlighter-rouge">any Collection&lt;.Element == T&gt;</code><sup id="fnref:protocol-syntax" role="doc-noteref"><a href="#fn:protocol-syntax" class="footnote" rel="footnote">2</a></sup> implicit existential just like it currently has an <code class="language-plaintext highlighter-rouge">AnyCollection&lt;T&gt;</code> explicit existential. That idea is called <em>generalized existentials</em>, and I’m pretty certain Swift will add it eventually (maybe even soon). That’ll knock off several of protocols’ sharp edges for some of the most common cases.</p>
+<p>So couldn’t Swift just create an existential all the time, even for protocols with associated types (PATs)? Yes, but…it’s complicated. For the most common cases, yes, Swift could automatically create an <code class="language-plaintext highlighter-rouge">any Collection&lt;.Element == T&gt;</code><sup id="fnref:protocol-syntax"><a href="#fn:protocol-syntax" class="footnote" rel="footnote" role="doc-noteref">2</a></sup> implicit existential just like it currently has an <code class="language-plaintext highlighter-rouge">AnyCollection&lt;T&gt;</code> explicit existential. That idea is called <em>generalized existentials</em>, and I’m pretty certain Swift will add it eventually (maybe even soon). That’ll knock off several of protocols’ sharp edges for some of the most common cases.</p>
 
 <p><span class="pullquote-right" data-pullquote="Many protocol problems I see in the wild are really just design problems that have little to do with missing Swift features.">
 But it probably won’t solve as many problems as people expect. Many protocol problems I see in the wild are really just design problems that have little to do with missing Swift features. A generalized existential will get you past the compiler error, but in the process it may let you go much further down a wrong road.
@@ -228,10 +228,10 @@ But it probably won’t solve as many problems as people expect. Many protocol p
 <hr />
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:performance" role="doc-endnote">
+    <li id="fn:performance">
       <p>All these “may” qualifiers are why you shouldn’t assume that protocols or generics are “better for performance” (for whatever meaning you’re attaching to “performance”). It depends on a lot of things. If your code is sensitive to the performance of generics or protocols, you need to profile it and look at what the compiler is actually generating. Do not take away from this discussion that “generics are faster” or “protocols create smaller binaries.” That might be true in certain cases, but it can also be the other way around. Write you code clearly and correctly, and say what you mean in types. The Swift compiler teams works very hard to make sure that kind of code will be performant. Don’t guess what the compiler will do. Test. <a href="#fnref:performance" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:protocol-syntax" role="doc-endnote">
+    <li id="fn:protocol-syntax">
       <p>For an introduction to that proposed syntax, see the <a href="https://forums.swift.org/t/protocol-assoctype-t-shorthand-for-combined-protocol-and-associated-type-constraints-without-naming-the-constrained-type/21217">Protocol&lt;.AssocType == T&gt; shorthand</a> forum thread. <a href="#fnref:protocol-syntax" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

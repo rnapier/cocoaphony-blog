@@ -160,7 +160,7 @@ list-of-lists of email addresses. What are we going to do now? I wouldn’t be
 surprised if you’ve encountered this before and fixed it with some kind of
 “flatten” function that removes one layer of structure. It’s slightly surprising
 that Swift doesn’t have one of these built in, but it’s easy enough to
-make.<sup id="fnref:simpler" role="doc-noteref"><a href="#fn:simpler" class="footnote" rel="footnote">1</a></sup></p>
+make.<sup id="fnref:simpler"><a href="#fn:simpler" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func flatten&lt;T&gt;(array: [[T]]) -&gt; [T] {
   var result = [T]()
@@ -473,7 +473,7 @@ pronounced “bind” or colloquially “and then.” <code class="language-plai
 functions in Swift, and it’s dangerous to overload things with completely
 different meanings (I’m looking at you, C++ <code class="language-plaintext highlighter-rouge">&lt;&lt;</code>). I think the operator should
 preserve as much of the “shape” as possible from Haskell’s, and I think <code class="language-plaintext highlighter-rouge">&gt;&gt;==</code>
-does that best.<sup id="fnref:type" role="doc-noteref"><a href="#fn:type" class="footnote" rel="footnote">2</a></sup></p>
+does that best.<sup id="fnref:type"><a href="#fn:type" class="footnote" rel="footnote" role="doc-noteref">2</a></sup></p>
 
 <p><span class="pullquote-right" data-pullquote="spend time looking at how other languages and other Swift developers have approached the same problem."></span></p>
 
@@ -530,10 +530,10 @@ work on that in future posts. But the basic structure is quite nice I think.</p>
 a lot of things to cover. Until then, stop mutating. Evolve.</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:simpler" role="doc-endnote">
+    <li id="fn:simpler">
       <p>In a later post we’ll discuss how <code class="language-plaintext highlighter-rouge">flatten</code> is insanely simple to implement with <code class="language-plaintext highlighter-rouge">reduce</code>. The fact that its so simple is probably the reason they didn’t bother to add <code class="language-plaintext highlighter-rouge">flatten</code> to stdlib. But I’m guessing. <a href="#fnref:simpler" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:type" role="doc-endnote">
+    <li id="fn:type">
       <p>I also have found it easy to type. I tried <code class="language-plaintext highlighter-rouge">&gt;&gt;=-</code> for a while and kept getting <code class="language-plaintext highlighter-rouge">&gt;&gt;=0-</code> when I was typing fast. <a href="#fnref:type" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

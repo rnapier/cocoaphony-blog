@@ -118,7 +118,7 @@ protocol Fetchable: Decodable { &hellip;">
 The basic premise of a mock is to build a test object that mimics some other object you want to replace. That encourages you to design a protocol that very closely matches the existing interface, and then your “mock object” will also closely match that interface. This makes your “real” object, the protocol, and the mock evolve tightly in lockstep, and it cuts off opportunities for more powerful protocols that aren’t tied to one implementation. If the only reason you can imagine using a protocol is for testing, then you’re not getting all you could out of it. Protocols can be so much more.
 </span></p>
 
-<p>So my goal isn’t to “mock” URLSession, but to abstract the functionality I need. What I want is to map a URLRequest to Data, asynchronously:<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+<p>So my goal isn’t to “mock” URLSession, but to abstract the functionality I need. What I want is to map a URLRequest to Data, asynchronously:<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A transport maps a URLRequest to Data, asynchronously</span>
 <span class="kd">protocol</span> <span class="kt">Transport</span> <span class="p">{</span>
@@ -246,7 +246,7 @@ final class APIClient {
 <p><a href="/assets/protocols/StartWithAProtocol.zip">Swift Playground</a></p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>Throughout this series, whenever it’s unambiguous, I’ll refer to <code class="language-plaintext highlighter-rouge">Result&lt;Value, Error&gt;</code> as just “Value.” <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

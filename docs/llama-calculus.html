@@ -87,7 +87,7 @@ we can really get started: variables are evil. Stop mutating them. It just makes
 them more evil. If I could do just one thing to improve your Swift programs, it
 would be to generate an electric keyboard shock every time you typed <code class="language-plaintext highlighter-rouge">v</code> <code class="language-plaintext highlighter-rouge">a</code>
 <code class="language-plaintext highlighter-rouge">r</code>. Yeah, you’ll need it sometimes, but each time you should ask “is it worth
-the shock?” And by “the shock,” I mean “hard to find bugs.”<sup id="fnref:computed" role="doc-noteref"><a href="#fn:computed" class="footnote" rel="footnote">1</a></sup></p>
+the shock?” And by “the shock,” I mean “hard to find bugs.”<sup id="fnref:computed"><a href="#fn:computed" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <!-- more -->
 
@@ -108,7 +108,7 @@ more reasonable result of this program should be <code class="language-plaintext
 stuff all the time and we expect it to mean something other than “equals.”</p>
 
 <p>The correct way to read this out loud is “assign five to <em>x</em>, then assign seven
-to <em>x</em>.”<sup id="fnref:algol" role="doc-noteref"><a href="#fn:algol" class="footnote" rel="footnote">2</a></sup></p>
+to <em>x</em>.”<sup id="fnref:algol"><a href="#fn:algol" class="footnote" rel="footnote" role="doc-noteref">2</a></sup></p>
 
 <p>I know that sounds pedantic. A lot of the build-up to functional programming
 sounds pedantic, but bear with me. I’m going to keep bringing it back to
@@ -167,7 +167,7 @@ caller.</p>
 <p>It’s very simple, but consider how hard it is to reason about this method. What
 are its inputs and outputs? Well, in principle, the entire current state of the
 object is the input, and the entire mutated state of the object is the
-output.<sup id="fnref:globals" role="doc-noteref"><a href="#fn:globals" class="footnote" rel="footnote">3</a></sup> What test cases would you write? And if the implementation
+output.<sup id="fnref:globals"><a href="#fn:globals" class="footnote" rel="footnote" role="doc-noteref">3</a></sup> What test cases would you write? And if the implementation
 details changed, would those test cases still provide sufficient coverage? If my
 final bill is wrong, how I do reproduce the state of this object to debug it?
 The whole point of OOP is that the internal details of <code class="language-plaintext highlighter-rouge">calculateTheBill()</code> are
@@ -216,13 +216,13 @@ want to treat state as a powerful and somewhat dangerous tool to be used in
 moderation. And the first step down that road is to stop typing <code class="language-plaintext highlighter-rouge">var</code> (ouch!)</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:computed" role="doc-endnote">
+    <li id="fn:computed">
       <p>Swift unfortunately overloads <code class="language-plaintext highlighter-rouge">var</code> to mean both “mutable” and “computed property” even if the computed property is immutable. I am only referring to the first use. <a href="#fnref:computed" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:algol" role="doc-endnote">
+    <li id="fn:algol">
       <p>ALGOL, and later Pascal, got this at least half-right: <code class="language-plaintext highlighter-rouge">x := 5</code>. There wasn’t a <code class="language-plaintext highlighter-rouge">&lt;</code> key on early keyboards, so <code class="language-plaintext highlighter-rouge">:</code> had to do. This really should be written <code class="language-plaintext highlighter-rouge">5 -&gt; x</code>, since the assignment happens after evaluation, but at least “x receives 5” is more sensible than “x equals 5.” So many C bugs could have been avoided if it had used ALGOL syntax. It amazes me that Swift held onto <code class="language-plaintext highlighter-rouge">=</code> for assignment. <a href="#fnref:algol" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:globals" role="doc-endnote">
+    <li id="fn:globals">
       <p>For this discussion, assume there are no mutable globals or singletons (which are just globals by another name). If there were, they create the same problems for every approach. <a href="#fnref:globals" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

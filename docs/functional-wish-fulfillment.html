@@ -420,7 +420,7 @@ write:</p>
 
 <p>That’s starting to look kind of nice. I like this <code class="language-plaintext highlighter-rouge">continueWith</code> function. I
 wonder how we’d write it. Well, if it’s passed a <code class="language-plaintext highlighter-rouge">.Success</code>, it unboxes it and
-calls the next function.<sup id="fnref:unbox" role="doc-noteref"><a href="#fn:unbox" class="footnote" rel="footnote">1</a></sup> If it’s passed a <code class="language-plaintext highlighter-rouge">.Failure</code>, it returns a
+calls the next function.<sup id="fnref:unbox"><a href="#fn:unbox" class="footnote" rel="footnote" role="doc-noteref">1</a></sup> If it’s passed a <code class="language-plaintext highlighter-rouge">.Failure</code>, it returns a
 <code class="language-plaintext highlighter-rouge">.Failure</code>. That doesn’t seem too hard:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func continueWith&lt;T,U&gt;(x: Result&lt;T&gt;, f: T -&gt; Result&lt;U&gt;) -&gt; Result&lt;U&gt; {
@@ -481,7 +481,7 @@ same place, just a bit more gently.</p>
 <p>Until then, stop mutating. Evolve.</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:unbox" role="doc-endnote">
+    <li id="fn:unbox">
       <p>Remember that the “unbox” step is just because of a Beta6 compiler limitation. <a href="#fnref:unbox" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

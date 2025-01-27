@@ -101,7 +101,7 @@
     <figcaption>IBM-style punch card, encoding the EBCDIC character set. Public Domain. Source: <a href="https://commons.wikimedia.org/wiki/File:Blue-punch-card-front.png">WikiCommons</a></figcaption>
 </figure>
 
-<p>As the name suggests, it extends the previous 6-bit BCDIC format, which was designed to work with punch card equipment and mechanical tabulators, which is why it has what seem like odd “gaps” in its layout. This approach made it more compatible with the existing 6-bit systems and the related equipment. It isn’t particularly well-suited to electrical or magnetic encoding, but it taught IBM the value of lining up digits this way for BCD conversions.<sup id="fnref:holes" role="doc-noteref"><a href="#fn:holes" class="footnote" rel="footnote">1</a></sup></p>
+<p>As the name suggests, it extends the previous 6-bit BCDIC format, which was designed to work with punch card equipment and mechanical tabulators, which is why it has what seem like odd “gaps” in its layout. This approach made it more compatible with the existing 6-bit systems and the related equipment. It isn’t particularly well-suited to electrical or magnetic encoding, but it taught IBM the value of lining up digits this way for BCD conversions.<sup id="fnref:holes"><a href="#fn:holes" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <p>If you’re working on business-focused computers, rather than scientific computing, the math generally isn’t very complicated. There aren’t a lot of square roots or logarithms in accounting. You mostly need add, subtract, multiply, and the occasional divide. But you spend a lot of time inputting and outputting numeric results in base 10. So it makes sense to do all your math in decimal so that converting back and forth between digits and their characters is really cheap and you avoid <a href="https://floating-point-gui.de">base-conversion rounding errors</a>. And that’s exactly what they did. A lot of IBM computers did all their math in binary coded decimal, and (E)BCDIC and ASCII reflect that.</p>
 
@@ -182,7 +182,7 @@
 <p>It took a few decades to finally build a better way. But that’s for another post.</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:holes" role="doc-endnote">
+    <li id="fn:holes">
       <p>I’m familiar with the common story that says that EBCDIC is laid out the way it is to minimize sequential holes in order to prevent weakening the card. I can’t find any primary source for that, and it doesn’t really follow from the character layout. The only evidence I’ve seen given is the slightly surprising placement of the ‘S’ encoding. But I expect that this was more about placing the ‘/’ encoding near the numbers in the older 6-bit encodings (the ones where the letters are “backwards”). Just modifying the ‘S’ encoding slightly shouldn’t have much if any impact on tape or card integrity. If the goal were to manage where holes show up, I would expect the letters to be laid out based on some English-frequency basis, or scattered around the encoding table, not laid out compactly and alphabetically. I’ve been reading <a href="https://archive.org/details/mackenzie-coded-char-sets/">Coded Character Sets, History and Development</a>, published in 1980, and I can’t find any mention of BCD encodings trying to optimize hole placement. <a href="#fnref:holes" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

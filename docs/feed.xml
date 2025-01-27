@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://robnapier.net/feed.xml" rel="self" type="application/atom+xml" /><link href="https://robnapier.net/" rel="alternate" type="text/html" /><updated>2025-01-26T20:23:46-05:00</updated><id>https://robnapier.net/feed.xml</id><title type="html">Cocoaphony</title><subtitle>Mac and iOS development with a focus on Swift and functional programming</subtitle><author><name>Rob Napier</name></author><entry><title type="html">ASCII</title><link href="https://robnapier.net/ascii" rel="alternate" type="text/html" title="ASCII" /><published>2024-05-18T14:30:00-04:00</published><updated>2024-05-18T14:30:00-04:00</updated><id>https://robnapier.net/ascii</id><content type="html" xml:base="https://robnapier.net/ascii"><![CDATA[<p><em>Every part of this post is over-simplified. History is messy and difficult to sum up. The original version was twice as long and still over-simplified. Just go with it.</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://robnapier.net/feed.xml" rel="self" type="application/atom+xml" /><link href="https://robnapier.net/" rel="alternate" type="text/html" /><updated>2025-01-26T20:28:21-05:00</updated><id>https://robnapier.net/feed.xml</id><title type="html">Cocoaphony</title><subtitle>Mac and iOS development with a focus on Swift and functional programming</subtitle><author><name>Rob Napier</name></author><entry><title type="html">ASCII</title><link href="https://robnapier.net/ascii" rel="alternate" type="text/html" title="ASCII" /><published>2024-05-18T14:30:00-04:00</published><updated>2024-05-18T14:30:00-04:00</updated><id>https://robnapier.net/ascii</id><content type="html" xml:base="https://robnapier.net/ascii"><![CDATA[<p><em>Every part of this post is over-simplified. History is messy and difficult to sum up. The original version was twice as long and still over-simplified. Just go with it.</em></p>
 
 <figure>
     <img src="/images/ascii/USASCII_code_chart.png" width="50%" alt="ASCII chart with 8 sticks (i.e. columns) and 16 rows, demonstrating the underlying structure of ASCII" />
@@ -27,7 +27,7 @@
     <figcaption>IBM-style punch card, encoding the EBCDIC character set. Public Domain. Source: <a href="https://commons.wikimedia.org/wiki/File:Blue-punch-card-front.png">WikiCommons</a></figcaption>
 </figure>
 
-<p>As the name suggests, it extends the previous 6-bit BCDIC format, which was designed to work with punch card equipment and mechanical tabulators, which is why it has what seem like odd “gaps” in its layout. This approach made it more compatible with the existing 6-bit systems and the related equipment. It isn’t particularly well-suited to electrical or magnetic encoding, but it taught IBM the value of lining up digits this way for BCD conversions.<sup id="fnref:holes" role="doc-noteref"><a href="#fn:holes" class="footnote" rel="footnote">1</a></sup></p>
+<p>As the name suggests, it extends the previous 6-bit BCDIC format, which was designed to work with punch card equipment and mechanical tabulators, which is why it has what seem like odd “gaps” in its layout. This approach made it more compatible with the existing 6-bit systems and the related equipment. It isn’t particularly well-suited to electrical or magnetic encoding, but it taught IBM the value of lining up digits this way for BCD conversions.<sup id="fnref:holes"><a href="#fn:holes" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <p>If you’re working on business-focused computers, rather than scientific computing, the math generally isn’t very complicated. There aren’t a lot of square roots or logarithms in accounting. You mostly need add, subtract, multiply, and the occasional divide. But you spend a lot of time inputting and outputting numeric results in base 10. So it makes sense to do all your math in decimal so that converting back and forth between digits and their characters is really cheap and you avoid <a href="https://floating-point-gui.de">base-conversion rounding errors</a>. And that’s exactly what they did. A lot of IBM computers did all their math in binary coded decimal, and (E)BCDIC and ASCII reflect that.</p>
 
@@ -108,7 +108,7 @@
 <p>It took a few decades to finally build a better way. But that’s for another post.</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:holes" role="doc-endnote">
+    <li id="fn:holes">
       <p>I’m familiar with the common story that says that EBCDIC is laid out the way it is to minimize sequential holes in order to prevent weakening the card. I can’t find any primary source for that, and it doesn’t really follow from the character layout. The only evidence I’ve seen given is the slightly surprising placement of the ‘S’ encoding. But I expect that this was more about placing the ‘/’ encoding near the numbers in the older 6-bit encodings (the ones where the letters are “backwards”). Just modifying the ‘S’ encoding slightly shouldn’t have much if any impact on tape or card integrity. If the goal were to manage where holes show up, I would expect the letters to be laid out based on some English-frequency basis, or scattered around the encoding table, not laid out compactly and alphabetically. I’ve been reading <a href="https://archive.org/details/mackenzie-coded-char-sets/">Coded Character Sets, History and Development</a>, published in 1980, and I can’t find any mention of BCD encodings trying to optimize hole placement. <a href="#fnref:holes" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
@@ -1050,7 +1050,7 @@ func transmit(data: Data, over transport: <span class="chl">URLSession</span>) {
 func transmit(data: Data, over transport: <span class="chl">TestTransport</span>) { ... }
 </pre>
 
-<p>The entire <code class="language-plaintext highlighter-rouge">transmit</code> function is (in principle) copied, just as if you’d written an overload <code class="language-plaintext highlighter-rouge">transmit</code> for each type. This is an over-simplification, and the compiler may not actually make all the copies, or it may generate an existential version instead (or in addition). It depends on a lot of things, including the optimization flags. But when you call a generic function, you should think of it as creating a new version of the function written specifically for the type you called it with.<sup id="fnref:performance" role="doc-noteref"><a href="#fn:performance" class="footnote" rel="footnote">1</a></sup></p>
+<p>The entire <code class="language-plaintext highlighter-rouge">transmit</code> function is (in principle) copied, just as if you’d written an overload <code class="language-plaintext highlighter-rouge">transmit</code> for each type. This is an over-simplification, and the compiler may not actually make all the copies, or it may generate an existential version instead (or in addition). It depends on a lot of things, including the optimization flags. But when you call a generic function, you should think of it as creating a new version of the function written specifically for the type you called it with.<sup id="fnref:performance"><a href="#fn:performance" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <ul>
   <li>In an existential (protocol parameter) function, the parameters may need to be copied into an existential at <em>run-time</em>.</li>
@@ -1067,7 +1067,7 @@ func transmit(data: Data, over transport: <span class="chl">TestTransport</span>
 
 <h2 id="what-if-we-made-things-more-generallyumexistential">What if we made things more generally…um…existential?</h2>
 
-<p>So couldn’t Swift just create an existential all the time, even for protocols with associated types (PATs)? Yes, but…it’s complicated. For the most common cases, yes, Swift could automatically create an <code class="language-plaintext highlighter-rouge">any Collection&lt;.Element == T&gt;</code><sup id="fnref:protocol-syntax" role="doc-noteref"><a href="#fn:protocol-syntax" class="footnote" rel="footnote">2</a></sup> implicit existential just like it currently has an <code class="language-plaintext highlighter-rouge">AnyCollection&lt;T&gt;</code> explicit existential. That idea is called <em>generalized existentials</em>, and I’m pretty certain Swift will add it eventually (maybe even soon). That’ll knock off several of protocols’ sharp edges for some of the most common cases.</p>
+<p>So couldn’t Swift just create an existential all the time, even for protocols with associated types (PATs)? Yes, but…it’s complicated. For the most common cases, yes, Swift could automatically create an <code class="language-plaintext highlighter-rouge">any Collection&lt;.Element == T&gt;</code><sup id="fnref:protocol-syntax"><a href="#fn:protocol-syntax" class="footnote" rel="footnote" role="doc-noteref">2</a></sup> implicit existential just like it currently has an <code class="language-plaintext highlighter-rouge">AnyCollection&lt;T&gt;</code> explicit existential. That idea is called <em>generalized existentials</em>, and I’m pretty certain Swift will add it eventually (maybe even soon). That’ll knock off several of protocols’ sharp edges for some of the most common cases.</p>
 
 <p><span class="pullquote-right" data-pullquote="Many protocol problems I see in the wild are really just design problems that have little to do with missing Swift features.">
 But it probably won’t solve as many problems as people expect. Many protocol problems I see in the wild are really just design problems that have little to do with missing Swift features. A generalized existential will get you past the compiler error, but in the process it may let you go much further down a wrong road.
@@ -1096,10 +1096,10 @@ But it probably won’t solve as many problems as people expect. Many protocol p
 <hr />
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:performance" role="doc-endnote">
+    <li id="fn:performance">
       <p>All these “may” qualifiers are why you shouldn’t assume that protocols or generics are “better for performance” (for whatever meaning you’re attaching to “performance”). It depends on a lot of things. If your code is sensitive to the performance of generics or protocols, you need to profile it and look at what the compiler is actually generating. Do not take away from this discussion that “generics are faster” or “protocols create smaller binaries.” That might be true in certain cases, but it can also be the other way around. Write you code clearly and correctly, and say what you mean in types. The Swift compiler teams works very hard to make sure that kind of code will be performant. Don’t guess what the compiler will do. Test. <a href="#fnref:performance" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:protocol-syntax" role="doc-endnote">
+    <li id="fn:protocol-syntax">
       <p>For an introduction to that proposed syntax, see the <a href="https://forums.swift.org/t/protocol-assoctype-t-shorthand-for-combined-protocol-and-associated-type-constraints-without-naming-the-constrained-type/21217">Protocol&lt;.AssocType == T&gt; shorthand</a> forum thread. <a href="#fnref:protocol-syntax" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
@@ -1148,7 +1148,7 @@ But it probably won’t solve as many problems as people expect. Many protocol p
 The basic premise of a mock is to build a test object that mimics some other object you want to replace. That encourages you to design a protocol that very closely matches the existing interface, and then your “mock object” will also closely match that interface. This makes your “real” object, the protocol, and the mock evolve tightly in lockstep, and it cuts off opportunities for more powerful protocols that aren’t tied to one implementation. If the only reason you can imagine using a protocol is for testing, then you’re not getting all you could out of it. Protocols can be so much more.
 </span></p>
 
-<p>So my goal isn’t to “mock” URLSession, but to abstract the functionality I need. What I want is to map a URLRequest to Data, asynchronously:<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+<p>So my goal isn’t to “mock” URLSession, but to abstract the functionality I need. What I want is to map a URLRequest to Data, asynchronously:<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A transport maps a URLRequest to Data, asynchronously</span>
 <span class="kd">protocol</span> <span class="kt">Transport</span> <span class="p">{</span>
@@ -1276,7 +1276,7 @@ final class APIClient {
 <p><a href="/assets/protocols/StartWithAProtocol.zip">Swift Playground</a></p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>Throughout this series, whenever it’s unambiguous, I’ll refer to <code class="language-plaintext highlighter-rouge">Result&lt;Value, Error&gt;</code> as just “Value.” <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
@@ -1545,7 +1545,7 @@ let value = try JSONDecoder().decode(<span class="chl">Int.self</span>, from: da
 let value<span class="chl">: Int</span> = try JSONDecoder().decode(data)
 </pre>
 
-<p>It would have even been a little shorter that way. But it forces the caller to add a type annotation on the variable, which is a little ugly, and unusual in Swift. If the only place the type parameter shows up is in the return value, I usually recommend passing it as a parameter. But in any case, try writing some code with it, and focus on making things clear at the call-site. <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+<p>It would have even been a little shorter that way. But it forces the caller to add a type annotation on the variable, which is a little ugly, and unusual in Swift. If the only place the type parameter shows up is in the return value, I usually recommend passing it as a parameter. But in any case, try writing some code with it, and focus on making things clear at the call-site. <sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <h2 id="making-fetch-generic">Making <code class="language-plaintext highlighter-rouge">fetch</code> generic</h2>
 
@@ -1635,7 +1635,7 @@ func fetch&lt;Model&gt;(_ model: Model.Type, id: Int,
 <p>(I don’t have comments on this site, but if you’re interested in any conversations about it, follow the thread on <a href="https://twitter.com/cocoaphony/status/1121549665789411333">Twitter</a>.)</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>A previous version of this post advocated for this approach much more strongly, but <a href="https://twitter.com/peres/status/1121824695211429888">some questions on Twitter</a> made me rethink this. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

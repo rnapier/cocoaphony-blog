@@ -286,7 +286,7 @@ single element of the first type into the second type.</p>
 based on one of them, and returns an array of the same kind of things.</p>
 
 <p>Even if I took away the names <code class="language-plaintext highlighter-rouge">map</code> and <code class="language-plaintext highlighter-rouge">filter</code>, you should have some guess
-what these functions do, just based on what they take and what they return.<sup id="fnref:haskell" role="doc-noteref"><a href="#fn:haskell" class="footnote" rel="footnote">1</a></sup></p>
+what these functions do, just based on what they take and what they return.<sup id="fnref:haskell"><a href="#fn:haskell" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <p>Let’s go back to the Swift header for moment. By this time, the  <code class="language-plaintext highlighter-rouge">map&lt;C:
 CollectionType, T&gt;</code> function and the <code class="language-plaintext highlighter-rouge">map&lt;S: SequenceType, T&gt;</code> function should
@@ -309,7 +309,7 @@ map(Optional&lt;T&gt;, T -&gt; U) -&gt; Optional&lt;U&gt;
 </code></pre></div></div>
 
 <p>That’s really, really interesting (at least to me), but if we go any deeper down
-this rabbit hole, I’m going to have to start using mathy words.<sup id="fnref:functor" role="doc-noteref"><a href="#fn:functor" class="footnote" rel="footnote">2</a></sup> You
+this rabbit hole, I’m going to have to start using mathy words.<sup id="fnref:functor"><a href="#fn:functor" class="footnote" rel="footnote" role="doc-noteref">2</a></sup> You
 came here to learn practical applications. So let’s crawl back up a step.</p>
 
 <p>So what does it mean to “map” over an optional? Well, mapping over an array
@@ -330,7 +330,7 @@ Optional-chaining is just a more method-friendly version of <code class="languag
 
 <p>So if we can map over an array, and we can map over an optional, can we map over
 anything else? How about the <code class="language-plaintext highlighter-rouge">Result</code> type we built in
-<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>?<sup id="fnref:box" role="doc-noteref"><a href="#fn:box" class="footnote" rel="footnote">3</a></sup></p>
+<a href="/functional-wish-fulfillment">Functional Wish Fulfillment</a>?<sup id="fnref:box"><a href="#fn:box" class="footnote" rel="footnote" role="doc-noteref">3</a></sup></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(x: Result&lt;T&gt;, f: T -&gt; U) -&gt; Result&lt;U&gt; {
   switch x {
@@ -375,13 +375,13 @@ functions. Refactor. Try again.</p>
 can do for us. Until then, stop mutating. Evolve.</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:haskell" role="doc-endnote">
+    <li id="fn:haskell">
       <p>In Haskell, which has a pretty consistent syntax, you can actually search the documentation for functions that transform the types you want. That turns out to be harder in Swift because of parameter names and syntactic sugar, but the idea of reading types is just as important. <a href="#fnref:haskell" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:functor" role="doc-endnote">
+    <li id="fn:functor">
       <p>That word is “functor” if you’re curious. A <a href="https://en.wikibooks.org/wiki/Haskell/The_Functor_class">functor</a> is a structure you can map over. It’d probably be clearer if we called it “mappable.” <a href="#fnref:functor" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:box" role="doc-endnote">
+    <li id="fn:box">
       <p>Remember that “box” and “unbox” are just because of a compiler limitation in Beta6. <a href="#fnref:box" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

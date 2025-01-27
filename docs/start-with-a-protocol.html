@@ -252,7 +252,7 @@ let value = try JSONDecoder().decode(<span class="chl">Int.self</span>, from: da
 let value<span class="chl">: Int</span> = try JSONDecoder().decode(data)
 </pre>
 
-<p>It would have even been a little shorter that way. But it forces the caller to add a type annotation on the variable, which is a little ugly, and unusual in Swift. If the only place the type parameter shows up is in the return value, I usually recommend passing it as a parameter. But in any case, try writing some code with it, and focus on making things clear at the call-site. <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+<p>It would have even been a little shorter that way. But it forces the caller to add a type annotation on the variable, which is a little ugly, and unusual in Swift. If the only place the type parameter shows up is in the return value, I usually recommend passing it as a parameter. But in any case, try writing some code with it, and focus on making things clear at the call-site. <sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup></p>
 
 <h2 id="making-fetch-generic">Making <code class="language-plaintext highlighter-rouge">fetch</code> generic</h2>
 
@@ -342,7 +342,7 @@ func fetch&lt;Model&gt;(_ model: Model.Type, id: Int,
 <p>(I don’t have comments on this site, but if you’re interested in any conversations about it, follow the thread on <a href="https://twitter.com/cocoaphony/status/1121549665789411333">Twitter</a>.)</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>A previous version of this post advocated for this approach much more strongly, but <a href="https://twitter.com/peres/status/1121824695211429888">some questions on Twitter</a> made me rethink this. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

@@ -143,14 +143,14 @@ zero.”</p>
 <p>Another common name for this function is “fold.” Sometimes, in other languages,
 you’ll see “fold left” or “fold right.” Swift’s “reduce” is the same as “fold
 left.” <strike>(A right fold starts at the end of the list and goes 
-backwards.</strike><sup id="fnref:lazy" role="doc-noteref"><a href="#fn:lazy" class="footnote" rel="footnote">1</a></sup>) You may also see it called “aggregate” or
+backwards.</strike><sup id="fnref:lazy"><a href="#fn:lazy" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>) You may also see it called “aggregate” or
 “accumulate” or “inject.” They’re all pretty much the same function.</p>
 
 <h2 id="finding-a-starting-point">Finding a starting point</h2>
 
 <p>OK, so we can add and multiply stuff. What else you got? We can get minimums and
 maximums. Let’s implement stdlib’s <code class="language-plaintext highlighter-rouge">minElement</code> for arrays with
-<code class="language-plaintext highlighter-rouge">reduce</code>.<sup id="fnref:array" role="doc-noteref"><a href="#fn:array" class="footnote" rel="footnote">2</a></sup></p>
+<code class="language-plaintext highlighter-rouge">reduce</code>.<sup id="fnref:array"><a href="#fn:array" class="footnote" rel="footnote" role="doc-noteref">2</a></sup></p>
 
 <p>Reducing requires an initial value. So, what should it be? For types that have a
 known minimum (like <code class="language-plaintext highlighter-rouge">Int.min</code>), you might be tempted to use it. But that’s not
@@ -220,7 +220,7 @@ initial value? That’s another thing worth thinking about for a while, but it�
 too much theory for this post. (If you want to research it, the magic search
 term you want is <em>monoid</em>.)</p>
 
-<p>Mapping an array is just a special case of reducing:<sup id="fnref:leftright" role="doc-noteref"><a href="#fn:leftright" class="footnote" rel="footnote">3</a></sup></p>
+<p>Mapping an array is just a special case of reducing:<sup id="fnref:leftright"><a href="#fn:leftright" class="footnote" rel="footnote" role="doc-noteref">3</a></sup></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func map&lt;T, U&gt;(xs: [T], f: T -&gt; U) -&gt; [U] {
   return xs.reduce([]) { $0 + [f($1)] }
@@ -321,13 +321,13 @@ make you look smart.</p>
 <p>But with that in mind, reduce your problems away!</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:lazy" role="doc-endnote">
+    <li id="fn:lazy">
       <p>UPDATE: After some <a href="https://twitter.com/cocoaphony/status/511339551915511808">helpful discussion</a> with @TacticalGrace and @pyrtsa, I’ve decided this description of fold right is too misleading. I usually favor simple-but-slightly-wrong explanations over more-correct-but-requires-lots-of-background-to-understand-and-is-still-slightly-wrong, but in this case, “goes backwards” really confuses how foldr is commonly used. We don’t have foldr in Swift, so I’m not going to dig into it here in a footnote; I’ll leave it to your <a href="https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29">exploration</a>. <a href="#fnref:lazy" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:array" role="doc-endnote">
+    <li id="fn:array">
       <p>In this post, and in many of my posts, I will focus on Array implementations rather than the more general Sequence. That’s because Sequence (and Collection) can introduce a lot of complexity and obscure the key points being discussed. Some of their complexity is due to the nature of type constraints, and some is due to quirks about Swift that will likely improve. I’ve chosen to dodge all of that and focus on the most common and simplest case: Arrays. <a href="#fnref:array" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:leftright" role="doc-endnote">
+    <li id="fn:leftright">
       <p>If you’re familiar with Haskell, you may know that <code class="language-plaintext highlighter-rouge">map</code> is usually implemented as a <code class="language-plaintext highlighter-rouge">foldr</code>, while this is a <code class="language-plaintext highlighter-rouge">foldl</code>. That’s just for performance. In Haskell, list prepending (<code class="language-plaintext highlighter-rouge">:</code>) is much faster than appending (<code class="language-plaintext highlighter-rouge">++</code>). In Swift, array appending is the faster operation. So <code class="language-plaintext highlighter-rouge">foldr</code> is common in Haskell, but isn’t even in Swift stdlib. Keep this in mind when translating Haskell algorithms to Swift. Haskell often walks lists backwards for performance reasons. It’s more natural in Swift to walk them forward. <a href="#fnref:leftright" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
