@@ -13,4 +13,3 @@ title: Talks
 {% if highlight and highlight.video %}* Video: {{ highlight.conference | link: highlight.video }}{% endif %}
 
 {% endfor %}
-
