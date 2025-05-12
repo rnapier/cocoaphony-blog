@@ -2296,3 +2296,8 @@ figcaption {
     position: relative;
     top: 7px;
 }
+
+div.scroll > .highlight {
+    overflow-y: auto;
+    height: 400px;
+}
