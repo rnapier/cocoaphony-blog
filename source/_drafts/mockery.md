@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Wherefore, Tests?"
+title: "A Mockery of Types"
 published: true
 categories: testing
 ---
@@ -24,12 +24,10 @@ I want to start this series with a concrete example: [a Keychain wrapper](/asset
 [^liberties]: All the stories I tell here are amalgamations of multiple teams and projects. Forgive me some narrative liberties.
 
 {% pullquote %}
-You're going to look at this wrapper and think "that's not an ideal design," and you're right. But it's the kind of design you'll find in real code bases. {" We need to be able to test things that aren't perfect. "} You don't need to read it all now. the comments at the top are enough, and I'll explain the whole API shortly. I just want you to have the code.
+You're going to look at this wrapper and think "that's not an ideal design," and you're right. But it's the kind of design you'll find in real code bases. {" We need to be able to test things that aren't perfect. "} You don't need to read it all now. The comments at the top are enough, and I'll explain the whole API shortly. I just want you to have the code.
 {% endpullquote %}
 
 ```swift
-import Foundation
-
 /// A Keychain wrapper that offers key/value storage with the following features:
 ///
 /// * Takes an identifier to maintain separate stores
@@ -44,9 +42,7 @@ public actor Keychain {
   public let identifier: String
   private var cache: [String: Data] = [:]
 
-  public init(identifier: String) {
-    self.identifier = identifier
-  }
+  public init(identifier: String) { self.identifier = identifier }
 
   // MARK: - Data Operations
 
@@ -55,58 +51,26 @@ public actor Keychain {
       return data
     }
 
-    var params = makeParameters(for: key)
-    params[kSecMatchLimit] = kSecMatchLimitOne
-    params[kSecReturnData] = kCFBooleanTrue
-    var result: CFTypeRef?
-    let status = SecItemCopyMatching(
-      params as CFDictionary,
-      &result)
+    // That terrible `SecItemCopyMatching` call you all know...
+    let data = try _data(for: key)
 
-    if status == errSecItemNotFound {
-      return nil
-    }
-
-    guard status == errSecSuccess else {
-      throw KeychainError(status)
-    }
-
-    let data = result as? Data
     cache[key] = data
     return data
   }
 
   public func set(data: Data, for key: String) throws {
     cache[key] = data
-
-    var params = makeParameters(for: key)
-
-    // Attempt to update the entry
-    var status = SecItemUpdate(
-      params as CFDictionary,
-      [kSecValueData: data] as CFDictionary)
-
-    // If it doesn't exist, try adding it
-    if status == errSecItemNotFound {
-      params[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-      params[kSecValueData] = data
-      status = SecItemAdd(params as CFDictionary, nil)
-    }
-
-    guard status == errSecSuccess else {
-      throw KeychainError(status)
-    }
+    try _set(data: data, for: key)
   }
 
   public func removeData(for key: String) throws {
     cache[key] = nil
+    try _removeData(for: key)
+  }
 
-    let params = makeParameters(for: key)
-    let status = SecItemDelete(params as CFDictionary)
-
-    guard status == errSecSuccess || status == errSecItemNotFound else {
-      throw KeychainError(status)
-    }
+  public func reset() throws {
+    cache = [:]
+    try _reset()
   }
 
   // MARK: - String Operations
@@ -120,7 +84,7 @@ public actor Keychain {
     try set(data: Data(string.utf8), for: key)
   }
 
-  // MARK: - JSON Value Operations
+  // MARK: - JSONSerialization Operations
 
   public func value(for key: String) throws -> Any? {
     guard let data = try data(for: key) else { return nil }
@@ -132,65 +96,35 @@ public actor Keychain {
     try set(data: data, for: key)
   }
 
-  // MARK: - Reset Operations
-
-  public func reset() throws {
-    cache = [:]
-
-    var query = makeParameters(for: nil)
-#if os(macOS)
-    query[kSecMatchLimit] = kSecMatchLimitAll
-#endif
-
-    let status = SecItemDelete(query as CFDictionary)
-
-    guard status == errSecSuccess || status == errSecItemNotFound else {
-      throw KeychainError(status)
-    }
-  }
-
   // MARK: - Public Extensions for Common Types
 
-  public func bool(for key: String) throws -> Bool? {
-    try value(for: key) as? Bool
+  public func bool(for key: String) throws -> Bool? { try value(for: key) as? Bool }
+  public func set(bool: Bool, for key: String) throws { try set(value: bool, for: key) }
+
+  public func int(for key: String) throws -> Int? { try value(for: key) as? Int }
+  public func set(int: Int, for key: String) throws { try set(value: int, for: key) }
+
+  // MARK: - All those horrible low-level SecItem... wrappers that I'm not going to bore you with
+
+  private func _data(for key: String) throws -> Data? { 
+    // ...
   }
-
-  public func set(bool: Bool, for key: String) throws {
-    try set(value: bool, for: key)
+  private func _set(data: Data, for key: String) throws {
+    // ...
   }
-
-  public func int(for key: String) throws -> Int? {
-    try value(for: key) as? Int
+  private func _removeData(for key: String) throws {
+    // ...
   }
-
-  public func set(int: Int, for key: String) throws {
-    try set(value: int, for: key)
+  private func _reset() throws {
+    // ...
   }
-
-  // MARK: - Private Helpers
-
-  private func makeParameters(for key: String?) -> [CFString: Any] {
-    var query: [CFString: Any] = [
-      kSecAttrGeneric: Data(self.identifier.utf8),
-      kSecClass: kSecClassGenericPassword,
-    ]
-    if let key {
-      query[kSecAttrService] = key
-    }
-    return query
-  }
-}
-
-public struct KeychainError: Swift.Error {
-  let status: OSStatus
-  init(_ status: OSStatus) { self.status = status }
 }
 ```
 {: .scroll}
 
 Some key points to this code that will come up later:
 
-* Calling `.set(string:forKey:)` encodes the value differently than `.set(value:forKey:)` when passing a `String`. In some cases mismatching will lead to returning the wrong value. In other cases it may return `nil`. "Well that's awkward, let's fix it!" But remember, this code has shipped. Millions of key have already been written to user keychains. If you change how it's encoded, you need to write a migrator. There may be other code that has hacked around the current behavior and will break if you change it (ask me why I think that might happen…). Before you go redesigning a critical piece of persistent storage, it sure would be nice to have tests, right? As much as we can, we want a system that can deal with things as they are, not just how they should be.[^why]
+* Calling `.set(string:forKey:)` encodes the value differently than `.set(value:forKey:)` when passing a `String`. In some cases mismatching will lead to returning the wrong value. In other cases it may return `nil`. "Well that's awkward, let's fix it!" But remember, this code has shipped. Millions of keys have already been written to user keychains. If you change how it's encoded, you need to write a migrator. There may be other code that has hacked around the current behavior and will break if you change it (ask me why I think that might happen…). Before you go redesigning a critical piece of persistent storage, it sure would be nice to have tests, right? As much as we can, we want a system that can deal with things as they are, not just how they should be.[^why]
 
 [^why]: "Why would anyone build it this way?!?!?" While I've invented this version for this article, it's based on many similar ones I've worked with and it's very natural to get here. The `Data` and `String` interfaces are built first and are all anyone needs. Later, the `Any` interface is added as a convenience to deal with storing `[String: Any]` dictionaries from the legacy networking stack. It happens to work fine for things like `Int` and `Bool`, so people start to use the `Any` interface for those. Then someone adds `Codable` support, but is afraid to modify the widely used `Keychain`, and so adds it locally in a module (that is a true story). Someone else does the same in another module, but instead of `JSONEncoder`, uses `PropertyListEncoder` (which is often more efficient). So now if you try to merge all the different interfaces, you'll find they're incompatible. [Yagni](https://martinfowler.com/bliki/Yagni.html) tells us not to build features we don't need yet. We only need `Data` and `String`, and then `[String: Any]`, and then just one module needs `Codable`, and then… Fixing it would introduce risky data migration for thousands of users that no project wants to add to their schedule. And that, my friends, is the problem of yagni that doesn't get enough discussion. But that's another blog post.
 
@@ -375,4 +309,100 @@ This test works with `Keychain` and the new `MockKeychain`, but it fails with th
 
 That's bad, but the test will fail, so at least it would be caught. The real problem is the reverse. Someone designs their system based on the mock's behavior rather than what you ship. All the tests will pass, but it will fail in the field. That's the worst case. You spend all this time building mocks, writing tests, running tests, and what do you get for all that? A bug that's a real pain to figure out because your tests are lying to you.
 
-Of course, instead of re-implementing everything for the mock, I could have copied a lot more code from `Keychain` into `MockKeychain`, but that's not really better. It means that today, they're aligned, but as `Keychain` evolves, the two will almost certainly diverge. If the tests don't verify all behaviors (and that's a lot more than just "100% code coverage"), then you'll have the same situation. The mock and the subject 
+Of course, instead of re-implementing everything for the mock, I could have copied a lot more code from `Keychain` into `MockKeychain`, but that's not any better. It means that today, they're aligned, but as `Keychain` evolves, the two will almost certainly diverge. If the tests don't verify all visible behaviors (and that takes a lot more than just "100% code coverage"), then you'll have the same situation.
+
+## Smaller than that
+
+Instead, I made the mock protocol small. Just 4 methods:
+
+```swift
+public protocol KeychainProtocol: Actor {
+  func data(for key: String) throws -> Data?
+  func set(data: Data, for key: String) throws
+  func removeData(for key: String) throws
+  func reset() throws
+}
+```
+
+Get, set, delete, reset. Those are what the rest of the code needs to operate. Those are exactly the methods I pulled out into some private helpers because they're kind of ugly. But what we we pulled them into a separate type like? What if instead of `KeychainProtocol`, it were `KeychainStorage` and `Keychain` HAS-A storage rather than IS-A storage?
+
+So the storage is just a struct:
+
+```swift
+struct KeychainStorage: StorageProtocol {
+  let identifier: String
+
+  init(identifier: String) { self.identifier = identifier}
+
+  // MARK: - All those horrible low-level SecItem... wrappers that I'm not going to bore you with
+
+  private func _data(for key: String) throws -> Data? { 
+    // ...
+  }
+  private func _set(data: Data, for key: String) throws {
+    // ...
+  }
+  private func _removeData(for key: String) throws {
+    // ...
+  }
+  private func _reset() throws {
+    // ...
+  }
+}
+```
+
+And the `Keychain` uses it.
+
+```swift
+public actor Keychain {
+  private var cache: [String: Data] = [:]
+  private let storage: KeychainStorage?
+
+  public init(identifier: String) {
+    self.storage = KeychainStorage(identifier: identifier)
+  }
+
+  // MARK: - Data Operations
+
+  public func data(for key: String) throws -> Data? {
+    if let data = cache[key] {
+      return data
+    }
+
+    let data = try storage?.data(for: key)
+    cache[key] = data
+    return data
+  }
+
+  public func set(data: Data, for key: String) throws {
+    cache[key] = data
+    try storage?.set(data: data, for: key)
+  }
+
+  public func removeData(for key: String) throws {
+    cache[key] = nil
+    try storage?.removeData(for: key)
+  }
+
+  public func reset() throws {
+    cache = [:]
+    try storage?.reset()
+  }
+
+  // ...
+}
+```
+
+But what about mocking? Where's the protocol? Look closely:
+
+```swift
+  private let storage: KeychainStorage?
+```
+
+The storage is optional. What happens in this code if it's nil? Well, it reads and writes to a local dictionary, and doesn't do anything with the system keychain. Isn't that exactly what `KeychainMock` does?
+
+`Keychain` is its own mock! All you need to do is set `storage = nil`. And if you modify `Keychain`, its mock automatically matches it because it's the same thing. The only thing we've removed is the little bit that we didn't want during testing: writing to the real keychain.
+
+This is a shockingly powerful pattern. I call it "self-mocking" and I use it a lot. A whole lot. `Keychain` is possibly the most perfect example of it, but many types can benefit from this approach.
+
+We just need a way to pass that `nil` to `KeychainStorage`. Currently there's no way to do that, because how to do it right is a little subtle and deserves its own blog post. We'll get to that very soon.
