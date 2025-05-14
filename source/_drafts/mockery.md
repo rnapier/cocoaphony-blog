@@ -5,7 +5,7 @@ published: true
 categories: testing
 ---
 
-I'm going to talk about testing over the next few posts. If you've talked to me at any length over the last several years, you know I've been thinking about testing a lot for a long time, and I have somewhat unorthodox opinions. Unorthodox enough that I really haven't wanted to write them down because I'm really not trying to start an argument with anyone. If your approach to testing works for you and your team, I think you're doing it right and I don't think you should change just because I do it a different way.
+I'm going to talk about testing over the next few posts. If you've talked to me at any length over the last several years, you know I've been thinking about testing a lot over the years, and I have somewhat unorthodox opinions. Unorthodox enough that I really haven't wanted to write them down because I'm really not trying to start an argument with anyone. If your approach to testing works for you and your team, I think you're doing it right and I don't think you should change just because I do it a different way.
 
 But if you and your team struggle with testing and you think it's because you lack the discipline to "do things right," I'd like to offer another way of thinking about testing that has worked very well for many years, for several teams, and in multiple languages. In this series I'm going to focus specifically on iOS development working in Swift. Some topics are different in other environments. I might touch on those eventually, but to keep this already sprawling topic bounded, I'm going to stick to client-side Swift for now.
 
@@ -15,7 +15,7 @@ So none of this may apply to you. But if you feel that your current testing appr
 
 <!-- more -->
 
-This is the point in the conversation at which many a good and wise friend has, with great kindness, called me an idiot. And before I'm done, you may as well, and that's fine. If your fancy DI framework is working for you, you shouldn't abandon it. Maybe listen to some of my philosophical points and ignore the rest. Or ignore it all. I'm warning you up front where this is headed.
+This is the point in the conversation at which many a good and wise friend has, with great kindness, called me an idiot. And before I'm done, you might too. And that's fine. If your fancy DI framework is working for you, you shouldn't abandon it. Maybe listen to some of my philosophical points and ignore the rest. Or ignore it all. I'm warning you up front where this is headed.
 
 But the best thing I've done for testing in multiple code bases has been to delete nearly all the mocks and mostly remove dependency injection. In the process, I've also made production code better. I've spent the last few months removing mocks from my current project while also improving test code coverage by tens of thousands of lines. Tests are simpler to write and they actually test real things. It's possible to do a lot of testing with very little mocking.
 
@@ -127,9 +127,9 @@ public actor Keychain {
 
 Some key points to this code that will come up later:
 
-* Calling `set(string:forKey:)` encodes the value differently than `set(value:forKey:)` when passing a `String`. In some cases mismatching will lead to returning the wrong value (quoted vs not-quoted). In other cases it may return `nil`. "Well that's awkward, let's fix it!" But remember, this code has shipped. Millions of keys have already been written to user keychains. If you change how it's encoded, you need to write a migrator. There may be other code that has hacked around the current behavior and will break if you change it (ask me why I think that might happen…). Before you go redesigning a critical piece of persistent storage, it sure would be nice to have tests, right? As much as we can, we want a system that can deal with things as they are, not just how they should be.[^why]
+* Calling `set(string:forKey:)` encodes the value differently than `set(value:forKey:)` when passing a `String`. In some cases, a mismatch will lead to returning the wrong value (quoted vs not-quoted). In other cases it may return `nil`. "Well that's awkward, let's fix it!" But remember, this code has shipped. Millions of keys have already been written to user keychains. If you change how it's encoded, you need to write a migrator. There may be other code that has hacked around the current behavior and will break if you change it (ask me why I think that might happen…). Before you go redesigning a critical piece of persistent storage, it sure would be nice to have tests, right? As much as we can, we want a system that can deal with things as they are, not just how they should be.[^why]
 
-[^why]: "Why would anyone build it this way?!?!?" While I've invented this version for this article, it's based on many similar ones I've worked with and it's very natural to get here. The `Data` and `String` interfaces are built first and are all anyone needs at the time. Later, the `Any` interface is added to deal with `[String: Any]` dictionaries from the legacy networking stack. It happens to work fine things like `Int` and `Bool`, so people start to use the `Any` interface for those, and then convenience methods are added. Then someone wants `Codable` support, but is afraid to modify the widely used `Keychain`, and so adds it locally in a module. Someone else does the same in another module, but instead of `JSONEncoder`, uses `PropertyListEncoder`. So now if you try to merge all the different interfaces, you'll find they're incompatible. [Yagni](https://martinfowler.com/bliki/Yagni.html) tells us not to build features we don't need yet. We only need `Data` and `String`, and then `[String: Any]`, and then just one module needs `Codable`, and then… Unifying at any point it would introduce risky data migration for thousands of users that no project wants to add to their schedule. And that, my friends, is a problem with yagni that doesn't get enough discussion. But that's another blog post.
+[^why]: "Why would anyone build it this way?!?!?" While I've invented this version for this article, it's based on many similar ones I've worked with and it's very natural to get here. The `Data` and `String` interfaces are built first and are all anyone needs at the time. Later, the `Any` interface is added to deal with `[String: Any]` dictionaries from the legacy networking stack. It happens to work fine for things like `Int` and `Bool`, so people start to use the `Any` interface for those, and then convenience methods are added. Then someone wants `Codable` support, but is afraid to modify the widely used `Keychain`, and so adds it locally in a module. Someone else does the same in another module, but instead of `JSONEncoder`, uses `PropertyListEncoder`. So now if you try to merge all the different interfaces, you'll find they're incompatible. [Yagni](https://martinfowler.com/bliki/Yagni.html) tells us not to build features we don't need yet. We only need `Data` and `String`, and then `[String: Any]`, and then just one module needs `Codable`, and then… Unifying at any point would introduce risky data migration for thousands of users that no project wants to add to their schedule. And that, my friends, is a downside of yagni that doesn't get enough discussion. But that's another blog post.
 
 * This code cannot be called as-is from a unit test on any platform but macOS if the test lives in an SPM package (rather than a hosted application). To access the system keychain, even on Simulator, requires an entitlements file, and SPM can't provide it. That means that some kind of "mocking" solution is absolutely required for any non-macOS SPM code that relies on `Keychain`. It's literally impossible to test otherwise. The point of this article and series isn't "never mock." It's to reduce mocking as much as we can.
 
@@ -217,7 +217,7 @@ public actor MockKeychain: KeychainProtocol {
 
 ## Make your mocks small
 
-This is exactly how I've seen this problem solved so many times. And now that I've written it out myself, I must cry a little. Give me a moment. Please stop doing this. You can have your mocks. Mock if it makes you happy. But stop doing this. There's no need to even mock this type, which I'll get to in a little bit, but if you're going to mock it with a protocol, this is how to do it:
+This is exactly how I've seen this problem solved so many times. And now that I've written it out myself, I must cry a little. Give me a moment. Please… stop doing this. You can have your mocks. Mock if it makes you happy. But stop doing this. There's no need to even mock this type, which I'll get to in a little bit, but if you're going to mock it with a protocol, this is how to do it:
 
 ```swift
 public protocol KeychainProtocol: Actor {
@@ -319,7 +319,7 @@ Get, set, delete, reset. Those are what the rest of the code needs to operate. T
 
 ## No, smaller than that
 
-But what we we pulled them into a separate type like? What if instead of `KeychainProtocol`, it were `KeychainStorage` and `Keychain` HAS-A storage rather than IS-A storage?
+But what if we pulled them into a separate type like? What if instead of `KeychainProtocol`, it were `KeychainStorage` and `Keychain` HAS-A storage rather than IS-A storage?
 
 So the storage is just a struct:
 
@@ -391,7 +391,7 @@ public actor Keychain {
 Wait, where did the protocol go? What about mocking? Look closely:
 
 ```swift
-  private let storage: KeychainStorage?
+private let storage: KeychainStorage?
 ```
 
 The storage is optional. What happens in this code if it's nil? Well, it reads and writes to a local dictionary, and doesn't do anything with the system keychain. Isn't that exactly what `KeychainMock` does?
@@ -400,4 +400,4 @@ The storage is optional. What happens in this code if it's nil? Well, it reads a
 
 This is a shockingly powerful pattern. I call it "self-mocking" and I use it a lot. A whole lot. `Keychain` is possibly the most perfect example of it, but many types can benefit from this approach.
 
-We just need a way to pass that `nil` to `KeychainStorage.init`. Currently there's no way to do that, because how to do it right is a little subtle and deserves its own blog post. Stay tuned.
+We just need a way to pass `nil` to `KeychainStorage.init`. Currently there's no way to do that, because how to do it right is a little subtle. That deserves its own post. Stay tuned.
