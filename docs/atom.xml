@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoaphony]]></title>
   <link href="https://robnapier.net/atom.xml" rel="self"/>
   <link href="https://robnapier.net/"/>
-  <updated>2025-05-15T18:11:16-04:00</updated>
+  <updated>2025-05-15T18:13:46-04:00</updated>
   <id>https://robnapier.net/</id>
   <author>
     <name><![CDATA[Rob Napier]]></name>
@@ -442,7 +442,7 @@ That’s bad, but the test will fail, so at least it would be caught. The real p
       <p>“Why would anyone build it this way?!?!?” While I’ve invented this version for this article, it’s based on many similar ones I’ve worked with and it’s very natural to get here. The <code class="language-plaintext highlighter-rouge">Data</code> and <code class="language-plaintext highlighter-rouge">String</code> interfaces are built first and are all anyone needs at the time. Later, the <code class="language-plaintext highlighter-rouge">Any</code> interface is added to deal with <code class="language-plaintext highlighter-rouge">[String: Any]</code> dictionaries from the networking stack. It happens to work fine for things like <code class="language-plaintext highlighter-rouge">Int</code> and <code class="language-plaintext highlighter-rouge">Bool</code>, so people start to use the <code class="language-plaintext highlighter-rouge">Any</code> interface for those, and then convenience methods are added. Then someone wants <code class="language-plaintext highlighter-rouge">Codable</code> support, but is afraid to modify the widely used <code class="language-plaintext highlighter-rouge">Keychain</code>, and so adds it locally in their module. Someone else does the same in another module, but instead of <code class="language-plaintext highlighter-rouge">JSONEncoder</code>, uses <code class="language-plaintext highlighter-rouge">PropertyListEncoder</code>. So now if you try to merge all the different interfaces, you’ll find they’re incompatible. <a href="https://martinfowler.com/bliki/Yagni.html">Yagni</a> tells us not to build features we don’t need yet. We only need <code class="language-plaintext highlighter-rouge">Data</code> and <code class="language-plaintext highlighter-rouge">String</code>, and then <code class="language-plaintext highlighter-rouge">[String: Any]</code>, and then just one module needs <code class="language-plaintext highlighter-rouge">Codable</code>, and then… Unifying at any point would introduce risky data migration for thousands of users that no project wants to add to their schedule. And that, my friends, is a downside of yagni that doesn’t get enough discussion. But that’s another blog post. <a href="#fnref:why" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
     <li id="fn:tikitu">
-      <p>Thanks to <a href="https://mastodon.social/@tikitu/114510337278524055">Tikitu</a> for noticing that I accidentally edited out mentioning it. <a href="#fnref:tikitu" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+      <p>Thanks to <a href="https://mastodon.social/@tikitu/114510337278524055">Tikitu</a> for noticing that I accidentally edited out mentioning it. And thanks to <a href="https://hachyderm.io/@rituals/114513983150697363">Nathan</a> for catching my access-level mistake in an earlier version of this post. <a href="#fnref:tikitu" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
