@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I have always strong recommended segregating Objective-C and C++ code with a thin Objective-C++ wrapper. I do not like Objective-C++. It is useful &hellip;">
+  <meta name="description" content="I know this exists out there somewhere already, but I couldn’t find it anywhere and I was sick of writing it over and over again…. If someone knows &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/simple-gcd-timer-rntimer">Simple GCD Timer (RNTimer)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2012-05-29T21:37:25-04:00" pubdate data-updated="true">29 May 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><i>I know this exists out there somewhere already, but I couldn’t find it anywhere and I was sick of writing it over and over again…. If someone knows of previous art, please point me in the right direction. I know <a href="http://www.fieryrobot.com/blog/2010/07/10/a-watchdog-timer-in-gcd/" target="_blank">Fiery Robot’s</a> and <a href="http://www.mikeash.com/pyblog/friday-qa-2010-07-02-background-timers.html" target="_blank">Mike Ash’s</a>, but they solve different problems.</i></p>
+
+<p>Have you ever noticed how hard it is to write a repeating <code class="language-plaintext highlighter-rouge">NSTimer</code> that doesn’t create a retain loop? Almost always you wind up with something like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NSTimer scheduledTimerWithTimeInterval:1
+                                 target:self
+                               selector:@selector(something)
+                               userInfo:nil 
+                                repeats:YES];
+</code></pre></div></div>
+
+<p>Seems easy enough, except it’s a retain loop. <a href="http://www.mikeash.com/pyblog/friday-qa-2010-04-30-dealing-with-retain-cycles.html" target="_blank">Mike Ash does a nice job of explaining it</a> and walking you through the hoops you need to avoid it. For such a common thing, you’d think this would be easy. And it should be, so I fixed it. I just still can’t quite believe I’m the first to do so.</p>
+
+<p>Anyway, for your consideration I present a very simple class called <code class="language-plaintext highlighter-rouge">RNTimer</code>. Right now it just handles the most common case: a repeating timer that does not generate a retain loop and automatically invalidates when it is released. It could of course be expanded to handle more NSTimer functionality if there is interest. Let me know if you have a use case that the current implementation doesn’t address.</p>
+
+<p>You may find it along with further information at <a href="https://github.com/rnapier/RNTimer" target="_blank">GitHub</a>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -404,39 +452,6 @@
 
 
   <div class="entry-content"><p>For those who have asked (and it’s the #1 question I’m asked about the book), <em>iOS 5 Programming Pushing the Limits</em> is now available in <a href="http://www.amazon.com/Programming-Pushing-Limits-Extraordinary-ebook/dp/B006OP97QI/ref=sr_1_11?s=digital-text&amp;ie=UTF8&amp;qid=1324561899&amp;sr=1-11">Kindle format</a>, along with iBook and Adobe eBook. Enjoy</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/ios-5-programming-adobe-ebook-format">iOS 5 Programming in Adobe E-Book Format</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2011-12-16T11:38:47-05:00" pubdate data-updated="true">16 Dec 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>For those who have asked, the <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-1119961580.html">Adobe E-Book version</a> of iOS 5 Programming is available now from Wiley. I’m not certain yet when the Kindle version will be out, but I’m looking into it, along with getting a list of what other formats are planned.</p>
 </div>
   
   

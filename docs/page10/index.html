@@ -6,7 +6,8 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="I keep coming across code like this: newMonster.trueName = [NSString stringWithString:@"New Monster"]; It’s time to say stop it already with the &hellip;">
+  <meta name="description" content="Thank you stinkblog, thank you for saving me a great deal of pain debugging this. PandoraBoy work can now continue.
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +50,39 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/flash-bug-sigint-debugger">Flash Bug, SIGINT From Debugger()</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2009-08-16T21:17:14-04:00" pubdate data-updated="true">16 Aug 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thank you <a href="http://www.stinkbot.com/blog/archives/69">stinkblog</a>, thank you for saving me a great deal of pain debugging this. PandoraBoy work can now continue.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -397,51 +431,6 @@ An event timestamp is a big, unsigned, 64-bit number. That's big, really big. Yo
 <p>Have I mentioned recently that PandoraBoy is an excellent small project to practice and hone your Cocoa skills?</p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/build-system-1-build-panel">Building the Build System - Part 1 - Abandoning the Build Panel</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2009-05-14T08:00:59-04:00" pubdate data-updated="true">14 May 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>XCode has a decent build system, but it doesn’t work as well as it could out of the box. With just a little work, you can make your projects easier to setup and maintain just the way you want them, improve your code, and even speed up your build times.</p>
-
-<p>The first thing we want to do is get rid of one of the great obfuscations of Xcode: The Build panel.</p>
-
-<p><img class="center" src="/images/build-system-1-build-panel/buildpanel.png" /></p>
-
-<p>The build panel seems convenient at first, but in practice it makes it hard to see what’s going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you’ve done this so someone doesn’t come along later switch the setting. The Build Panel doesn’t give you an easy way to include comments right along with the setting (the “Comments” panel is pretty useless in my experience), and it’s easy to lose settings or accidentally apply them to only to one configuration.</p>
-
-<p>XCode provides a better solution called xcconfig files. Everything you can do in the build panel can be done in xcconfig files, and you can actually read them and make comments. So let’s make some.
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/build-system-1-build-panel">Read on &rarr;</a>
-    </footer>
   
 
 

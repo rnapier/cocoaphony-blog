@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Several people have noted that PandoraBoy is displaying a “Profile” window over the player that interferes with the player. This is a notification &hellip;">
+  <meta name="description" content="I’ve been playing with Core Text recently, and one of the things I wanted to do was layout text in an arbitrary CGPath. On Mac, you’d do this with &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/clipping-cgrect-cgpath">Clipping a CGRect to a CGPath</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2010-09-09T10:49:07-04:00" pubdate data-updated="true">09 Sep 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I’ve been playing with Core Text recently, and one of the things I wanted to do was layout text in an arbitrary CGPath. On Mac, you’d do this with NSLayoutManager, but iOS doesn’t have that so we have to build our own. I’ll discuss Core Text more later, but one of the steps along this problem is how to clip a CGRect to a CGPath. I found several discussions of finding CGPath intersections, all explaining the basic technique. Draw the things you care about into a bitmap context and then inspect the pixels to see where they overlap. Clear enough, but it was hard to find a small code sample that demonstrated this with Core Graphics.</p>
+
+<p>For my purposes, I want the first full-height rectangle within the intersection of the line rectangle and the CGPath. Later I will expand this code to find all full-height rectangles within the intersection (there can be more than one), but this is enough to demonstrate the point.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/clipping-cgrect-cgpath">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -395,44 +434,6 @@ NSLog(@"%s", 1);
   
     <footer>
       <a rel="full-article" href="/iphone-career">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/learning-cocoa-2">Learning Cocoa With Other Backgrounds</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2010-01-28T14:05:18-05:00" pubdate data-updated="true">28 Jan 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em><a href="http://stackoverflow.com/questions/1043820/what-programming-skills-i-need-to-become-an-iphone-developer/1044525#1044525">From a StackOverflow posting</a>.</em></p>
-
-<p>When I teach Cocoa, I always ask the class what their background is in. This generally tells me what they need to unlearn before they’re ready for Cocoa. Here are some of the things I’ve found that different groups need to unlearn.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/learning-cocoa-2">Read on &rarr;</a>
     </footer>
   
 

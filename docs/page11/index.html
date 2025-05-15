@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Answering a question on Stack Overflow, asking for an explanation of the Application Delegate, how it is accessed and created. In Cocoa, a delegate &hellip;">
+  <meta name="description" content="XCode has a decent build system, but it doesn’t work as well as it could out of the box. With just a little work, you can make your projects easier &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/build-system-1-build-panel">Building the Build System - Part 1 - Abandoning the Build Panel</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2009-05-14T08:00:59-04:00" pubdate data-updated="true">14 May 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>XCode has a decent build system, but it doesn’t work as well as it could out of the box. With just a little work, you can make your projects easier to setup and maintain just the way you want them, improve your code, and even speed up your build times.</p>
+
+<p>The first thing we want to do is get rid of one of the great obfuscations of Xcode: The Build panel.</p>
+
+<p><img class="center" src="/images/build-system-1-build-panel/buildpanel.png" /></p>
+
+<p>The build panel seems convenient at first, but in practice it makes it hard to see what’s going on in your build. It especially gets confusing as your build settings get complicated. When you need to turn off Thumb Code Generation because of an obscure assembler conflict in legacy C++ code (true story), it would be nice to put a comment somewhere indicating why you’ve done this so someone doesn’t come along later switch the setting. The Build Panel doesn’t give you an easy way to include comments right along with the setting (the “Comments” panel is pretty useless in my experience), and it’s easy to lose settings or accidentally apply them to only to one configuration.</p>
+
+<p>XCode provides a better solution called xcconfig files. Everything you can do in the build panel can be done in xcconfig files, and you can actually read them and make comments. So let’s make some.
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/build-system-1-build-panel">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -409,45 +454,6 @@
     <footer>
       <a rel="full-article" href="/core-data-rdbms">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/building-autoconf-tools">Building Autoconf Tools</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2009-02-23T09:16:19-05:00" pubdate data-updated="true">23 Feb 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Trying to solve this problem last night, I came across this great script to automate the process. Works great, right out of the box.</p>
-
-<p><a href="http://pseudogreen.org/blog/build_autoconfed_libs_for_iphone.html">build_for_iphoneos</a></p>
-
-<p>If you want to integrate this with an xcodebuild, you’ll still need to build a small xcodeproj file. There’s a template for this and instructions here:</p>
-
-<p><a href="http://developer.apple.com/DOCUMENTATION/Porting/Conceptual/PortingUnix/preparing/preparing.html#//apple_ref/doc/uid/TP40002849-BBCJABGC">Building Makefile Projects With XCode</a></p>
-</div>
-  
   
 
 

@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="The $10,000 Mac Hack I recently read a comment about this hack wondering how long the author had sat on the exploit rather than reporting it to Apple &hellip;">
+  <meta name="description" content="It’s been a busy few weeks for PandoraBoy… well, for PandoraBoy’s mailbox. I’ve been incredibly busy getting my day-to-day work out for months now &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,41 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/pandoraboy-french">PandoraBoy in French</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2008-05-25T13:13:58-04:00" pubdate data-updated="true">25 May 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It’s been a busy few weeks for PandoraBoy… well, for PandoraBoy’s mailbox. I’ve been incredibly busy getting my day-to-day work out for months now and have barely looked at PandoraBoy since about February. The backlog of Issues has grown to a troubling level, and it’s probably another few weeks before I’ll be able to get back into PB development. But in the meantime I’ve been amazed at how much mail I’ve been getting on the subject. Mostly small bugs people are running into, but then, this just in:</p>
+
+<p>PandoraBoy in French. Yes, Pierre Rudloff, out of the blue, sends me a fully translated lproj. I really appreciate it. I’ll make sure to get it integrated into the next release. I probably won’t get started on PB development until after WWDC because of other projects, but after WWDC it’s top of my list. Especially all the annoying little bugs that have been creeping in (I suspect because of some backend Pandora changes).</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -385,44 +420,6 @@ I was incredibly skeptical from the headline. It read to me like “team builds 
 <p>I’m trying to waste system resources in a guaranteed way. I have these boxes with 2G of memory, and need to test problems that show up on 512MB machines and I don’t have any 512MB sticks….</p>
 
 <p>As I study Mac OS X Advanced Programming, I think I may be able to do this with mlock() and not have to use a kext. I’ve read other things that suggest that mlock() won’t work the way I want in a user app. So testing is in my future.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/88">88</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-<time datetime="2007-12-30T22:19:59-05:00" pubdate data-updated="true">30 Dec 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the random noise in the picture. First secret: spend some time and read through every patch available, particularly the ones in Tools. It’s important to know what’s available so you don’t spend hours trying to reinvent the basics. And don’t forget that “transparent” defaults to meaning “whatever random memory happens to be on the video card.”</p>
-
-<p>I’ll be spend quite a bit of time trying to improve the interface for the full-screen plugins. I’m trying to make it as easy to write new full-screen modes as to write new screen savers. Once I’ve gotten a second full-screen plugin written, I think I’ll better know how to structure the interface.</p>
-
-<p>I’ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you’d get a stray “ERROR: Could not find webNetscapePluggin” error in your logs. Hopefully that’s now fixed.</p>
-<div class="post-body entry-content">Should post a 0.6 (or at least 0.6 beta) sometime after the New Year.</div>
 </div>
   
   

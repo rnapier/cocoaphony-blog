@@ -6,7 +6,7 @@
   <meta name="author" content="Rob Napier">
 
   
-  <meta name="description" content="Huge changes in PandoraBoy on the way. I’m working on full-screen mode, so you can run PandoraBoy from across the room and still see what’s currently &hellip;">
+  <meta name="description" content="Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -49,6 +49,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/88">88</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+<time datetime="2007-12-30T22:19:59-05:00" pubdate data-updated="true">30 Dec 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Full-screen PandoraBoy has been a major learning experience. Quartz Composer is an incredible tool, but it took me a long time to get rid of the random noise in the picture. First secret: spend some time and read through every patch available, particularly the ones in Tools. It’s important to know what’s available so you don’t spend hours trying to reinvent the basics. And don’t forget that “transparent” defaults to meaning “whatever random memory happens to be on the video card.”</p>
+
+<p>I’ll be spend quite a bit of time trying to improve the interface for the full-screen plugins. I’m trying to make it as easy to write new full-screen modes as to write new screen savers. Once I’ve gotten a second full-screen plugin written, I think I’ll better know how to structure the interface.</p>
+
+<p>I’ve also finally gotten rid of an old, nagging bug where PB would fail to respond to keyboard shortcuts or Applescript. WebKit is a bit funny about plugins (i.e. Flash). I finally tracked down a weird race condition that causes hitTest: to sometimes return the Flash view and sometimes to return the view that contains the Flash view. PB was only handling the more common case, so sometimes you’d get a stray “ERROR: Could not find webNetscapePluggin” error in your logs. Hopefully that’s now fixed.</p>
+<div class="post-body entry-content">Should post a 0.6 (or at least 0.6 beta) sometime after the New Year.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
